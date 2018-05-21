@@ -18,15 +18,15 @@ import org.odk.collect.android.activities.NotificationActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
-import org.odk.collect.android.tasks.ServerPollingJob;
-import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
 import org.odk.collect.android.listeners.InstanceUploaderListener;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.tasks.InstanceGoogleSheetsUploader;
 import org.odk.collect.android.tasks.InstanceServerUploader;
+import org.odk.collect.android.tasks.ServerPollingJob;
 import org.odk.collect.android.utilities.WebUtils;
+import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -243,7 +243,7 @@ public class NetworkReceiver extends BroadcastReceiver implements InstanceUpload
                 notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(Collect.getInstance())
-                .setSmallIcon(R.drawable.notes)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(Collect.getInstance().getString(R.string.odk_auto_note))
                 .setContentIntent(pendingNotify)
                 .setContentText(message.toString().trim())

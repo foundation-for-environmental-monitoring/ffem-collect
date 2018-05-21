@@ -15,8 +15,6 @@
 package org.odk.collect.android.activities;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -60,8 +58,8 @@ public class AndroidShortcuts extends AppCompatActivity {
      * Builds a list of shortcuts
      */
     private void buildMenuList() {
-        ArrayList<String> names = new ArrayList<String>();
-        ArrayList<Uri> commands = new ArrayList<Uri>();
+        ArrayList<String> names = new ArrayList<>();
+        ArrayList<Uri> commands = new ArrayList<>();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.select_odk_shortcut);
@@ -90,18 +88,13 @@ public class AndroidShortcuts extends AppCompatActivity {
         this.names = names.toArray(new String[0]);
         this.commands = commands.toArray(new Uri[0]);
 
-        builder.setItems(this.names, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                returnShortcut(AndroidShortcuts.this.names[item], AndroidShortcuts.this.commands[item]);
-            }
-        });
+        builder.setItems(this.names, (dialog, item) ->
+                returnShortcut(AndroidShortcuts.this.names[item], AndroidShortcuts.this.commands[item]));
 
-        builder.setOnCancelListener(new OnCancelListener() {
-            public void onCancel(DialogInterface dialog) {
-                AndroidShortcuts sc = AndroidShortcuts.this;
-                sc.setResult(RESULT_CANCELED);
-                sc.finish();
-            }
+        builder.setOnCancelListener(dialog -> {
+            AndroidShortcuts sc = AndroidShortcuts.this;
+            sc.setResult(RESULT_CANCELED);
+            sc.finish();
         });
 
         AlertDialog alert = builder.create();
@@ -119,7 +112,7 @@ public class AndroidShortcuts extends AppCompatActivity {
         Intent intent = new Intent();
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
         intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
-        Parcelable iconResource = Intent.ShortcutIconResource.fromContext(this, R.drawable.notes);
+        Parcelable iconResource = Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher);
         intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
 
         // Now, return the result to the launcher

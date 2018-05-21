@@ -151,7 +151,7 @@ public class ServerPollingJob extends Job {
         PendingIntent contentIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext())
-                .setSmallIcon(R.drawable.notes)
+                .setSmallIcon(R.mipmap.ic_notification)
                 .setContentTitle(getContext().getString(R.string.form_updates_available))
                 .setAutoCancel(true)
                 .setContentIntent(contentIntent);
@@ -168,7 +168,7 @@ public class ServerPollingJob extends Job {
         PendingIntent contentIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext())
-                .setSmallIcon(R.drawable.notes)
+                .setSmallIcon(R.mipmap.ic_notification)
                 .setContentTitle(getContext().getString(R.string.new_form_versions_downloaded))
                 .setAutoCancel(true)
                 .setContentIntent(contentIntent);
