@@ -14,50 +14,6 @@ ant.condition(property: 'os', value: 'unix') {
     os(family: 'unix')
 }
 
-// Build numbers were manually set until 1067
-def LEGACY_BUILD_NUMBER_OFFSET = 1067
-
-// Based on http://stackoverflow.com/questions/17097263#24121734
-def getMasterCommitCount = { ->
-    try {
-        def stdout = new ByteArrayOutputStream()
-        exec {
-            switch (ant.properties.os) {
-                case 'windows':
-                    commandLine 'cmd', '/c', 'git', 'rev-list', '--first-parent', '--count', 'master'
-                    break
-                case 'unix':
-                    commandLine 'git', 'rev-list', '--first-parent', '--count', 'master'
-                    break
-            }
-            standardOutput = stdout
-        }
-        return Integer.parseInt(stdout.toString().trim())
-    } catch (ignored) {
-        return -1
-    }
-}
-
-def getVersionName = { ->
-    try {
-        def stdout = new ByteArrayOutputStream()
-        exec {
-            switch (ant.properties.os) {
-                case 'windows':
-                    commandLine 'cmd', '/c', 'git', 'describe', '--tags', '--dirty', '--always'
-                    break
-                case 'unix':
-                    commandLine 'git', 'describe', '--tags', '--dirty', '--always'
-                    break
-            }
-            standardOutput = stdout
-        }
-        return stdout.toString().trim()
-    } catch (ignored) {
-        return null
-    }
-}
-
 def secretsFile = file('secrets.properties')
 def secrets = new Properties()
 if (secretsFile.exists()) {
@@ -69,10 +25,10 @@ android {
 
     defaultConfig {
         applicationId('org.odk.collect.android')
-        minSdkVersion(16)
-        targetSdkVersion(22)
-        versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
-        versionName getVersionName()
+        minSdkVersion(19)
+        targetSdkVersion(27)
+        versionCode 1
+        versionName "1.0 Alpha 1"
         testInstrumentationRunner('android.support.test.runner.AndroidJUnitRunner')
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -191,12 +147,12 @@ dependencies {
     implementation "com.android.support:exifinterface:${rootProject.supportLibraryVersion}"
     implementation "com.android.support:multidex:1.0.3"
 
-    implementation "com.google.android.gms:play-services-analytics:${rootProject.playServicesVersion}"
-    implementation "com.google.android.gms:play-services-auth:${rootProject.playServicesVersion}"
-    implementation "com.google.android.gms:play-services-maps:${rootProject.playServicesVersion}"
-    implementation "com.google.android.gms:play-services-location:${rootProject.playServicesVersion}"
+    implementation "com.google.android.gms:play-services-analytics:15.0.2"
+    implementation "com.google.android.gms:play-services-auth:15.0.1"
+    implementation "com.google.android.gms:play-services-maps:15.0.1"
+    implementation "com.google.android.gms:play-services-location:15.0.1"
 
-    implementation "com.google.firebase:firebase-core:${rootProject.playServicesVersion}"
+    implementation "com.google.firebase:firebase-core:15.0.2"
     implementation "com.crashlytics.sdk.android:crashlytics:2.9.2"
 
     implementation("com.google.code.gson:gson:2.6.2") {
@@ -233,8 +189,8 @@ dependencies {
         exclude group: 'org.apache.httpcomponents'
     }
     implementation "com.jakewharton.timber:timber:4.7.0"
-    implementation "com.google.zxing:core:3.3.0"
-    implementation "com.journeyapps:zxing-android-embedded:3.5.0"
+    implementation "com.google.zxing:core:3.3.2"
+    implementation "com.journeyapps:zxing-android-embedded:3.6.0"
     implementation "net.danlew:android.joda:2.9.9"
 
     // Real LeakCanary for debug builds only: notifications, analysis, etc
@@ -278,13 +234,13 @@ dependencies {
 
     // Testing-only dependencies
     testImplementation "junit:junit:4.12"
-    testImplementation "org.mockito:mockito-core:2.8.47"
-    testImplementation "org.robolectric:robolectric:3.5.1"
+    testImplementation "org.mockito:mockito-core:2.11.0"
+    testImplementation "org.robolectric:robolectric:3.6.1"
     testImplementation "org.robolectric:shadows-multidex:3.5.1"
 
     // power mock (for mocking final methods which is not handled by mockito)
-    testImplementation "org.powermock:powermock-module-junit4:1.6.4"
-    testImplementation "org.powermock:powermock-api-mockito2:1.7.3"
+    testImplementation "org.powermock:powermock-module-junit4:2.0.0-beta.5"
+    testImplementation "org.powermock:powermock-api-mockito2:2.0.0-beta.5"
 
     androidTestImplementation "org.mockito:mockito-android:2.11.0"
     androidTestImplementation("com.android.support.test:runner:1.0.1") {
@@ -297,7 +253,7 @@ dependencies {
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     }
 
-    androidTestImplementation "com.squareup.okhttp3:mockwebserver:3.9.0"
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:3.9.1"
 }
 
 // Must be at bottom to prevent dependency collisions
