@@ -51,7 +51,6 @@ import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferenceKeys;
-import org.odk.collect.android.preferences.PreferencesActivity;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.AuthDialogUtility;
@@ -88,8 +87,8 @@ public class MainMenuActivity extends CollectAbstractActivity {
     private Button viewSentFormsButton;
     private Button reviewDataButton;
     private Button getFormsButton;
-    private View reviewSpacer;
-    private View getFormsSpacer;
+    //    private View reviewSpacer;
+//    private View getFormsSpacer;
     private AlertDialog alertDialog;
     private SharedPreferences adminPreferences;
     private int completedCount;
@@ -193,7 +192,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
                             .getDefaultSharedPreferences(MainMenuActivity.this);
                     String protocol = sharedPreferences.getString(
                             PreferenceKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default));
-                    Intent i = null;
+                    Intent i;
                     if (protocol.equalsIgnoreCase(getString(R.string.protocol_google_sheets))) {
                         if (PlayServicesUtil.isGooglePlayServicesAvailable(MainMenuActivity.this)) {
                             i = new Intent(getApplicationContext(),
@@ -270,8 +269,8 @@ public class MainMenuActivity extends CollectAbstractActivity {
             }
         }
 
-        reviewSpacer = findViewById(R.id.review_spacer);
-        getFormsSpacer = findViewById(R.id.get_forms_spacer);
+//        reviewSpacer = findViewById(R.id.review_spacer);
+//        getFormsSpacer = findViewById(R.id.get_forms_spacer);
 
         adminPreferences = this.getSharedPreferences(
                 AdminPreferencesActivity.ADMIN_PREFERENCES, 0);
@@ -341,16 +340,16 @@ public class MainMenuActivity extends CollectAbstractActivity {
             if (reviewDataButton != null) {
                 reviewDataButton.setVisibility(View.GONE);
             }
-            if (reviewSpacer != null) {
-                reviewSpacer.setVisibility(View.GONE);
-            }
+//            if (reviewSpacer != null) {
+//                reviewSpacer.setVisibility(View.GONE);
+//            }
         } else {
             if (reviewDataButton != null) {
                 reviewDataButton.setVisibility(View.VISIBLE);
             }
-            if (reviewSpacer != null) {
-                reviewSpacer.setVisibility(View.VISIBLE);
-            }
+//            if (reviewSpacer != null) {
+//                reviewSpacer.setVisibility(View.VISIBLE);
+//            }
         }
 
         boolean send = sharedPreferences.getBoolean(
@@ -383,16 +382,16 @@ public class MainMenuActivity extends CollectAbstractActivity {
             if (getFormsButton != null) {
                 getFormsButton.setVisibility(View.GONE);
             }
-            if (getFormsSpacer != null) {
-                getFormsSpacer.setVisibility(View.GONE);
-            }
+//            if (getFormsSpacer != null) {
+//                getFormsSpacer.setVisibility(View.GONE);
+//            }
         } else {
             if (getFormsButton != null) {
                 getFormsButton.setVisibility(View.VISIBLE);
             }
-            if (getFormsSpacer != null) {
-                getFormsSpacer.setVisibility(View.VISIBLE);
-            }
+//            if (getFormsSpacer != null) {
+//                getFormsSpacer.setVisibility(View.VISIBLE);
+//            }
         }
 
         boolean deleteSaved = sharedPreferences.getBoolean(
@@ -443,32 +442,9 @@ public class MainMenuActivity extends CollectAbstractActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_about:
-                Collect.getInstance()
-                        .getActivityLogger()
-                        .logAction(this, "onOptionsItemSelected",
-                                "MENU_ABOUT");
-                startActivity(new Intent(this, AboutActivity.class));
-                return true;
-            case R.id.menu_general_preferences:
-                Collect.getInstance()
-                        .getActivityLogger()
-                        .logAction(this, "onOptionsItemSelected",
-                                "MENU_PREFERENCES");
-                startActivity(new Intent(this, PreferencesActivity.class));
-                return true;
-            case R.id.menu_admin_preferences:
-                Collect.getInstance().getActivityLogger()
-                        .logAction(this, "onOptionsItemSelected", "MENU_ADMIN");
-                String pw = adminPreferences.getString(
-                        AdminKeys.KEY_ADMIN_PW, "");
-                if ("".equalsIgnoreCase(pw)) {
-                    startActivity(new Intent(this, AdminPreferencesActivity.class));
-                } else {
-                    showDialog(PASSWORD_DIALOG);
-                    Collect.getInstance().getActivityLogger()
-                            .logAction(this, "createAdminPasswordDialog", "show");
-                }
+            case R.id.menu_settings:
+                final Intent intent = new Intent(this, SettingsActivity.class);
+                startActivityForResult(intent, 100);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -673,7 +649,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
         private final WeakReference<MainMenuActivity> target;
 
         IncomingHandler(MainMenuActivity target) {
-            this.target = new WeakReference<MainMenuActivity>(target);
+            this.target = new WeakReference<>(target);
         }
 
         @Override

@@ -20,12 +20,6 @@
     <!-- Toolbar -->
     <include layout="@layout/toolbar" />
 
-    <include
-        layout="@layout/toolbar_action_bar_shadow"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -41,8 +35,8 @@
             android:paddingTop="6dp"
             android:text="@string/app_name"
             android:textColor="?primaryTextColor"
-            android:textStyle="bold"
             android:textSize="21sp"
+            android:textStyle="bold"
             android:visibility="gone" />
 
         <TextView
@@ -64,92 +58,74 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingEnd="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingStart="10dp">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" />
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/enter_data"
+                    style="@style/ListButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="start|center"
+                    android:minHeight="80dp"
                     android:padding="20dp"
                     android:textAllCaps="false"
-                    android:textSize="21sp"
-                    android:textStyle="normal" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp" />
+                    android:textSize="21sp" />
 
                 <Button
                     android:id="@+id/review_data"
+                    style="@style/ListButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="start|center"
+                    android:minHeight="80dp"
                     android:padding="20dp"
                     android:textAllCaps="false"
-                    android:textSize="21sp"
-                    android:textStyle="normal" />
-
-                <View
-                    android:id="@+id/review_spacer"
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp" />
+                    android:textSize="21sp" />
 
                 <Button
                     android:id="@+id/send_data"
+                    style="@style/ListButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="start|center"
+                    android:minHeight="80dp"
                     android:padding="20dp"
                     android:textAllCaps="false"
-                    android:textSize="21sp"
-                    android:textStyle="normal" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp" />
+                    android:textSize="21sp" />
 
                 <Button
                     android:id="@+id/view_sent_forms"
+                    style="@style/ListButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="start|center"
+                    android:minHeight="80dp"
                     android:padding="20dp"
                     android:text="@string/view_sent_forms"
                     android:textAllCaps="false"
-                    android:textSize="21sp"
-                    android:textStyle="normal" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp" />
+                    android:textSize="21sp" />
 
                 <Button
                     android:id="@+id/get_forms"
+                    style="@style/ListButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="start|center"
+                    android:minHeight="80dp"
                     android:padding="20dp"
                     android:textAllCaps="false"
-                    android:textSize="21sp"
-                    android:textStyle="normal" />
-
-                <View
-                    android:id="@+id/get_forms_spacer"
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp" />
+                    android:textSize="21sp" />
 
                 <Button
                     android:id="@+id/manage_forms"
+                    style="@style/ListButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="start|center"
+                    android:minHeight="80dp"
                     android:padding="20dp"
                     android:textAllCaps="false"
-                    android:textSize="21sp"
-                    android:textStyle="normal" />
+                    android:textSize="21sp" />
             </LinearLayout>
 
         </ScrollView>

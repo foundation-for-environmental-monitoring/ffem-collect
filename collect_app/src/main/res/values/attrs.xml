@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="Collect">
         <attr name="primaryTextColor" format="color" />
+        <attr name="textColorPrimary" format="color" />
         <attr name="iconColor" format="color" />
     </declare-styleable>
 </resources>

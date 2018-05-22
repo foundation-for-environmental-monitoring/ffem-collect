@@ -20,7 +20,13 @@ the License.
     <color name="darkTintColor">#2196F3</color>
 
     <!-- Light Theme Palette -->
+    <color name="primary">#585858</color>
+    <color name="white">@android:color/white</color>
     <color name="lightPrimaryTextColor">@android:color/black</color>
     <color name="lightIconColor">@android:color/black</color>
     <color name="lightTintColor">#2196F3</color>
+
+    <color name="button_text">#e33b3b3b</color>
+    <color name="button_main">#CDCDCD</color>
+    <color name="window_background">#fff</color>
 </resources>
