@@ -612,4 +612,6 @@
 
     <string name="copyrightMessage">Copyright © FFEM</string>
     <string name="legalInformation">Legal Information</string>
+    <string name="settings">Settings</string>
+    <string name="general">General</string>
 </resources>
