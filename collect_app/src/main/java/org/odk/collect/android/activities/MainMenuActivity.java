@@ -16,7 +16,6 @@ package org.odk.collect.android.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,17 +26,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -77,8 +70,6 @@ import timber.log.Timber;
  */
 public class MainMenuActivity extends CollectAbstractActivity {
 
-    private static final int PASSWORD_DIALOG = 1;
-
     private static final boolean EXIT = true;
     // buttons
     private Button enterDataButton;
@@ -90,7 +81,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
     //    private View reviewSpacer;
 //    private View getFormsSpacer;
     private AlertDialog alertDialog;
-    private SharedPreferences adminPreferences;
     private int completedCount;
     private int savedCount;
     private int viewSentCount;
@@ -271,9 +261,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
 
 //        reviewSpacer = findViewById(R.id.review_spacer);
 //        getFormsSpacer = findViewById(R.id.get_forms_spacer);
-
-        adminPreferences = this.getSharedPreferences(
-                AdminPreferencesActivity.ADMIN_PREFERENCES, 0);
 
         InstancesDao instancesDao = new InstancesDao();
 
@@ -475,74 +462,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
         alertDialog.setCancelable(false);
         alertDialog.setButton(getString(R.string.ok), errorListener);
         alertDialog.show();
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case PASSWORD_DIALOG:
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                final AlertDialog passwordDialog = builder.create();
-                passwordDialog.setTitle(getString(R.string.enter_admin_password));
-                LayoutInflater inflater = this.getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.dialogbox_layout, null);
-                passwordDialog.setView(dialogView, 20, 10, 20, 10);
-                final CheckBox checkBox = dialogView.findViewById(R.id.checkBox);
-                final EditText input = dialogView.findViewById(R.id.editText);
-                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        if (!checkBox.isChecked()) {
-                            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                        } else {
-                            input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                        }
-                    }
-                });
-                passwordDialog.setButton(AlertDialog.BUTTON_POSITIVE,
-                        getString(R.string.ok),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int whichButton) {
-                                String value = input.getText().toString();
-                                String pw = adminPreferences.getString(
-                                        AdminKeys.KEY_ADMIN_PW, "");
-                                if (pw.compareTo(value) == 0) {
-                                    Intent i = new Intent(getApplicationContext(),
-                                            AdminPreferencesActivity.class);
-                                    startActivity(i);
-                                    input.setText("");
-                                    passwordDialog.dismiss();
-                                } else {
-                                    ToastUtils.showShortToast(R.string.admin_password_incorrect);
-                                    Collect.getInstance()
-                                            .getActivityLogger()
-                                            .logAction(this, "adminPasswordDialog",
-                                                    "PASSWORD_INCORRECT");
-                                }
-                            }
-                        });
-
-                passwordDialog.setButton(AlertDialog.BUTTON_NEGATIVE,
-                        getString(R.string.cancel),
-                        new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int which) {
-                                Collect.getInstance()
-                                        .getActivityLogger()
-                                        .logAction(this, "adminPasswordDialog",
-                                                "cancel");
-                                input.setText("");
-                            }
-                        });
-
-                passwordDialog.getWindow().setSoftInputMode(
-                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                return passwordDialog;
-
-        }
-        return null;
     }
 
     // This flag must be set each time the app starts up
