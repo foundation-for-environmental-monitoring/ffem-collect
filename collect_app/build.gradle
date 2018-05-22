@@ -24,7 +24,7 @@ android {
     compileSdkVersion(27)
 
     defaultConfig {
-        applicationId('org.odk.collect.android')
+        applicationId('io.ffem.collect.android')
         minSdkVersion(19)
         targetSdkVersion(27)
         versionCode 1
