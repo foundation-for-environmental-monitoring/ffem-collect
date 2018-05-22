@@ -23,6 +23,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.fragments.OtherPreferenceFragment;
@@ -65,7 +66,6 @@ public class SettingsActivity extends CollectAbstractActivity
         try {
             setSupportActionBar(toolbar);
         } catch (Exception ignored) {
-            //Ignore crash in Samsung
         }
 
         if (getSupportActionBar() != null) {
@@ -83,5 +83,15 @@ public class SettingsActivity extends CollectAbstractActivity
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

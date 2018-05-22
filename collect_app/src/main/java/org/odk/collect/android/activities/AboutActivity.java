@@ -3,6 +3,7 @@ package org.odk.collect.android.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 
 import org.odk.collect.android.R;
@@ -26,6 +27,10 @@ public class AboutActivity extends CollectAbstractActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setTitle(getString(R.string.about));
         setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     /**
@@ -37,4 +42,13 @@ public class AboutActivity extends CollectAbstractActivity {
         startActivity(intent);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

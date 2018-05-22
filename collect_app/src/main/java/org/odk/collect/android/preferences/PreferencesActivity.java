@@ -16,9 +16,9 @@ package org.odk.collect.android.preferences;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import org.odk.collect.android.R;
@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Handles general preferences.
  */
-public class PreferencesActivity extends PreferenceActivity {
+public class PreferencesActivity extends AppCompatPreferenceActivity {
     public static final String INTENT_KEY_ADMIN_MODE = "adminMode";
 
     private AdminSharedPreferences sharedPreferences;
@@ -64,6 +64,17 @@ public class PreferencesActivity extends PreferenceActivity {
                 loadHeadersFromResource(R.xml.user_device_identity_preference_header, target);
             }
         }
+
+        setContentView(R.layout.settings_page);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar bar = getSupportActionBar();
+        bar.setHomeButtonEnabled(true);
+        bar.setDisplayHomeAsUpEnabled(true);
+        bar.setDisplayShowTitleEnabled(true);
+//        bar.setHomeAsUpIndicator(R.drawable.);
     }
 
     @Override
@@ -99,13 +110,23 @@ public class PreferencesActivity extends PreferenceActivity {
         setTheme(new ThemeUtils(this).getSettingsTheme());
         super.onCreate(savedInstanceState);
 
-        ViewGroup root = getRootView();
-        Toolbar toolbar = (Toolbar) View.inflate(this, R.layout.toolbar_without_progressbar, null);
-        toolbar.setTitle(R.string.general_preferences);
-        View shadow = View.inflate(this, R.layout.toolbar_action_bar_shadow, null);
+//        ViewGroup root = getRootView();
+//        Toolbar toolbar = (Toolbar) View.inflate(this, R.layout.toolbar_without_progressbar, null);
+//        toolbar.setTitle(R.string.general_preferences);
+//        View shadow = View.inflate(this, R.layout.toolbar_action_bar_shadow, null);
 
-        root.addView(toolbar, 0);
-        root.addView(shadow, 1);
+//        root.addView(toolbar, 0);
+//        root.addView(shadow, 1);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

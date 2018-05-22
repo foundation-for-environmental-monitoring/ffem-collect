@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import org.odk.collect.android.R;
+
+import java.util.Objects;
 
 import static org.odk.collect.android.preferences.PreferencesActivity.INTENT_KEY_ADMIN_MODE;
 
@@ -23,7 +27,7 @@ public class BasePreferenceFragment extends PreferenceFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        initToolbar(getPreferenceScreen(), view);
+//        initToolbar(getPreferenceScreen(), view);
 
         // removes disabled preferences if in general settings
         if (getActivity() instanceof PreferencesActivity) {
@@ -39,6 +43,33 @@ public class BasePreferenceFragment extends PreferenceFragment {
         }
 
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View layout = inflater.inflate(R.layout.settings_page, container, false);
+        if (layout != null) {
+
+            toolbar = layout.findViewById(R.id.toolbar);
+            ActionBar bar;
+            if (getActivity() instanceof AppCompatActivity) {
+                AppCompatActivity activity = (AppCompatActivity) getActivity();
+                activity.setSupportActionBar(toolbar);
+                bar = activity.getSupportActionBar();
+            } else {
+                PreferencesActivity activity = (PreferencesActivity) getActivity();
+                activity.setSupportActionBar(toolbar);
+                bar = activity.getSupportActionBar();
+            }
+
+            if (bar != null) {
+                bar.setHomeButtonEnabled(true);
+                bar.setDisplayHomeAsUpEnabled(true);
+                bar.setDisplayShowTitleEnabled(true);
+                bar.setTitle(getPreferenceScreen().getTitle());
+            }
+        }
+        return layout;
     }
 
     // inflates toolbar in the preference fragments
@@ -62,6 +93,16 @@ public class BasePreferenceFragment extends PreferenceFragment {
 
             inflateToolbar(preferenceScreen.getTitle());
         }
+
+        try {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            if (toolbar != null) {
+                Objects.requireNonNull(((AppCompatActivity) getActivity())
+                        .getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+            }
+        } catch (Exception ignored) {
+        }
+
     }
 
     private void inflateToolbar(CharSequence title) {
