@@ -14,12 +14,10 @@
 
 package org.odk.collect.android.preferences;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
@@ -135,11 +133,11 @@ public class PreferencesActivity extends AppCompatPreferenceActivity {
         Collect.getInstance().initProperties();
     }
 
-    private ViewGroup getRootView() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return (ViewGroup) findViewById(android.R.id.list).getParent().getParent().getParent();
-        } else {
-            return (ViewGroup) findViewById(android.R.id.list).getParent();
-        }
-    }
+//    private ViewGroup getRootView() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            return (ViewGroup) findViewById(android.R.id.list).getParent().getParent().getParent();
+//        } else {
+//            return (ViewGroup) findViewById(android.R.id.list).getParent();
+//        }
+//    }
 }

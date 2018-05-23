@@ -17,14 +17,14 @@ the License.
     <!-- Dark Theme Palette -->
     <color name="darkPrimaryTextColor">@android:color/white</color>
     <color name="darkIconColor">@android:color/white</color>
-    <color name="darkTintColor">#2196F3</color>
+    <color name="darkTintColor">#1a8302</color>
 
     <!-- Light Theme Palette -->
     <color name="primary">#585858</color>
     <color name="white">@android:color/white</color>
     <color name="lightPrimaryTextColor">@android:color/black</color>
     <color name="lightIconColor">@android:color/black</color>
-    <color name="lightTintColor">#2196F3</color>
+    <color name="lightTintColor">#1a8302</color>
 
     <color name="button_text">#e33b3b3b</color>
     <color name="button_main">#CDCDCD</color>
