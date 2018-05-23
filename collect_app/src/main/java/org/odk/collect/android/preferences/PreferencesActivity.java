@@ -72,7 +72,8 @@ public class PreferencesActivity extends AppCompatPreferenceActivity {
         bar.setHomeButtonEnabled(true);
         bar.setDisplayHomeAsUpEnabled(true);
         bar.setDisplayShowTitleEnabled(true);
-//        bar.setHomeAsUpIndicator(R.drawable.);
+
+        setTitle(R.string.general_preferences);
     }
 
     @Override

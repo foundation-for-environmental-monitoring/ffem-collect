@@ -89,6 +89,9 @@ public class MainMenuActivity extends CollectAbstractActivity {
     private Cursor viewSentCursor;
     private IncomingHandler handler = new IncomingHandler(this);
     private MyContentObserver contentObserver = new MyContentObserver();
+    private TextView reviewDataBadge;
+    private TextView sendDataBadge;
+    private TextView viewSendFormsBadge;
 
     // private static boolean DO_NOT_EXIT = false;
 
@@ -125,6 +128,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
             }
         });
 
+        reviewDataBadge = findViewById(R.id.text_review_data);
         // review data button. expects a result.
         reviewDataButton = findViewById(R.id.review_data);
         reviewDataButton.setText(getString(R.string.review_data_button));
@@ -142,6 +146,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
             }
         });
 
+        sendDataBadge = findViewById(R.id.text_send_data);
         // send data button. expects a result.
         sendDataButton = findViewById(R.id.send_data);
         sendDataButton.setText(getString(R.string.send_data_button));
@@ -158,6 +163,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
             }
         });
 
+        viewSendFormsBadge = findViewById(R.id.text_view_sent);
         //View sent forms
         viewSentFormsButton = findViewById(R.id.view_sent_forms);
         viewSentFormsButton.setOnClickListener(new OnClickListener() {
@@ -483,11 +489,13 @@ public class MainMenuActivity extends CollectAbstractActivity {
             finalizedCursor.requery();
             completedCount = finalizedCursor.getCount();
             if (completedCount > 0) {
-                sendDataButton.setText(
-                        getString(R.string.send_data_button, String.valueOf(completedCount)));
+                sendDataBadge.setText(String.valueOf(completedCount));
+                sendDataBadge.setVisibility(View.VISIBLE);
             } else {
-                sendDataButton.setText(getString(R.string.send_data));
+                sendDataBadge.setVisibility(View.GONE);
             }
+            sendDataButton.setText(getString(R.string.send_data));
+
         } else {
             sendDataButton.setText(getString(R.string.send_data));
             Timber.w("Cannot update \"Send Finalized\" button label since the database is closed. "
@@ -498,11 +506,12 @@ public class MainMenuActivity extends CollectAbstractActivity {
             savedCursor.requery();
             savedCount = savedCursor.getCount();
             if (savedCount > 0) {
-                reviewDataButton.setText(getString(R.string.review_data_button,
-                        String.valueOf(savedCount)));
+                reviewDataBadge.setText(String.valueOf(savedCount));
+                reviewDataBadge.setVisibility(View.VISIBLE);
             } else {
-                reviewDataButton.setText(getString(R.string.review_data));
+                reviewDataBadge.setVisibility(View.GONE);
             }
+            reviewDataButton.setText(getString(R.string.review_data));
         } else {
             reviewDataButton.setText(getString(R.string.review_data));
             Timber.w("Cannot update \"Edit Form\" button label since the database is closed. "
@@ -513,11 +522,12 @@ public class MainMenuActivity extends CollectAbstractActivity {
             viewSentCursor.requery();
             viewSentCount = viewSentCursor.getCount();
             if (viewSentCount > 0) {
-                viewSentFormsButton.setText(
-                        getString(R.string.view_sent_forms_button, String.valueOf(viewSentCount)));
+                viewSendFormsBadge.setText(String.valueOf(viewSentCount));
+                viewSendFormsBadge.setVisibility(View.VISIBLE);
             } else {
-                viewSentFormsButton.setText(getString(R.string.view_sent_forms));
+                viewSendFormsBadge.setVisibility(View.GONE);
             }
+            viewSentFormsButton.setText(getString(R.string.view_sent_forms));
         } else {
             viewSentFormsButton.setText(getString(R.string.view_sent_forms));
             Timber.w("Cannot update \"View Sent\" button label since the database is closed. "
