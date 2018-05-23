@@ -20,6 +20,7 @@
 package org.odk.collect.android.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -30,33 +31,63 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import org.odk.collect.android.R;
-import org.odk.collect.android.activities.AboutActivity;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.preferences.AdminKeys;
+import org.odk.collect.android.preferences.AdminPreferencesActivity;
+import org.odk.collect.android.preferences.PreferencesActivity;
 
 import static org.odk.collect.android.utilities.ListViewUtil.setListViewHeightBasedOnChildren;
 
-public class OtherPreferenceFragment extends PreferenceFragment {
+public class GeneralPreferenceFragment extends PreferenceFragment {
+
+    private static final int PASSWORD_DIALOG = 1;
 
     private ListView list;
+    private SharedPreferences adminPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.pref_other);
+        addPreferencesFromResource(R.xml.pref_general);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.card_row, container, false);
 
-        Preference aboutPreference = findPreference("about");
-        if (aboutPreference != null) {
-            aboutPreference.setSummary("");
-            aboutPreference.setOnPreferenceClickListener(preference -> {
-                final Intent intent = new Intent(getActivity(), AboutActivity.class);
-                getActivity().startActivity(intent);
+        adminPreferences = getActivity().getSharedPreferences(
+                AdminPreferencesActivity.ADMIN_PREFERENCES, 0);
+
+        Preference generalSettings = findPreference("general_settings");
+        if (generalSettings != null) {
+            generalSettings.setOnPreferenceClickListener(preference -> {
+                Collect.getInstance()
+                        .getActivityLogger()
+                        .logAction(this, "onOptionsItemSelected",
+                                "MENU_PREFERENCES");
+                startActivity(new Intent(getActivity(), PreferencesActivity.class));
                 return true;
             });
         }
+
+        Preference adminSettings = findPreference("admin_settings");
+        if (adminSettings != null) {
+            adminSettings.setOnPreferenceClickListener(preference -> {
+                Collect.getInstance().getActivityLogger()
+                        .logAction(this, "onOptionsItemSelected", "MENU_ADMIN");
+                String pw = adminPreferences.getString(
+                        AdminKeys.KEY_ADMIN_PW, "");
+                if ("".equalsIgnoreCase(pw)) {
+                    startActivity(new Intent(getActivity(), AdminPreferencesActivity.class));
+                } else {
+                    getActivity().showDialog(PASSWORD_DIALOG);
+                    Collect.getInstance().getActivityLogger()
+                            .logAction(this, "createAdminPasswordDialog", "show");
+                }
+                return true;
+            });
+        }
+
         return rootView;
     }
 

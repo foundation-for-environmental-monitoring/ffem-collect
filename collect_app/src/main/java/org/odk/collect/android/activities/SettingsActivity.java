@@ -25,7 +25,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -38,14 +37,13 @@ import android.widget.EditText;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.fragments.GeneralPreferenceFragment;
 import org.odk.collect.android.fragments.OtherPreferenceFragment;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminPreferencesActivity;
 import org.odk.collect.android.utilities.ToastUtils;
 
-
-public class SettingsActivity extends CollectAbstractActivity
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsActivity extends CollectAbstractActivity {
 
     private static final int PASSWORD_DIALOG = 1;
 
@@ -67,14 +65,6 @@ public class SettingsActivity extends CollectAbstractActivity
         setupActivity();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext())
-                .registerOnSharedPreferenceChangeListener(this);
-    }
-
     private void setupActivity() {
 
         setTitle(R.string.settings);
@@ -82,7 +72,11 @@ public class SettingsActivity extends CollectAbstractActivity
         setContentView(R.layout.activity_settings);
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.layoutGeneral, new OtherPreferenceFragment())
+                .replace(R.id.layoutOther, new OtherPreferenceFragment())
+                .commit();
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.layoutGeneral, new GeneralPreferenceFragment())
                 .commit();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -101,11 +95,6 @@ public class SettingsActivity extends CollectAbstractActivity
         super.onPostCreate(savedInstanceState);
 
         setTitle(R.string.settings);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-
     }
 
     @Override
