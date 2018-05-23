@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.CustomTabHelper;
 
 /**
@@ -21,6 +23,9 @@ public class AboutActivity extends CollectAbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about_layout);
         initToolbar();
+
+        ((TextView) findViewById(R.id.textVersion))
+                .setText(Collect.getInstance().getVersionedAppName());
     }
 
     private void initToolbar() {

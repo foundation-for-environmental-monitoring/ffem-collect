@@ -31,6 +31,7 @@ import android.widget.ListView;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.AboutActivity;
+import org.odk.collect.android.application.Collect;
 
 import static org.odk.collect.android.utilities.ListViewUtil.setListViewHeightBasedOnChildren;
 
@@ -50,7 +51,7 @@ public class OtherPreferenceFragment extends PreferenceFragment {
 
         Preference aboutPreference = findPreference("about");
         if (aboutPreference != null) {
-            aboutPreference.setSummary("");
+            aboutPreference.setSummary(Collect.getInstance().getVersionedAppName());
             aboutPreference.setOnPreferenceClickListener(preference -> {
                 final Intent intent = new Intent(getActivity(), AboutActivity.class);
                 getActivity().startActivity(intent);

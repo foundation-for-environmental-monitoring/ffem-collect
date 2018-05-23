@@ -30,9 +30,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobManagerCreateException;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.squareup.leakcanary.LeakCanary;
@@ -106,16 +106,13 @@ public class Collect extends Application implements HasActivityInjector {
     protected CookieStore cookieStore;
     @Inject
     protected CredentialsProvider credsProvider;
-
+    @Inject
+    DispatchingAndroidInjector<Activity> androidInjector;
     private ActivityLogger activityLogger;
-
     @Nullable
     private FormController formController = null;
     private ExternalDataManager externalDataManager;
     private Tracker tracker;
-
-    @Inject
-    DispatchingAndroidInjector<Activity> androidInjector;
 
     public static Collect getInstance() {
         return singleton;
@@ -179,11 +176,20 @@ public class Collect extends Application implements HasActivityInjector {
             dirPath = dirPath.substring(Collect.ODK_ROOT.length());
             String[] parts = dirPath.split(File.separatorChar == '\\' ? "\\\\" : File.separator);
             // [appName, instances, tableId, instanceId ]
-            if (parts.length == 4 && parts[1].equals("instances")) {
-                return true;
-            }
+            return parts.length == 4 && parts[1].equals("instances");
         }
         return false;
+    }
+
+    // Preventing multiple clicks, using threshold of 1000 ms
+    public static boolean allowClick() {
+        long elapsedRealtime = SystemClock.elapsedRealtime();
+        boolean allowClick = (lastClickTime == 0 || lastClickTime == elapsedRealtime) // just for tests
+                || elapsedRealtime - lastClickTime > 1000;
+        if (allowClick) {
+            lastClickTime = elapsedRealtime;
+        }
+        return allowClick;
     }
 
     public ActivityLogger getActivityLogger() {
@@ -208,9 +214,7 @@ public class Collect extends Application implements HasActivityInjector {
     }
 
     public String getVersionedAppName() {
-        String versionName = BuildConfig.VERSION_NAME;
-        versionName = " " + versionName.replaceFirst("-", "\n");
-        return getString(R.string.app_name) + versionName;
+        return String.format("%s %s", getString(R.string.version), BuildConfig.VERSION_NAME);
     }
 
     public boolean isNetworkAvailable() {
@@ -333,22 +337,6 @@ public class Collect extends Application implements HasActivityInjector {
         return tracker;
     }
 
-
-    private static class CrashReportingTree extends Timber.Tree {
-        @Override
-        protected void log(int priority, String tag, String message, Throwable t) {
-            if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
-                return;
-            }
-
-            Crashlytics.log(priority, tag, message);
-
-            if (t != null && priority == Log.ERROR) {
-                Crashlytics.logException(t);
-            }
-        }
-    }
-
     public void initProperties() {
         PropertyManager mgr = new PropertyManager(this);
 
@@ -367,19 +355,23 @@ public class Collect extends Application implements HasActivityInjector {
         AdminSharedPreferences.getInstance().reloadPreferences();
     }
 
-    // Preventing multiple clicks, using threshold of 1000 ms
-    public static boolean allowClick() {
-        long elapsedRealtime = SystemClock.elapsedRealtime();
-        boolean allowClick = (lastClickTime == 0 || lastClickTime == elapsedRealtime) // just for tests
-                || elapsedRealtime - lastClickTime > 1000;
-        if (allowClick) {
-            lastClickTime = elapsedRealtime;
-        }
-        return allowClick;
-    }
-
     @Override
     public DispatchingAndroidInjector<Activity> activityInjector() {
         return androidInjector;
+    }
+
+    private static class CrashReportingTree extends Timber.Tree {
+        @Override
+        protected void log(int priority, String tag, String message, Throwable t) {
+            if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
+                return;
+            }
+
+            Crashlytics.log(priority, tag, message);
+
+            if (t != null && priority == Log.ERROR) {
+                Crashlytics.logException(t);
+            }
+        }
     }
 }
