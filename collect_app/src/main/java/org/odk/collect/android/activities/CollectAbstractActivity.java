@@ -17,9 +17,11 @@
 package org.odk.collect.android.activities;
 
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.utilities.ThemeUtils;
@@ -30,8 +32,8 @@ import static org.odk.collect.android.utilities.PermissionUtils.isEntryPointActi
 
 public abstract class CollectAbstractActivity extends AppCompatActivity {
 
-    private boolean isInstanceStateSaved;
     protected ThemeUtils themeUtils;
+    private boolean isInstanceStateSaved;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,5 +77,26 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
 
     public boolean isInstanceStateSaved() {
         return isInstanceStateSaved;
+    }
+
+    @Override
+    public void setContentView(@LayoutRes int layoutResID) {
+        super.setContentView(layoutResID);
+
+        setSupportActionBar(findViewById(R.id.toolbar));
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

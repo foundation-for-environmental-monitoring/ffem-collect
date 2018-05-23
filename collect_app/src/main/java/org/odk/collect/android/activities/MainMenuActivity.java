@@ -102,6 +102,11 @@ public class MainMenuActivity extends CollectAbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+
         initToolbar();
 
         // enter data button. expects a result.

@@ -128,8 +128,6 @@ abstract class AppListActivity extends CollectAbstractActivity {
         listView.setEmptyView(findViewById(android.R.id.empty));
         progressBar = findViewById(R.id.progressBar);
         llParent = findViewById(R.id.llParent);
-
-        setSupportActionBar(findViewById(R.id.toolbar));
     }
 
     @Override
