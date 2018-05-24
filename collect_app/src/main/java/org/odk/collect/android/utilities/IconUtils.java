@@ -16,8 +16,6 @@
 
 package org.odk.collect.android.utilities;
 
-import android.os.Build;
-
 import org.odk.collect.android.R;
 
 public class IconUtils {
@@ -26,7 +24,6 @@ public class IconUtils {
     }
 
     public static int getNotificationAppIcon() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
-                R.drawable.ic_notes_white : R.drawable.ic_notes_white_png;
+        return R.mipmap.ic_notification;
     }
 }
