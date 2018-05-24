@@ -48,6 +48,7 @@
 
     <style name="BaseLightAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="textColorPrimary">@color/white</item>
         <item name="primaryTextColor">@color/lightPrimaryTextColor</item>
         <item name="android:scrollbarThumbHorizontal">@drawable/thumb</item>
