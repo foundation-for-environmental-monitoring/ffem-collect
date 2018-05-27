@@ -14,6 +14,8 @@
 
 package org.odk.collect.android.activities;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,6 +23,8 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -44,7 +48,9 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.location.client.LocationClient;
 import org.odk.collect.android.location.client.LocationClients;
 import org.odk.collect.android.spatial.MapHelper;
+import org.odk.collect.android.utilities.ApiUtil;
 import org.odk.collect.android.utilities.GeoPointUtils;
+import org.odk.collect.android.utilities.PermissionsDelegate;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.GeoPointWidget;
 
@@ -63,6 +69,8 @@ public class GeoPointMapActivity extends CollectAbstractActivity implements OnMa
         LocationClient.LocationClientListener, LocationListener {
 
     private static final String LOCATION_COUNT = "locationCount";
+    private final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
+    private final String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
 
     private GoogleMap map;
     private MarkerOptions markerOptions;
@@ -132,6 +140,15 @@ public class GeoPointMapActivity extends CollectAbstractActivity implements OnMa
         locationClient.setListener(this);
 
         isMapReady = false;
+
+        if (permissionsDelegate.hasPermissions(permissions)) {
+            startMap();
+        } else {
+            permissionsDelegate.requestPermissions(permissions);
+        }
+    }
+
+    private void startMap() {
         ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
@@ -190,6 +207,25 @@ public class GeoPointMapActivity extends CollectAbstractActivity implements OnMa
         return new DecimalFormat("#.##").format(f);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (permissionsDelegate.resultGranted(requestCode, grantResults)) {
+            startMap();
+        } else {
+            View mainLayout = findViewById(R.id.mainLayout);
+            Snackbar snackbar = Snackbar
+                    .make(mainLayout, getString(R.string.location_permission),
+                            Snackbar.LENGTH_LONG)
+                    .setAction("SETTINGS", view -> ApiUtil.startInstalledAppDetailsActivity(this));
+
+            snackbar.show();
+        }
+    }
+
+    @SuppressLint("MissingPermission")
     private void setupMap(GoogleMap googleMap) {
         map = googleMap;
         if (map == null) {

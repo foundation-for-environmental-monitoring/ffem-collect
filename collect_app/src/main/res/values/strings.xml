@@ -612,9 +612,10 @@
     <string name="hide_old_form_versions_setting_title">Hide old form versions</string>
     <string name="hide_old_form_versions_setting_summary">Only the newest version will appear in Fill Blank Form</string>
 
-    <string name="copyrightMessage">Copyright © FFEM</string>
-    <string name="legalInformation">Legal Information</string>
+    <string name="copyright_message">Copyright © FFEM</string>
+    <string name="legal_information">Legal Information</string>
     <string name="settings">Settings</string>
     <string name="general">General</string>
     <string name="other">Other</string>
+    <string name="location_permission">Location permission is required</string>
 </resources>
