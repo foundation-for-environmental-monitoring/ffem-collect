@@ -14,7 +14,7 @@ ant.condition(property: 'os', value: 'unix') {
     os(family: 'unix')
 }
 
-def secretsFile = file('secrets.properties')
+def secretsFile = file(System.properties['user.home'] + '/.gradle/gradle.properties')
 def secrets = new Properties()
 if (secretsFile.exists()) {
     secrets.load(new FileInputStream(secretsFile))
@@ -24,7 +24,7 @@ android {
     compileSdkVersion(27)
 
     defaultConfig {
-        applicationId('io.ffem.collect.android')
+        applicationId('io.ffem.collect')
         minSdkVersion(19)
         targetSdkVersion(27)
         versionCode 1
@@ -37,11 +37,11 @@ android {
 
     signingConfigs {
         release {
-            if (secrets.getProperty('RELEASE_STORE_FILE')) {
-                storeFile file(secrets.getProperty('RELEASE_STORE_FILE'))
-                storePassword secrets.getProperty('RELEASE_STORE_PASSWORD')
-                keyAlias secrets.getProperty('RELEASE_KEY_ALIAS')
-                keyPassword secrets.getProperty('RELEASE_KEY_PASSWORD')
+            if (secrets.getProperty('FFEM_RELEASE_STORE_FILE')) {
+                storeFile file(secrets.getProperty('FFEM_RELEASE_STORE_FILE'))
+                storePassword secrets.getProperty('FFEM_RELEASE_STORE_PASSWORD')
+                keyAlias secrets.getProperty('FFEM_RELEASE_KEY_ALIAS')
+                keyPassword secrets.getProperty('FFEM_RELEASE_KEY_PASSWORD')
             }
         }
     }
@@ -49,15 +49,17 @@ android {
     buildTypes {
         // Release build for all forks
         release {
-            if (secrets.getProperty('RELEASE_STORE_FILE')) {
+            if (secrets.getProperty('FFEM_RELEASE_STORE_FILE')) {
                 signingConfig signingConfigs.release
             }
             minifyEnabled(true)
+            shrinkResources true
+            zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "false")
         }
-        // Release build for the original ODK Collect app
-        odkCollectRelease {
+        // Release build for the original ffem Collect app
+        ffemCollectRelease {
             if (secrets.getProperty('RELEASE_STORE_FILE')) {
                 signingConfig signingConfigs.release
             }
@@ -198,7 +200,7 @@ dependencies {
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakyCanaryVersion}"
     testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakyCanaryVersion}"
     androidTestImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakyCanaryVersion}"
-    odkCollectReleaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakyCanaryVersion}"
+    ffemCollectReleaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakyCanaryVersion}"
 
     // Android Architecture Components:
     implementation "android.arch.lifecycle:extensions:1.1.1"
