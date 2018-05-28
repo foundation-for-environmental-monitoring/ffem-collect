@@ -83,7 +83,7 @@ public final class PreferenceKeys {
         hashMap.put(KEY_SERVER_URL,                 Collect.getInstance().getString(R.string.default_server_url));
         hashMap.put(KEY_USERNAME,                   "");
         // form_management_preferences.xml
-        hashMap.put(KEY_AUTOSEND,                   AUTOSEND_OFF);
+        hashMap.put(KEY_AUTOSEND, "wifi_only");
         hashMap.put(KEY_GUIDANCE_HINT,              GUIDANCE_HINT_OFF);
         hashMap.put(KEY_DELETE_AFTER_SEND,          false);
         hashMap.put(KEY_COMPLETED_DEFAULT,          true);
