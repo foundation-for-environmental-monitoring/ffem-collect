@@ -27,11 +27,6 @@
         android:key="showSplash"
         android:summary="@string/show_splash_summary"
         android:title="@string/show_splash_title" />
-    <Preference
-        android:dependency="showSplash"
-        android:key="splashPath"
-        android:layout="?android:attr/preferenceLayoutChild"
-        android:title="@string/splash_path" />
 
     <PreferenceCategory
         android:key="@string/map_preferences"
