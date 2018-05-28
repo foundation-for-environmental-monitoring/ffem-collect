@@ -1,15 +1,15 @@
-# FFEM Collect
+# ffem Collect
 ![Platform](https://img.shields.io/badge/platform-Android-blue.svg)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Build status](https://circleci.com/gh/opendatakit/collect.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/opendatakit/collect)
 [![codecov.io](https://codecov.io/github/opendatakit/collect/branch/master/graph/badge.svg)](https://codecov.io/github/opendatakit/collect)
 [![Slack status](http://slack.opendatakit.org/badge.svg)](http://slack.opendatakit.org)
 
-FFEM Collect is an Android app for filling out forms. It is integrated with FFEM Caddisfly.
+ffem Collect is an Android app for filling out forms. It is integrated with ffem Caddisfly.
 
-FFEM Collect is a fork of the Open Data Kit (ODK) Collect project, a free and open-source set of tools which help organizations author, field, and manage mobile data collection solutions. Learn more about the Open Data Kit project and its history [here](https://opendatakit.org/about/) and read about example ODK deployments [here](https://opendatakit.org/about/deployments/).
+ffem Collect is a fork of the Open Data Kit (ODK) Collect project, a free and open-source set of tools which help organizations author, field, and manage mobile data collection solutions. Learn more about the Open Data Kit project and its history [here](https://opendatakit.org/about/) and read about example ODK deployments [here](https://opendatakit.org/about/deployments/).
 
-FFEM Collect renders forms that are compliant with the [ODK XForms standard](http://opendatakit.github.io/xforms-spec/), a subset of the [XForms 1.1 standard](https://www.w3.org/TR/xforms/) with some extensions. The form parsing is done by the [JavaRosa library](https://github.com/opendatakit/javarosa) which Collect includes as a dependency.
+ffem Collect renders forms that are compliant with the [ODK XForms standard](http://opendatakit.github.io/xforms-spec/), a subset of the [XForms 1.1 standard](https://www.w3.org/TR/xforms/) with some extensions. The form parsing is done by the [JavaRosa library](https://github.com/opendatakit/javarosa) which Collect includes as a dependency.
 
 ## Table of Contents
 * [Learn more about ODK Collect](#learn-more-about-odk-collect)
