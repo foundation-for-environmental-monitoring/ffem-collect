@@ -32,3 +32,6 @@ out/
 .externalNativeBuild/
 .navigation/
 captures/
+
+# Firebase
+google-services.json
