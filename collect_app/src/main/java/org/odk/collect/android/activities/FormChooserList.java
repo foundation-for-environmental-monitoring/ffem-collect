@@ -72,12 +72,12 @@ public class FormChooserList extends FormListActivity implements
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent
                 try {
+                    Collect.resetLastClickTime();
                     Collect.createODKDirs();
                     Collect.getInstance().getActivityLogger().open();
                     init();
                 } catch (RuntimeException e) {
                     createErrorDialog(e.getMessage(), EXIT);
-                    return;
                 }
             }
 
@@ -90,7 +90,7 @@ public class FormChooserList extends FormListActivity implements
     }
 
     private void init() {
-        setupAdapter();
+//        setupAdapter();
 
         // DiskSyncTask checks the disk for any forms not already in the content provider
         // that is, put here by dragging and dropping onto the SDCard

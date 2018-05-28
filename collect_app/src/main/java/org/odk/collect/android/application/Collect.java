@@ -353,6 +353,10 @@ public class Collect extends Application implements HasActivityInjector {
         return androidInjector;
     }
 
+    public static void resetLastClickTime() {
+        lastClickTime = 0;
+    }
+
     private static class CrashReportingTree extends Timber.Tree {
         @Override
         protected void log(int priority, String tag, String message, Throwable t) {
