@@ -136,7 +136,7 @@ the specific language governing permissions and limitations under the License.
 
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:mimeType="vnd.android.cursor.dir/vnd.odk.instance" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.ffem.instance" />
             </intent-filter>
         </activity>
         <activity android:name=".activities.FormChooserList">
@@ -147,7 +147,7 @@ the specific language governing permissions and limitations under the License.
 
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:mimeType="vnd.android.cursor.dir/vnd.odk.form" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.ffem.form" />
             </intent-filter>
         </activity>
         <activity android:name=".activities.FormDownloadList" />

@@ -72,7 +72,6 @@ public class FormChooserList extends FormListActivity implements
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent
                 try {
-                    Collect.resetLastClickTime();
                     Collect.createODKDirs();
                     Collect.getInstance().getActivityLogger().open();
                     init();
