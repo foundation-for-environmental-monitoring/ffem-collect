@@ -26,10 +26,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
-import android.view.View;
 import android.view.Window;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
@@ -180,15 +177,15 @@ public class SplashScreenActivity extends Activity {
     private void startSplashScreen(String path) {
 
         // add items to the splash screen here. makes things less distracting.
-        ImageView iv = findViewById(R.id.splash);
-        LinearLayout ll = findViewById(R.id.splash_default);
-
-        File f = new File(path);
-        if (f.exists()) {
-            iv.setImageBitmap(decodeFile(f));
-            ll.setVisibility(View.GONE);
-            iv.setVisibility(View.VISIBLE);
-        }
+//        ImageView iv = findViewById(R.id.splash);
+//        LinearLayout ll = findViewById(R.id.splash_default);
+//
+//        File f = new File(path);
+//        if (f.exists()) {
+//            iv.setImageBitmap(decodeFile(f));
+//            ll.setVisibility(View.GONE);
+//            iv.setVisibility(View.VISIBLE);
+//        }
 
         // create a thread that counts up to the timeout
         Thread t = new Thread() {

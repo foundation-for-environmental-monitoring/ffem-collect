@@ -195,7 +195,7 @@ the specific language governing permissions and limitations under the License.
         <activity android:name=".activities.BearingActivity" />
         <activity
             android:name=".activities.SplashScreenActivity"
-            android:theme="@android:style/Theme.Dialog">
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
