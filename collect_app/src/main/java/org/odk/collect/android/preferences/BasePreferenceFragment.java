@@ -9,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import org.odk.collect.android.R;
 
@@ -18,7 +17,7 @@ import static org.odk.collect.android.preferences.PreferencesActivity.INTENT_KEY
 public class BasePreferenceFragment extends PreferenceFragment {
 
     protected Toolbar toolbar;
-    private LinearLayout root;
+//    private LinearLayout root;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -62,7 +61,7 @@ public class BasePreferenceFragment extends PreferenceFragment {
                 bar.setHomeButtonEnabled(true);
                 bar.setDisplayHomeAsUpEnabled(true);
                 bar.setDisplayShowTitleEnabled(true);
-                bar.setTitle(getPreferenceScreen().getTitle());
+//                bar.setTitle(getPreferenceScreen().getTitle());
             }
         }
         return layout;

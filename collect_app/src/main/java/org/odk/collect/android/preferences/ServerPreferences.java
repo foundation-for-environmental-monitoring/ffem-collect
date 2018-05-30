@@ -31,7 +31,7 @@ public class ServerPreferences extends ServerPreferencesFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.server_preferences);
+//        addPreferencesFromResource(R.xml.server_preferences);
 
         initProtocolPrefs();
     }
@@ -53,10 +53,14 @@ public class ServerPreferences extends ServerPreferencesFragment {
     private void initProtocolPrefs() {
         ListPreference protocolPref = (ListPreference) findPreference(KEY_PROTOCOL);
 
-        protocolPref.setSummary(protocolPref.getEntry());
-        protocolPref.setOnPreferenceChangeListener(createChangeListener());
+        if (protocolPref != null) {
+            protocolPref.setSummary(protocolPref.getEntry());
+            protocolPref.setOnPreferenceChangeListener(createChangeListener());
 
-        addPreferencesResource(protocolPref.getValue());
+            addPreferencesResource(protocolPref.getValue());
+        } else {
+            addPreferencesResource(getString(R.string.protocol_odk_default));
+        }
     }
 
     private void addPreferencesResource(CharSequence value) {
@@ -90,6 +94,6 @@ public class ServerPreferences extends ServerPreferencesFragment {
 
     private void removeTypeSettings() {
         getPreferenceScreen().removeAll();
-        addPreferencesFromResource(R.xml.server_preferences);
+//        addPreferencesFromResource(R.xml.server_preferences);
     }
 }
