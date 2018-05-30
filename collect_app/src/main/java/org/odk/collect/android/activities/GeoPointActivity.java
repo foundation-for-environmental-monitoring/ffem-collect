@@ -14,6 +14,8 @@
 
 package org.odk.collect.android.activities;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,7 +26,9 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.text.format.DateUtils;
+import android.view.View;
 import android.view.Window;
 
 import com.google.android.gms.location.LocationListener;
@@ -33,7 +37,9 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.location.client.LocationClient;
 import org.odk.collect.android.location.client.LocationClients;
+import org.odk.collect.android.utilities.ApiUtil;
 import org.odk.collect.android.utilities.GeoPointUtils;
+import org.odk.collect.android.utilities.PermissionsDelegate;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.GeoPointWidget;
 
@@ -49,11 +55,11 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
     // Default values for requesting Location updates.
     private static final long LOCATION_UPDATE_INTERVAL = 100;
     private static final long LOCATION_FASTEST_UPDATE_INTERVAL = 50;
-
     private static final String LOCATION_COUNT = "locationCount";
     private static final String START_TIME = "startTime";
     private static final String NUMBER_OF_AVAILABLE_SATELLITES = "numberOfAvailableSatellites";
-
+    private final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
+    private final String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
     private ProgressDialog locationDialog;
 
     private LocationClient locationClient;
@@ -105,7 +111,12 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
     @Override
     protected void onStart() {
         super.onStart();
-        locationClient.start();
+
+        if (permissionsDelegate.hasPermissions(permissions)) {
+            locationClient.start();
+        } else {
+            permissionsDelegate.requestPermissions(permissions);
+        }
 
         Collect.getInstance().getActivityLogger().logOnStart(this);
     }
@@ -153,6 +164,7 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
 
     // LocationClientListener:
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onClientStart() {
         locationClient.requestLocationUpdates(this);
@@ -285,6 +297,7 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
         if (event == GpsStatus.GPS_EVENT_SATELLITE_STATUS) {
             LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             if (locationManager != null) {
+                @SuppressLint("MissingPermission")
                 GpsStatus status = locationManager.getGpsStatus(null);
                 Iterable<GpsSatellite> satellites = status.getSatellites();
                 int satellitesNumber = 0;
@@ -325,5 +338,23 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
         String timeElapsed = DateUtils.formatElapsedTime((System.currentTimeMillis() - startTime) / 1000);
         String locationMetadata = getString(R.string.location_metadata, numberOfAvailableSatellites, timeElapsed);
         runOnUiThread(() -> locationDialog.setMessage(dialogMessage + "\n\n" + locationMetadata));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (permissionsDelegate.resultGranted(requestCode, grantResults)) {
+            locationClient.start();
+        } else {
+            View mainLayout = findViewById(R.id.mainLayout);
+            Snackbar snackbar = Snackbar
+                    .make(mainLayout, getString(R.string.location_permission),
+                            Snackbar.LENGTH_LONG)
+                    .setAction("SETTINGS", view -> ApiUtil.startInstalledAppDetailsActivity(this));
+
+            snackbar.show();
+        }
     }
 }
