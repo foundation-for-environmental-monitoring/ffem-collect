@@ -37,8 +37,8 @@
     <string name="recapture_osm">Redo OSM Tagging</string>
     <string name="capture_video">Record Video</string>
     <string name="change_language">Change Language</string>
-    <string name="change_password">ODK Password</string>
-    <string name="change_username">ODK Username</string>
+    <string name="change_password">Server Password</string>
+    <string name="change_username">Server Username</string>
     <string name="clearanswer_confirm">Remove the response to \"%s\"?</string>
     <string name="clear_answer">Remove response</string>
     <string name="clear_answer_ask">Remove This Response?</string>
@@ -282,8 +282,8 @@
     <string name="no_google_account">No Google Account Selected!</string>
     <string name="google_set_account">You have selected Google Sheets as your server, please select a corresponding Google account in the General Settings before continuing</string>
     <string name="media_upload_error">Failed to upload media file that does not exist: %1$s</string>
-    <string name="odk_auth_auth_fail">ODK auto send authentication failure, please make sure your settings are correct</string>
-    <string name="odk_auto_note">ODK Auto Send Notification</string>
+    <string name="odk_auth_auth_fail">Auto send authentication failure, please make sure your settings are correct</string>
+    <string name="odk_auto_note">Auto Send Notification</string>
     <string name="notification_error">Error displaying notification text</string>
     <string name="delete_after_send">Delete after send</string>
     <string name="delete_after_send_summary">Deletes finalized forms and media after sending to server</string>
