@@ -62,6 +62,7 @@
         <item name="alertDialogTheme">@style/AlertDialogTheme.Light</item>
         <item name="searchViewStyle">@style/SearchViewTheme.Light</item>
         <item name="iconColor">@color/lightIconColor</item>
+        <item name="toolbarIconColor">@color/darkIconColor</item>
         <item name="android:textDirection" tools:targetApi="17">locale</item>
         <item name="cardBackgroundColor">@color/window_background</item>
     </style>
