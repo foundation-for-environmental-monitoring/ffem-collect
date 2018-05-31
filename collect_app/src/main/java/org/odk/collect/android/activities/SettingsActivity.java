@@ -37,10 +37,11 @@ import android.widget.EditText;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.fragments.GeneralPreferenceFragment;
 import org.odk.collect.android.fragments.OtherPreferenceFragment;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminPreferencesActivity;
+import org.odk.collect.android.preferences.FormManagementPreferences;
+import org.odk.collect.android.preferences.ServerPreferences;
 import org.odk.collect.android.utilities.ToastUtils;
 
 public class SettingsActivity extends CollectAbstractActivity {
@@ -72,11 +73,15 @@ public class SettingsActivity extends CollectAbstractActivity {
         setContentView(R.layout.activity_settings);
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.layoutOther, new OtherPreferenceFragment())
+                .replace(R.id.layoutFormManagement, new FormManagementPreferences())
                 .commit();
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.layoutGeneral, new GeneralPreferenceFragment())
+                .replace(R.id.layoutInfo, new OtherPreferenceFragment())
+                .commit();
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.layoutServer, new ServerPreferences())
                 .commit();
 
         Toolbar toolbar = findViewById(R.id.toolbar);

@@ -20,18 +20,21 @@ import android.accounts.AccountManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v7.content.res.AppCompatResources;
 import android.text.InputFilter;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListPopupWindow;
+import android.widget.ListView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -53,6 +56,7 @@ import java.util.List;
 import static android.app.Activity.RESULT_OK;
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_FORMLIST_URL;
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SUBMISSION_URL;
+import static org.odk.collect.android.utilities.ListViewUtil.setListViewHeightBasedOnChildren;
 import static org.odk.collect.android.utilities.gdrive.GoogleAccountsManager.REQUEST_ACCOUNT_PICKER;
 
 public class ServerPreferencesFragment extends BasePreferenceFragment implements View.OnTouchListener,
@@ -68,10 +72,10 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     private List<String> urlList;
     private Preference selectedGoogleAccountPreference;
     private GoogleAccountsManager accountsManager;
-
+    private ListView list;
 
     public void addAggregatePreferences() {
-        addPreferencesFromResource(R.xml.aggregate_preferences);
+        addPreferencesFromResource(R.xml.aggregate_preferences_custom);
 
         serverUrlPreference = (EditTextPreference) findPreference(
                 PreferenceKeys.KEY_SERVER_URL);
@@ -91,16 +95,16 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
             addUrlToPreferencesList(getString(R.string.default_server_url), prefs);
         }
 
-        urlDropdownSetup();
-
-        // TODO: use just 'serverUrlPreference.getEditText().setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_drop_down, 0);' once minSdkVersion is >= 21
-        serverUrlPreference.getEditText().setCompoundDrawablesWithIntrinsicBounds(null, null,
-                AppCompatResources.getDrawable(getActivity(), R.drawable.ic_arrow_drop_down), null);
-        serverUrlPreference.getEditText().setOnTouchListener(this);
-        serverUrlPreference.setOnPreferenceChangeListener(createChangeListener());
-        serverUrlPreference.setSummary(serverUrlPreference.getText());
-        serverUrlPreference.getEditText().setFilters(
-                new InputFilter[]{new ControlCharacterFilter(), new WhitespaceFilter()});
+//        urlDropdownSetup();
+//
+//        // TODO: use just 'serverUrlPreference.getEditText().setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_drop_down, 0);' once minSdkVersion is >= 21
+//        serverUrlPreference.getEditText().setCompoundDrawablesWithIntrinsicBounds(null, null,
+//                AppCompatResources.getDrawable(getActivity(), R.drawable.ic_arrow_drop_down), null);
+//        serverUrlPreference.getEditText().setOnTouchListener(this);
+//        serverUrlPreference.setOnPreferenceChangeListener(createChangeListener());
+//        serverUrlPreference.setSummary(serverUrlPreference.getText());
+//        serverUrlPreference.getEditText().setFilters(
+//                new InputFilter[]{new ControlCharacterFilter(), new WhitespaceFilter()});
 
         usernamePreference.setOnPreferenceChangeListener(createChangeListener());
         usernamePreference.setSummary(usernamePreference.getText());
@@ -353,5 +357,22 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     @Override
     public void onGoogleAccountSelected(String accountName) {
         selectedGoogleAccountPreference.setSummary(accountName);
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.card_row, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        list = view.findViewById(android.R.id.list);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setListViewHeightBasedOnChildren(list, 0);
     }
 }
