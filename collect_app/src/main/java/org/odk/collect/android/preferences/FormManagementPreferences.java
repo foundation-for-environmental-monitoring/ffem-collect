@@ -17,8 +17,12 @@ package org.odk.collect.android.preferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.support.annotation.Nullable;
+import android.preference.PreferenceFragment;
+import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.tasks.ServerPollingJob;
@@ -30,16 +34,19 @@ import static org.odk.collect.android.preferences.PreferenceKeys.KEY_CONSTRAINT_
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_GUIDANCE_HINT;
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_IMAGE_SIZE;
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_PERIODIC_FORM_UPDATES_CHECK;
+import static org.odk.collect.android.utilities.ListViewUtil.setListViewHeightBasedOnChildren;
 
-public class FormManagementPreferences extends BasePreferenceFragment {
+public class FormManagementPreferences extends PreferenceFragment {
+
+    private ListView list;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.form_management_preferences);
+        addPreferencesFromResource(R.xml.form_management_preferences_custom);
 
         initListPref(KEY_PERIODIC_FORM_UPDATES_CHECK);
-        initPref(KEY_AUTOMATIC_UPDATE);  
+        initPref(KEY_AUTOMATIC_UPDATE);
         initListPref(KEY_CONSTRAINT_BEHAVIOR);
         initListPref(KEY_AUTOSEND);
         initListPref(KEY_IMAGE_SIZE);
@@ -47,17 +54,8 @@ public class FormManagementPreferences extends BasePreferenceFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        toolbar.setTitle(R.string.form_management_preferences);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        if (toolbar != null) {
-            toolbar.setTitle(R.string.general_preferences);
-        }
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.card_row, container, false);
     }
 
     private void initListPref(String key) {
@@ -112,6 +110,18 @@ public class FormManagementPreferences extends BasePreferenceFragment {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        list = view.findViewById(android.R.id.list);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setListViewHeightBasedOnChildren(list, 0);
     }
 
 }

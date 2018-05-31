@@ -617,5 +617,6 @@
     <string name="settings">Settings</string>
     <string name="general">General</string>
     <string name="other">Other</string>
+    <string name="info">Info</string>
     <string name="location_permission">Location permission is required</string>
 </resources>
