@@ -21,7 +21,8 @@
         <item name="searchViewStyle">@style/SearchViewTheme.Dark</item>
         <item name="iconColor">@color/darkIconColor</item>
         <item name="android:textDirection" tools:targetApi="17">locale</item>
-        <item name="cardBackgroundColor">@color/window_background</item>
+        <item name="cardBackgroundColor">@color/darkCardBackground</item>
+        <item name="android:windowBackground">@color/lightWindowBackground</item>
     </style>
 
     <style name="AlertDialogTheme.Dark" parent="Theme.AppCompat.Dialog.Alert">
@@ -64,7 +65,8 @@
         <item name="iconColor">@color/lightIconColor</item>
         <item name="toolbarIconColor">@color/darkIconColor</item>
         <item name="android:textDirection" tools:targetApi="17">locale</item>
-        <item name="cardBackgroundColor">@color/window_background</item>
+        <item name="cardBackgroundColor">@color/lightCardBackground</item>
+        <item name="android:windowBackground">@color/lightWindowBackground</item>
     </style>
 
     <style name="AlertDialogTheme.Light" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -82,4 +84,10 @@
     <style name="SearchViewTheme.Light" parent="Widget.AppCompat.Light.SearchView">
         <item name="searchHintIcon">@null</item>
     </style>
+
+    <style name="LightAppTheme.Launcher" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+    </style>
+
 </resources>

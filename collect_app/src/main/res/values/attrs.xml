@@ -5,5 +5,7 @@
         <attr name="textColorPrimary" format="color" />
         <attr name="iconColor" format="color" />
         <attr name="toolbarIconColor" format="color" />
+        <attr name="windowBackgroundColor" format="color" />
+        <attr name="cardBackgroundColor" format="color" />
     </declare-styleable>
 </resources>
