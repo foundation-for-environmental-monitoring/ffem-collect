@@ -22,9 +22,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -48,9 +48,9 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.location.client.LocationClient;
 import org.odk.collect.android.location.client.LocationClients;
 import org.odk.collect.android.spatial.MapHelper;
-import org.odk.collect.android.utilities.ApiUtil;
 import org.odk.collect.android.utilities.GeoPointUtils;
 import org.odk.collect.android.utilities.PermissionsDelegate;
+import org.odk.collect.android.utilities.SnackbarUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.GeoPointWidget;
 
@@ -215,13 +215,11 @@ public class GeoPointMapActivity extends CollectAbstractActivity implements OnMa
         if (permissionsDelegate.resultGranted(requestCode, grantResults)) {
             startMap();
         } else {
-            View mainLayout = findViewById(android.R.id.content);
-            Snackbar snackbar = Snackbar
-                    .make(mainLayout, getString(R.string.location_permission),
-                            Snackbar.LENGTH_LONG)
-                    .setAction("SETTINGS", view -> ApiUtil.startInstalledAppDetailsActivity(this));
+            SnackbarUtils.showSettingsSnackbar(this,
+                    getWindow().getDecorView().getRootView(),
+                    getString(R.string.location_permission));
 
-            snackbar.show();
+            (new Handler()).postDelayed(this::finish, SnackbarUtils.LONG_DURATION_MS);
         }
     }
 

@@ -24,11 +24,10 @@ import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.text.format.DateUtils;
-import android.view.View;
 import android.view.Window;
 
 import com.google.android.gms.location.LocationListener;
@@ -37,9 +36,9 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.location.client.LocationClient;
 import org.odk.collect.android.location.client.LocationClients;
-import org.odk.collect.android.utilities.ApiUtil;
 import org.odk.collect.android.utilities.GeoPointUtils;
 import org.odk.collect.android.utilities.PermissionsDelegate;
+import org.odk.collect.android.utilities.SnackbarUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.GeoPointWidget;
 
@@ -350,13 +349,11 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
         if (permissionsDelegate.resultGranted(requestCode, grantResults)) {
             locationClient.start();
         } else {
-            View mainLayout = findViewById(android.R.id.content);
-            Snackbar snackbar = Snackbar
-                    .make(mainLayout, getString(R.string.location_permission),
-                            Snackbar.LENGTH_LONG)
-                    .setAction("SETTINGS", view -> ApiUtil.startInstalledAppDetailsActivity(this));
+            SnackbarUtils.showSettingsSnackbar(this,
+                    getWindow().getDecorView().getRootView(),
+                    getString(R.string.location_permission));
 
-            snackbar.show();
+            (new Handler()).postDelayed(this::finish, SnackbarUtils.LONG_DURATION_MS);
         }
     }
 }

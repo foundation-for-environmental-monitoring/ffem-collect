@@ -14,13 +14,14 @@ limitations under the License.
 
 package org.odk.collect.android.utilities;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
 
 public final class SnackbarUtils {
-    private static final int LONG_DURATION_MS = 3500;
+    public static final int LONG_DURATION_MS = 3500;
 
     private SnackbarUtils() {
 
@@ -41,6 +42,20 @@ public final class SnackbarUtils {
         Snackbar snackbar = Snackbar.make(view, message.trim(), LONG_DURATION_MS);
         TextView textView = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
         textView.setSingleLine(false);
+        snackbar.show();
+    }
+
+    /**
+     * Displays snackbar with settings button and {@param message}
+     *
+     * @param rootView The root view of the activity.
+     * @param message  The text to show.
+     */
+    public static void showSettingsSnackbar(Activity activity, View rootView, String message) {
+        Snackbar snackbar = Snackbar
+                .make(rootView, message.trim(), Snackbar.LENGTH_INDEFINITE)
+                .setAction("SETTINGS", view -> ApiUtil.startInstalledAppDetailsActivity(activity));
+
         snackbar.show();
     }
 }
