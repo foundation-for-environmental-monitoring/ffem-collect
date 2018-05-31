@@ -61,7 +61,6 @@ public class BasePreferenceFragment extends PreferenceFragment {
                 bar.setHomeButtonEnabled(true);
                 bar.setDisplayHomeAsUpEnabled(true);
                 bar.setDisplayShowTitleEnabled(true);
-//                bar.setTitle(getPreferenceScreen().getTitle());
             }
         }
         return layout;
@@ -70,36 +69,17 @@ public class BasePreferenceFragment extends PreferenceFragment {
     // inflates toolbar in the preference fragments
 //    public void initToolbar(PreferenceScreen preferenceScreen, View view) {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//
-//            if (getActivity() instanceof PreferencesActivity) {
-//                root = (LinearLayout) ((ViewGroup) view.findViewById(android.R.id.list).getRootView()).getChildAt(0);
-//                toolbar = root.findViewById(R.id.toolbar);
-//
-//            } else {
-//                root = (LinearLayout) view.findViewById(android.R.id.list).getParent().getParent();
-//                toolbar = (Toolbar) LayoutInflater.from(getActivity()).inflate(R.layout.toolbar_without_progressbar, root, false);
-//
-//                inflateToolbar(preferenceScreen.getTitle());
-//            }
-//
+//            root = (LinearLayout) view.findViewById(android.R.id.list).getParent().getParent();
+//            toolbar = (Toolbar) LayoutInflater.from(getActivity()).inflate(R.layout.toolbar_without_progressbar, root, false);
+//            inflateToolbar(preferenceScreen.getTitle());
 //        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 //            root = (LinearLayout) view.findViewById(android.R.id.list).getParent();
 //            toolbar = (Toolbar) LayoutInflater.from(getActivity()).inflate(R.layout.toolbar_without_progressbar, root, false);
 //
 //            inflateToolbar(preferenceScreen.getTitle());
 //        }
-//
-//        try {
-//            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-//            if (toolbar != null) {
-//                Objects.requireNonNull(((AppCompatActivity) getActivity())
-//                        .getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-//            }
-//        } catch (Exception ignored) {
-//        }
-//
 //    }
-
+//
 //    private void inflateToolbar(CharSequence title) {
 //        toolbar.setTitle(title);
 //        root.addView(toolbar, 0);
