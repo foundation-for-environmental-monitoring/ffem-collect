@@ -215,7 +215,7 @@ public class GeoPointMapActivity extends CollectAbstractActivity implements OnMa
         if (permissionsDelegate.resultGranted(requestCode, grantResults)) {
             startMap();
         } else {
-            View mainLayout = findViewById(R.id.mainLayout);
+            View mainLayout = findViewById(android.R.id.content);
             Snackbar snackbar = Snackbar
                     .make(mainLayout, getString(R.string.location_permission),
                             Snackbar.LENGTH_LONG)

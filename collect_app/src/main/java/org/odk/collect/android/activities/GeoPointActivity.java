@@ -125,14 +125,16 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
     protected void onResume() {
         super.onResume();
 
-        if (locationDialog != null) {
-            locationDialog.show();
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    updateDialogMessage();
-                }
-            }, 0, 1000);
+        if (permissionsDelegate.hasPermissions(permissions)) {
+            if (locationDialog != null) {
+                locationDialog.show();
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        updateDialogMessage();
+                    }
+                }, 0, 1000);
+            }
         }
     }
 
@@ -348,7 +350,7 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
         if (permissionsDelegate.resultGranted(requestCode, grantResults)) {
             locationClient.start();
         } else {
-            View mainLayout = findViewById(R.id.mainLayout);
+            View mainLayout = findViewById(android.R.id.content);
             Snackbar snackbar = Snackbar
                     .make(mainLayout, getString(R.string.location_permission),
                             Snackbar.LENGTH_LONG)
