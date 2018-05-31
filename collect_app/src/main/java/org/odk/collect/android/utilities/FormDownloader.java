@@ -36,6 +36,10 @@ import org.opendatakit.httpclientandroidlib.HttpStatus;
 import org.opendatakit.httpclientandroidlib.client.HttpClient;
 import org.opendatakit.httpclientandroidlib.client.methods.HttpGet;
 import org.opendatakit.httpclientandroidlib.protocol.HttpContext;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -51,6 +55,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import timber.log.Timber;
 
@@ -323,7 +337,7 @@ public class FormDownloader {
      * object representing the downloaded file.
      */
     private FileResult downloadXform(String formName, String url)
-            throws IOException, TaskCancelledException, Exception {
+            throws Exception {
         // clean up friendly form name...
         String rootName = formName.replaceAll("[^\\p{L}\\p{Digit}]", " ");
         rootName = rootName.replaceAll("\\p{javaWhitespace}+", " ");
@@ -370,6 +384,8 @@ public class FormDownloader {
             }
         }
 
+        customizeForm(f);
+
         return new FileResult(f, isNew);
     }
 
@@ -384,7 +400,7 @@ public class FormDownloader {
      * @param downloadUrl the url to get the contents from.
      */
     private void downloadFile(File file, String downloadUrl)
-            throws IOException, TaskCancelledException, URISyntaxException, Exception {
+            throws Exception {
         File tempFile = File.createTempFile(file.getName(), TEMP_DOWNLOAD_EXTENSION,
                 new File(Collect.CACHE_PATH));
 
@@ -722,5 +738,67 @@ public class FormDownloader {
 
     public static String getMd5Hash(String hash) {
         return hash == null || hash.isEmpty() ? null : hash.substring(MD5_COLON_PREFIX.length());
+    }
+
+    /**
+     * Make changes to the form to work correctly with external app.
+     * This is because currently these properties cannot be accessed in the online form designer.
+     *
+     * @param file the xml form to be customized
+     */
+    private void customizeForm(File file) {
+
+        String testId = "52ec4ca0-d691-4f2b-b17a-232c2966974a";
+
+        if (file.isFile() && file.getPath().endsWith(".xml")) {
+
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder;
+
+            boolean xmlModified = false;
+            try {
+                builder = factory.newDocumentBuilder();
+                Document doc = builder.parse(file);
+
+                NodeList nodesList = doc.getElementsByTagName("group");
+
+                for (int i = 0; i < nodesList.getLength(); i++) {
+                    Node node = nodesList.item(i);
+
+                    Node appearanceNode = node.getChildNodes().item(3).getAttributes().getNamedItem("appearance");
+
+                    if (appearanceNode != null) {
+                        String appearance = appearanceNode.getNodeValue();
+
+                        if (appearance.contains(testId)) {
+                            ((org.w3c.dom.Element) node).setAttribute("intent",
+                                    "io.ffem.app.caddisfly(testId='" + testId + "')");
+                            xmlModified = true;
+
+                            for (int j = 0; j < node.getChildNodes().getLength(); j++) {
+                                if (node.getChildNodes().item(j).getAttributes() != null) {
+                                    if (node.getChildNodes().item(j).getAttributes().getNamedItem("appearance") != null) {
+                                        node.getChildNodes().item(j).getAttributes().removeNamedItem("appearance");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (xmlModified) {
+                    Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                    transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+                    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "5");
+                    DOMSource source = new DOMSource(doc);
+                    StreamResult result = new StreamResult(file.getAbsolutePath());
+                    transformer.transform(source, result);
+                }
+
+            } catch (ParserConfigurationException | IOException | SAXException | TransformerException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
