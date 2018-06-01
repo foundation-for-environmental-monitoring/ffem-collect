@@ -101,7 +101,7 @@ public class SplashScreenActivity extends Activity {
             Timber.e(e, "Unable to get package info");
         }
 
-        boolean firstRun = sharedPreferences.getBoolean(PreferenceKeys.KEY_FIRST_RUN, true);
+        boolean firstRun = sharedPreferences.getBoolean(PreferenceKeys.KEY_FIRST_RUN, false);
         boolean showSplash =
                 sharedPreferences.getBoolean(PreferenceKeys.KEY_SHOW_SPLASH, false);
         String splashPath = (String) GeneralSharedPreferences.getInstance().get(KEY_SPLASH_PATH);
@@ -112,7 +112,7 @@ public class SplashScreenActivity extends Activity {
             editor.putLong(PreferenceKeys.KEY_LAST_VERSION, packageInfo.versionCode);
             editor.apply();
 
-            firstRun = true;
+//            firstRun = true;
         }
 
         // do all the first run things

@@ -7,7 +7,7 @@
     <style name="BaseDarkAppTheme.Collect" parent="BaseDarkAppTheme" />
 
     <style name="BaseDarkAppTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="textColorPrimary">@color/white</item>
+        <item name="textColorPrimary">@color/darkPrimaryTextColor</item>
         <item name="primaryTextColor">@color/darkPrimaryTextColor</item>
         <item name="android:scrollbarThumbHorizontal">@drawable/thumb</item>
         <item name="android:scrollbarThumbVertical">@drawable/thumb</item>
@@ -22,7 +22,8 @@
         <item name="iconColor">@color/darkIconColor</item>
         <item name="android:textDirection" tools:targetApi="17">locale</item>
         <item name="cardBackgroundColor">@color/darkCardBackground</item>
-        <item name="android:windowBackground">@color/lightWindowBackground</item>
+        <item name="android:windowBackground">@color/darkWindowBackground</item>
+        <item name="mainButtonBackground">@color/darkMainButton</item>
     </style>
 
     <style name="AlertDialogTheme.Dark" parent="Theme.AppCompat.Dialog.Alert">
@@ -67,6 +68,7 @@
         <item name="android:textDirection" tools:targetApi="17">locale</item>
         <item name="cardBackgroundColor">@color/lightCardBackground</item>
         <item name="android:windowBackground">@color/lightWindowBackground</item>
+        <item name="mainButtonBackground">@color/lightMainButton</item>
     </style>
 
     <style name="AlertDialogTheme.Light" parent="Theme.AppCompat.Light.Dialog.Alert">
