@@ -40,4 +40,6 @@ the License.
     <color name="lightMainButton">#cdcdcd</color>
     <color name="primary_dark">#4d4d4d</color>
     <color name="red">#F44336</color>
+
+    <color name="linkBlue">#5f87cc</color>
 </resources>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reset_password_link">"https://kf.kobotoolbox.org/accounts/password/reset/"</string>
+    <string name="create_account_link">"https://kf.kobotoolbox.org/accounts/register/"</string>
+</resources>
