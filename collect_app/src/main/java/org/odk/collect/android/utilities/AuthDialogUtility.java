@@ -158,11 +158,11 @@ public class AuthDialogUtility {
         return (String) GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_SERVER_URL);
     }
 
-    private static String getPasswordFromPreferences() {
+    public static String getPasswordFromPreferences() {
         return (String) GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_PASSWORD);
     }
 
-    private static String getUserNameFromPreferences() {
+    public static String getUserNameFromPreferences() {
         return (String) GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_USERNAME);
     }
 
