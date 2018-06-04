@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import org.odk.collect.android.R;
@@ -37,6 +38,22 @@ public class AuthDialogUtility {
 
     private EditText username;
     private EditText password;
+
+    public static void setWebCredentialsFromPreferences() {
+        String username = getUserNameFromPreferences();
+        String password = getPasswordFromPreferences();
+
+        if (username == null || username.isEmpty()) {
+            return;
+        }
+
+        if (password == null || password.isEmpty()) {
+            return;
+        }
+
+        String host = Uri.parse(getServerFromPreferences()).getHost();
+        WebUtils.addCredentials(username, password, host);
+    }
 
     public AlertDialog createDialog(final Context context,
                                     final AuthDialogUtilityResultListener resultListener, String url) {
@@ -57,31 +74,24 @@ public class AuthDialogUtility {
         username = dialogView.findViewById(R.id.username_edit);
         password = dialogView.findViewById(R.id.password_edit);
 
-        username.setText(overriddenUrl != null ? null : getUserNameFromPreferences());
-        password.setText(overriddenUrl != null ? null : getPasswordFromPreferences());
+        String userNameVal = overriddenUrl != null ? null : getUserNameFromPreferences();
+        String passwordVal = overriddenUrl != null ? null : getPasswordFromPreferences();
+
+        username.setText(userNameVal);
+        password.setText(passwordVal);
+
+        String invalidMessage = context.getString(R.string.server_auth_credentials,
+                overriddenUrl != null ? overriddenUrl : getServerFromPreferences());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(context.getString(R.string.server_requires_auth));
-        builder.setMessage(context.getString(R.string.server_auth_credentials, overriddenUrl != null ? overriddenUrl : getServerFromPreferences()));
+        if ((userNameVal != null && !userNameVal.isEmpty())
+                || (passwordVal != null && !passwordVal.isEmpty())) {
+            builder.setMessage(invalidMessage);
+        }
         builder.setView(dialogView);
         String finalOverriddenUrl = overriddenUrl;
-        builder.setPositiveButton(context.getString(R.string.ok), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Collect.getInstance().getActivityLogger().logAction(this, TAG, "OK");
-
-                String userNameValue = username.getText().toString();
-                String passwordValue = password.getText().toString();
-
-                if (finalOverriddenUrl == null) {
-                    saveCredentials(userNameValue, passwordValue);
-                    setWebCredentialsFromPreferences();
-                } else {
-                    setWebCredentials(finalOverriddenUrl);
-                }
-
-                resultListener.updatedCredentials();
-            }
+        builder.setPositiveButton(context.getString(R.string.ok), (dialog, which) -> {
         });
         builder.setNegativeButton(context.getString(R.string.cancel),
                 new DialogInterface.OnClickListener() {
@@ -95,19 +105,44 @@ public class AuthDialogUtility {
 
         builder.setCancelable(false);
 
-        return builder.create();
-    }
+        AlertDialog dialog = builder.create();
 
-    public static void setWebCredentialsFromPreferences() {
-        String username = getUserNameFromPreferences();
-        String password = getPasswordFromPreferences();
+        dialog.setOnShowListener(dialogInterface -> {
 
-        if (username == null || username.isEmpty()) {
-            return;
-        }
+            Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            button.setOnClickListener(view -> {
 
-        String host = Uri.parse(getServerFromPreferences()).getHost();
-        WebUtils.addCredentials(username, password, host);
+                Collect.getInstance().getActivityLogger().logAction(this, TAG, "OK");
+
+                String userNameValue = username.getText().toString();
+                String passwordValue = password.getText().toString();
+
+                if (userNameValue.isEmpty()) {
+                    username.requestFocus();
+                    username.setError(context.getString(R.string.required_answer_error));
+                    return;
+                }
+
+                if (passwordValue.isEmpty()) {
+                    password.requestFocus();
+                    password.setError(context.getString(R.string.required_answer_error));
+                    return;
+                }
+
+                if (finalOverriddenUrl == null) {
+                    saveCredentials(userNameValue, passwordValue);
+                    setWebCredentialsFromPreferences();
+                } else {
+                    setWebCredentials(finalOverriddenUrl);
+                }
+
+                resultListener.updatedCredentials();
+
+                dialog.dismiss();
+
+            });
+        });
+        return dialog;
     }
 
     private void setWebCredentials(String url) {
