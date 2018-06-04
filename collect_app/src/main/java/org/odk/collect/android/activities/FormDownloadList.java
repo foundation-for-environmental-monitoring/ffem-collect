@@ -296,6 +296,15 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
      * Starts the download task and shows the progress dialog.
      */
     private void downloadFormList() {
+
+        String username = AuthDialogUtility.getUserNameFromPreferences();
+        String password = AuthDialogUtility.getPasswordFromPreferences();
+
+        if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+            showDialog(AUTH_DIALOG);
+            return;
+        }
+
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
@@ -577,6 +586,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
      */
     public void formListDownloadingComplete(HashMap<String, FormDetails> result) {
         dismissDialog(PROGRESS_DIALOG);
+        removeDialog(AUTH_DIALOG);
         downloadFormListTask.setDownloaderListener(null);
         downloadFormListTask = null;
 
