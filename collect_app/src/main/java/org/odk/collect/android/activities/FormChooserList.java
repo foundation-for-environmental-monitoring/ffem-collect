@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -138,7 +139,7 @@ public class FormChooserList extends FormListActivity implements
                 intent.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
                 startActivity(intent);
             }
-            
+
             finish();
         }
     }
@@ -252,10 +253,19 @@ public class FormChooserList extends FormListActivity implements
                 GeneralSharedPreferences.getInstance().getBoolean(PreferenceKeys.KEY_HIDE_OLD_FORM_VERSIONS, false)
                         ? FormUtils.removeOldForms(cursor)
                         : cursor);
+        if (listAdapter.getCount() == 0) {
+            findViewById(R.id.buttonGetBlankForm).setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader loader) {
         listAdapter.swapCursor(null);
+    }
+
+    public void onClickGetBlankForm(View view) {
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        Intent localIntent = new Intent("DOWNLOAD_FORMS_ACTION");
+        localBroadcastManager.sendBroadcast(localIntent);
     }
 }

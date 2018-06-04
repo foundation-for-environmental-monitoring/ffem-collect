@@ -14,11 +14,11 @@ the License.
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <!-- Toolbar -->
-    <include layout="@layout/toolbar"/>
+    <include layout="@layout/toolbar" />
 
     <LinearLayout
         android:id="@+id/llParent"
@@ -31,17 +31,49 @@ the License.
             android:id="@id/android:list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
 
         <TextView
-            android:id="@android:id/empty"
             style="@style/emptyViewStyle"
-            android:text="@string/no_items_display_forms"/>
-    </LinearLayout>
+            android:text="@string/no_items_display" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:onClick="onClickGetBlankForm"
+            android:padding="20dp"
+            android:paddingEnd="50dp"
+            android:paddingStart="50dp"
+            android:text="@string/get_forms"
+            android:textSize="18dp" />
+    </FrameLayout>
 
     <include
         layout="@layout/toolbar_action_bar_shadow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"/>
+        android:layout_below="@id/toolbar" />
+
+    <Button
+        android:id="@+id/buttonGetBlankForm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_horizontal"
+        android:onClick="onClickGetBlankForm"
+        android:padding="20dp"
+        android:paddingEnd="50dp"
+        android:paddingStart="50dp"
+        android:text="@string/get_forms"
+        android:textSize="18dp" />
 </RelativeLayout>

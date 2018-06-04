@@ -16,8 +16,11 @@ package org.odk.collect.android.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -25,6 +28,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -73,11 +77,11 @@ public class MainMenuActivity extends CollectAbstractActivity {
     private static final boolean EXIT = true;
     // buttons
     private Button enterDataButton;
-    private Button manageFilesButton;
+    //    private Button manageFilesButton;
     private Button sendDataButton;
     private Button viewSentFormsButton;
     private Button reviewDataButton;
-    private Button getFormsButton;
+    //    private Button getFormsButton;
     //    private View reviewSpacer;
 //    private View getFormsSpacer;
     private AlertDialog alertDialog;
@@ -101,6 +105,19 @@ public class MainMenuActivity extends CollectAbstractActivity {
         activity.finishAffinity();
     }
 
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            getBlankForm();
+        }
+    };
+
+    private void initToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setTitle(getString(R.string.app_name));
+        setSupportActionBar(toolbar);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,21 +129,10 @@ public class MainMenuActivity extends CollectAbstractActivity {
 
         initToolbar();
 
-        // enter data button. expects a result.
-        enterDataButton = findViewById(R.id.enter_data);
-        enterDataButton.setText(getString(R.string.enter_data_button));
-        enterDataButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Collect.allowClick()) {
-                    Collect.getInstance().getActivityLogger()
-                            .logAction(this, "fillBlankForm", "click");
-                    Intent i = new Intent(getApplicationContext(),
-                            FormChooserList.class);
-                    startActivity(i);
-                }
-            }
-        });
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                broadcastReceiver,
+                new IntentFilter("DOWNLOAD_FORMS_ACTION")
+        );
 
         reviewDataBadge = findViewById(R.id.text_review_data);
         // review data button. expects a result.
@@ -181,51 +187,51 @@ public class MainMenuActivity extends CollectAbstractActivity {
         });
 
         // manage forms button. no result expected.
-        getFormsButton = findViewById(R.id.get_forms);
-        getFormsButton.setText(getString(R.string.get_forms));
-        getFormsButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Collect.allowClick()) {
-                    Collect.getInstance().getActivityLogger()
-                            .logAction(this, "downloadBlankForms", "click");
-                    SharedPreferences sharedPreferences = PreferenceManager
-                            .getDefaultSharedPreferences(MainMenuActivity.this);
-                    String protocol = sharedPreferences.getString(
-                            PreferenceKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default));
-                    Intent i;
-                    if (protocol.equalsIgnoreCase(getString(R.string.protocol_google_sheets))) {
-                        if (PlayServicesUtil.isGooglePlayServicesAvailable(MainMenuActivity.this)) {
-                            i = new Intent(getApplicationContext(),
-                                    GoogleDriveActivity.class);
-                        } else {
-                            PlayServicesUtil.showGooglePlayServicesAvailabilityErrorDialog(MainMenuActivity.this);
-                            return;
-                        }
-                    } else {
-                        i = new Intent(getApplicationContext(),
-                                FormDownloadList.class);
-                    }
-                    startActivity(i);
-                }
-            }
-        });
-
-        // manage forms button. no result expected.
-        manageFilesButton = findViewById(R.id.manage_forms);
-        manageFilesButton.setText(getString(R.string.manage_files));
-        manageFilesButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Collect.allowClick()) {
-                    Collect.getInstance().getActivityLogger()
-                            .logAction(this, "deleteSavedForms", "click");
-                    Intent i = new Intent(getApplicationContext(),
-                            FileManagerTabs.class);
-                    startActivity(i);
-                }
-            }
-        });
+//        getFormsButton = findViewById(R.id.get_forms);
+//        getFormsButton.setText(getString(R.string.get_forms));
+//        getFormsButton.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (Collect.allowClick()) {
+//                    Collect.getInstance().getActivityLogger()
+//                            .logAction(this, "downloadBlankForms", "click");
+//                    SharedPreferences sharedPreferences = PreferenceManager
+//                            .getDefaultSharedPreferences(MainMenuActivity.this);
+//                    String protocol = sharedPreferences.getString(
+//                            PreferenceKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default));
+//                    Intent i;
+//                    if (protocol.equalsIgnoreCase(getString(R.string.protocol_google_sheets))) {
+//                        if (PlayServicesUtil.isGooglePlayServicesAvailable(MainMenuActivity.this)) {
+//                            i = new Intent(getApplicationContext(),
+//                                    GoogleDriveActivity.class);
+//                        } else {
+//                            PlayServicesUtil.showGooglePlayServicesAvailabilityErrorDialog(MainMenuActivity.this);
+//                            return;
+//                        }
+//                    } else {
+//                        i = new Intent(getApplicationContext(),
+//                                FormDownloadList.class);
+//                    }
+//                    startActivity(i);
+//                }
+//            }
+//        });
+//
+//        // manage forms button. no result expected.
+//        manageFilesButton = findViewById(R.id.manage_forms);
+//        manageFilesButton.setText(getString(R.string.manage_files));
+//        manageFilesButton.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (Collect.allowClick()) {
+//                    Collect.getInstance().getActivityLogger()
+//                            .logAction(this, "deleteSavedForms", "click");
+//                    Intent i = new Intent(getApplicationContext(),
+//                            FileManagerTabs.class);
+//                    startActivity(i);
+//                }
+//            }
+//        });
 
         // must be at the beginning of any activity that can be called from an
         // external intent
@@ -275,6 +281,22 @@ public class MainMenuActivity extends CollectAbstractActivity {
 
         InstancesDao instancesDao = new InstancesDao();
 
+        // enter data button. expects a result.
+        enterDataButton = findViewById(R.id.enter_data);
+        enterDataButton.setText(getString(R.string.enter_data_button));
+        enterDataButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Collect.allowClick()) {
+                    Collect.getInstance().getActivityLogger()
+                            .logAction(this, "fillBlankForm", "click");
+                    Intent i = new Intent(getApplicationContext(),
+                            FormChooserList.class);
+                    startActivity(i);
+                }
+            }
+        });
+
         // count for finalized instances
         try {
             finalizedCursor = instancesDao.getFinalizedInstancesCursor();
@@ -318,95 +340,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
 
         updateButtons();
         setupGoogleAnalytics();
-    }
-
-    private void initToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setTitle(getString(R.string.app_name));
-        setSupportActionBar(toolbar);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        SharedPreferences sharedPreferences = this.getSharedPreferences(
-                AdminPreferencesActivity.ADMIN_PREFERENCES, 0);
-
-        boolean edit = sharedPreferences.getBoolean(
-                AdminKeys.KEY_EDIT_SAVED, true);
-        if (!edit) {
-            if (reviewDataButton != null) {
-                reviewDataButton.setVisibility(View.GONE);
-            }
-//            if (reviewSpacer != null) {
-//                reviewSpacer.setVisibility(View.GONE);
-//            }
-        } else {
-            if (reviewDataButton != null) {
-                reviewDataButton.setVisibility(View.VISIBLE);
-            }
-//            if (reviewSpacer != null) {
-//                reviewSpacer.setVisibility(View.VISIBLE);
-//            }
-        }
-
-        boolean send = sharedPreferences.getBoolean(
-                AdminKeys.KEY_SEND_FINALIZED, true);
-        if (!send) {
-            if (sendDataButton != null) {
-                sendDataButton.setVisibility(View.GONE);
-            }
-        } else {
-            if (sendDataButton != null) {
-                sendDataButton.setVisibility(View.VISIBLE);
-            }
-        }
-
-        boolean viewSent = sharedPreferences.getBoolean(
-                AdminKeys.KEY_VIEW_SENT, true);
-        if (!viewSent) {
-            if (viewSentFormsButton != null) {
-                viewSentFormsButton.setVisibility(View.GONE);
-            }
-        } else {
-            if (viewSentFormsButton != null) {
-                viewSentFormsButton.setVisibility(View.VISIBLE);
-            }
-        }
-
-        boolean getBlank = sharedPreferences.getBoolean(
-                AdminKeys.KEY_GET_BLANK, true);
-        if (!getBlank) {
-            if (getFormsButton != null) {
-                getFormsButton.setVisibility(View.GONE);
-            }
-//            if (getFormsSpacer != null) {
-//                getFormsSpacer.setVisibility(View.GONE);
-//            }
-        } else {
-            if (getFormsButton != null) {
-                getFormsButton.setVisibility(View.VISIBLE);
-            }
-//            if (getFormsSpacer != null) {
-//                getFormsSpacer.setVisibility(View.VISIBLE);
-//            }
-        }
-
-        boolean deleteSaved = sharedPreferences.getBoolean(
-                AdminKeys.KEY_DELETE_SAVED, true);
-        if (!deleteSaved) {
-            if (manageFilesButton != null) {
-                manageFilesButton.setVisibility(View.GONE);
-            }
-        } else {
-            if (manageFilesButton != null) {
-                manageFilesButton.setVisibility(View.VISIBLE);
-            }
-        }
-
-        ((Collect) getApplication())
-                .getDefaultTracker()
-                .enableAutoActivityTracking(true);
     }
 
     @Override
@@ -484,55 +417,87 @@ public class MainMenuActivity extends CollectAbstractActivity {
         googleAnalytics.setAppOptOut(!isAnalyticsEnabled);
     }
 
-    private void updateButtons() {
-        if (finalizedCursor != null && !finalizedCursor.isClosed()) {
-            finalizedCursor.requery();
-            completedCount = finalizedCursor.getCount();
-            if (completedCount > 0) {
-                sendDataBadge.setText(String.valueOf(completedCount));
-                sendDataBadge.setVisibility(View.VISIBLE);
-            } else {
-                sendDataBadge.setVisibility(View.GONE);
-            }
-            sendDataButton.setText(getString(R.string.send_data));
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences sharedPreferences = this.getSharedPreferences(
+                AdminPreferencesActivity.ADMIN_PREFERENCES, 0);
 
+        boolean edit = sharedPreferences.getBoolean(
+                AdminKeys.KEY_EDIT_SAVED, true);
+        if (!edit) {
+            if (reviewDataButton != null) {
+                reviewDataButton.setVisibility(View.GONE);
+            }
+//            if (reviewSpacer != null) {
+//                reviewSpacer.setVisibility(View.GONE);
+//            }
         } else {
-            sendDataButton.setText(getString(R.string.send_data));
-            Timber.w("Cannot update \"Send Finalized\" button label since the database is closed. "
-                    + "Perhaps the app is running in the background?");
+            if (reviewDataButton != null) {
+                reviewDataButton.setVisibility(View.VISIBLE);
+            }
+//            if (reviewSpacer != null) {
+//                reviewSpacer.setVisibility(View.VISIBLE);
+//            }
         }
 
-        if (savedCursor != null && !savedCursor.isClosed()) {
-            savedCursor.requery();
-            savedCount = savedCursor.getCount();
-            if (savedCount > 0) {
-                reviewDataBadge.setText(String.valueOf(savedCount));
-                reviewDataBadge.setVisibility(View.VISIBLE);
-            } else {
-                reviewDataBadge.setVisibility(View.GONE);
+        boolean send = sharedPreferences.getBoolean(
+                AdminKeys.KEY_SEND_FINALIZED, true);
+        if (!send) {
+            if (sendDataButton != null) {
+                sendDataButton.setVisibility(View.GONE);
             }
-            reviewDataButton.setText(getString(R.string.review_data));
         } else {
-            reviewDataButton.setText(getString(R.string.review_data));
-            Timber.w("Cannot update \"Edit Form\" button label since the database is closed. "
-                    + "Perhaps the app is running in the background?");
+            if (sendDataButton != null) {
+                sendDataButton.setVisibility(View.VISIBLE);
+            }
         }
 
-        if (viewSentCursor != null && !viewSentCursor.isClosed()) {
-            viewSentCursor.requery();
-            viewSentCount = viewSentCursor.getCount();
-            if (viewSentCount > 0) {
-                viewSendFormsBadge.setText(String.valueOf(viewSentCount));
-                viewSendFormsBadge.setVisibility(View.VISIBLE);
-            } else {
-                viewSendFormsBadge.setVisibility(View.GONE);
+        boolean viewSent = sharedPreferences.getBoolean(
+                AdminKeys.KEY_VIEW_SENT, true);
+        if (!viewSent) {
+            if (viewSentFormsButton != null) {
+                viewSentFormsButton.setVisibility(View.GONE);
             }
-            viewSentFormsButton.setText(getString(R.string.view_sent_forms));
         } else {
-            viewSentFormsButton.setText(getString(R.string.view_sent_forms));
-            Timber.w("Cannot update \"View Sent\" button label since the database is closed. "
-                    + "Perhaps the app is running in the background?");
+            if (viewSentFormsButton != null) {
+                viewSentFormsButton.setVisibility(View.VISIBLE);
+            }
         }
+
+//        boolean getBlank = sharedPreferences.getBoolean(
+//                AdminKeys.KEY_GET_BLANK, true);
+//        if (!getBlank) {
+//            if (getFormsButton != null) {
+//                getFormsButton.setVisibility(View.GONE);
+//            }
+//            if (getFormsSpacer != null) {
+//                getFormsSpacer.setVisibility(View.GONE);
+//            }
+//        } else {
+//            if (getFormsButton != null) {
+//                getFormsButton.setVisibility(View.VISIBLE);
+//            }
+//            if (getFormsSpacer != null) {
+//                getFormsSpacer.setVisibility(View.VISIBLE);
+//            }
+//        }
+//
+//        boolean deleteSaved = sharedPreferences.getBoolean(
+//                AdminKeys.KEY_DELETE_SAVED, true);
+//        if (!deleteSaved) {
+//            if (manageFilesButton != null) {
+//                manageFilesButton.setVisibility(View.GONE);
+//            }
+//        } else {
+//            if (manageFilesButton != null) {
+//                manageFilesButton.setVisibility(View.VISIBLE);
+//            }
+//        }
+
+        ((Collect) getApplication())
+                .getDefaultTracker()
+                .enableAutoActivityTracking(true);
     }
 
     private boolean loadSharedPreferencesFromFile(File src) {
@@ -610,5 +575,94 @@ public class MainMenuActivity extends CollectAbstractActivity {
             handler.sendEmptyMessage(0);
         }
     }
+
+    private void updateButtons() {
+        if (finalizedCursor != null && !finalizedCursor.isClosed()) {
+            finalizedCursor.requery();
+            completedCount = finalizedCursor.getCount();
+            if (completedCount > 0) {
+                sendDataBadge.setText(String.valueOf(completedCount));
+                sendDataBadge.setVisibility(View.VISIBLE);
+                sendDataButton.setAlpha(1);
+                sendDataButton.setEnabled(true);
+            } else {
+                sendDataBadge.setVisibility(View.GONE);
+                sendDataButton.setAlpha(0.3f);
+                sendDataButton.setEnabled(false);
+            }
+            sendDataButton.setText(getString(R.string.send_data));
+
+        } else {
+            sendDataButton.setText(getString(R.string.send_data));
+            Timber.w("Cannot update \"Send Finalized\" button label since the database is closed. "
+                    + "Perhaps the app is running in the background?");
+        }
+
+        if (savedCursor != null && !savedCursor.isClosed()) {
+            savedCursor.requery();
+            savedCount = savedCursor.getCount();
+            if (savedCount > 0) {
+                reviewDataBadge.setText(String.valueOf(savedCount));
+                reviewDataBadge.setVisibility(View.VISIBLE);
+                reviewDataButton.setAlpha(1);
+                reviewDataButton.setEnabled(true);
+            } else {
+                reviewDataBadge.setVisibility(View.GONE);
+                reviewDataButton.setAlpha(0.3f);
+                reviewDataButton.setEnabled(false);
+            }
+            reviewDataButton.setText(getString(R.string.review_data));
+        } else {
+            reviewDataButton.setText(getString(R.string.review_data));
+            Timber.w("Cannot update \"Edit Form\" button label since the database is closed. "
+                    + "Perhaps the app is running in the background?");
+        }
+
+        if (viewSentCursor != null && !viewSentCursor.isClosed()) {
+            viewSentCursor.requery();
+            viewSentCount = viewSentCursor.getCount();
+            if (viewSentCount > 0) {
+                viewSendFormsBadge.setText(String.valueOf(viewSentCount));
+                viewSendFormsBadge.setVisibility(View.VISIBLE);
+                viewSentFormsButton.setAlpha(1);
+                viewSentFormsButton.setEnabled(true);
+            } else {
+                viewSendFormsBadge.setVisibility(View.GONE);
+                viewSentFormsButton.setAlpha(0.3f);
+                viewSentFormsButton.setEnabled(false);
+            }
+            viewSentFormsButton.setText(getString(R.string.view_sent_forms));
+        } else {
+            viewSentFormsButton.setText(getString(R.string.view_sent_forms));
+            Timber.w("Cannot update \"View Sent\" button label since the database is closed. "
+                    + "Perhaps the app is running in the background?");
+        }
+    }
+
+    private void getBlankForm() {
+        if (Collect.allowClick()) {
+            Collect.getInstance().getActivityLogger()
+                    .logAction(this, "downloadBlankForms", "click");
+            SharedPreferences sharedPreferences = PreferenceManager
+                    .getDefaultSharedPreferences(MainMenuActivity.this);
+            String protocol = sharedPreferences.getString(
+                    PreferenceKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default));
+            Intent i;
+            if (protocol.equalsIgnoreCase(getString(R.string.protocol_google_sheets))) {
+                if (PlayServicesUtil.isGooglePlayServicesAvailable(MainMenuActivity.this)) {
+                    i = new Intent(getApplicationContext(),
+                            GoogleDriveActivity.class);
+                } else {
+                    PlayServicesUtil.showGooglePlayServicesAvailabilityErrorDialog(MainMenuActivity.this);
+                    return;
+                }
+            } else {
+                i = new Intent(getApplicationContext(),
+                        FormDownloadList.class);
+            }
+            startActivity(i);
+        }
+    }
+
 
 }
