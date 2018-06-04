@@ -4,12 +4,6 @@
     <org.odk.collect.android.preferences.PreferenceCategoryCustom
         android:key="form_filling"
         android:title="@string/form_filling_category">
-        <ListPreference
-            android:dialogTitle="@string/constraint_behavior"
-            android:entries="@array/constraint_behavior_entries"
-            android:entryValues="@array/constraint_behavior_entry_values"
-            android:key="constraint_behavior"
-            android:title="@string/constraint_behavior_title" />
         <CheckBoxPreference
             android:key="high_resolution"
             android:summary="@string/high_resolution_summary"
@@ -21,13 +15,12 @@
             android:key="image_size"
             android:title="@string/image_size_title" />
 
-        <ListPreference
-            android:dialogTitle="@string/guidance_hint_title"
-            android:entries="@array/guidance_hint_selector_entries"
-            android:entryValues="@array/guidance_hint_selector_entries_values"
-            android:key="guidance_hint"
-            android:title="@string/guidance_hint_title" />
-
     </org.odk.collect.android.preferences.PreferenceCategoryCustom>
-    >
+
+    <org.odk.collect.android.preferences.PreferenceCategoryCustom android:title="@string/form_management_preferences">
+        <Preference
+            android:key="delete_forms"
+            android:summary="Permanently delete forms"
+            android:title="@string/delete_forms" />
+    </org.odk.collect.android.preferences.PreferenceCategoryCustom>
 </PreferenceScreen>

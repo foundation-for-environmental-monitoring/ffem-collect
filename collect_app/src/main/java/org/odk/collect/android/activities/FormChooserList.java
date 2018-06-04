@@ -68,6 +68,8 @@ public class FormChooserList extends FormListActivity implements
 
         setTitle(getString(R.string.enter_data));
 
+        findViewById(R.id.buttonGetBlankForm).setOnClickListener(view -> onClickGetBlankForm(view));
+
         requestStoragePermissions(this, new PermissionListener() {
             @Override
             public void granted() {

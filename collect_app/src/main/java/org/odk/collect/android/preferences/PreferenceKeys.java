@@ -26,6 +26,7 @@ public final class PreferenceKeys {
     public static final String KEY_PERIODIC_FORM_UPDATES_CHECK = "periodic_form_updates_check";
     public static final String KEY_AUTOMATIC_UPDATE         = "automatic_update";
     public static final String KEY_HIDE_OLD_FORM_VERSIONS   = "hide_old_form_versions";
+    public static final String KEY_DELETE_FORMS = "delete_forms";
 
     // form_metadata_preferences.xml
     public static final String KEY_METADATA_USERNAME        = "metadata_username";
@@ -84,7 +85,7 @@ public final class PreferenceKeys {
         hashMap.put(KEY_SERVER_URL,                 Collect.getInstance().getString(R.string.default_server_url));
         hashMap.put(KEY_USERNAME,                   "");
         // form_management_preferences.xml
-        hashMap.put(KEY_AUTOSEND, "wifi_only");
+        hashMap.put(KEY_AUTOSEND, "wifi_and_cellular");
         hashMap.put(KEY_GUIDANCE_HINT,              GUIDANCE_HINT_OFF);
         hashMap.put(KEY_DELETE_AFTER_SEND,          false);
         hashMap.put(KEY_COMPLETED_DEFAULT,          true);
