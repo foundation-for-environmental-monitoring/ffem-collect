@@ -17,16 +17,16 @@ import org.odk.collect.android.activities.NotificationActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
-import org.odk.collect.android.tasks.ServerPollingJob;
-import org.odk.collect.android.utilities.IconUtils;
-import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
 import org.odk.collect.android.listeners.InstanceUploaderListener;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.tasks.InstanceGoogleSheetsUploader;
 import org.odk.collect.android.tasks.InstanceServerUploader;
+import org.odk.collect.android.tasks.ServerPollingJob;
+import org.odk.collect.android.utilities.IconUtils;
 import org.odk.collect.android.utilities.WebUtils;
+import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,7 +62,7 @@ public class NetworkReceiver extends BroadcastReceiver implements InstanceUpload
             }
 
             ServerPollingJob.pollServerIfNeeded();
-        } else if (action.equals("org.odk.collect.android.FormSaved")) {
+        } else if (action.equals("io.ffem.collect.FormSaved")) {
             ConnectivityManager connectivityManager = (ConnectivityManager) context
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo ni = connectivityManager.getActiveNetworkInfo();

@@ -64,10 +64,10 @@ the specific language governing permissions and limitations under the License.
     -->
 
     <permission
-        android:name="org.odk.collect.android.permission.MAPS_RECEIVE"
+        android:name="io.ffem.collect.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="org.odk.collect.android.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="io.ffem.collect.permission.MAPS_RECEIVE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <supports-screens
@@ -87,11 +87,11 @@ the specific language governing permissions and limitations under the License.
         android:supportsRtl="true">
         <provider
             android:name=".provider.FormsProvider"
-            android:authorities="org.odk.collect.android.provider.odk.forms"
+            android:authorities="io.ffem.collect.provider.odk.forms"
             android:exported="true" />
         <provider
             android:name=".provider.InstanceProvider"
-            android:authorities="org.odk.collect.android.provider.odk.instances"
+            android:authorities="io.ffem.collect.provider.odk.instances"
             android:exported="true" />
 
         <activity
@@ -215,7 +215,7 @@ the specific language governing permissions and limitations under the License.
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
             <intent-filter>
-                <action android:name="org.odk.collect.android.FormSaved" />
+                <action android:name="io.ffem.collect.FormSaved" />
             </intent-filter>
         </receiver>
         <!--
@@ -238,7 +238,7 @@ the specific language governing permissions and limitations under the License.
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBS-JQ-dnaZ_8qsbvSyr_I3rTPFd5fJsYI" />
+            android:value="" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"

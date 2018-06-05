@@ -37,7 +37,7 @@ public class PermissionsTest {
                 "android.permission.ACCESS_NETWORK_STATE",
                 "android.permission.MANAGE_ACCOUNTS",
                 "android.permission.WAKE_LOCK",
-                "org.odk.collect.android.permission.MAPS_RECEIVE",
+                "io.ffem.collect.permission.MAPS_RECEIVE",
                 "com.google.android.providers.gsf.permission.READ_GSERVICES"
         };
 
