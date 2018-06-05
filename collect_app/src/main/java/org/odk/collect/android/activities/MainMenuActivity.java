@@ -448,9 +448,9 @@ public class MainMenuActivity extends CollectAbstractActivity {
                 sendDataButton.setVisibility(View.GONE);
             }
         } else {
-            if (sendDataButton != null) {
-                sendDataButton.setVisibility(View.VISIBLE);
-            }
+//            if (sendDataButton != null) {
+//                sendDataButton.setVisibility(View.VISIBLE);
+//            }
         }
 
         boolean viewSent = sharedPreferences.getBoolean(
@@ -583,11 +583,13 @@ public class MainMenuActivity extends CollectAbstractActivity {
             if (completedCount > 0) {
                 sendDataBadge.setText(String.valueOf(completedCount));
                 sendDataBadge.setVisibility(View.VISIBLE);
-                sendDataButton.setAlpha(1);
+//                sendDataButton.setAlpha(1);
+                sendDataButton.setVisibility(View.VISIBLE);
                 sendDataButton.setEnabled(true);
             } else {
                 sendDataBadge.setVisibility(View.GONE);
-                sendDataButton.setAlpha(0.3f);
+//                sendDataButton.setAlpha(0.3f);
+                sendDataButton.setVisibility(View.GONE);
                 sendDataButton.setEnabled(false);
             }
             sendDataButton.setText(getString(R.string.send_data));
