@@ -751,19 +751,25 @@ public class FormDownloader {
                                     ? inputNode2.getFirstChild()
                                     : inputNode2.getFirstChild().getNextSibling();
                             label.setTextContent("Broth");
-
-                            System.out.println(inputNode2.getChildNodes().getLength());
-                            for (int j = 0; j < inputNode2.getChildNodes().getLength(); j++) {
-                                System.out.println(inputNode2.getChildNodes().item(j).getNodeName());
-                            }
-
                             groupNode.appendChild(inputNode2);
+
+                            org.w3c.dom.Node inputNode3 = inputNode.cloneNode(true);
+                            ((org.w3c.dom.Element) inputNode3).setAttribute("ref", "/" + id + groupName + "/Time_to_detect");
+                            org.w3c.dom.Node label3 = inputNode3.getFirstChild().getNodeType() == org.w3c.dom.Node.ELEMENT_NODE
+                                    ? inputNode3.getFirstChild()
+                                    : inputNode3.getFirstChild().getNextSibling();
+                            label3.setTextContent("Time to detect");
+                            groupNode.appendChild(inputNode3);
+
+//                            System.out.println(inputNode2.getChildNodes().getLength());
+//                            for (int j = 0; j < inputNode2.getChildNodes().getLength(); j++) {
+//                                System.out.println(inputNode2.getChildNodes().item(j).getNodeName());
+//                            }
                         }
                     }
                 }
 
                 if (xmlModified) {
-
 
                     NodeList node = doc.getElementsByTagName(testName);
 
@@ -772,19 +778,26 @@ public class FormDownloader {
                     group.appendChild(node1);
                     org.w3c.dom.Element node2 = doc.createElement("Broth");
                     group.appendChild(node2);
+                    org.w3c.dom.Element node3 = doc.createElement("Time_to_detect");
+                    group.appendChild(node3);
                     node.item(0).getParentNode().replaceChild(group, node.item(0));
 
-                    org.w3c.dom.Node bindNode2;
                     NodeList bindNodes = doc.getElementsByTagName("bind");
                     for (int i = 0; i < bindNodes.getLength(); i++) {
                         org.w3c.dom.Node bindNode = bindNodes.item(i);
                         org.w3c.dom.Node attr = bindNode.getAttributes().getNamedItem("nodeset");
                         if (attr.getNodeValue().contains(testName)) {
                             attr.setNodeValue("/" + id + groupName + "/" + testName);
-                            bindNode2 = bindNode.cloneNode(true);
+
+                            org.w3c.dom.Node bindNode2 = bindNode.cloneNode(true);
                             org.w3c.dom.Node attr2 = bindNode2.getAttributes().getNamedItem("nodeset");
                             attr2.setNodeValue("/" + id + groupName + "/Broth");
                             bindNode.getParentNode().appendChild(bindNode2);
+
+                            org.w3c.dom.Node bindNode3 = bindNode.cloneNode(true);
+                            org.w3c.dom.Node attr3 = bindNode3.getAttributes().getNamedItem("nodeset");
+                            attr3.setNodeValue("/" + id + groupName + "/Time_to_detect");
+                            bindNode.getParentNode().appendChild(bindNode3);
                         }
                     }
 
