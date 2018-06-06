@@ -740,7 +740,7 @@ public class FormDownloader {
                             groupNode.setAttribute("appearance", "field-list");
                             groupNode.setAttribute("intent", "io.ffem.app.caddisfly(testId='" + testId + "')");
                             groupNode.setAttribute("ref", "/" + id + groupName);
-                            bodyNode.appendChild(groupNode);
+                            bodyNode.replaceChild(groupNode, inputNode);
 
                             ((org.w3c.dom.Element) inputNode).setAttribute("ref", "/" + id + groupName + "/" + testName);
                             groupNode.appendChild(inputNode);
@@ -857,7 +857,7 @@ public class FormDownloader {
 
         customizeForm(f);
 
-//        customizeColiformsQuestion(f);
+        customizeColiformsQuestion(f);
 
         return new FileResult(f, isNew);
     }
