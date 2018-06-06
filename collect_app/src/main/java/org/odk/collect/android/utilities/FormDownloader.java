@@ -36,8 +36,6 @@ import org.opendatakit.httpclientandroidlib.HttpStatus;
 import org.opendatakit.httpclientandroidlib.client.HttpClient;
 import org.opendatakit.httpclientandroidlib.client.methods.HttpGet;
 import org.opendatakit.httpclientandroidlib.protocol.HttpContext;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -330,63 +328,6 @@ public class FormDownloader {
         Collect.getInstance().getActivityLogger().logAction(this, "insert",
                 formFile.getAbsolutePath());
         return uri;
-    }
-
-    /**
-     * Takes the formName and the URL and attempts to download the specified file. Returns a file
-     * object representing the downloaded file.
-     */
-    private FileResult downloadXform(String formName, String url)
-            throws Exception {
-        // clean up friendly form name...
-        String rootName = formName.replaceAll("[^\\p{L}\\p{Digit}]", " ");
-        rootName = rootName.replaceAll("\\p{javaWhitespace}+", " ");
-        rootName = rootName.trim();
-
-        // proposed name of xml file...
-        String path = Collect.FORMS_PATH + File.separator + rootName + ".xml";
-        int i = 2;
-        File f = new File(path);
-        while (f.exists()) {
-            path = Collect.FORMS_PATH + File.separator + rootName + "_" + i + ".xml";
-            f = new File(path);
-            i++;
-        }
-
-        downloadFile(f, url);
-
-        boolean isNew = true;
-
-        // we've downloaded the file, and we may have renamed it
-        // make sure it's not the same as a file we already have
-        Cursor c = null;
-        try {
-            c = formsDao.getFormsCursorForMd5Hash(FileUtils.getMd5Hash(f));
-            if (c.getCount() > 0) {
-                // Should be at most, 1
-                c.moveToFirst();
-
-                isNew = false;
-
-                // delete the file we just downloaded, because it's a duplicate
-                Timber.w("A duplicate file has been found, we need to remove the downloaded file "
-                        + "and return the other one.");
-                FileUtils.deleteAndReport(f);
-
-                // set the file returned to the file we already had
-                String existingPath = c.getString(c.getColumnIndex(FormsProviderAPI.FormsColumns.FORM_FILE_PATH));
-                f = new File(existingPath);
-                Timber.w("Will use %s", existingPath);
-            }
-        } finally {
-            if (c != null) {
-                c.close();
-            }
-        }
-
-        customizeForm(f);
-
-        return new FileResult(f, isNew);
     }
 
     /**
@@ -746,6 +687,187 @@ public class FormDownloader {
      *
      * @param file the xml form to be customized
      */
+    private static void customizeColiformsQuestion(File file) {
+
+        String testId = "df3d1009-2112-4d95-a6f9-fdc4b5633ec9";
+
+        if (file.isFile() && file.getPath().endsWith(".xml")) {
+
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder;
+
+            String groupName = "/group_coliform";
+
+            boolean xmlModified = false;
+            String testName = "";
+            try {
+                builder = factory.newDocumentBuilder();
+                org.w3c.dom.Document doc = builder.parse(file);
+
+                org.w3c.dom.Node instanceNode = doc.getElementsByTagName("instance").item(0).getFirstChild().getNodeType() == org.w3c.dom.Node.ELEMENT_NODE
+                        ? doc.getElementsByTagName("instance").item(0).getFirstChild()
+                        : doc.getElementsByTagName("instance").item(0).getFirstChild().getNextSibling();
+
+                String id = instanceNode.getNodeName();
+
+
+                org.w3c.dom.Node bodyNode = doc.getElementsByTagName("h:body").item(0);
+                NodeList inputNodes = doc.getElementsByTagName("input");
+
+                for (int i = 0; i < inputNodes.getLength(); i++) {
+                    org.w3c.dom.Node inputNode = inputNodes.item(i);
+
+                    org.w3c.dom.Node appearanceNode = inputNode.getAttributes().getNamedItem("appearance");
+
+                    if (appearanceNode != null) {
+
+                        String appearance = appearanceNode.getNodeValue();
+
+                        if (appearance.contains(testId)) {
+
+                            testName = inputNode.getAttributes().getNamedItem("ref").getTextContent();
+                            testName = testName.replace("/" + id + "/", "");
+
+                            inputNode.getAttributes().removeNamedItem("appearance");
+                            xmlModified = true;
+
+                            org.w3c.dom.Element groupNode = doc.createElement("group");
+
+                            org.w3c.dom.Element newLabel = doc.createElement("label");
+                            newLabel.setTextContent("Coliform Test");
+                            groupNode.appendChild(newLabel);
+
+                            groupNode.setAttribute("appearance", "field-list");
+                            groupNode.setAttribute("intent", "io.ffem.app.caddisfly(testId='" + testId + "')");
+                            groupNode.setAttribute("ref", "/" + id + groupName);
+                            bodyNode.appendChild(groupNode);
+
+                            ((org.w3c.dom.Element) inputNode).setAttribute("ref", "/" + id + groupName + "/" + testName);
+                            groupNode.appendChild(inputNode);
+
+                            org.w3c.dom.Node inputNode2 = inputNode.cloneNode(true);
+                            ((org.w3c.dom.Element) inputNode2).setAttribute("ref", "/" + id + groupName + "/Broth");
+                            org.w3c.dom.Node label = inputNode2.getFirstChild().getNodeType() == org.w3c.dom.Node.ELEMENT_NODE
+                                    ? inputNode2.getFirstChild()
+                                    : inputNode2.getFirstChild().getNextSibling();
+                            label.setTextContent("Broth");
+
+                            System.out.println(inputNode2.getChildNodes().getLength());
+                            for (int j = 0; j < inputNode2.getChildNodes().getLength(); j++) {
+                                System.out.println(inputNode2.getChildNodes().item(j).getNodeName());
+                            }
+
+                            groupNode.appendChild(inputNode2);
+                        }
+                    }
+                }
+
+                if (xmlModified) {
+
+
+                    NodeList node = doc.getElementsByTagName(testName);
+
+                    org.w3c.dom.Element group = doc.createElement("group_coliform");
+                    org.w3c.dom.Element node1 = doc.createElement(testName);
+                    group.appendChild(node1);
+                    org.w3c.dom.Element node2 = doc.createElement("Broth");
+                    group.appendChild(node2);
+                    node.item(0).getParentNode().replaceChild(group, node.item(0));
+
+                    org.w3c.dom.Node bindNode2;
+                    NodeList bindNodes = doc.getElementsByTagName("bind");
+                    for (int i = 0; i < bindNodes.getLength(); i++) {
+                        org.w3c.dom.Node bindNode = bindNodes.item(i);
+                        org.w3c.dom.Node attr = bindNode.getAttributes().getNamedItem("nodeset");
+                        if (attr.getNodeValue().contains(testName)) {
+                            attr.setNodeValue("/" + id + groupName + "/" + testName);
+                            bindNode2 = bindNode.cloneNode(true);
+                            org.w3c.dom.Node attr2 = bindNode2.getAttributes().getNamedItem("nodeset");
+                            attr2.setNodeValue("/" + id + groupName + "/Broth");
+                            bindNode.getParentNode().appendChild(bindNode2);
+                        }
+                    }
+
+                    Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                    transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+                    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "5");
+                    DOMSource source = new DOMSource(doc);
+                    StreamResult result = new StreamResult(file.getAbsolutePath());
+                    transformer.transform(source, result);
+                }
+
+            } catch (Exception e) {
+                Timber.e(e);
+            }
+        }
+    }
+
+    /**
+     * Takes the formName and the URL and attempts to download the specified file. Returns a file
+     * object representing the downloaded file.
+     */
+    private FileResult downloadXform(String formName, String url)
+            throws Exception {
+        // clean up friendly form name...
+        String rootName = formName.replaceAll("[^\\p{L}\\p{Digit}]", " ");
+        rootName = rootName.replaceAll("\\p{javaWhitespace}+", " ");
+        rootName = rootName.trim();
+
+        // proposed name of xml file...
+        String path = Collect.FORMS_PATH + File.separator + rootName + ".xml";
+        int i = 2;
+        File f = new File(path);
+        while (f.exists()) {
+            path = Collect.FORMS_PATH + File.separator + rootName + "_" + i + ".xml";
+            f = new File(path);
+            i++;
+        }
+
+        downloadFile(f, url);
+
+        boolean isNew = true;
+
+        // we've downloaded the file, and we may have renamed it
+        // make sure it's not the same as a file we already have
+        Cursor c = null;
+        try {
+            c = formsDao.getFormsCursorForMd5Hash(FileUtils.getMd5Hash(f));
+            if (c.getCount() > 0) {
+                // Should be at most, 1
+                c.moveToFirst();
+
+                isNew = false;
+
+                // delete the file we just downloaded, because it's a duplicate
+                Timber.w("A duplicate file has been found, we need to remove the downloaded file "
+                        + "and return the other one.");
+                FileUtils.deleteAndReport(f);
+
+                // set the file returned to the file we already had
+                String existingPath = c.getString(c.getColumnIndex(FormsProviderAPI.FormsColumns.FORM_FILE_PATH));
+                f = new File(existingPath);
+                Timber.w("Will use %s", existingPath);
+            }
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+
+        customizeForm(f);
+
+//        customizeColiformsQuestion(f);
+
+        return new FileResult(f, isNew);
+    }
+
+    /**
+     * Make changes to the form to work correctly with external app.
+     * This is because currently these properties cannot be accessed in the online form designer.
+     *
+     * @param file the xml form to be customized
+     */
     private void customizeForm(File file) {
 
         String testId = "52ec4ca0-d691-4f2b-b17a-232c2966974a";
@@ -758,14 +880,14 @@ public class FormDownloader {
             boolean xmlModified = false;
             try {
                 builder = factory.newDocumentBuilder();
-                Document doc = builder.parse(file);
+                org.w3c.dom.Document doc = builder.parse(file);
 
                 NodeList nodesList = doc.getElementsByTagName("group");
 
                 for (int i = 0; i < nodesList.getLength(); i++) {
-                    Node node = nodesList.item(i);
+                    org.w3c.dom.Node node = nodesList.item(i);
 
-                    Node appearanceNode = node.getChildNodes().item(3).getAttributes().getNamedItem("appearance");
+                    org.w3c.dom.Node appearanceNode = node.getChildNodes().item(3).getAttributes().getNamedItem("appearance");
 
                     if (appearanceNode != null) {
                         String appearance = appearanceNode.getNodeValue();
