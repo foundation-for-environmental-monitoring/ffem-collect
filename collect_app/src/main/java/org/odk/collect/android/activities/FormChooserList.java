@@ -16,9 +16,12 @@ package org.odk.collect.android.activities;
 
 import android.app.AlertDialog;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,6 +43,7 @@ import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.tasks.DiskSyncTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.FormUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.VersionHidingCursorAdapter;
 
 import timber.log.Timber;
@@ -266,8 +270,17 @@ public class FormChooserList extends FormListActivity implements
     }
 
     public void onClickGetBlankForm(View view) {
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        Intent localIntent = new Intent("DOWNLOAD_FORMS_ACTION");
-        localBroadcastManager.sendBroadcast(localIntent);
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
+            if (ni == null || !ni.isConnected()) {
+                ToastUtils.showShortToast(R.string.no_connection);
+            } else {
+                LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+                Intent localIntent = new Intent("DOWNLOAD_FORMS_ACTION");
+                localBroadcastManager.sendBroadcast(localIntent);
+            }
+        }
     }
 }
