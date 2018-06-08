@@ -20,6 +20,8 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
 
+import io.ffem.collect.android.util.ApiUtil;
+
 public final class SnackbarUtils {
     public static final int LONG_DURATION_MS = 3500;
 

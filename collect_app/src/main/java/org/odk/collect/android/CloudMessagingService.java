@@ -5,19 +5,23 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import org.odk.collect.android.activities.MainMenuActivity;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.preferences.PreferenceKeys;
 
 import java.util.Objects;
 
-import timber.log.Timber;
+import io.ffem.collect.android.util.ApiUtil;
 
 public class CloudMessagingService extends FirebaseMessagingService {
 
@@ -27,9 +31,25 @@ public class CloudMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        Timber.e("From: %s", remoteMessage.getFrom());
+        Context context = getApplicationContext();
 
-        sendNotification("Update to get the most from ffem Collect");
+        int latestAppVersion;
+        int versionCode = ApiUtil.getAppVersionCode(context);
+
+        try {
+            latestAppVersion = Integer.parseInt(remoteMessage.getData().get("latestAppVersion"));
+
+            if (latestAppVersion > versionCode) {
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(Collect.getInstance());
+                settings.edit().putInt(PreferenceKeys.LATEST_APP_VERSION, latestAppVersion).apply();
+
+                sendNotification(context.getString(R.string.updateTitle),
+                        context.getString(R.string.updateAvailable));
+            }
+
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -37,7 +57,7 @@ public class CloudMessagingService extends FirebaseMessagingService {
      *
      * @param message FCM message body received.
      */
-    private void sendNotification(String message) {
+    private void sendNotification(String title, String message) {
         Intent intent = new Intent(this, MainMenuActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
@@ -48,7 +68,7 @@ public class CloudMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.mipmap.ic_notification)
-                        .setContentTitle("FCM Message")
+                        .setContentTitle(title)
                         .setContentText(message)
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)

@@ -78,6 +78,7 @@ public final class PreferenceKeys {
     static final String GOOGLE_MAPS_BASEMAP_DEFAULT         = "streets";
     static final String OSM_BASEMAP_KEY                     = "osmdroid";
     static final String OSM_MAPS_BASEMAP_DEFAULT            = "openmap_streets";
+    public static final String LATEST_APP_VERSION = "latest_app_version";
 
     private static HashMap<String, Object> getHashMap() {
         HashMap<String, Object> hashMap = new HashMap<>();
