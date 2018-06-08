@@ -508,7 +508,7 @@ public abstract class QuestionWidget
 
         button.setId(withId);
         button.setText(text);
-        button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize());
+        button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize() + 4);
         button.setPadding(20, 20, 20, 20);
 
         TableLayout.LayoutParams params = new TableLayout.LayoutParams();
@@ -673,7 +673,7 @@ public abstract class QuestionWidget
     }
 
     public int getAnswerFontSize() {
-        return questionFontSize + 2;
+        return questionFontSize;
     }
 
     public TextView getGuidanceTextView() {

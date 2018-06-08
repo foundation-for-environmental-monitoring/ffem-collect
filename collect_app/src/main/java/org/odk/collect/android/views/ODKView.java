@@ -52,9 +52,9 @@ import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.ViewIds;
-import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 import org.odk.collect.android.widgets.QuestionWidget;
 import org.odk.collect.android.widgets.WidgetFactory;
+import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -127,7 +127,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
                 launchIntentButton.setId(ViewIds.generateViewId());
                 launchIntentButton.setText(buttonText);
                 launchIntentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
-                        Collect.getQuestionFontsize() + 2);
+                        Collect.getQuestionFontsize() + 4);
                 launchIntentButton.setPadding(20, 20, 20, 20);
                 launchIntentButton.setLayoutParams(params);
 
