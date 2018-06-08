@@ -868,9 +868,9 @@ public class FormDownloader {
             }
         }
 
-        customizeForm(f);
+//        customizeForm(f);
 
-        customizeColiformsQuestion(f);
+//        customizeColiformsQuestion(f);
 
         return new FileResult(f, isNew);
     }

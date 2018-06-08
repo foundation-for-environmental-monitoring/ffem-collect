@@ -30,6 +30,9 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
@@ -47,6 +50,8 @@ import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 
 import java.util.Map;
 
+import io.ffem.collect.android.model.ExternalResult;
+import io.ffem.collect.android.model.TestResult;
 import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
@@ -102,6 +107,8 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
 
     private ActivityAvailability activityAvailability;
 
+    private final Gson gson = new Gson();
+
     public ExStringWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
 
@@ -123,10 +130,28 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         // needed to make long read only text scroll
         answer.setHorizontallyScrolling(false);
         answer.setSingleLine(false);
+        answer.setLineSpacing(0, 1.3f);
 
         String s = prompt.getAnswerText();
         if (s != null) {
-            answer.setText(s);
+            if (s.startsWith("{")) {
+                try {
+                    ExternalResult externalResult = gson.fromJson(s, ExternalResult.class);
+                    if (externalResult != null && externalResult.getResults() != null) {
+                        StringBuilder displayResult = new StringBuilder();
+                        for (TestResult result :
+                                externalResult.getResults()) {
+                            displayResult.append(result.buildResultToDisplay());
+                            displayResult.append("\n");
+                        }
+                        answer.setText(displayResult.toString());
+                    }
+                } catch (JsonSyntaxException e) {
+                    Timber.e(e, "Error parsing result: %s", s);
+                }
+            } else {
+                answer.setText(s);
+            }
         }
 
         if (getFormEntryPrompt().isReadOnly() || hasExApp) {
