@@ -2,4 +2,5 @@
 <resources>
     <string name="reset_password_link">"https://kf.kobotoolbox.org/accounts/password/reset/"</string>
     <string name="create_account_link">"https://kf.kobotoolbox.org/accounts/register/"</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
 </resources>

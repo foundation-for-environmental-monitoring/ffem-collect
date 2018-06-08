@@ -239,6 +239,9 @@ dependencies {
     implementation "com.jakewharton:butterknife:8.8.1"
     annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
 
+    // Firebase Cloud Messaging
+    implementation 'com.google.firebase:firebase-messaging:17.0.0'
+
     // Used to generate documentation screenshots.
     androidTestImplementation "tools.fastlane:screengrab:1.1.0"
 
@@ -269,6 +272,3 @@ dependencies {
 // Must be at bottom to prevent dependency collisions
 // https://developers.google.com/android/guides/google-services-plugin
 apply plugin: 'com.google.gms.google-services'
-
-
-
