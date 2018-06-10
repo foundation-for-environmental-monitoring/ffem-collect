@@ -66,6 +66,7 @@ import javax.inject.Inject;
 
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
+import io.ffem.collect.android.updater.UpdateCheck;
 import timber.log.Timber;
 
 import static org.odk.collect.android.logic.PropertyManager.PROPMGR_USERNAME;
@@ -294,6 +295,8 @@ public class Collect extends Application implements HasActivityInjector {
         } else {
             Timber.plant(new Timber.DebugTree());
         }
+
+        UpdateCheck.setNextUpdateCheck(this, -1);
 
         setupLeakCanary();
     }

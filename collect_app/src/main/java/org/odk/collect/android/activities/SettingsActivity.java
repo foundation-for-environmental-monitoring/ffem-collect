@@ -1,22 +1,3 @@
-/*
- * Copyright (C) Stichting Akvo (Akvo Foundation)
- *
- * This file is part of Akvo Caddisfly.
- *
- * Akvo Caddisfly is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Akvo Caddisfly is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Akvo Caddisfly. If not, see <http://www.gnu.org/licenses/>.
- */
-
 package org.odk.collect.android.activities;
 
 import android.app.AlertDialog;
@@ -32,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import org.odk.collect.android.R;
@@ -125,14 +105,11 @@ public class SettingsActivity extends CollectAbstractActivity {
                 passwordDialog.setView(dialogView, 20, 10, 20, 10);
                 final CheckBox checkBox = dialogView.findViewById(R.id.checkBox);
                 final EditText input = dialogView.findViewById(R.id.editText);
-                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        if (!checkBox.isChecked()) {
-                            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                        } else {
-                            input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                        }
+                checkBox.setOnCheckedChangeListener((compoundButton, b) -> {
+                    if (!checkBox.isChecked()) {
+                        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    } else {
+                        input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     }
                 });
                 passwordDialog.setButton(AlertDialog.BUTTON_POSITIVE,

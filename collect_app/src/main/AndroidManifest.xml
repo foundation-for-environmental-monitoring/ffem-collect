@@ -278,12 +278,27 @@ the specific language governing permissions and limitations under the License.
             android:value="@string/default_notification_channel_id" />
 
         <service
-            android:name=".CloudMessagingService"
+            android:name="io.ffem.collect.android.notification.CloudMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <service
+            android:name="io.ffem.collect.android.updater.AlarmService"
+            android:enabled="true" />
+
+        <receiver android:name="io.ffem.collect.android.updater.NotificationCancelReceiver" />
+        <receiver android:name="io.ffem.collect.android.updater.UpdateAppReceiver" />
+        <receiver
+            android:name="io.ffem.collect.android.updater.BootReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
