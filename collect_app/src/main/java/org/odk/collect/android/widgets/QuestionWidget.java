@@ -128,7 +128,7 @@ public abstract class QuestionWidget
         formEntryPrompt = prompt;
 
         setGravity(Gravity.TOP);
-        setPadding(0, 7, 0, 0);
+//        setPadding(12, 7, 10, 0);
 
         questionMediaLayout = createQuestionMediaLayout(prompt);
         helpTextLayout = createHelpTextLayout();
@@ -203,7 +203,7 @@ public abstract class QuestionWidget
     private TextView configureGuidanceTextView(TextView guidanceTextView, String guidance) {
         guidanceTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getQuestionFontSize() - 3);
         //noinspection ResourceType
-        guidanceTextView.setPadding(0, -5, 0, 7);
+//        guidanceTextView.setPadding(0, -5, 0, 7);
         // wrap to the widget of view
         guidanceTextView.setHorizontallyScrolling(false);
         guidanceTextView.setTypeface(null, Typeface.ITALIC);
@@ -243,9 +243,9 @@ public abstract class QuestionWidget
         String promptText = prompt.getLongText();
         // Add the text view. Textview always exists, regardless of whether there's text.
         TextView questionText = new TextView(getContext());
-        questionText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getQuestionFontSize());
+        questionText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getQuestionFontSize() + 2);
         questionText.setTypeface(null, Typeface.BOLD);
-        questionText.setPadding(0, 0, 0, 7);
+        questionText.setPadding(0, 10, 0, 0);
         questionText.setTextColor(themeUtils.getPrimaryTextColor());
         questionText.setText(TextUtils.textToHtml(FormEntryPromptUtils.markQuestionIfIsRequired(promptText, prompt.isRequired())));
         questionText.setMovementMethod(LinkMovementMethod.getInstance());
@@ -370,7 +370,7 @@ public abstract class QuestionWidget
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
         params.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
-        params.setMargins(10, 0, 10, 0);
+        params.setMargins(6, 0, 6, 0);
         addView(v, params);
     }
 
@@ -407,7 +407,7 @@ public abstract class QuestionWidget
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
         params.addRule(RelativeLayout.BELOW, getQuestionMediaLayout().getId());
-        params.setMargins(10, 0, 10, 0);
+//        params.setMargins(18, 0, 10, 0);
         addView(v, params);
     }
 
@@ -454,7 +454,7 @@ public abstract class QuestionWidget
         params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
         params.addRule(RelativeLayout.BELOW, getHelpTextLayout().getId());
 
-        params.setMargins(10, 0, 10, 0);
+//        params.setMargins(10, 0, 10, 0);
         addView(v, params);
     }
 
@@ -509,10 +509,10 @@ public abstract class QuestionWidget
         button.setId(withId);
         button.setText(text);
         button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize() + 4);
-        button.setPadding(20, 20, 20, 20);
+        button.setPadding(10, 30, 10, 30);
 
         TableLayout.LayoutParams params = new TableLayout.LayoutParams();
-        params.setMargins(7, 5, 7, 5);
+//        params.setMargins(5, 5, 5, 5);
 
         button.setLayoutParams(params);
 
@@ -552,7 +552,7 @@ public abstract class QuestionWidget
         textView.setId(R.id.answer_text);
         textView.setTextColor(themeUtils.getPrimaryTextColor());
         textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize());
-        textView.setPadding(20, 20, 20, 20);
+//        textView.setPadding(20, 20, 20, 20);
         textView.setText(text);
 
         return textView;

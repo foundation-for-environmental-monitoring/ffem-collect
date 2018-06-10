@@ -69,7 +69,7 @@ public class HierarchyElementView extends RelativeLayout {
         lp.addRule(RelativeLayout.RIGHT_OF, icon.getId());
         addView(secondaryTextView, lp);
 
-        setPadding(dipToPx(8), dipToPx(4), dipToPx(8), dipToPx(8));
+        setPadding(dipToPx(8), dipToPx(14), dipToPx(8), dipToPx(14));
 
     }
 

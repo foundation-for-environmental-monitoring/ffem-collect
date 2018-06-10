@@ -113,7 +113,7 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         super(context, prompt);
 
         TableLayout.LayoutParams params = new TableLayout.LayoutParams();
-        params.setMargins(7, 5, 7, 5);
+        params.setMargins(7, 4, 7, 0);
 
         // set text formatting
         answer = new EditText(context);

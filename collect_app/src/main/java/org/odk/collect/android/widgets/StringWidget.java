@@ -89,7 +89,7 @@ public class StringWidget extends QuestionWidget {
             }
         }
 
-        params.setMargins(7, 5, 7, 5);
+//        params.setMargins(7, 5, 7, 5);
         answerText.setLayoutParams(params);
 
         // capitalize the first letter of the sentence

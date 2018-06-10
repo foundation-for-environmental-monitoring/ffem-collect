@@ -85,17 +85,19 @@ public class ODKView extends ScrollView implements OnLongClickListener {
             FormEntryCaption[] groups, boolean advancingPage) {
         super(context);
 
+        setScrollBarSize(10);
+
         widgets = new ArrayList<>();
 
         view = new LinearLayout(getContext());
         view.setOrientation(LinearLayout.VERTICAL);
         view.setGravity(Gravity.TOP);
-        view.setPadding(0, 7, 0, 0);
+//        view.setPadding(0, 7, 0, 0);
 
         layout =
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
-        layout.setMargins(10, 0, 10, 0);
+        layout.setMargins(12, 5, 12, 0);
 
         // display which group you are in as well as the question
 
@@ -120,7 +122,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
                 errorString = (v != null) ? v : context.getString(R.string.no_app);
 
                 TableLayout.LayoutParams params = new TableLayout.LayoutParams();
-                params.setMargins(7, 5, 7, 5);
+//                params.setMargins(7, 5, 7, 5);
 
                 // set button formatting
                 Button launchIntentButton = new Button(getContext());
@@ -281,8 +283,8 @@ public class ODKView extends ScrollView implements OnLongClickListener {
         if (!path.isEmpty()) {
             TextView tv = new TextView(getContext());
             tv.setText(path);
-            tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Collect.getQuestionFontsize() - 4);
-            tv.setPadding(0, 0, 0, 5);
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Collect.getQuestionFontsize());
+            tv.setPadding(5, 0, 5, 7);
             view.addView(tv, layout);
         }
     }
