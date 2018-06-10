@@ -1,11 +1,11 @@
 /*
  * Copyright (C) 2009 University of Washington
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -24,6 +24,8 @@ import android.widget.TextView;
 import org.odk.collect.android.logic.HierarchyElement;
 import org.odk.collect.android.utilities.TextUtils;
 import org.odk.collect.android.utilities.ViewIds;
+
+import static io.ffem.collect.android.helper.ResultHelper.jsonToText;
 
 public class HierarchyElementView extends RelativeLayout {
 
@@ -58,7 +60,7 @@ public class HierarchyElementView extends RelativeLayout {
         addView(primaryTextView, l);
 
         secondaryTextView = new TextView(context);
-        secondaryTextView.setText(it.getSecondaryText());
+        secondaryTextView.setText(jsonToText(it.getSecondaryText()));
         secondaryTextView.setTextAppearance(context, android.R.style.TextAppearance_Small);
         secondaryTextView.setGravity(Gravity.CENTER_VERTICAL);
 
@@ -80,7 +82,7 @@ public class HierarchyElementView extends RelativeLayout {
 
 
     public void setSecondaryText(String text) {
-        secondaryTextView.setText(TextUtils.textToHtml(text));
+        secondaryTextView.setText(jsonToText(text));
     }
 
 

@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.Selection;
 import android.text.method.DigitsKeyListener;
 
 import org.javarosa.core.model.data.DecimalData;
@@ -70,7 +69,7 @@ public class ExDecimalWidget extends ExStringWidget {
             String formattedValue = nf.format(d);
             answer.setText(formattedValue);
 
-            Selection.setSelection(answer.getText(), answer.getText().length());
+//            Selection.setSelection(answer.getText(), answer.getText().length());
         }
     }
 
@@ -116,7 +115,7 @@ public class ExDecimalWidget extends ExStringWidget {
 
 
     /**
-     * Allows answer to be set externally in {@link FormEntryActivity}.
+     * Allows answer to be set externally in {@link .FormEntryActivity}.
      */
     @Override
     public void setBinaryData(Object answer) {

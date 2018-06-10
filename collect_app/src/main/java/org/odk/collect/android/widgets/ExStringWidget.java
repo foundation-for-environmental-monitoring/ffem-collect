@@ -25,13 +25,10 @@ import android.text.method.TextKeyListener.Capitalize;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
@@ -50,10 +47,9 @@ import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 
 import java.util.Map;
 
-import io.ffem.collect.android.model.ExternalResult;
-import io.ffem.collect.android.model.TestResult;
 import timber.log.Timber;
 
+import static io.ffem.collect.android.helper.ResultHelper.jsonToText;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
 
 /**
@@ -100,14 +96,12 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
 @SuppressLint("ViewConstructor")
 public class ExStringWidget extends QuestionWidget implements BinaryWidget {
 
-    protected EditText answer;
+    protected TextView answer;
     private boolean hasExApp = true;
     private Button launchIntentButton;
     private Drawable textBackground;
 
     private ActivityAvailability activityAvailability;
-
-    private final Gson gson = new Gson();
 
     public ExStringWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
@@ -116,7 +110,7 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         params.setMargins(7, 4, 7, 0);
 
         // set text formatting
-        answer = new EditText(context);
+        answer = new TextView(context);
         answer.setId(ViewIds.generateViewId());
         answer.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize());
         answer.setLayoutParams(params);
@@ -134,24 +128,7 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
 
         String s = prompt.getAnswerText();
         if (s != null) {
-            if (s.startsWith("{")) {
-                try {
-                    ExternalResult externalResult = gson.fromJson(s, ExternalResult.class);
-                    if (externalResult != null && externalResult.getResults() != null) {
-                        StringBuilder displayResult = new StringBuilder();
-                        for (TestResult result :
-                                externalResult.getResults()) {
-                            displayResult.append(result.buildResultToDisplay());
-                            displayResult.append("\n");
-                        }
-                        answer.setText(displayResult.toString());
-                    }
-                } catch (JsonSyntaxException e) {
-                    Timber.e(e, "Error parsing result: %s", s);
-                }
-            } else {
-                answer.setText(s);
-            }
+            answer.setText(jsonToText(s));
         }
 
         if (getFormEntryPrompt().isReadOnly() || hasExApp) {
@@ -189,7 +166,10 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
 
     @Override
     public IAnswerData getAnswer() {
-        String s = answer.getText().toString();
+        String s = (String) answer.getTag();
+        if (s == null) {
+            s = answer.getText().toString();
+        }
         return !s.isEmpty() ? new StringData(s) : null;
     }
 
