@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/help_text_layout"
     android:layout_width="match_parent"
-    android:paddingEnd="5dp"
-    android:paddingStart="5dp"
+    android:paddingEnd="6dp"
+    android:paddingStart="6dp"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 

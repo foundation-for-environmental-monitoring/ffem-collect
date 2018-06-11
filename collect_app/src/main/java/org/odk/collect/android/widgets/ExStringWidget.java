@@ -107,7 +107,7 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         super(context, prompt);
 
         TableLayout.LayoutParams params = new TableLayout.LayoutParams();
-        params.setMargins(7, 4, 7, 0);
+        params.setMargins(7, 10, 7, 20);
 
         // set text formatting
         answer = new TextView(context);
@@ -124,11 +124,16 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         // needed to make long read only text scroll
         answer.setHorizontallyScrolling(false);
         answer.setSingleLine(false);
-        answer.setLineSpacing(0, 1.3f);
+        answer.setLineSpacing(0, 1.20f);
 
         String s = prompt.getAnswerText();
         if (s != null) {
-            answer.setText(jsonToText(s));
+            if (s.startsWith("{")) {
+                answer.setTag(s);
+                answer.setText(jsonToText(s));
+            } else {
+                answer.setText(s);
+            }
         }
 
         if (getFormEntryPrompt().isReadOnly() || hasExApp) {

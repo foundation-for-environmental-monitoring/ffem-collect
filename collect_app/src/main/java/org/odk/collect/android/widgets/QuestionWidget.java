@@ -552,7 +552,7 @@ public abstract class QuestionWidget
         textView.setId(R.id.answer_text);
         textView.setTextColor(themeUtils.getPrimaryTextColor());
         textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize());
-//        textView.setPadding(20, 20, 20, 20);
+        textView.setPadding(0, 20, 0, 20);
         textView.setText(text);
 
         return textView;
