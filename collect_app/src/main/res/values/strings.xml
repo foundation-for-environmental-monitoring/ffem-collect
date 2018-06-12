@@ -10,7 +10,8 @@
     the specific language governing permissions and limitations under the
     License.
 -->
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation" tools:locale="en">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation"
+           tools:locale="en">
     <string name="show_password">Show password</string>
     <string name="activity_not_found">No activity found to handle: %s</string>
     <string name="view_image">View Image</string>
@@ -611,4 +612,5 @@
     <string name="instance_upload_cancelled">Instance upload canceled</string>
     <string name="hide_old_form_versions_setting_title">Hide old form versions</string>
     <string name="hide_old_form_versions_setting_summary">Only the newest version will appear in Fill Blank Form</string>
+    <string name="seconds">Seconds</string>
 </resources>
