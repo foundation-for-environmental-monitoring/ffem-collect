@@ -29,6 +29,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -46,6 +47,7 @@ import org.odk.collect.android.utilities.FormUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.VersionHidingCursorAdapter;
 
+import io.ffem.collect.android.activities.DeleteFormsActivity;
 import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
@@ -282,5 +284,17 @@ public class FormChooserList extends FormListActivity implements
                 localBroadcastManager.sendBroadcast(localIntent);
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_delete:
+                Intent i = new Intent(this, DeleteFormsActivity.class);
+                i.putExtra("blankForms", true);
+                startActivity(i);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

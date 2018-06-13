@@ -272,6 +272,7 @@ the specific language governing permissions and limitations under the License.
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="io.ffem.collect.android.activities.DeleteFormsActivity" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"

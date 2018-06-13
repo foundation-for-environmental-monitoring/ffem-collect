@@ -17,10 +17,4 @@
 
     </org.odk.collect.android.preferences.PreferenceCategoryCustom>
 
-    <org.odk.collect.android.preferences.PreferenceCategoryCustom android:title="@string/form_management_preferences">
-        <Preference
-            android:key="delete_forms"
-            android:summary="Permanently delete forms"
-            android:title="@string/delete_forms" />
-    </org.odk.collect.android.preferences.PreferenceCategoryCustom>
 </PreferenceScreen>

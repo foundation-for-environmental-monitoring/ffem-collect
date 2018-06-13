@@ -246,9 +246,11 @@ public class InstanceUploaderList extends InstanceListActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        logger.logAction(this, "onCreateOptionsMenu", "show");
-        getMenuInflater().inflate(R.menu.instance_uploader_menu, menu);
-        return super.onCreateOptionsMenu(menu);
+        super.onCreateOptionsMenu(menu);
+
+        final MenuItem deleteItem = menu.findItem(R.id.menu_delete);
+        deleteItem.setVisible(false);
+        return true;
     }
 
     @Override
