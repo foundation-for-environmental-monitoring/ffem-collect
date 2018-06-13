@@ -40,6 +40,7 @@ import org.odk.collect.android.activities.CaptureSelfieActivity;
 import org.odk.collect.android.activities.CaptureSelfieActivityNewApi;
 import org.odk.collect.android.activities.CaptureSelfieVideoActivity;
 import org.odk.collect.android.activities.CaptureSelfieVideoActivityNewApi;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.utilities.FileUtil;
@@ -53,6 +54,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import io.ffem.collect.android.util.PermissionsDelegate;
 import timber.log.Timber;
 
 import static android.os.Build.MODEL;
@@ -333,7 +335,11 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
     public void onButtonClick(int id) {
         switch (id) {
             case R.id.capture_video:
-                captureVideo();
+                if (PermissionsDelegate.hasCameraPermission(getContext())) {
+                    captureVideo();
+                } else {
+                    ((CollectAbstractActivity) this.getContext()).getCameraPermission(captureButton);
+                }
                 break;
             case R.id.choose_video:
                 chooseVideo();

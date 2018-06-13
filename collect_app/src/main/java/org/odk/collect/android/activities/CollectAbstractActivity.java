@@ -107,9 +107,9 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void getLocationPermission(View clickedView) {
+    public void getAudioPermission(View clickedView) {
         currentClickedView = clickedView;
-        permissionsDelegate.requestLocationPermission();
+        permissionsDelegate.requestAudioPermission();
     }
 
     public void getCameraPermission(View clickedView) {
@@ -117,20 +117,36 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
         permissionsDelegate.requestCameraPermission();
     }
 
+    public void getLocationPermission(View clickedView) {
+        currentClickedView = clickedView;
+        permissionsDelegate.requestLocationPermission();
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (PermissionsDelegate.resultGranted(requestCode, grantResults)) {
+        if (PermissionsDelegate.resultGranted(grantResults)) {
             if (currentClickedView != null) {
                 currentClickedView.performClick();
                 currentClickedView = null;
             }
         } else {
+            String message = "";
+            switch (requestCode) {
+                case 100:
+                    message = getString(R.string.audio_permission);
+                    break;
+                case 110:
+                    message = getString(R.string.camera_permission);
+                    break;
+                case 120:
+                    message = getString(R.string.location_permission);
+                    break;
+            }
             SnackbarUtils.showSettingsSnackbar(this,
-                    getWindow().getDecorView().getRootView(),
-                    getString(R.string.location_permission));
+                    getWindow().getDecorView().getRootView(), message);
         }
     }
 }

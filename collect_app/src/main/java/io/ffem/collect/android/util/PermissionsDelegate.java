@@ -9,7 +9,10 @@ import android.support.v4.content.ContextCompat;
 
 public class PermissionsDelegate {
 
-    private static final int REQUEST_CODE = 100;
+    private static final int AUDIO_REQUEST_CODE = 100;
+    private static final int CAMERA_REQUEST_CODE = 110;
+    private static final int LOCATION_REQUEST_CODE = 120;
+    private final String[] audioPermission = {Manifest.permission.RECORD_AUDIO};
     private final String[] cameraPermission = {Manifest.permission.CAMERA};
     private final String[] locationPermission = {Manifest.permission.ACCESS_FINE_LOCATION};
     private final Activity activity;
@@ -18,23 +21,9 @@ public class PermissionsDelegate {
         this.activity = activity;
     }
 
-    public static boolean resultGranted(int requestCode, int[] grantResults) {
-
-        if (requestCode != REQUEST_CODE) {
-            return false;
-        }
-
-        if (grantResults.length < 1) {
-            return false;
-        }
-
-        for (int result : grantResults) {
-            if (result != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-
-        return true;
+    public static boolean hasAudioPermission(Context context) {
+        return (ContextCompat.checkSelfPermission(context,
+                Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED);
     }
 
     public static boolean hasCameraPermission(Context context) {
@@ -61,15 +50,7 @@ public class PermissionsDelegate {
         return true;
     }
 
-    public void requestPermissions(String[] permissions) {
-        ActivityCompat.requestPermissions(
-                activity,
-                permissions,
-                REQUEST_CODE
-        );
-    }
-
-    public boolean resultGranted(int[] grantResults) {
+    public static boolean resultGranted(int[] grantResults) {
         if (grantResults.length < 1) {
             return false;
         }
@@ -82,11 +63,23 @@ public class PermissionsDelegate {
         return true;
     }
 
+    public void requestPermissions(String[] permissions, int requestCode) {
+        ActivityCompat.requestPermissions(
+                activity,
+                permissions,
+                requestCode
+        );
+    }
+
     public void requestLocationPermission() {
-        requestPermissions(locationPermission);
+        requestPermissions(locationPermission, LOCATION_REQUEST_CODE);
     }
 
     public void requestCameraPermission() {
-        requestPermissions(cameraPermission);
+        requestPermissions(cameraPermission, CAMERA_REQUEST_CODE);
+    }
+
+    public void requestAudioPermission() {
+        requestPermissions(audioPermission, AUDIO_REQUEST_CODE);
     }
 }

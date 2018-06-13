@@ -32,6 +32,7 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.FileUtil;
 import org.odk.collect.android.utilities.MediaManager;
@@ -41,6 +42,7 @@ import org.odk.collect.android.widgets.interfaces.FileWidget;
 import java.io.File;
 import java.util.Locale;
 
+import io.ffem.collect.android.util.PermissionsDelegate;
 import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
@@ -235,7 +237,11 @@ public class AudioWidget extends QuestionWidget implements FileWidget {
     public void onButtonClick(int buttonId) {
         switch (buttonId) {
             case R.id.capture_audio:
-                captureAudio();
+                if (PermissionsDelegate.hasAudioPermission(getContext())) {
+                    captureAudio();
+                } else {
+                    ((CollectAbstractActivity) this.getContext()).getAudioPermission(captureButton);
+                }
                 break;
             case R.id.choose_sound:
                 chooseSound();
