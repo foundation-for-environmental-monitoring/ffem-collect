@@ -27,11 +27,14 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.GeoShapeGoogleMapActivity;
 import org.odk.collect.android.activities.GeoShapeOsmMapActivity;
 import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.utilities.PlayServicesUtil;
 import org.odk.collect.android.widgets.interfaces.BinaryWidget;
+
+import io.ffem.collect.android.util.PermissionsDelegate;
 
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
 
@@ -138,7 +141,11 @@ public class GeoShapeWidget extends QuestionWidget implements BinaryWidget {
 
     @Override
     public void onButtonClick(int buttonId) {
-        waitForData();
-        startGeoShapeActivity();
+        if (PermissionsDelegate.hasLocationPermission(getContext())) {
+            waitForData();
+            startGeoShapeActivity();
+        } else {
+            ((CollectAbstractActivity) this.getContext()).getLocationPermission(createShapeButton);
+        }
     }
 }

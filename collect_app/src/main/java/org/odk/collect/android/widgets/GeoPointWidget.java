@@ -31,6 +31,7 @@ import org.javarosa.core.model.data.GeoPointData;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.GeoPointActivity;
 import org.odk.collect.android.activities.GeoPointMapActivity;
 import org.odk.collect.android.activities.GeoPointOsmMapActivity;
@@ -41,6 +42,8 @@ import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 
 import java.text.DecimalFormat;
 import java.util.Locale;
+
+import io.ffem.collect.android.util.PermissionsDelegate;
 
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
 
@@ -283,6 +286,15 @@ public class GeoPointWidget extends QuestionWidget implements BinaryWidget {
 
     @Override
     public void onButtonClick(int buttonId) {
+
+        if (PermissionsDelegate.hasLocationPermission(getContext())) {
+            startGeoPointActivity();
+        } else {
+            ((CollectAbstractActivity) this.getContext()).getLocationPermission(getLocationButton);
+        }
+    }
+
+    private void startGeoPointActivity() {
         Collect.getInstance()
                 .getActivityLogger()
                 .logInstanceAction(this, "recordLocation", "click",

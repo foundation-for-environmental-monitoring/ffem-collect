@@ -18,13 +18,18 @@ package org.odk.collect.android.activities;
 
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.utilities.SnackbarUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
+
+import io.ffem.collect.android.util.PermissionsDelegate;
 
 import static org.odk.collect.android.utilities.PermissionUtils.checkIfStoragePermissionsGranted;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
@@ -32,7 +37,9 @@ import static org.odk.collect.android.utilities.PermissionUtils.isEntryPointActi
 
 public abstract class CollectAbstractActivity extends AppCompatActivity {
 
+    PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
     protected ThemeUtils themeUtils;
+    View currentClickedView;
     private boolean isInstanceStateSaved;
 
     @Override
@@ -98,5 +105,32 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void getLocationPermission(View clickedView) {
+        currentClickedView = clickedView;
+        permissionsDelegate.requestLocationPermission();
+    }
+
+    public void getCameraPermission(View clickedView) {
+        currentClickedView = clickedView;
+        permissionsDelegate.requestCameraPermission();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (PermissionsDelegate.resultGranted(requestCode, grantResults)) {
+            if (currentClickedView != null) {
+                currentClickedView.performClick();
+                currentClickedView = null;
+            }
+        } else {
+            SnackbarUtils.showSettingsSnackbar(this,
+                    getWindow().getDecorView().getRootView(),
+                    getString(R.string.location_permission));
+        }
     }
 }

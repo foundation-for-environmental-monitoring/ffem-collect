@@ -15,6 +15,7 @@ limitations under the License.
 package org.odk.collect.android.utilities;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -24,6 +25,7 @@ import io.ffem.collect.android.util.ApiUtil;
 
 public final class SnackbarUtils {
     public static final int LONG_DURATION_MS = 3500;
+    private static final float SNACK_BAR_LINE_SPACING = 1.4f;
 
     private SnackbarUtils() {
 
@@ -54,9 +56,20 @@ public final class SnackbarUtils {
      * @param message  The text to show.
      */
     public static void showSettingsSnackbar(Activity activity, View rootView, String message) {
+
         Snackbar snackbar = Snackbar
-                .make(rootView, message.trim(), Snackbar.LENGTH_INDEFINITE)
+                .make(rootView, message.trim(), LONG_DURATION_MS)
                 .setAction("SETTINGS", view -> ApiUtil.startInstalledAppDetailsActivity(activity));
+
+        View snackbarView = snackbar.getView();
+
+        TextView textView = snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+
+        textView.setTextColor(Color.WHITE);
+
+        textView.setLineSpacing(0, SNACK_BAR_LINE_SPACING);
+
+        snackbar.setActionTextColor(Color.YELLOW);
 
         snackbar.show();
     }

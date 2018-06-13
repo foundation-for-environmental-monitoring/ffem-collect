@@ -20,13 +20,18 @@ import android.net.Uri;
 import android.os.Build;
 import android.view.View;
 import android.widget.Button;
+
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CaptureSelfieActivity;
 import org.odk.collect.android.activities.CaptureSelfieActivityNewApi;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.application.Collect;
+
 import java.io.File;
 import java.util.Locale;
+
+import io.ffem.collect.android.util.PermissionsDelegate;
 
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
 
@@ -121,7 +126,11 @@ public class ImageWidget extends BaseImageWidget {
     public void onButtonClick(int buttonId) {
         switch (buttonId) {
             case R.id.capture_image:
-                captureImage();
+                if (PermissionsDelegate.hasCameraPermission(getContext())) {
+                    captureImage();
+                } else {
+                    ((CollectAbstractActivity) this.getContext()).getCameraPermission(captureButton);
+                }
                 break;
             case R.id.choose_image:
                 imageCaptureHandler.chooseImage(R.string.choose_image);
