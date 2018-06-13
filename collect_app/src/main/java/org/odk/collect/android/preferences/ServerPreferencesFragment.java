@@ -63,8 +63,8 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         GoogleAccountsManager.GoogleAccountSelectionListener {
     private static final String KNOWN_URL_LIST = "knownUrlList";
     protected EditTextPreference serverUrlPreference;
-    protected EditTextPreference usernamePreference;
-    protected EditTextPreference passwordPreference;
+    //    protected EditTextPreference usernamePreference;
+//    protected EditTextPreference passwordPreference;
     protected boolean credentialsHaveChanged = false;
     protected EditTextPreference submissionUrlPreference;
     protected EditTextPreference formListUrlPreference;
@@ -79,8 +79,8 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
 
         serverUrlPreference = (EditTextPreference) findPreference(
                 PreferenceKeys.KEY_SERVER_URL);
-        usernamePreference = (EditTextPreference) findPreference(PreferenceKeys.KEY_USERNAME);
-        passwordPreference = (EditTextPreference) findPreference(PreferenceKeys.KEY_PASSWORD);
+//        usernamePreference = (EditTextPreference) findPreference(PreferenceKeys.KEY_USERNAME);
+//        passwordPreference = (EditTextPreference) findPreference(PreferenceKeys.KEY_PASSWORD);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String urlListString = prefs.getString(KNOWN_URL_LIST, "");
@@ -106,15 +106,15 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
 //        serverUrlPreference.getEditText().setFilters(
 //                new InputFilter[]{new ControlCharacterFilter(), new WhitespaceFilter()});
 
-        usernamePreference.setOnPreferenceChangeListener(createChangeListener());
-        usernamePreference.setSummary(usernamePreference.getText());
-        usernamePreference.getEditText().setFilters(
-                new InputFilter[]{new ControlCharacterFilter()});
-
-        passwordPreference.setOnPreferenceChangeListener(createChangeListener());
-        maskPasswordSummary(passwordPreference.getText());
-        passwordPreference.getEditText().setFilters(
-                new InputFilter[]{new ControlCharacterFilter()});
+//        usernamePreference.setOnPreferenceChangeListener(createChangeListener());
+//        usernamePreference.setSummary(usernamePreference.getText());
+//        usernamePreference.getEditText().setFilters(
+//                new InputFilter[]{new ControlCharacterFilter()});
+//
+//        passwordPreference.setOnPreferenceChangeListener(createChangeListener());
+//        maskPasswordSummary(passwordPreference.getText());
+//        passwordPreference.getEditText().setFilters(
+//                new InputFilter[]{new ControlCharacterFilter()});
     }
 
     public void addGooglePreferences() {
@@ -292,7 +292,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
                         return false;
                     }
 
-                    maskPasswordSummary(pw);
+//                    maskPasswordSummary(pw);
                     clearCachedCrendentials();
 
                     // To ensure we update current credentials in CredentialsProvider
@@ -321,11 +321,11 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         };
     }
 
-    private void maskPasswordSummary(String password) {
-        passwordPreference.setSummary(password != null && password.length() > 0
-                ? "********"
-                : "");
-    }
+//    private void maskPasswordSummary(String password) {
+//        passwordPreference.setSummary(password != null && password.length() > 0
+//                ? "********"
+//                : "");
+//    }
 
     private void clearCachedCrendentials() {
         String server = (String) GeneralSharedPreferences

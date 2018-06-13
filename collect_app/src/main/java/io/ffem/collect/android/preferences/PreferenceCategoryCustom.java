@@ -1,4 +1,4 @@
-package org.odk.collect.android.preferences;
+package io.ffem.collect.android.preferences;
 
 import android.content.Context;
 import android.preference.PreferenceCategory;

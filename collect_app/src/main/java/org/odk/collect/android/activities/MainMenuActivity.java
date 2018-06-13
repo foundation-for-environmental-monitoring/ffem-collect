@@ -592,10 +592,10 @@ public class MainMenuActivity extends CollectAbstractActivity {
                 sendDataButton.setVisibility(View.GONE);
                 sendDataButton.setEnabled(false);
             }
-            sendDataButton.setText(getString(R.string.send_data));
+            sendDataButton.setText(getString(R.string.outbox));
 
         } else {
-            sendDataButton.setText(getString(R.string.send_data));
+            sendDataButton.setText(getString(R.string.outbox));
             Timber.w("Cannot update \"Send Finalized\" button label since the database is closed. "
                     + "Perhaps the app is running in the background?");
         }

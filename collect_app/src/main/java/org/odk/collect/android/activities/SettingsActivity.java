@@ -17,12 +17,13 @@ import android.widget.EditText;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.fragments.OtherPreferenceFragment;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminPreferencesActivity;
 import org.odk.collect.android.preferences.FormManagementPreferences;
 import org.odk.collect.android.preferences.ServerPreferences;
 import org.odk.collect.android.utilities.ToastUtils;
+
+import io.ffem.collect.android.preferences.OtherPreferenceFragment;
 
 public class SettingsActivity extends CollectAbstractActivity {
 

@@ -17,7 +17,7 @@
  * along with Akvo Caddisfly. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.odk.collect.android.fragments;
+package io.ffem.collect.android.preferences;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <org.odk.collect.android.preferences.PreferenceCategoryCustom
+    <io.ffem.collect.android.preferences.PreferenceCategoryCustom
         android:key="form_filling"
         android:title="@string/form_filling_category">
         <CheckBoxPreference
@@ -14,7 +13,5 @@
             android:entryValues="@array/image_size_entry_values"
             android:key="image_size"
             android:title="@string/image_size_title" />
-
-    </org.odk.collect.android.preferences.PreferenceCategoryCustom>
-
+    </io.ffem.collect.android.preferences.PreferenceCategoryCustom>
 </PreferenceScreen>

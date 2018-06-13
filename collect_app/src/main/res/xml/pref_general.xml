@@ -1,10 +1,10 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <org.odk.collect.android.preferences.PreferenceCategoryCustom android:title="@string/general">
+    <io.ffem.collect.android.preferences.PreferenceCategoryCustom android:title="@string/general">
         <Preference
             android:key="general_settings"
             android:title="@string/general_preferences" />
         <Preference
             android:key="admin_settings"
             android:title="@string/admin_preferences" />
-    </org.odk.collect.android.preferences.PreferenceCategoryCustom>
+    </io.ffem.collect.android.preferences.PreferenceCategoryCustom>
 </PreferenceScreen>

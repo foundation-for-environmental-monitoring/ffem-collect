@@ -1,14 +1,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <org.odk.collect.android.preferences.PreferenceCategoryCustom android:title="@string/server">
-        <EditTextPreference
-            android:dialogTitle="@string/change_username"
-            android:inputType="textNoSuggestions"
-            android:key="username"
-            android:title="@string/username" />
-        <EditTextPreference
-            android:dialogTitle="@string/change_password"
-            android:inputType="textPassword"
-            android:key="password"
-            android:title="@string/password" />
-    </org.odk.collect.android.preferences.PreferenceCategoryCustom>
+    <io.ffem.collect.android.preferences.PreferenceCategoryCustom android:title="@string/server">
+        <Preference
+            android:dialogTitle="@string/server_credentials"
+            android:key="server_credentials"
+            android:title="@string/server_credentials" />
+    </io.ffem.collect.android.preferences.PreferenceCategoryCustom>
 </PreferenceScreen>

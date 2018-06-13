@@ -16,11 +16,18 @@
 
 package org.odk.collect.android.preferences;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import org.odk.collect.android.R;
+
+import io.ffem.collect.android.activities.SignInActivity;
 
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_PROTOCOL;
 
@@ -32,6 +39,23 @@ public class ServerPreferences extends ServerPreferencesFragment {
 //        addPreferencesFromResource(R.xml.server_preferences);
 
         initProtocolPrefs();
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.card_row, container, false);
+
+        Preference serverPreferences = findPreference("server_credentials");
+        if (serverPreferences != null) {
+            serverPreferences.setSummary(R.string.sign_in_to_account);
+            serverPreferences.setOnPreferenceClickListener(preference -> {
+                final Intent intent = new Intent(getActivity(), SignInActivity.class);
+                intent.putExtra("isSettings", true);
+                getActivity().startActivity(intent);
+                return true;
+            });
+        }
+        return rootView;
     }
 
     private void initProtocolPrefs() {

@@ -39,6 +39,12 @@
             android:orientation="vertical">
 
             <FrameLayout
+                android:id="@+id/layoutServer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <FrameLayout
                 android:id="@+id/layoutFormManagement"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,12 +52,6 @@
 
             <FrameLayout
                 android:id="@+id/layoutInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <FrameLayout
-                android:id="@+id/layoutServer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />

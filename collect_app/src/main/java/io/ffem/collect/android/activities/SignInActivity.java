@@ -56,14 +56,18 @@ public class SignInActivity extends Activity {
                 finish();
             }
         });
-        if (isUserSignedIn()) {
-            startActivity(new Intent(this, MainMenuActivity.class));
-            finish();
-        }
 
         setContentView(R.layout.activity_signin);
 
         initialize();
+
+        if (isUserSignedIn() && !getIntent().getBooleanExtra("isSettings", false)) {
+            startActivity(new Intent(this, MainMenuActivity.class));
+            finish();
+        } else {
+            editText.setText(AuthDialogUtility.getUserNameFromPreferences());
+            editPassword.setText(AuthDialogUtility.getPasswordFromPreferences());
+        }
     }
 
     @Override
