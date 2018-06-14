@@ -258,6 +258,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
             if (success) {
                 ToastUtils.showLongToast(R.string.settings_successfully_loaded_file_notification);
                 j.delete();
+                recreate();
 
                 // Delete settings file to prevent overwrite of settings from JSON file on next startup
                 if (f.exists()) {
@@ -271,6 +272,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
             if (success) {
                 ToastUtils.showLongToast(R.string.settings_successfully_loaded_file_notification);
                 f.delete();
+                recreate();
             } else {
                 ToastUtils.showLongToast(R.string.corrupt_settings_file_notification);
             }

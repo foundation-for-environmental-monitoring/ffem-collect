@@ -75,9 +75,9 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
 @SuppressLint("ViewConstructor")
 public class ODKView extends ScrollView implements OnLongClickListener {
 
-    private LinearLayout view;
-    private LinearLayout.LayoutParams layout;
-    private ArrayList<QuestionWidget> widgets;
+    private final LinearLayout view;
+    private final LinearLayout.LayoutParams layout;
+    private final ArrayList<QuestionWidget> widgets;
 
     public static final String FIELD_LIST = "field-list";
 
