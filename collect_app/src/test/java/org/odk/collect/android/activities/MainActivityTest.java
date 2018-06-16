@@ -42,7 +42,7 @@ public class MainActivityTest {
      * {@link Test} to assert {@link MainMenuActivity} for not null.
      */
     @Test
-    public void nullActivityTest() throws Exception {
+    public void nullActivityTest() {
         assertNotNull(mainMenuActivity);
     }
 
@@ -50,7 +50,7 @@ public class MainActivityTest {
      * {@link Test} to assert title of {@link MainMenuActivity} for not null.
      */
     @Test
-    public void titleTest() throws Exception {
+    public void titleTest() {
         Toolbar toolbar = mainMenuActivity.findViewById(R.id.toolbar);
         assertEquals(mainMenuActivity.getString(R.string.main_menu), toolbar.getTitle());
     }
@@ -59,7 +59,7 @@ public class MainActivityTest {
      * {@link Test} to assert Options Menu's functioning.
      */
     @Test
-    public void optionsMenuTest() throws Exception {
+    public void optionsMenuTest() {
         Menu menu = shadowOf(mainMenuActivity).getOptionsMenu();
 
         assertNotNull(menu);
@@ -99,7 +99,7 @@ public class MainActivityTest {
      * {@link Test} to assert dataButton's functioning.
      */
     @Test
-    public void dataButtonTest() throws Exception {
+    public void dataButtonTest() {
         Button dataButton = mainMenuActivity.findViewById(R.id.enter_data);
 
         assertNotNull(dataButton);
@@ -118,7 +118,7 @@ public class MainActivityTest {
      * {@link Test} to assert reviewDataButton's functioning.
      */
     @Test
-    public void reviewDataButtonTest() throws Exception {
+    public void reviewDataButtonTest() {
         Button reviewDataButton = mainMenuActivity.findViewById(R.id.review_data);
 
         assertNotNull(reviewDataButton);
@@ -137,7 +137,7 @@ public class MainActivityTest {
      * {@link Test} to assert sendDataButton's functioning.
      */
     @Test
-    public void sendDataButtonTest() throws Exception {
+    public void sendDataButtonTest() {
         Button sendDataButton = mainMenuActivity.findViewById(R.id.send_data);
 
         assertNotNull(sendDataButton);
@@ -156,7 +156,7 @@ public class MainActivityTest {
      * {@link Test} to assert viewSentFormButton's functioning.
      */
     @Test
-    public void viewSentFormButtonTest() throws Exception {
+    public void viewSentFormButtonTest() {
         Button viewSentFormButton = mainMenuActivity.findViewById(R.id.view_sent_forms);
 
         assertNotNull(viewSentFormButton);
@@ -171,33 +171,33 @@ public class MainActivityTest {
                 shadowIntent.getIntentClass().getName());
     }
 
-    /**
-     * {@link Test} to assert getFormButton's functioning.
-     */
-    @Test
-    public void getFormButtonTest() throws Exception {
-        Button getFormButton = mainMenuActivity.findViewById(R.id.get_forms);
-        assertNotNull(getFormButton);
-        assertEquals(View.VISIBLE, getFormButton.getVisibility());
-        assertEquals(mainMenuActivity.getString(R.string.get_forms), getFormButton.getText());
-    }
-
-    /**
-     * {@link Test} to assert manageFilesButton's functioning.
-     */
-    @Test
-    public void manageFilesButtonTest() throws Exception {
-        Button manageFilesButton = mainMenuActivity.findViewById(R.id.manage_forms);
-
-        assertNotNull(manageFilesButton);
-        assertEquals(View.VISIBLE, manageFilesButton.getVisibility());
-        assertEquals(mainMenuActivity.getString(R.string.manage_files), manageFilesButton.getText());
-
-        manageFilesButton.performClick();
-        ShadowActivity shadowActivity = shadowOf(mainMenuActivity);
-        Intent startedIntent = shadowActivity.getNextStartedActivity();
-        ShadowIntent shadowIntent = shadowOf(startedIntent);
-        assertEquals(FileManagerTabs.class.getName(),
-                shadowIntent.getIntentClass().getName());
-    }
+//    /**
+//     * {@link Test} to assert getFormButton's functioning.
+//     */
+//    @Test
+//    public void getFormButtonTest() throws Exception {
+//        Button getFormButton = mainMenuActivity.findViewById(R.id.get_forms);
+//        assertNotNull(getFormButton);
+//        assertEquals(View.VISIBLE, getFormButton.getVisibility());
+//        assertEquals(mainMenuActivity.getString(R.string.get_forms), getFormButton.getText());
+//    }
+//
+//    /**
+//     * {@link Test} to assert manageFilesButton's functioning.
+//     */
+//    @Test
+//    public void manageFilesButtonTest() throws Exception {
+//        Button manageFilesButton = mainMenuActivity.findViewById(R.id.manage_forms);
+//
+//        assertNotNull(manageFilesButton);
+//        assertEquals(View.VISIBLE, manageFilesButton.getVisibility());
+//        assertEquals(mainMenuActivity.getString(R.string.manage_files), manageFilesButton.getText());
+//
+//        manageFilesButton.performClick();
+//        ShadowActivity shadowActivity = shadowOf(mainMenuActivity);
+//        Intent startedIntent = shadowActivity.getNextStartedActivity();
+//        ShadowIntent shadowIntent = shadowOf(startedIntent);
+//        assertEquals(FileManagerTabs.class.getName(),
+//                shadowIntent.getIntentClass().getName());
+//    }
 }

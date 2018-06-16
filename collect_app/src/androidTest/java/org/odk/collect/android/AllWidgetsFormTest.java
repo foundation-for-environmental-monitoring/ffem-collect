@@ -76,6 +76,7 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.odk.collect.android.activities.FormEntryActivity.EXTRA_TESTING_PATH;
+import static org.odk.collect.android.application.Collect.APP_FOLDER;
 
 // import android.support.annotation.Nullable;
 // import org.odk.collect.android.activities.BearingActivity;
@@ -95,7 +96,7 @@ import static org.odk.collect.android.activities.FormEntryActivity.EXTRA_TESTING
 public class AllWidgetsFormTest {
 
     private static final String ALL_WIDGETS_FORM = "all-widgets.xml";
-    private static final String FORMS_DIRECTORY = "/odk/forms/";
+    private static final String FORMS_DIRECTORY = File.separator + APP_FOLDER + "/forms/";
 
     private final Random random = new Random();
     private final ActivityResult okResult = new ActivityResult(RESULT_OK, new Intent());

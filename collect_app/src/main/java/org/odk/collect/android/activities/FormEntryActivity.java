@@ -105,7 +105,6 @@ import org.odk.collect.android.tasks.SavePointTask;
 import org.odk.collect.android.tasks.SaveResult;
 import org.odk.collect.android.tasks.SaveToDiskTask;
 import org.odk.collect.android.utilities.ActivityAvailability;
-import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.DependencyProvider;
 import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.FileUtils;
@@ -2573,33 +2572,33 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             Intent reqIntent = getIntent();
             boolean showFirst = reqIntent.getBooleanExtra("start", false);
 
-            if (!showFirst) {
-                // we've just loaded a saved form, so start in the hierarchy view
-
-                if (!allowMovingBackwards) {
-                    FormIndex formIndex = SaveFormIndexTask.loadFormIndexFromFile();
-                    if (formIndex != null) {
-                        formController.jumpToIndex(formIndex);
-                        refreshCurrentView();
-                        return;
-                    }
-                }
-
-                String formMode = reqIntent.getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE);
-                if (formMode == null || ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)) {
-                    formController.getTimerLogger().logTimerEvent(TimerLogger.EventTypes.FORM_RESUME, 0, null, false, true);
-                    formController.getTimerLogger().logTimerEvent(TimerLogger.EventTypes.HIERARCHY, 0, null, false, true);
-                    startActivity(new Intent(this, EditFormHierarchyActivity.class));
-                    return; // so we don't show the intro screen before jumping to the hierarchy
-                } else {
-                    if (ApplicationConstants.FormModes.VIEW_SENT.equalsIgnoreCase(formMode)) {
-                        startActivity(new Intent(this, ViewFormHierarchyActivity.class));
-                    }
-                    finish();
-                }
-            } else {
+//            if (!showFirst) {
+//                // we've just loaded a saved form, so start in the hierarchy view
+//
+//                if (!allowMovingBackwards) {
+//                    FormIndex formIndex = SaveFormIndexTask.loadFormIndexFromFile();
+//                    if (formIndex != null) {
+//                        formController.jumpToIndex(formIndex);
+//                        refreshCurrentView();
+//                        return;
+//                    }
+//                }
+//
+//                String formMode = reqIntent.getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE);
+//                if (formMode == null || ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)) {
+//                    formController.getTimerLogger().logTimerEvent(TimerLogger.EventTypes.FORM_RESUME, 0, null, false, true);
+//                    formController.getTimerLogger().logTimerEvent(TimerLogger.EventTypes.HIERARCHY, 0, null, false, true);
+//                    startActivity(new Intent(this, EditFormHierarchyActivity.class));
+//                    return; // so we don't show the intro screen before jumping to the hierarchy
+//                } else {
+//                    if (ApplicationConstants.FormModes.VIEW_SENT.equalsIgnoreCase(formMode)) {
+//                        startActivity(new Intent(this, ViewFormHierarchyActivity.class));
+//                    }
+//                    finish();
+//                }
+//            } else {
                 formController.getTimerLogger().logTimerEvent(TimerLogger.EventTypes.FORM_RESUME, 0, null, false, true);
-            }
+//            }
         }
 
         refreshCurrentView();

@@ -25,6 +25,7 @@ import android.text.method.TextKeyListener.Capitalize;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -110,7 +111,7 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         params.setMargins(7, 10, 7, 20);
 
         // set text formatting
-        answer = new TextView(context);
+        answer = new EditText(context);
         answer.setId(ViewIds.generateViewId());
         answer.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize());
         answer.setLayoutParams(params);

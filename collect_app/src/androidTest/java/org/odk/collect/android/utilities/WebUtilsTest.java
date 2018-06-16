@@ -2,6 +2,7 @@ package org.odk.collect.android.utilities;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.test.MockedServerTest;
 import org.opendatakit.httpclientandroidlib.client.HttpClient;
@@ -33,7 +34,7 @@ public class WebUtilsTest extends MockedServerTest {
         // then
         RecordedRequest r = nextRequest();
         assertEquals("GET /some-path HTTP/1.1", r.getRequestLine());
-        assertTrue(r.getHeader("User-Agent").matches("Dalvik/.* org.odk.collect.android/.*"));
+        assertTrue(r.getHeader("User-Agent").matches("Dalvik/.* " + BuildConfig.APPLICATION_ID + "/.*"));
     }
 
     @Test
@@ -42,7 +43,7 @@ public class WebUtilsTest extends MockedServerTest {
         WebUtils.getXmlDocument(url("/list-forms"), httpContext(), httpClient());
 
         // then
-        assertMatches("Dalvik/.* org.odk.collect.android/.*",
+        assertMatches("Dalvik/.* " + BuildConfig.APPLICATION_ID + "/.*",
                 nextRequest().getHeader("User-Agent"));
     }
 
@@ -76,7 +77,7 @@ public class WebUtilsTest extends MockedServerTest {
     }
 
     @Test
-    public void getXmlDocument_request_shouldReportInvalidUrl() throws Exception {
+    public void getXmlDocument_request_shouldReportInvalidUrl() {
         // when
         DocumentFetchResult res = WebUtils.getXmlDocument("NOT_A_URL", httpContext(), httpClient());
 
@@ -86,7 +87,7 @@ public class WebUtilsTest extends MockedServerTest {
     }
 
     @Test
-    public void getXmlDocument_request_shouldReportInvalidHost() throws Exception {
+    public void getXmlDocument_request_shouldReportInvalidHost() {
         // when
         DocumentFetchResult res = WebUtils.getXmlDocument("file:/some/path", httpContext(), httpClient());
 

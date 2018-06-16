@@ -2,16 +2,17 @@ package org.odk.collect.android.tasks;
 
 import android.net.Uri;
 
-import java.io.File;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.dto.Instance;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.tasks.InstanceUploader.Outcome;
 import org.odk.collect.android.test.MockedServerTest;
+
+import java.io.File;
 
 import okhttp3.mockwebserver.RecordedRequest;
 
@@ -32,7 +33,7 @@ public class InstanceServerUploaderTest extends MockedServerTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         cleanUpTempFiles();
         resetInstancesContentProvider();
     }
@@ -56,7 +57,7 @@ public class InstanceServerUploaderTest extends MockedServerTest {
             RecordedRequest r = nextRequest();
             assertEquals("HEAD", r.getMethod());
             assertMatches("/submission\\?deviceID=\\w+%3A\\w+", r.getPath());
-            assertMatches("Dalvik/.* org.odk.collect.android/.*", r.getHeader("User-Agent"));
+            assertMatches("Dalvik/.* " + BuildConfig.APPLICATION_ID + "/.*", r.getHeader("User-Agent"));
             assertEquals("1.0", r.getHeader("X-OpenRosa-Version"));
             assertEquals("gzip,deflate", r.getHeader("Accept-Encoding"));
         }
@@ -66,7 +67,7 @@ public class InstanceServerUploaderTest extends MockedServerTest {
             RecordedRequest r = nextRequest();
             assertEquals("POST", r.getMethod());
             assertMatches("/submission\\?deviceID=\\w+%3A\\w+", r.getPath());
-            assertMatches("Dalvik/.* org.odk.collect.android/.*", r.getHeader("User-Agent"));
+            assertMatches("Dalvik/.* " + BuildConfig.APPLICATION_ID + "/.*", r.getHeader("User-Agent"));
             assertEquals("1.0", r.getHeader("X-OpenRosa-Version"));
             assertEquals("gzip,deflate", r.getHeader("Accept-Encoding"));
             assertMatches("multipart/form-data; boundary=.*", r.getHeader("Content-Type"));
