@@ -1,6 +1,5 @@
 package io.ffem.collect.android.activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.EditText;
 
 import org.odk.collect.android.R;
@@ -18,15 +20,17 @@ import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.utilities.AuthDialogUtility;
+import org.odk.collect.android.utilities.ThemeUtils;
 
 import io.ffem.collect.android.util.AdjustingViewGlobalLayoutListener;
 
+import static android.view.View.GONE;
 import static org.odk.collect.android.utilities.PermissionUtils.requestStoragePermissions;
 
 /**
  * Sign in screen shown on app first launch
  */
-public class SignInActivity extends Activity {
+public class SignInActivity extends AppCompatActivity {
     private static final boolean EXIT = true;
 
     private EditText editText;
@@ -36,7 +40,6 @@ public class SignInActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
         requestStoragePermissions(this, new PermissionListener() {
             @Override
@@ -57,14 +60,42 @@ public class SignInActivity extends Activity {
             }
         });
 
+        boolean isSettings = getIntent().getBooleanExtra("isSettings", false);
+
+        if (isUserSignedIn() && !isSettings) {
+            startActivity(new Intent(getBaseContext(), MainMenuActivity.class));
+            finish();
+        }
+
+        super.onCreate(savedInstanceState);
+
+        ThemeUtils themeUtils = new ThemeUtils(this);
+        setTheme(themeUtils.getAppTheme());
+
         setContentView(R.layout.activity_signin);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        try {
+            setSupportActionBar(toolbar);
+        } catch (Exception ignored) {
+        }
+
+        if (isSettings) {
+
+            findViewById(R.id.imageLogo).setVisibility(GONE);
+
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+
+            setTitle(R.string.server_credentials);
+        } else {
+            toolbar.setVisibility(GONE);
+        }
 
         initialize();
 
-        if (isUserSignedIn() && !getIntent().getBooleanExtra("isSettings", false)) {
-            startActivity(new Intent(this, MainMenuActivity.class));
-            finish();
-        } else {
+        if (!isUserSignedIn() || isSettings) {
             editText.setText(AuthDialogUtility.getUserNameFromPreferences());
             editPassword.setText(AuthDialogUtility.getPasswordFromPreferences());
         }
@@ -178,5 +209,15 @@ public class SignInActivity extends Activity {
         alertDialog.setCancelable(false);
         alertDialog.setButton(getString(R.string.ok), errorListener);
         alertDialog.show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
