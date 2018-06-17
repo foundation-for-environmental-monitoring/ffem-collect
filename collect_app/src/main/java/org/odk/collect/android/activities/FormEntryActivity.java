@@ -107,6 +107,7 @@ import org.odk.collect.android.tasks.SavePointTask;
 import org.odk.collect.android.tasks.SaveResult;
 import org.odk.collect.android.tasks.SaveToDiskTask;
 import org.odk.collect.android.utilities.ActivityAvailability;
+import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.DependencyProvider;
 import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.FileUtils;
@@ -2580,7 +2581,12 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             formController.getTimerLogger().logTimerEvent(TimerLogger.EventTypes.FORM_START, 0, null, false, true);
         } else {
             Intent reqIntent = getIntent();
-            boolean showFirst = reqIntent.getBooleanExtra("start", false);
+            String formMode = reqIntent.getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE);
+            if (ApplicationConstants.FormModes.VIEW_SENT.equalsIgnoreCase(formMode)) {
+                startActivity(new Intent(this, ViewFormHierarchyActivity.class));
+                finish();
+            }
+//            boolean showFirst = reqIntent.getBooleanExtra("start", false);
 
 //            if (!showFirst) {
 //                // we've just loaded a saved form, so start in the hierarchy view
