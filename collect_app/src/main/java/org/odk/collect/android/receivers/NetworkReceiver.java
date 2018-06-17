@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.NotificationCompat;
 
+import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.NotificationActivity;
 import org.odk.collect.android.application.Collect;
@@ -62,7 +63,7 @@ public class NetworkReceiver extends BroadcastReceiver implements InstanceUpload
             }
 
             ServerPollingJob.pollServerIfNeeded();
-        } else if (action.equals("io.ffem.collect.FormSaved")) {
+        } else if (action.equals(BuildConfig.APPLICATION_ID + ".FormSaved")) {
             ConnectivityManager connectivityManager = (ConnectivityManager) context
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo ni = connectivityManager.getActiveNetworkInfo();

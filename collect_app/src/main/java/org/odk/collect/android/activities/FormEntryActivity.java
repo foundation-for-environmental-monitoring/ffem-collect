@@ -2847,7 +2847,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     }
 
     private void sendSavedBroadcast() {
-        sendBroadcast(new Intent("io.ffem.collect.FormSaved"));
+        sendBroadcast(new Intent(BuildConfig.APPLICATION_ID + ".FormSaved"));
     }
 
     @Override
