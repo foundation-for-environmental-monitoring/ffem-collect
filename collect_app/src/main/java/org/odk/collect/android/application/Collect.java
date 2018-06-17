@@ -94,8 +94,8 @@ public class Collect extends Application implements HasActivityInjector {
     public static final String TMPFILE_PATH = CACHE_PATH + File.separator + "tmp.jpg";
     public static final String TMPDRAWFILE_PATH = CACHE_PATH + File.separator + "tmpDraw.jpg";
     public static final String LOG_PATH = ODK_ROOT + File.separator + "log";
-    public static final String DEFAULT_FONTSIZE = "17";
-    public static final int DEFAULT_FONTSIZE_INT = 17;
+    public static final String DEFAULT_FONTSIZE = "18";
+    public static final int DEFAULT_FONTSIZE_INT = 18;
     public static final String OFFLINE_LAYERS = ODK_ROOT + File.separator + "layers";
     public static final String SETTINGS = ODK_ROOT + File.separator + "settings";
 

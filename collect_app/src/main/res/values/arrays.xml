@@ -31,9 +31,9 @@ the specific language governing permissions and limitations under the License. -
     <string-array name="font_size_entry_values" translatable="false">
         <item>25</item>
         <item>21</item>
-        <item>17</item>
-        <item>15</item>
-        <item>12</item>
+        <item>18</item>
+        <item>16</item>
+        <item>13</item>
     </string-array>
     <string-array name="font_size_entries">
         <item>@string/font_size_extra_large</item>
