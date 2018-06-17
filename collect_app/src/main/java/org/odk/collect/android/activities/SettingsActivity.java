@@ -23,6 +23,7 @@ import org.odk.collect.android.preferences.FormManagementPreferences;
 import org.odk.collect.android.preferences.ServerPreferences;
 import org.odk.collect.android.utilities.ToastUtils;
 
+import io.ffem.collect.android.preferences.AdminPreferenceFragment;
 import io.ffem.collect.android.preferences.OtherPreferenceFragment;
 
 public class SettingsActivity extends CollectAbstractActivity {
@@ -38,7 +39,6 @@ public class SettingsActivity extends CollectAbstractActivity {
 
         adminPreferences = this.getSharedPreferences(
                 AdminPreferencesActivity.ADMIN_PREFERENCES, 0);
-
     }
 
     @Override
@@ -64,6 +64,11 @@ public class SettingsActivity extends CollectAbstractActivity {
         getFragmentManager().beginTransaction()
                 .replace(R.id.layoutServer, new ServerPreferences())
                 .commit();
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.layoutAdmin, new AdminPreferenceFragment())
+                .commit();
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         try {

@@ -29,6 +29,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialog;
 import org.odk.collect.android.utilities.ResetUtility;
 
@@ -196,8 +197,8 @@ public class ResetDialogPreference extends DialogPreference implements CompoundB
                 resultMessage.append("\n\n");
             }
         }
-        if (!((AdminPreferencesActivity) getContext()).isInstanceStateSaved()) {
-            ((AdminPreferencesActivity) getContext()).runOnUiThread(new Thread(new Runnable() {
+        if (!((CollectAbstractActivity) getContext()).isInstanceStateSaved()) {
+            ((CollectAbstractActivity) getContext()).runOnUiThread(new Thread(new Runnable() {
                 public void run() {
                     if (resetActions.contains(RESET_PREFERENCES)) {
                         ((AdminPreferencesActivity) getContext()).recreate();
