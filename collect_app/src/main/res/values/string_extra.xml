@@ -18,6 +18,9 @@
     <string name="delete_forms">Delete Blank or Saved Forms</string>
     <string name="server_credentials">Server credentials</string>
     <string name="outbox">Outbox</string>
+    <string name="app_not_found">App not found</string>
+    <string name="install_app">ffem Water or ffem Soil app is required for this question.\n\nInstall the appropriate app from Play store.</string>
+    <string name="go_to_play_store">Go to Play store</string>
 
     <!--Update-->
     <string name="update">Update</string>

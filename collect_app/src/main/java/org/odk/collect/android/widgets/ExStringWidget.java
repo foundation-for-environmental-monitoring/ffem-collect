@@ -19,17 +19,16 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.support.v7.app.AlertDialog;
 import android.text.method.TextKeyListener;
 import android.text.method.TextKeyListener.Capitalize;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
@@ -100,7 +99,7 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
     protected TextView answer;
     private boolean hasExApp = true;
     private final Button launchIntentButton;
-    private final Drawable textBackground;
+//    private final Drawable textBackground;
 
     private ActivityAvailability activityAvailability;
 
@@ -111,11 +110,11 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         params.setMargins(7, 10, 7, 20);
 
         // set text formatting
-        answer = new EditText(context);
+        answer = new TextView(context);
         answer.setId(ViewIds.generateViewId());
         answer.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize());
         answer.setLayoutParams(params);
-        textBackground = answer.getBackground();
+//        textBackground = answer.getBackground();
         answer.setBackground(null);
         answer.setTextColor(themeUtils.getPrimaryTextColor());
 
@@ -278,21 +277,35 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
     }
 
     private void onException(String toastText) {
-        hasExApp = false;
-        if (!getFormEntryPrompt().isReadOnly()) {
-            answer.setBackground(textBackground);
-            answer.setFocusable(true);
-            answer.setFocusableInTouchMode(true);
-            answer.setEnabled(true);
-        }
-        launchIntentButton.setEnabled(false);
-        launchIntentButton.setFocusable(false);
-        cancelWaitingForData();
+//        hasExApp = false;
+//        if (!getFormEntryPrompt().isReadOnly()) {
+//            answer.setBackground(textBackground);
+//            answer.setFocusable(true);
+//            answer.setFocusableInTouchMode(true);
+//            answer.setEnabled(true);
+//        }
+//        launchIntentButton.setEnabled(false);
+//        launchIntentButton.setFocusable(false);
+//        cancelWaitingForData();
 
-        Toast.makeText(getContext(),
-                toastText, Toast.LENGTH_SHORT)
+//        Toast.makeText(getContext(),
+//                toastText, Toast.LENGTH_SHORT)
+//                .show();
+//        Timber.d(toastText);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.Theme_AppCompat_Light_Dialog);
+
+        builder.setTitle(R.string.app_not_found)
+                .setMessage(R.string.install_app)
+                .setPositiveButton(R.string.go_to_play_store, (dialogInterface, i) -> {
+                    getContext().startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("https://play.google.com/store/apps/developer?id=Foundation+for+Environmental+Monitoring")));
+                })
+                .setNegativeButton(android.R.string.cancel,
+                        (dialogInterface, i) -> dialogInterface.dismiss())
+                .setCancelable(false)
                 .show();
-        Timber.d(toastText);
+
         focusAnswer();
     }
 }
