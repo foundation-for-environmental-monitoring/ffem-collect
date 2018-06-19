@@ -40,6 +40,9 @@ public class ViewFormHierarchyActivity extends FormHierarchyActivity {
 
         Collect.getInstance().getFormController().stepToOuterScreenEvent();
 
+        View buttonHolder = findViewById(R.id.buttonholder);
+        buttonHolder.setVisibility(View.GONE);
+
         Button exitButton = findViewById(R.id.exitButton);
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
