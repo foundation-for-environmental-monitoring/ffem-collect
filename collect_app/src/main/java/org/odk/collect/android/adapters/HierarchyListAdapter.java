@@ -16,6 +16,7 @@
 
 package org.odk.collect.android.adapters;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,15 +38,23 @@ public class HierarchyListAdapter extends RecyclerView.Adapter<HierarchyListAdap
     private final OnElementClickListener listener;
 
     private final List<HierarchyElement> hierarchyElements;
+    private boolean isEnabled;
 
-    public HierarchyListAdapter(List<HierarchyElement> listElements, OnElementClickListener listener) {
+    public HierarchyListAdapter(List<HierarchyElement> listElements, OnElementClickListener listener, boolean isEnabled) {
         this.hierarchyElements = listElements;
         this.listener = listener;
+        this.isEnabled = isEnabled;
     }
 
     @Override
     public HierarchyListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.hierarchy_element, parent, false));
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.hierarchy_element, parent, false);
+
+        if (!isEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            view.setForeground(null);
+        }
+
+        return new ViewHolder(view);
     }
 
     @Override

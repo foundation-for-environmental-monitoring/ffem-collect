@@ -35,6 +35,7 @@ public class ViewFormHierarchyActivity extends FormHierarchyActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        isEnabled = false;
         super.onCreate(savedInstanceState);
 
         Collect.getInstance().getFormController().stepToOuterScreenEvent();
@@ -54,6 +55,8 @@ public class ViewFormHierarchyActivity extends FormHierarchyActivity {
 
         jumpBeginningButton.setVisibility(View.GONE);
         jumpEndButton.setVisibility(View.GONE);
+
+        recyclerView.setBackgroundColor(getResources().getColor(R.color.disabled_gray));
     }
 
 
@@ -113,7 +116,7 @@ public class ViewFormHierarchyActivity extends FormHierarchyActivity {
                 return;
         }
 
-        recyclerView.setAdapter(new HierarchyListAdapter(formList, this::onElementClick));
+        recyclerView.setAdapter(new HierarchyListAdapter(formList, this::onElementClick, isEnabled));
         ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
     }
 }

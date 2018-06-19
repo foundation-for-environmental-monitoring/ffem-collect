@@ -13,7 +13,13 @@ limitations under the License.
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:foreground="?android:attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:minHeight="70dp"
+    android:paddingBottom="10dp"
+    android:paddingEnd="15dp"
+    android:paddingStart="15dp"
+    android:paddingTop="10dp">
 
     <ImageView
         android:id="@+id/icon"
@@ -27,12 +33,17 @@ limitations under the License.
         android:id="@+id/primary_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:text="Primary Text"
+        android:textColor="?primaryTextColor"
+        android:textSize="20sp"
+        android:textStyle="bold"
         android:layout_toEndOf="@id/icon"
         android:layout_toRightOf="@id/icon" />
 
     <TextView
         android:id="@+id/secondary_text"
+        android:text="Secondary Text"
+        android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/primary_text"

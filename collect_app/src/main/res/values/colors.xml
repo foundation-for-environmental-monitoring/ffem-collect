@@ -22,7 +22,7 @@ the License.
     <!-- Light Theme Palette -->
     <color name="primary">#585858</color>
     <color name="white">@android:color/white</color>
-    <color name="lightPrimaryTextColor">@android:color/black</color>
+    <color name="lightPrimaryTextColor">#232323</color>
     <color name="lightIconColor">@android:color/black</color>
     <color name="lightTintColor">#1a8302</color>
 

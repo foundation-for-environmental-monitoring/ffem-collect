@@ -14,6 +14,7 @@
 
 package org.odk.collect.android.activities;
 
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.KeyEvent;
@@ -31,6 +32,12 @@ import java.util.ArrayList;
 import timber.log.Timber;
 
 public class EditFormHierarchyActivity extends FormHierarchyActivity {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        isEnabled = true;
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public void onElementClick(HierarchyElement element) {
@@ -89,7 +96,7 @@ public class EditFormHierarchyActivity extends FormHierarchyActivity {
                 return;
         }
 
-        recyclerView.setAdapter(new HierarchyListAdapter(formList, this::onElementClick));
+        recyclerView.setAdapter(new HierarchyListAdapter(formList, this::onElementClick, isEnabled));
         ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
     }
 

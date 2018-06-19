@@ -62,6 +62,8 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
     protected Button jumpEndButton;
     protected RecyclerView recyclerView;
 
+    protected boolean isEnabled;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -351,7 +353,7 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
                         formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
             }
 
-            recyclerView.setAdapter(new HierarchyListAdapter(formList, this::onElementClick));
+            recyclerView.setAdapter(new HierarchyListAdapter(formList, this::onElementClick, isEnabled));
 
             // set the controller back to the current index in case the user hits 'back'
             formController.jumpToIndex(currentIndex);
