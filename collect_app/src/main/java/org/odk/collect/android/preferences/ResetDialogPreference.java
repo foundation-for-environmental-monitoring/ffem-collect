@@ -201,7 +201,7 @@ public class ResetDialogPreference extends DialogPreference implements CompoundB
             ((CollectAbstractActivity) getContext()).runOnUiThread(new Thread(new Runnable() {
                 public void run() {
                     if (resetActions.contains(RESET_PREFERENCES)) {
-                        ((AdminPreferencesActivity) getContext()).recreate();
+                        ((CollectAbstractActivity) getContext()).recreate();
                     }
                     ResetSettingsResultDialog resetSettingsResultDialog = ResetSettingsResultDialog.newInstance(String.valueOf(resultMessage));
                     try {
