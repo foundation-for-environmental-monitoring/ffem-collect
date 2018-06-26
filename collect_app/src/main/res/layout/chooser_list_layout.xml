@@ -14,11 +14,11 @@ the License.
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <!-- Toolbar -->
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar"/>
 
     <LinearLayout
         android:id="@+id/llParent"
@@ -31,17 +31,17 @@ the License.
             android:id="@id/android:list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@android:id/empty"
             style="@style/emptyViewStyle"
-            android:text="@string/no_items_display_forms" />
+            android:text="@string/no_items_display_forms"/>
     </LinearLayout>
 
     <include
         layout="@layout/toolbar_action_bar_shadow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar" />
+        android:layout_below="@id/toolbar"/>
 </RelativeLayout>

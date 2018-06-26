@@ -44,9 +44,9 @@ the specific language governing permissions and limitations under the License.
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
+            android:textColor="?primaryTextColor"
             android:lineSpacingMultiplier="1.2"
             android:text="@string/save_form_as"
-            android:textColor="?primaryTextColor"
             android:textSize="21sp" />
 
         <EditText

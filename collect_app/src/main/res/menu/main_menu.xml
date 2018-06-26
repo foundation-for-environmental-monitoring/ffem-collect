@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Copyright 2016 Nafundi
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 Nafundi
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,16 +19,16 @@ limitations under the License.
     <item
         android:id="@+id/menu_about"
         android:title="@string/about_preferences"
-        app:showAsAction="never" />
+        app:showAsAction="never"/>
 
     <item
         android:id="@+id/menu_general_preferences"
         android:title="@string/general_preferences"
-        app:showAsAction="never" />
+        app:showAsAction="never"/>
 
     <item
         android:id="@+id/menu_admin_preferences"
         android:title="@string/admin_preferences"
-        app:showAsAction="never" />
+        app:showAsAction="never"/>
 
 </menu>
