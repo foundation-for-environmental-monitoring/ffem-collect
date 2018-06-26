@@ -16,7 +16,7 @@
     than title-->
     <item
         android:id="@+id/menu_save"
-        android:icon="@drawable/ic_save_tool"
+        android:icon="@drawable/ic_save"
         android:title="@string/save_all_answers"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"/>
@@ -32,9 +32,9 @@
         android:title="@string/change_language"
         app:showAsAction="never"/>
 
-    <!--<item-->
-    <!--android:id="@+id/menu_preferences"-->
-    <!--android:title="@string/general_preferences"-->
-    <!--app:showAsAction="never"/>-->
+    <item
+        android:id="@+id/menu_preferences"
+        android:title="@string/general_preferences"
+        app:showAsAction="never" />
 
 </menu>

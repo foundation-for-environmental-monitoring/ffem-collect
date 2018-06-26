@@ -12,12 +12,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_delete"
-        android:icon="@drawable/ic_delete_tool"
-        android:title="@string/delete_forms"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/menu_sort"
         android:icon="@drawable/ic_sort"
         android:title="@string/sort_the_list"

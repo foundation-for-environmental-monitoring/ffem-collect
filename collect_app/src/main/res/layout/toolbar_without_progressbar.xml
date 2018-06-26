@@ -6,8 +6,8 @@
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimary"
     android:minHeight="?attr/actionBarSize"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     app:contentInsetEnd="0dp"
-    app:contentInsetStart="16dp"
+    app:contentInsetStart="0dp"
     app:contentInsetStartWithNavigation="0dp"
-    app:titleTextColor="?attr/textColorPrimary" />
+    app:navigationIcon="@drawable/notes"
+    app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />

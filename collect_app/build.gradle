@@ -35,6 +35,17 @@ android {
         archivesBaseName = 'collect'
     }
 
+    flavorDimensions "default"
+
+    productFlavors {
+        branded {
+            applicationId "io.ffem.collect"
+        }
+        odk {
+            applicationId "org.odk.collect.android"
+        }
+    }
+
     signingConfigs {
         release {
             if (secrets.getProperty('FFEM_RELEASE_STORE_FILE')) {
@@ -49,17 +60,6 @@ android {
     buildTypes {
         // Release build for all forks
         release {
-            if (secrets.getProperty('RELEASE_STORE_FILE')) {
-                signingConfig signingConfigs.release
-            }
-            minifyEnabled(true)
-            shrinkResources true
-            zipAlignEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "false")
-        }
-        // Release build for the original ffem Collect app
-        ffemRelease {
             if (secrets.getProperty('FFEM_RELEASE_STORE_FILE')) {
                 signingConfig signingConfigs.release
             }
@@ -209,7 +209,7 @@ dependencies {
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakyCanaryVersion}"
     testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakyCanaryVersion}"
     androidTestImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakyCanaryVersion}"
-    ffemReleaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakyCanaryVersion}"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakyCanaryVersion}"
 
     // Android Architecture Components:
     implementation "android.arch.lifecycle:extensions:1.1.1"

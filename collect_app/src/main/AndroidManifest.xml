@@ -270,7 +270,7 @@ the specific language governing permissions and limitations under the License.
         <activity android:name=".activities.WebViewActivity" />
         <activity android:name=".activities.CaptureSelfieVideoActivity" />
         <activity android:name=".activities.CaptureSelfieVideoActivityNewApi" />
-        <activity android:name=".activities.SettingsActivity" />
+        <activity android:name="io.ffem.collect.android.activities.SettingsActivity" />
 
         <activity
             android:name="io.ffem.collect.android.activities.SignInActivity"
@@ -283,6 +283,9 @@ the specific language governing permissions and limitations under the License.
             </intent-filter>
         </activity>
         <activity android:name="io.ffem.collect.android.activities.DeleteFormsActivity" />
+        <activity
+            android:name="io.ffem.collect.android.activities.AboutActivity"
+            android:screenOrientation="nosensor" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"

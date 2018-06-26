@@ -37,7 +37,6 @@ the License.
     <color name="darkWindowBackground">#121212</color>
     <color name="darkCardBackground">#000</color>
     <color name="darkMainButton">#1b1b1b</color>
-    <color name="darkPopupDialogColor">#3f3f3f</color>
 
     <!-- Light Theme Palette Custom -->
     <color name="lightWindowBackground">#fff</color>

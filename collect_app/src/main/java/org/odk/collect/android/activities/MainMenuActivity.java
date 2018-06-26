@@ -63,6 +63,7 @@ import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import io.ffem.collect.android.activities.SettingsActivity;
 import timber.log.Timber;
 
 /**

@@ -31,14 +31,12 @@ limitations under the License.
             android:layout_height="wrap_content"
             android:textColor="@color/red"
             android:textStyle="bold"
-            android:textSize="17sp"
             android:textAlignment="center"
             android:padding="5dp"
             android:text="@string/reset_app_state_warning" />
 
         <CheckBox
             android:id="@+id/preferences"
-            android:textSize="15sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/reset_settings"
@@ -49,7 +47,6 @@ limitations under the License.
 
         <CheckBox
             android:id="@+id/instances"
-            android:textSize="15sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/reset_saved_forms"
@@ -60,7 +57,6 @@ limitations under the License.
 
         <CheckBox
             android:id="@+id/forms"
-            android:textSize="15sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/reset_blank_forms"
@@ -71,7 +67,6 @@ limitations under the License.
 
         <CheckBox
             android:id="@+id/cache"
-            android:textSize="15sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/reset_cache"
@@ -82,7 +77,6 @@ limitations under the License.
 
         <CheckBox
             android:id="@+id/layers"
-            android:textSize="15sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/reset_layers"
@@ -93,7 +87,6 @@ limitations under the License.
 
         <CheckBox
             android:id="@+id/osmdroid"
-            android:textSize="15sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/reset_osm_tiles"

@@ -29,6 +29,7 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FileManagerTabs;
 import org.odk.collect.android.tasks.ServerPollingJob;
 
+import static io.ffem.collect.android.utilities.ListViewUtil.setListViewHeightBasedOnChildren;
 import static org.odk.collect.android.preferences.AdminKeys.ALLOW_OTHER_WAYS_OF_EDITING_FORM;
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_AUTOMATIC_UPDATE;
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_AUTOSEND;
@@ -37,7 +38,6 @@ import static org.odk.collect.android.preferences.PreferenceKeys.KEY_DELETE_FORM
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_GUIDANCE_HINT;
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_IMAGE_SIZE;
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_PERIODIC_FORM_UPDATES_CHECK;
-import static org.odk.collect.android.utilities.ListViewUtil.setListViewHeightBasedOnChildren;
 
 public class FormManagementPreferences extends PreferenceFragment {
 
