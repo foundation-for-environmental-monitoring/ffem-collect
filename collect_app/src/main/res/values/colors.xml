@@ -16,7 +16,9 @@ the License.
 <resources>
     <!-- Dark Theme Palette -->
     <color name="darkPrimaryTextColor">#d7d7d7</color>
+    <color name="darkPopupDialogColor">#3f3f3f</color>
     <color name="darkIconColor">@android:color/white</color>
+    <color name="darkBackgroundColor">@android:color/black</color>
     <color name="darkTintColor">#2196F3</color>
 
     <!-- Light Theme Palette -->
@@ -24,6 +26,9 @@ the License.
     <color name="white">@android:color/white</color>
     <color name="lightPrimaryTextColor">#232323</color>
     <color name="lightIconColor">@android:color/black</color>
+    <color name="lightBackgroundColor">@android:color/white</color>
+
+    <color name="tintColor">#2196F3</color>
     <color name="lightTintColor">#1a8302</color>
 
     <color name="button_text">#e33b3b3b</color>
