@@ -26,7 +26,10 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
@@ -101,7 +104,7 @@ public class SplashScreenActivity extends Activity {
             Timber.e(e, "Unable to get package info");
         }
 
-        boolean firstRun = sharedPreferences.getBoolean(PreferenceKeys.KEY_FIRST_RUN, false);
+        boolean firstRun = sharedPreferences.getBoolean(PreferenceKeys.KEY_FIRST_RUN, true);
         boolean showSplash =
                 sharedPreferences.getBoolean(PreferenceKeys.KEY_SHOW_SPLASH, false);
         String splashPath = (String) GeneralSharedPreferences.getInstance().get(KEY_SPLASH_PATH);
@@ -112,7 +115,7 @@ public class SplashScreenActivity extends Activity {
             editor.putLong(PreferenceKeys.KEY_LAST_VERSION, packageInfo.versionCode);
             editor.apply();
 
-//            firstRun = true;
+            firstRun = true;
         }
 
         // do all the first run things
@@ -177,15 +180,15 @@ public class SplashScreenActivity extends Activity {
     private void startSplashScreen(String path) {
 
         // add items to the splash screen here. makes things less distracting.
-//        ImageView iv = findViewById(R.id.splash);
-//        LinearLayout ll = findViewById(R.id.splash_default);
-//
-//        File f = new File(path);
-//        if (f.exists()) {
-//            iv.setImageBitmap(decodeFile(f));
-//            ll.setVisibility(View.GONE);
-//            iv.setVisibility(View.VISIBLE);
-//        }
+        ImageView iv = findViewById(R.id.splash);
+        LinearLayout ll = findViewById(R.id.splash_default);
+
+        File f = new File(path);
+        if (f.exists()) {
+            iv.setImageBitmap(decodeFile(f));
+            ll.setVisibility(View.GONE);
+            iv.setVisibility(View.VISIBLE);
+        }
 
         // create a thread that counts up to the timeout
         Thread t = new Thread() {

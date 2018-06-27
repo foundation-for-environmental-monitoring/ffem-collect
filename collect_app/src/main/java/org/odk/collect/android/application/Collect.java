@@ -286,7 +286,7 @@ public class Collect extends Application implements HasActivityInjector {
         initProperties();
 
         AuthDialogUtility.setWebCredentialsFromPreferences();
-        if (BuildConfig.BUILD_TYPE.equals("ffemRelease")) {
+        if (BuildConfig.BUILD_TYPE.equals("brandedRelease")) {
             Timber.plant(new CrashReportingTree());
         } else {
             Timber.plant(new Timber.DebugTree());

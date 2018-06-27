@@ -34,4 +34,4 @@ out/
 captures/
 
 # Firebase
-**/ffemRelease/google-services.json
+**/branded/google-services.json
