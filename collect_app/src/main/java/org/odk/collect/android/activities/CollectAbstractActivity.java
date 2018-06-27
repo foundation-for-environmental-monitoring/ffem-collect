@@ -38,9 +38,10 @@ import static org.odk.collect.android.utilities.PermissionUtils.isEntryPointActi
 public abstract class CollectAbstractActivity extends AppCompatActivity {
 
     PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
-    protected ThemeUtils themeUtils;
     View currentClickedView;
+
     private boolean isInstanceStateSaved;
+    protected ThemeUtils themeUtils;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

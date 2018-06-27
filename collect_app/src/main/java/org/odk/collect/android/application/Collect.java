@@ -107,13 +107,16 @@ public class Collect extends Application implements HasActivityInjector {
     protected CookieStore cookieStore;
     @Inject
     protected CredentialsProvider credsProvider;
-    @Inject
-    DispatchingAndroidInjector<Activity> androidInjector;
+
     private ActivityLogger activityLogger;
+
     @Nullable
     private FormController formController = null;
     private ExternalDataManager externalDataManager;
     private Tracker tracker;
+
+    @Inject
+    DispatchingAndroidInjector<Activity> androidInjector;
 
     public static Collect getInstance() {
         return singleton;
@@ -177,20 +180,11 @@ public class Collect extends Application implements HasActivityInjector {
             dirPath = dirPath.substring(Collect.ODK_ROOT.length());
             String[] parts = dirPath.split(File.separatorChar == '\\' ? "\\\\" : File.separator);
             // [appName, instances, tableId, instanceId ]
-            return parts.length == 4 && parts[1].equals("instances");
+            if (parts.length == 4 && parts[1].equals("instances")) {
+                return true;
+            }
         }
         return false;
-    }
-
-    // Preventing multiple clicks, using threshold of 1000 ms
-    public static boolean allowClick() {
-        long elapsedRealtime = SystemClock.elapsedRealtime();
-        boolean allowClick = (lastClickTime == 0 || lastClickTime == elapsedRealtime) // just for tests
-                || elapsedRealtime - lastClickTime > 1000;
-        if (allowClick) {
-            lastClickTime = elapsedRealtime;
-        }
-        return allowClick;
     }
 
     public ActivityLogger getActivityLogger() {
@@ -337,6 +331,22 @@ public class Collect extends Application implements HasActivityInjector {
         return tracker;
     }
 
+
+    private static class CrashReportingTree extends Timber.Tree {
+        @Override
+        protected void log(int priority, String tag, String message, Throwable t) {
+            if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
+                return;
+            }
+
+            Crashlytics.log(priority, tag, message);
+
+            if (t != null && priority == Log.ERROR) {
+                Crashlytics.logException(t);
+            }
+        }
+    }
+
     public void initProperties() {
         PropertyManager mgr = new PropertyManager(this);
 
@@ -355,6 +365,17 @@ public class Collect extends Application implements HasActivityInjector {
         AdminSharedPreferences.getInstance().reloadPreferences();
     }
 
+    // Preventing multiple clicks, using threshold of 1000 ms
+    public static boolean allowClick() {
+        long elapsedRealtime = SystemClock.elapsedRealtime();
+        boolean allowClick = (lastClickTime == 0 || lastClickTime == elapsedRealtime) // just for tests
+                || elapsedRealtime - lastClickTime > 1000;
+        if (allowClick) {
+            lastClickTime = elapsedRealtime;
+        }
+        return allowClick;
+    }
+
     @Override
     public DispatchingAndroidInjector<Activity> activityInjector() {
         return androidInjector;
@@ -364,18 +385,4 @@ public class Collect extends Application implements HasActivityInjector {
         lastClickTime = 0;
     }
 
-    private static class CrashReportingTree extends Timber.Tree {
-        @Override
-        protected void log(int priority, String tag, String message, Throwable t) {
-            if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
-                return;
-            }
-
-            Crashlytics.log(priority, tag, message);
-
-            if (t != null && priority == Log.ERROR) {
-                Crashlytics.logException(t);
-            }
-        }
-    }
 }

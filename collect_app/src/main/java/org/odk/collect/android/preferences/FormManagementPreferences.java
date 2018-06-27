@@ -57,6 +57,12 @@ public class FormManagementPreferences extends PreferenceFragment {
         initFormDeletePref(KEY_DELETE_FORMS);
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        list = view.findViewById(android.R.id.list);
+    }
+
     private void initFormDeletePref(String key) {
         Preference deleteFormsPreference = findPreference(key);
         if (deleteFormsPreference != null) {
@@ -128,12 +134,6 @@ public class FormManagementPreferences extends PreferenceFragment {
                 return true;
             }
         });
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        list = view.findViewById(android.R.id.list);
     }
 
     @Override

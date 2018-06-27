@@ -105,13 +105,14 @@ public class ODKView extends ScrollView implements OnLongClickListener {
 
         // when the grouped fields are populated by an external app, this will get true.
         boolean readOnlyOverride = false;
+//        boolean isExternalQuestionGroup = false;
 
         // get the group we are showing -- it will be the last of the groups in the groups list
         if (groups != null && groups.length > 0) {
             final FormEntryCaption c = groups[groups.length - 1];
             final String intentString = c.getFormElement().getAdditionalAttribute(null, "intent");
             if (intentString != null && intentString.length() != 0) {
-
+//                isExternalQuestionGroup = true;
                 readOnlyOverride = true;
 
                 final String buttonText;
@@ -186,6 +187,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
             }
         }
 
+//        if (!isExternalQuestionGroup) {
         boolean first = true;
         for (FormEntryPrompt p : questionPrompts) {
             if (!first) {
@@ -207,6 +209,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
             widgets.add(qw);
             view.addView(qw, layout);
         }
+//        }
 
         addView(view);
 
@@ -464,7 +467,9 @@ public class ODKView extends ScrollView implements OnLongClickListener {
     }
 
     public void stopAudio() {
-        widgets.get(0).stopAudio();
+        if (widgets.size() > 0) {
+            widgets.get(0).stopAudio();
+        }
     }
 
     /**

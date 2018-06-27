@@ -702,20 +702,6 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
     }
 
 
-    public static String getDownloadResultMessage(HashMap<FormDetails, String> result) {
-        Set<FormDetails> keys = result.keySet();
-        StringBuilder b = new StringBuilder();
-        for (FormDetails k : keys) {
-            b.append(result.get(k) + " - " + k.getFormName() + " ("
-                    + ((k.getFormVersion() != null)
-                    ? (Collect.getInstance().getString(R.string.version) + ": " + k.getFormVersion() + " ")
-                    : "") + "ID: " + k.getFormID() + ")");
-            b.append("\n\n");
-        }
-
-        return b.toString().trim();
-    }
-
     @Override
     public void formsDownloadingComplete(HashMap<FormDetails, String> result) {
         if (downloadFormsTask != null) {
@@ -731,6 +717,20 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
 
 //        createAlertDialog(getString(R.string.download_forms_result), getDownloadResultMessage(result), EXIT);
         finish();
+    }
+
+    public static String getDownloadResultMessage(HashMap<FormDetails, String> result) {
+        Set<FormDetails> keys = result.keySet();
+        StringBuilder b = new StringBuilder();
+        for (FormDetails k : keys) {
+            b.append(result.get(k) + " - " + k.getFormName() + " ("
+                    + ((k.getFormVersion() != null)
+                    ? (Collect.getInstance().getString(R.string.version) + ": " + k.getFormVersion() + " ")
+                    : "") + "ID: " + k.getFormID() + ")");
+            b.append("\n\n");
+        }
+
+        return b.toString().trim();
     }
 
     @Override
