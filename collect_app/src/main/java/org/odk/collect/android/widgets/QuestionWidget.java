@@ -242,10 +242,12 @@ public abstract class QuestionWidget
         //dependencies for the widget will be wired here.
     }
 
+    TextView questionText = new TextView(getContext());
+    String promptText = "";
+
     private MediaLayout createQuestionMediaLayout(FormEntryPrompt prompt) {
-        String promptText = prompt.getLongText();
+        promptText = prompt.getLongText();
         // Add the text view. Textview always exists, regardless of whether there's text.
-        TextView questionText = new TextView(getContext());
         questionText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getQuestionFontSize() + 2);
         questionText.setTypeface(null, Typeface.BOLD);
         questionText.setPadding(0, 10, 0, 0);
@@ -702,5 +704,9 @@ public abstract class QuestionWidget
 
     public int getPlayColor() {
         return playColor;
+    }
+
+    public String getQuestionText() {
+        return promptText;
     }
 }

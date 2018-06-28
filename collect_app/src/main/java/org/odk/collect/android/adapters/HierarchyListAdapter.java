@@ -31,8 +31,6 @@ import org.odk.collect.android.utilities.TextUtils;
 
 import java.util.List;
 
-import io.ffem.collect.android.helper.ResultHelper;
-
 public class HierarchyListAdapter extends RecyclerView.Adapter<HierarchyListAdapter.ViewHolder> {
 
     private final OnElementClickListener listener;
@@ -69,11 +67,7 @@ public class HierarchyListAdapter extends RecyclerView.Adapter<HierarchyListAdap
         holder.primaryText.setText(TextUtils.textToHtml(hierarchyElements.get(position).getPrimaryText()));
         if (hierarchyElements.get(position).getSecondaryText() != null && !hierarchyElements.get(position).getSecondaryText().isEmpty()) {
             holder.secondaryText.setVisibility(View.VISIBLE);
-            if (hierarchyElements.get(position).getSecondaryText().startsWith("{")) {
-                holder.secondaryText.setText(ResultHelper.jsonToText(hierarchyElements.get(position).getSecondaryText()));
-            } else {
-                holder.secondaryText.setText(TextUtils.textToHtml(hierarchyElements.get(position).getSecondaryText()));
-            }
+            holder.secondaryText.setText(TextUtils.textToHtml(hierarchyElements.get(position).getSecondaryText()));
         } else {
             holder.secondaryText.setVisibility(View.GONE);
         }

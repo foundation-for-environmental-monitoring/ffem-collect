@@ -49,7 +49,6 @@ import java.util.Map;
 
 import timber.log.Timber;
 
-import static io.ffem.collect.android.helper.ResultHelper.jsonToText;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
 
 /**
@@ -124,16 +123,10 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         // needed to make long read only text scroll
         answer.setHorizontallyScrolling(false);
         answer.setSingleLine(false);
-        answer.setLineSpacing(0, 1.20f);
 
         String s = prompt.getAnswerText();
         if (s != null) {
-            if (s.startsWith("{")) {
-                answer.setTag(s);
-                answer.setText(jsonToText(s));
-            } else {
-                answer.setText(s);
-            }
+            answer.setText(s);
         }
 
         if (getFormEntryPrompt().isReadOnly() || hasExApp) {
@@ -171,10 +164,7 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
 
     @Override
     public IAnswerData getAnswer() {
-        String s = (String) answer.getTag();
-        if (s == null) {
-            s = answer.getText().toString();
-        }
+        String s = answer.getText().toString();
         return !s.isEmpty() ? new StringData(s) : null;
     }
 

@@ -21,9 +21,11 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -49,6 +51,8 @@ import org.odk.collect.android.exception.ExternalParamsException;
 import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.external.ExternalAppsUtils;
 import org.odk.collect.android.logic.FormController;
+import org.odk.collect.android.utilities.FormEntryPromptUtils;
+import org.odk.collect.android.utilities.TextUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.ViewIds;
@@ -63,6 +67,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import io.ffem.collect.android.widget.RowView;
 import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
@@ -99,21 +104,40 @@ public class ODKView extends ScrollView implements OnLongClickListener {
                         LinearLayout.LayoutParams.WRAP_CONTENT);
         layout.setMargins(12, 5, 12, 0);
 
-        // display which group you are in as well as the question
-
-        addGroupText(groups);
-
         // when the grouped fields are populated by an external app, this will get true.
         boolean readOnlyOverride = false;
-//        boolean isExternalQuestionGroup = false;
+        TextView questionText = new TextView(getContext());
+        ThemeUtils themeUtils = new ThemeUtils(context);
 
         // get the group we are showing -- it will be the last of the groups in the groups list
         if (groups != null && groups.length > 0) {
             final FormEntryCaption c = groups[groups.length - 1];
-            final String intentString = c.getFormElement().getAdditionalAttribute(null, "intent");
+            String intentStringTemp = c.getFormElement().getAdditionalAttribute(null, "intent");
+            if ((intentStringTemp == null || intentStringTemp.isEmpty()) && c.getFormElement().getChildren().size() > 0) {
+                intentStringTemp = c.getFormElement().getChildren().get(0).getAdditionalAttribute(null, "intent");
+                questionText.setText(c.getFormElement().getChildren().get(0).getLabelInnerText());
+            } else {
+                questionText.setText(c.getLongText());
+            }
+
+            final String intentString = intentStringTemp;
+
             if (intentString != null && intentString.length() != 0) {
-//                isExternalQuestionGroup = true;
+
+                // display which group you are in as well as the question
+                addGroupText(groups);
+
                 readOnlyOverride = true;
+
+                questionText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Collect.getQuestionFontsize() + 2);
+                questionText.setTypeface(null, Typeface.BOLD);
+                questionText.setPadding(10, 10, 0, 10);
+                questionText.setTextColor(themeUtils.getPrimaryTextColor());
+                questionText.setMovementMethod(LinkMovementMethod.getInstance());
+
+                // Wrap to the size of the parent view
+                questionText.setHorizontallyScrolling(false);
+                view.addView(questionText, layout);
 
                 final String buttonText;
                 final String errorString;
@@ -131,7 +155,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
                 launchIntentButton.setText(buttonText);
                 launchIntentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
                         Collect.getQuestionFontsize() + 4);
-                launchIntentButton.setPadding(20, 20, 20, 20);
+                launchIntentButton.setPadding(10, 30, 10, 30);
                 launchIntentButton.setLayoutParams(params);
 
                 launchIntentButton.setOnClickListener(new View.OnClickListener() {
@@ -178,25 +202,33 @@ public class ODKView extends ScrollView implements OnLongClickListener {
                     }
                 });
 
-                View divider = new View(getContext());
-                divider.setBackgroundResource(new ThemeUtils(getContext()).getDivider());
-                divider.setMinimumHeight(3);
-                view.addView(divider);
+//                View divider = new View(getContext());
+//                divider.setBackgroundResource(new ThemeUtils(getContext()).getDivider());
+//                divider.setMinimumHeight(3);
+//                view.addView(divider);
 
                 view.addView(launchIntentButton, layout);
             }
         }
 
-//        if (!isExternalQuestionGroup) {
+        // display which group you are in as well as the question
+        if (!readOnlyOverride) {
+            addGroupText(groups);
+        }
+
+//        TextView answerText = new TextView(getContext());
+
         boolean first = true;
+        boolean isRequired = false;
         for (FormEntryPrompt p : questionPrompts) {
-            if (!first) {
+            if (p.isRequired() && !isRequired) {
+                isRequired = true;
+            }
+            if (!first && !readOnlyOverride) {
                 View divider = new View(getContext());
                 divider.setBackgroundResource(new ThemeUtils(getContext()).getDivider());
                 divider.setMinimumHeight(3);
                 view.addView(divider);
-            } else {
-                first = false;
             }
 
             // if question or answer type is not supported, use text widget
@@ -205,11 +237,31 @@ public class ODKView extends ScrollView implements OnLongClickListener {
             qw.setLongClickable(true);
             qw.setOnLongClickListener(this);
             qw.setId(ViewIds.generateViewId());
-
             widgets.add(qw);
             view.addView(qw, layout);
+
+            if (readOnlyOverride) {
+                qw.setVisibility(GONE);
+                if (qw.getAnswer() != null) {
+                    RowView answerRow = new RowView(context);
+                    answerRow.setPadding(10, 10, 0, 10);
+                    answerRow.setPrimaryText(qw.getQuestionText() + ": ");
+                    answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
+                    view.addView(answerRow, layout);
+                }
+            }
+            first = false;
         }
-//        }
+
+        if (readOnlyOverride) {
+            questionText.setText(TextUtils.textToHtml(FormEntryPromptUtils
+                    .markQuestionIfIsRequired(questionText.getText().toString(), isRequired)));
+        }
+
+        View divider = new View(getContext());
+        divider.setBackgroundResource(new ThemeUtils(getContext()).getDivider());
+        divider.setMinimumHeight(3);
+        view.addView(divider);
 
         addView(view);
 
