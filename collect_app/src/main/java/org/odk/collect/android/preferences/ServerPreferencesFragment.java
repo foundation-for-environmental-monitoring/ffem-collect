@@ -63,9 +63,9 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         GoogleAccountsManager.GoogleAccountSelectionListener {
     private static final String KNOWN_URL_LIST = "knownUrlList";
     protected EditTextPreference serverUrlPreference;
-    //    protected EditTextPreference usernamePreference;
+//    protected EditTextPreference usernamePreference;
 //    protected EditTextPreference passwordPreference;
-    protected boolean credentialsHaveChanged = false;
+    protected boolean credentialsHaveChanged;
     protected EditTextPreference submissionUrlPreference;
     protected EditTextPreference formListUrlPreference;
     private ListPopupWindow listPopupWindow;

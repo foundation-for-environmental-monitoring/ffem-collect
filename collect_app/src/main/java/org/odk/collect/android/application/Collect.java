@@ -100,7 +100,7 @@ public class Collect extends Application implements HasActivityInjector {
     public static final String SETTINGS = ODK_ROOT + File.separator + "settings";
 
     public static String defaultSysLanguage;
-    private static Collect singleton = null;
+    private static Collect singleton;
     private static long lastClickTime;
 
     @Inject
@@ -111,7 +111,7 @@ public class Collect extends Application implements HasActivityInjector {
     private ActivityLogger activityLogger;
 
     @Nullable
-    private FormController formController = null;
+    private FormController formController;
     private ExternalDataManager externalDataManager;
     private Tracker tracker;
 

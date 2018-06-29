@@ -16,6 +16,7 @@
 
 package org.odk.collect.android.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -27,6 +28,7 @@ import android.view.View;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.utilities.SnackbarUtils;
+import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.ThemeUtils;
 
 import io.ffem.collect.android.util.PermissionsDelegate;
@@ -149,5 +151,10 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
             SnackbarUtils.showSettingsSnackbar(this,
                     getWindow().getDecorView().getRootView(), message);
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(new LocaleHelper().updateLocale(base));
     }
 }
