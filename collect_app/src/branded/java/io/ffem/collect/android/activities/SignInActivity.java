@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.view.MenuItem;
 import android.widget.EditText;
 
@@ -32,6 +33,7 @@ import static org.odk.collect.android.utilities.PermissionUtils.requestStoragePe
  */
 public class SignInActivity extends AppCompatActivity {
     private static final boolean EXIT = true;
+    private static final String MASK = "**********";
 
     private EditText editText;
     private EditText editPassword;
@@ -97,8 +99,14 @@ public class SignInActivity extends AppCompatActivity {
 
         if (!isUserSignedIn() || isSettings) {
             editText.setText(AuthDialogUtility.getUserNameFromPreferences());
-            editPassword.setText(AuthDialogUtility.getPasswordFromPreferences());
+            editPassword.setText(maskPassword(AuthDialogUtility.getPasswordFromPreferences()));
         }
+    }
+
+    private String maskPassword(String password) {
+        return password != null && password.length() > 0
+                ? MASK
+                : "";
     }
 
     @Override
@@ -133,8 +141,10 @@ public class SignInActivity extends AppCompatActivity {
             if (isInputValid()) {
                 GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_USERNAME,
                         editText.getText().toString().trim());
-                GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_PASSWORD,
-                        editPassword.getText().toString().trim());
+                if (!editPassword.getText().toString().equals(MASK)) {
+                    GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_PASSWORD,
+                            editPassword.getText().toString().trim());
+                }
 
                 AuthDialogUtility.setWebCredentialsFromPreferences();
 
