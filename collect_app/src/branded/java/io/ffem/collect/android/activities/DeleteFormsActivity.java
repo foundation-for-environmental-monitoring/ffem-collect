@@ -28,29 +28,25 @@ public class DeleteFormsActivity extends CollectAbstractActivity {
     private DataManagerList dataManagerList = DataManagerList.newInstance();
     private FormManagerList formManagerList = FormManagerList.newInstance();
 
-    private void initToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setTitle(getString(R.string.manage_files));
-        setSupportActionBar(toolbar);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.file_manager_layout_custom);
-        initToolbar();
+        Toolbar toolbar = findViewById(R.id.toolbar);
 
         if (getIntent().getBooleanExtra("blankForms", false)) {
+            setTitle(getString(R.string.delete_yes));
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, formManagerList)
                     .commit();
         } else {
+            setTitle(getString(R.string.manage_files));
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, dataManagerList)
                     .commit();
         }
-
+        setSupportActionBar(toolbar);
     }
 
     @Override

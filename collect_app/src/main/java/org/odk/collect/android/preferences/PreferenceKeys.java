@@ -69,7 +69,7 @@ public final class PreferenceKeys {
 
     // values
     public static final String NAVIGATION_SWIPE             = "swipe";
-    public static final String CONSTRAINT_BEHAVIOR_ON_SWIPE = "on_swipe";
+    public static final String CONSTRAINT_BEHAVIOR_ON_SWIPE = "on_finalize";
     public static final String NAVIGATION_BUTTONS           = "buttons";
     public static final String NAVIGATION_SWIPE_BUTTONS = "swipe_buttons";
     private static final String GOOGLE_MAPS                 = "osmdroid";
