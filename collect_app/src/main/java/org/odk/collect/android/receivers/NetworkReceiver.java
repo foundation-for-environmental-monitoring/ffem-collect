@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -225,6 +226,7 @@ public class NetworkReceiver extends BroadcastReceiver implements InstanceUpload
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(Collect.getInstance())
                 .setSmallIcon(IconUtils.getNotificationAppIcon())
+                .setLargeIcon(BitmapFactory.decodeResource(Collect.getInstance().getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(Collect.getInstance().getString(R.string.odk_auto_note))
                 .setContentIntent(pendingNotify)
                 .setContentText(getContentText(result))

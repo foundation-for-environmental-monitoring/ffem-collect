@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -46,6 +47,7 @@ public class NotificationScheduler {
                 .setAutoCancel(true)
                 .setSound(alarmSound)
                 .setSmallIcon(R.mipmap.ic_notification)
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setColor(ContextCompat.getColor(context, R.color.primary))
                 .addAction(0, context.getString(R.string.remindLater), snoozePendingIntent)
                 .addAction(0, context.getString(R.string.update), pendingIntent)

@@ -22,6 +22,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
@@ -154,6 +155,7 @@ public class ServerPollingJob extends Job {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext())
                 .setSmallIcon(IconUtils.getNotificationAppIcon())
+                .setLargeIcon(BitmapFactory.decodeResource(getContext().getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(getContext().getString(R.string.form_updates_available))
                 .setAutoCancel(true)
                 .setContentIntent(contentIntent);
@@ -172,6 +174,7 @@ public class ServerPollingJob extends Job {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext())
                 .setSmallIcon(IconUtils.getNotificationAppIcon())
+                .setLargeIcon(BitmapFactory.decodeResource(Collect.getInstance().getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(getContext().getString(R.string.odk_auto_download_notification_title))
                 .setContentText(getContentText(result))
                 .setAutoCancel(true)
