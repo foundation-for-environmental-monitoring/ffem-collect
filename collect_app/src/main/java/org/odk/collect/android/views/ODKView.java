@@ -117,39 +117,69 @@ public class ODKView extends ScrollView implements OnLongClickListener {
         if (groups != null && groups.length > 0) {
             final FormEntryCaption c = groups[groups.length - 1];
 
-            String intentStringTemp;
+            String intentString;
             String longText;
             for (int i = 0; i < c.getFormElement().getChildren().size(); i++) {
                 IFormElement formElement = c.getFormElement();
 
                 if (formElement.getChildren().get(i) instanceof GroupDef) {
-                    intentStringTemp = formElement.getAdditionalAttribute(null, "intent");
-                    if ((intentStringTemp == null || intentStringTemp.isEmpty()) && formElement.getChildren().size() > 0) {
-                        intentStringTemp = formElement.getChildren().get(i).getAdditionalAttribute(null, "intent");
+                    intentString = formElement.getAdditionalAttribute(null, "intent");
+                    if (intentString != null) {
+                        intentString = formElement.getChildren().get(i).getAdditionalAttribute(null, "intent");
                         longText = formElement.getChildren().get(i).getLabelInnerText();
-                    } else {
-                        longText = c.getLongText();
-                    }
 
-                    List<FormEntryPrompt> formEntryPrompts = new ArrayList<>();
-                    for (FormEntryPrompt prompt : questionPrompts) {
-                        if (prompt != null && prompt.getIndex().getNextLevel().getLocalIndex() == i) {
-                            formEntryPrompts.add(prompt);
-                        }
-                    }
-
-                    if (formEntryPrompts.size() > 0) {
-
-                        if (!groupAdded) {
-                            addGroupText(groups);
-                            groupAdded = true;
+                        List<FormEntryPrompt> formEntryPrompts = new ArrayList<>();
+                        for (FormEntryPrompt prompt : questionPrompts) {
+                            if (prompt != null && prompt.getIndex().getNextLevel().getLocalIndex() == i) {
+                                formEntryPrompts.add(prompt);
+                            }
                         }
 
-                        AddLauncherButton(context,
-                                formEntryPrompts.toArray(new FormEntryPrompt[0]),
-                                themeUtils, c, longText, intentStringTemp);
+                        if (formEntryPrompts.size() > 0) {
 
-                        for (FormEntryPrompt p : formEntryPrompts) {
+                            if (!groupAdded) {
+                                addGroupText(groups);
+                                groupAdded = true;
+                            }
+
+                            AddLauncherButton(context,
+                                    formEntryPrompts.toArray(new FormEntryPrompt[0]),
+                                    themeUtils, c, longText, intentString);
+
+                            for (FormEntryPrompt p : formEntryPrompts) {
+                                // if question or answer type is not supported, use text widget
+                                QuestionWidget qw =
+                                        WidgetFactory.createWidgetFromPrompt(p, getContext(), readOnlyOverride);
+
+                                widgets.add(qw);
+                                RowView answerRow = new RowView(context);
+                                answerRow.setPadding(10, 10, 0, 10);
+                                if (qw.getAnswer() != null) {
+                                    answerRow.setPrimaryText(qw.getQuestionText() + ": ");
+                                    answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
+                                }
+                                view.addView(answerRow, layout);
+                            }
+
+                            View divider = new View(getContext());
+                            divider.setBackgroundResource(new ThemeUtils(getContext()).getDivider());
+                            divider.setMinimumHeight(3);
+                            view.addView(divider);
+
+                            questionsAdded = true;
+                        }
+                    }
+                }
+            }
+
+            if (!questionsAdded) {
+                IFormElement formElement = c.getFormElement();
+                if (formElement instanceof GroupDef) {
+                    intentString = formElement.getAdditionalAttribute(null, "intent");
+                    if (intentString != null) {
+                        longText = formElement.getLabelInnerText();
+                        AddLauncherButton(context, questionPrompts, themeUtils, c, longText, intentString);
+                        for (FormEntryPrompt p : questionPrompts) {
                             // if question or answer type is not supported, use text widget
                             QuestionWidget qw =
                                     WidgetFactory.createWidgetFromPrompt(p, getContext(), readOnlyOverride);
@@ -163,37 +193,6 @@ public class ODKView extends ScrollView implements OnLongClickListener {
                             }
                             view.addView(answerRow, layout);
                         }
-
-                        View divider = new View(getContext());
-                        divider.setBackgroundResource(new ThemeUtils(getContext()).getDivider());
-                        divider.setMinimumHeight(3);
-                        view.addView(divider);
-
-                        questionsAdded = true;
-                    }
-
-                }
-            }
-
-            if (!questionsAdded) {
-                IFormElement formElement = c.getFormElement();
-                if (formElement instanceof GroupDef) {
-                    intentStringTemp = formElement.getAdditionalAttribute(null, "intent");
-                    longText = formElement.getLabelInnerText();
-                    AddLauncherButton(context, questionPrompts, themeUtils, c, longText, intentStringTemp);
-                    for (FormEntryPrompt p : questionPrompts) {
-                        // if question or answer type is not supported, use text widget
-                        QuestionWidget qw =
-                                WidgetFactory.createWidgetFromPrompt(p, getContext(), readOnlyOverride);
-
-                        widgets.add(qw);
-                        RowView answerRow = new RowView(context);
-                        answerRow.setPadding(10, 10, 0, 10);
-                        if (qw.getAnswer() != null) {
-                            answerRow.setPrimaryText(qw.getQuestionText() + ": ");
-                            answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
-                        }
-                        view.addView(answerRow, layout);
                     }
                 }
             }
