@@ -39,6 +39,7 @@ import android.widget.TextView;
 
 import org.javarosa.core.model.Constants;
 import org.javarosa.core.model.FormIndex;
+import org.javarosa.core.model.GroupDef;
 import org.javarosa.core.model.IFormElement;
 import org.javarosa.core.model.QuestionDef;
 import org.javarosa.core.model.data.IAnswerData;
@@ -64,6 +65,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -106,117 +108,96 @@ public class ODKView extends ScrollView implements OnLongClickListener {
 
         // when the grouped fields are populated by an external app, this will get true.
         boolean readOnlyOverride = false;
-        TextView questionText = new TextView(getContext());
         ThemeUtils themeUtils = new ThemeUtils(context);
+
+        boolean questionsAdded = false;
+        boolean groupAdded = false;
 
         // get the group we are showing -- it will be the last of the groups in the groups list
         if (groups != null && groups.length > 0) {
             final FormEntryCaption c = groups[groups.length - 1];
-            String intentStringTemp = c.getFormElement().getAdditionalAttribute(null, "intent");
-            if ((intentStringTemp == null || intentStringTemp.isEmpty()) && c.getFormElement().getChildren().size() > 0) {
-                intentStringTemp = c.getFormElement().getChildren().get(0).getAdditionalAttribute(null, "intent");
-                questionText.setText(c.getFormElement().getChildren().get(0).getLabelInnerText());
-            } else {
-                questionText.setText(c.getLongText());
-            }
 
-            final String intentString = intentStringTemp;
+            String intentStringTemp;
+            String longText;
+            for (int i = 0; i < c.getFormElement().getChildren().size(); i++) {
+                IFormElement formElement = c.getFormElement();
 
-            if (intentString != null && intentString.length() != 0) {
+                if (formElement.getChildren().get(i) instanceof GroupDef) {
+                    intentStringTemp = formElement.getAdditionalAttribute(null, "intent");
+                    if ((intentStringTemp == null || intentStringTemp.isEmpty()) && formElement.getChildren().size() > 0) {
+                        intentStringTemp = formElement.getChildren().get(i).getAdditionalAttribute(null, "intent");
+                        longText = formElement.getChildren().get(i).getLabelInnerText();
+                    } else {
+                        longText = c.getLongText();
+                    }
 
-                // display which group you are in as well as the question
-                addGroupText(groups);
-
-                readOnlyOverride = true;
-
-                questionText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Collect.getQuestionFontsize() + 2);
-                questionText.setTypeface(null, Typeface.BOLD);
-                questionText.setPadding(10, 10, 0, 10);
-                questionText.setTextColor(themeUtils.getPrimaryTextColor());
-                questionText.setMovementMethod(LinkMovementMethod.getInstance());
-
-                // Wrap to the size of the parent view
-                questionText.setHorizontallyScrolling(false);
-                view.addView(questionText, layout);
-
-                final String buttonText;
-                final String errorString;
-                String v = c.getSpecialFormQuestionText("buttonText");
-                buttonText = (v != null) ? v : context.getString(R.string.launch_app);
-                v = c.getSpecialFormQuestionText("noAppErrorString");
-                errorString = (v != null) ? v : context.getString(R.string.no_app);
-
-                TableLayout.LayoutParams params = new TableLayout.LayoutParams();
-//                params.setMargins(7, 5, 7, 5);
-
-                // set button formatting
-                Button launchIntentButton = new Button(getContext());
-                launchIntentButton.setId(ViewIds.generateViewId());
-                launchIntentButton.setText(buttonText);
-                launchIntentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
-                        Collect.getQuestionFontsize() + 4);
-                launchIntentButton.setPadding(10, 30, 10, 30);
-                launchIntentButton.setLayoutParams(params);
-
-                launchIntentButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String intentName = ExternalAppsUtils.extractIntentName(intentString);
-                        Map<String, String> parameters = ExternalAppsUtils.extractParameters(
-                                intentString);
-
-                        Intent i = new Intent(intentName);
-                        try {
-                            ExternalAppsUtils.populateParameters(i, parameters,
-                                    c.getIndex().getReference());
-
-                            for (FormEntryPrompt p : questionPrompts) {
-                                IFormElement formElement = p.getFormElement();
-                                if (formElement instanceof QuestionDef) {
-                                    TreeReference reference =
-                                            (TreeReference) formElement.getBind().getReference();
-                                    IAnswerData answerValue = p.getAnswerValue();
-                                    Object value =
-                                            answerValue == null ? null : answerValue.getValue();
-                                    switch (p.getDataType()) {
-                                        case Constants.DATATYPE_TEXT:
-                                        case Constants.DATATYPE_INTEGER:
-                                        case Constants.DATATYPE_DECIMAL:
-                                            i.putExtra(reference.getNameLast(),
-                                                    (Serializable) value);
-                                            break;
-                                    }
-                                }
-                            }
-
-                            ((Activity) getContext()).startActivityForResult(i, RequestCodes.EX_GROUP_CAPTURE);
-                        } catch (ExternalParamsException e) {
-                            Timber.e(e, "ExternalParamsException");
-
-                            ToastUtils.showShortToast(e.getMessage());
-                        } catch (ActivityNotFoundException e) {
-                            Timber.d(e, "ActivityNotFoundExcept");
-
-                            ToastUtils.showShortToast(errorString);
+                    List<FormEntryPrompt> formEntryPrompts = new ArrayList<>();
+                    for (FormEntryPrompt prompt : questionPrompts) {
+                        if (prompt != null && prompt.getIndex().getNextLevel().getLocalIndex() == i) {
+                            formEntryPrompts.add(prompt);
                         }
                     }
-                });
 
-//                View divider = new View(getContext());
-//                divider.setBackgroundResource(new ThemeUtils(getContext()).getDivider());
-//                divider.setMinimumHeight(3);
-//                view.addView(divider);
+                    if (formEntryPrompts.size() > 0) {
 
-                view.addView(launchIntentButton, layout);
+                        if (!groupAdded) {
+                            addGroupText(groups);
+                            groupAdded = true;
+                        }
+
+                        AddLauncherButton(context,
+                                formEntryPrompts.toArray(new FormEntryPrompt[0]),
+                                themeUtils, c, longText, intentStringTemp);
+
+                        for (FormEntryPrompt p : formEntryPrompts) {
+                            // if question or answer type is not supported, use text widget
+                            QuestionWidget qw =
+                                    WidgetFactory.createWidgetFromPrompt(p, getContext(), readOnlyOverride);
+
+                            widgets.add(qw);
+                            RowView answerRow = new RowView(context);
+                            answerRow.setPadding(10, 10, 0, 10);
+                            if (qw.getAnswer() != null) {
+                                answerRow.setPrimaryText(qw.getQuestionText() + ": ");
+                                answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
+                            }
+                            view.addView(answerRow, layout);
+                        }
+
+                        View divider = new View(getContext());
+                        divider.setBackgroundResource(new ThemeUtils(getContext()).getDivider());
+                        divider.setMinimumHeight(3);
+                        view.addView(divider);
+
+                        questionsAdded = true;
+                    }
+
+                }
+            }
+
+            if (!questionsAdded) {
+                IFormElement formElement = c.getFormElement();
+                if (formElement instanceof GroupDef) {
+                    intentStringTemp = formElement.getAdditionalAttribute(null, "intent");
+                    longText = formElement.getLabelInnerText();
+                    AddLauncherButton(context, questionPrompts, themeUtils, c, longText, intentStringTemp);
+                    for (FormEntryPrompt p : questionPrompts) {
+                        // if question or answer type is not supported, use text widget
+                        QuestionWidget qw =
+                                WidgetFactory.createWidgetFromPrompt(p, getContext(), readOnlyOverride);
+
+                        widgets.add(qw);
+                        RowView answerRow = new RowView(context);
+                        answerRow.setPadding(10, 10, 0, 10);
+                        if (qw.getAnswer() != null) {
+                            answerRow.setPrimaryText(qw.getQuestionText() + ": ");
+                            answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
+                        }
+                        view.addView(answerRow, layout);
+                    }
+                }
             }
         }
-
-        // display which group you are in as well as the question
-        if (!readOnlyOverride) {
-            addGroupText(groups);
-        }
-
-//        TextView answerText = new TextView(getContext());
 
         boolean first = true;
         boolean isRequired = false;
@@ -224,44 +205,33 @@ public class ODKView extends ScrollView implements OnLongClickListener {
             if (p.isRequired() && !isRequired) {
                 isRequired = true;
             }
-            if (!first && !readOnlyOverride) {
+            if (!first) {
                 View divider = new View(getContext());
                 divider.setBackgroundResource(new ThemeUtils(getContext()).getDivider());
                 divider.setMinimumHeight(3);
                 view.addView(divider);
             }
 
-            // if question or answer type is not supported, use text widget
-            QuestionWidget qw =
-                    WidgetFactory.createWidgetFromPrompt(p, getContext(), readOnlyOverride);
-            qw.setLongClickable(true);
-            qw.setOnLongClickListener(this);
-            qw.setId(ViewIds.generateViewId());
-            widgets.add(qw);
-            view.addView(qw, layout);
+            if (p.getQuestion().getAdditionalAttribute("", "done") == null) {
 
-            if (readOnlyOverride) {
-                qw.setVisibility(GONE);
-                if (qw.getAnswer() != null) {
-                    RowView answerRow = new RowView(context);
-                    answerRow.setPadding(10, 10, 0, 10);
-                    answerRow.setPrimaryText(qw.getQuestionText() + ": ");
-                    answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
-                    view.addView(answerRow, layout);
+                if (!groupAdded) {
+                    addGroupText(groups);
+                    groupAdded = true;
                 }
+
+                // if question or answer type is not supported, use text widget
+                QuestionWidget qw =
+                        WidgetFactory.createWidgetFromPrompt(p, getContext(), false);
+                qw.setLongClickable(true);
+                qw.setOnLongClickListener(this);
+                qw.setId(ViewIds.generateViewId());
+
+                widgets.add(qw);
+                view.addView(qw, layout);
+
+                first = false;
             }
-            first = false;
         }
-
-        if (readOnlyOverride) {
-            questionText.setText(TextUtils.textToHtml(FormEntryPromptUtils
-                    .markQuestionIfIsRequired(questionText.getText().toString(), isRequired)));
-        }
-
-        View divider = new View(getContext());
-        divider.setBackgroundResource(new ThemeUtils(getContext()).getDivider());
-        divider.setMinimumHeight(3);
-        view.addView(divider);
 
         addView(view);
 
@@ -284,6 +254,40 @@ public class ODKView extends ScrollView implements OnLongClickListener {
                 }, 150);
             }
         }
+    }
+
+    @NonNull
+    public static String getGroupsPath(FormEntryCaption[] groups) {
+        StringBuilder path = new StringBuilder("");
+        if (groups != null) {
+            String longText;
+            int multiplicity;
+            int index = 1;
+            // list all groups in one string
+            for (FormEntryCaption group : groups) {
+                multiplicity = group.getMultiplicity() + 1;
+                String intentString = group.getFormElement()
+                        .getAdditionalAttribute(null, "intent");
+                if ((intentString == null || intentString.isEmpty())) {
+                    longText = group.getLongText();
+                    if (longText != null) {
+                        path.append(longText);
+                        if (group.repeats() && multiplicity > 0) {
+                            path
+                                    .append(" (")
+                                    .append(multiplicity)
+                                    .append(")\u200E");
+                        }
+                        if (index < groups.length) {
+                            path.append(" > ");
+                        }
+                        index++;
+                    }
+                }
+            }
+        }
+
+        return path.toString();
     }
 
     public Bundle getState() {
@@ -340,38 +344,105 @@ public class ODKView extends ScrollView implements OnLongClickListener {
             tv.setText(path);
             tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Collect.getQuestionFontsize());
             tv.setPadding(5, 0, 5, 7);
-            view.addView(tv, layout);
+            view.addView(tv, 0, layout);
         }
     }
 
-    @NonNull
-    public static String getGroupsPath(FormEntryCaption[] groups) {
-        StringBuilder path = new StringBuilder("");
-        if (groups != null) {
-            String longText;
-            int multiplicity;
-            int index = 1;
-            // list all groups in one string
-            for (FormEntryCaption group : groups) {
-                multiplicity = group.getMultiplicity() + 1;
-                longText = group.getLongText();
-                if (longText != null) {
-                    path.append(longText);
-                    if (group.repeats() && multiplicity > 0) {
-                        path
-                                .append(" (")
-                                .append(multiplicity)
-                                .append(")\u200E");
-                    }
-                    if (index < groups.length) {
-                        path.append(" > ");
-                    }
-                    index++;
+    private void AddLauncherButton(Context context, FormEntryPrompt[] questionPrompts,
+                                   ThemeUtils themeUtils, FormEntryCaption c,
+                                   String longText, String intentString) {
+
+        TextView questionText = new TextView(getContext());
+
+        boolean isRequired = false;
+
+        if (intentString != null && intentString.length() != 0) {
+
+            for (FormEntryPrompt prompt : questionPrompts) {
+                prompt.getQuestion().setAdditionalAttribute("", "done", "true");
+                if (prompt.isRequired() && !isRequired) {
+                    isRequired = true;
                 }
             }
-        }
 
-        return path.toString();
+            questionText.setText(TextUtils.textToHtml(FormEntryPromptUtils
+                    .markQuestionIfIsRequired(longText, isRequired)));
+
+            questionText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Collect.getQuestionFontsize() + 2);
+            questionText.setTypeface(null, Typeface.BOLD);
+            questionText.setPadding(5, 10, 0, 10);
+            questionText.setTextColor(themeUtils.getPrimaryTextColor());
+            questionText.setMovementMethod(LinkMovementMethod.getInstance());
+
+            // Wrap to the size of the parent view
+            questionText.setHorizontallyScrolling(false);
+            view.addView(questionText, layout);
+
+            final String buttonText;
+            final String errorString;
+            String v = c.getSpecialFormQuestionText("buttonText");
+            buttonText = (v != null) ? v : context.getString(R.string.launch_app);
+            v = c.getSpecialFormQuestionText("noAppErrorString");
+            errorString = (v != null) ? v : context.getString(R.string.no_app);
+
+            TableLayout.LayoutParams params = new TableLayout.LayoutParams();
+//                params.setMargins(7, 5, 7, 5);
+
+            // set button formatting
+            Button launchIntentButton = new Button(getContext());
+            launchIntentButton.setId(ViewIds.generateViewId());
+            launchIntentButton.setText(buttonText);
+            launchIntentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
+                    Collect.getQuestionFontsize() + 4);
+            launchIntentButton.setPadding(10, 30, 10, 30);
+            launchIntentButton.setLayoutParams(params);
+
+            launchIntentButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String intentName = ExternalAppsUtils.extractIntentName(intentString);
+                    Map<String, String> parameters = ExternalAppsUtils.extractParameters(
+                            intentString);
+
+                    Intent i = new Intent(intentName);
+                    try {
+                        ExternalAppsUtils.populateParameters(i, parameters,
+                                c.getIndex().getReference());
+
+                        for (FormEntryPrompt p : questionPrompts) {
+                            IFormElement formElement = p.getFormElement();
+                            if (formElement instanceof QuestionDef) {
+                                TreeReference reference =
+                                        (TreeReference) formElement.getBind().getReference();
+                                IAnswerData answerValue = p.getAnswerValue();
+                                Object value =
+                                        answerValue == null ? null : answerValue.getValue();
+                                switch (p.getDataType()) {
+                                    case Constants.DATATYPE_TEXT:
+                                    case Constants.DATATYPE_INTEGER:
+                                    case Constants.DATATYPE_DECIMAL:
+                                        i.putExtra(reference.getNameLast(),
+                                                (Serializable) value);
+                                        break;
+                                }
+                            }
+                        }
+
+                        ((Activity) getContext()).startActivityForResult(i, RequestCodes.EX_GROUP_CAPTURE);
+                    } catch (ExternalParamsException e) {
+                        Timber.e(e, "ExternalParamsException");
+
+                        ToastUtils.showShortToast(e.getMessage());
+                    } catch (ActivityNotFoundException e) {
+                        Timber.d(e, "ActivityNotFoundExcept");
+
+                        ToastUtils.showShortToast(errorString);
+                    }
+                }
+            });
+
+            view.addView(launchIntentButton, layout);
+        }
     }
 
     public void setFocus(Context context) {

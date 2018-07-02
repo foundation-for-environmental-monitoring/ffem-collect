@@ -28,8 +28,11 @@ import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.logic.HierarchyElement;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import timber.log.Timber;
+
+import static org.javarosa.form.api.FormEntryController.EVENT_GROUP;
 
 public class ViewFormHierarchyActivity extends FormHierarchyActivity {
 
@@ -39,9 +42,6 @@ public class ViewFormHierarchyActivity extends FormHierarchyActivity {
         super.onCreate(savedInstanceState);
 
         Collect.getInstance().getFormController().stepToOuterScreenEvent();
-
-        View buttonHolder = findViewById(R.id.buttonholder);
-        buttonHolder.setVisibility(View.GONE);
 
         Button exitButton = findViewById(R.id.exitButton);
         exitButton.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +96,7 @@ public class ViewFormHierarchyActivity extends FormHierarchyActivity {
                 element.setIcon(ContextCompat.getDrawable(this, R.drawable.expander_ic_maximized));
                 break;
             case QUESTION:
+            case EVENT_GROUP:
                 Collect.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick",
                         "QUESTION-JUMP", index);
                 Collect.getInstance().getFormController().jumpToIndex(index);
@@ -119,7 +120,40 @@ public class ViewFormHierarchyActivity extends FormHierarchyActivity {
                 return;
         }
 
-        recyclerView.setAdapter(new HierarchyListAdapter(formList, this::onElementClick, isEnabled));
+        List<HierarchyElement> newFormList = new ArrayList<>();
+
+        int i = 0;
+        while (i < formList.size()) {
+            boolean isRequired = false;
+            HierarchyElement item = formList.get(i);
+            item.getIntentChildren().clear();
+            newFormList.add(item);
+
+            if (item.getType() == EVENT_GROUP) {
+                for (int ii = i + 1; ii < formList.size(); ii++) {
+                    HierarchyElement childItem = formList.get(ii);
+                    if (childItem.getType() != EVENT_GROUP) {
+                        if (childItem.getFormIndex().toString().startsWith(item.getFormIndex().toString())) {
+                            if (!isRequired && childItem.isRequired()) {
+                                isRequired = true;
+                                childItem.setRequired(false);
+                            }
+                            item.addIntentChild(childItem);
+                            i++;
+                        } else {
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+
+                }
+                item.setRequired(isRequired);
+            }
+            i++;
+        }
+
+        recyclerView.setAdapter(new HierarchyListAdapter(newFormList, this::onElementClick, isEnabled));
         ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
     }
 }

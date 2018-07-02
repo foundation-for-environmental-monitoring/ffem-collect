@@ -22,19 +22,23 @@ import java.util.ArrayList;
 
 public class HierarchyElement {
     private final ArrayList<HierarchyElement> children = new ArrayList<>();
+    private final ArrayList<HierarchyElement> intentChildren = new ArrayList<>();
 
     private int type;
     private final FormIndex formIndex;
     private final String primaryText;
     private final String secondaryText;
     private Drawable icon;
+    private boolean isRequired;
 
-    public HierarchyElement(String primaryText, String secondaryText, Drawable icon, int type, FormIndex formIndex) {
+    public HierarchyElement(String primaryText, String secondaryText, Drawable icon,
+                            int type, FormIndex formIndex, boolean isRequired) {
         this.primaryText = primaryText;
         this.secondaryText = secondaryText;
         this.icon = icon;
         this.type = type;
         this.formIndex = formIndex;
+        this.isRequired = isRequired;
     }
 
     public String getPrimaryText() {
@@ -69,7 +73,23 @@ public class HierarchyElement {
         return children;
     }
 
+    public ArrayList<HierarchyElement> getIntentChildren() {
+        return intentChildren;
+    }
+
     public void addChild(HierarchyElement h) {
         children.add(h);
+    }
+
+    public void addIntentChild(HierarchyElement h) {
+        intentChildren.add(h);
+    }
+
+    public boolean isRequired() {
+        return isRequired;
+    }
+
+    public void setRequired(boolean required) {
+        isRequired = required;
     }
 }

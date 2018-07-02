@@ -103,7 +103,7 @@ public class FormEntryPromptUtils {
             if (questionText == null) {
                 questionText = "";
             }
-            questionText = "<span style=\"color:#F44336\">*</span> " + questionText;
+            questionText = "<span style=\"color:#F44336\">*</span>" + questionText;
         }
 
         return questionText;

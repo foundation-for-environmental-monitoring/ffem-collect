@@ -263,6 +263,8 @@ public class FormChooserList extends FormListActivity implements
                         : cursor);
         if (listAdapter.getCount() == 0) {
             findViewById(R.id.buttonGetBlankForm).setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.buttonGetBlankForm).setVisibility(View.VISIBLE);
         }
     }
 

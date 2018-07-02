@@ -45,6 +45,8 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static org.javarosa.form.api.FormEntryController.EVENT_GROUP;
+
 public abstract class FormHierarchyActivity extends CollectAbstractActivity {
 
     protected static final int CHILD = 1;
@@ -150,6 +152,8 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
                 ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
             });
         }
+
+        goUpLevel();
     }
 
     private boolean shouldScrollToTheGivenIndex(FormIndex formIndex, FormController formController) {
@@ -212,7 +216,7 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
                 // If we have a 'group' tag, we want to step back until we hit a repeat or the
                 // beginning.
                 while (startTest != null
-                        && formController.getEvent(startTest) == FormEntryController.EVENT_GROUP) {
+                        && formController.getEvent(startTest) == EVENT_GROUP) {
                     startTest = formController.stepIndexOut(startTest);
                 }
                 if (startTest == null) {
@@ -303,12 +307,22 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
                             // or if it is read-only and the label is not blank.
                             String answerDisplay = FormEntryPromptUtils.getAnswerText(fp, this, formController);
                             formList.add(
-                                    new HierarchyElement(FormEntryPromptUtils.markQuestionIfIsRequired(label, fp.isRequired()), answerDisplay, null,
-                                            QUESTION, fp.getIndex()));
+                                    new HierarchyElement(label, answerDisplay, null,
+                                            QUESTION, fp.getIndex(), fp.isRequired()));
                         }
                         break;
-                    case FormEntryController.EVENT_GROUP:
+                    case EVENT_GROUP:
                         // ignore group events
+                        FormEntryCaption fp1 = formController.getCaptionPrompt();
+                        if (ODKView.FIELD_LIST.equalsIgnoreCase(fp1.getFormElement().getAppearanceAttr())) {
+                            String intentString = fp1.getFormElement().getAdditionalAttribute(null, "intent");
+                            if ((intentString != null && !intentString.isEmpty()) && fp1.getFormElement().getChildren().size() > 0) {
+                                formList.add(
+                                        new HierarchyElement(fp1.getQuestionText(), "",
+                                                null, EVENT_GROUP, fp1.getIndex(), false));
+                            }
+                        }
+
                         break;
                     case FormEntryController.EVENT_PROMPT_NEW_REPEAT:
                         // this would display the 'add new repeat' dialog
@@ -332,7 +346,7 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
                             HierarchyElement group =
                                     new HierarchyElement(getLabel(fc), null, ContextCompat
                                             .getDrawable(this, R.drawable.expander_ic_minimized),
-                                            COLLAPSED, fc.getIndex());
+                                            COLLAPSED, fc.getIndex(), false);
                             formList.add(group);
                         }
                         String repeatLabel = getLabel(fc);
@@ -346,14 +360,47 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
                         repeatLabel += " (" + (fc.getMultiplicity() + 1) + ")\u200E";
                         // Add this group name to the drop down list for this repeating group.
                         HierarchyElement h = formList.get(formList.size() - 1);
-                        h.addChild(new HierarchyElement(repeatLabel, null, null, CHILD, fc.getIndex()));
+                        h.addChild(new HierarchyElement(repeatLabel, null, null, CHILD, fc.getIndex(), false));
                         break;
                 }
                 event =
                         formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
             }
 
-            recyclerView.setAdapter(new HierarchyListAdapter(formList, this::onElementClick, isEnabled));
+            List<HierarchyElement> newFormList = new ArrayList<>();
+
+            int i = 0;
+            while (i < formList.size()) {
+                boolean isRequired = false;
+                HierarchyElement item = formList.get(i);
+                item.getIntentChildren().clear();
+                newFormList.add(item);
+
+                if (item.getType() == EVENT_GROUP) {
+                    for (int ii = i + 1; ii < formList.size(); ii++) {
+                        HierarchyElement childItem = formList.get(ii);
+                        if (childItem.getType() != EVENT_GROUP) {
+                            if (childItem.getFormIndex().toString().startsWith(item.getFormIndex().toString())) {
+                                if (!isRequired && childItem.isRequired()) {
+                                    isRequired = true;
+                                    childItem.setRequired(false);
+                                }
+                                item.addIntentChild(childItem);
+                                i++;
+                            } else {
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+
+                    }
+                    item.setRequired(isRequired);
+                }
+                i++;
+            }
+
+            recyclerView.setAdapter(new HierarchyListAdapter(newFormList, this::onElementClick, isEnabled));
 
             // set the controller back to the current index in case the user hits 'back'
             formController.jumpToIndex(currentIndex);

@@ -13,7 +13,6 @@ limitations under the License.
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foreground="?android:attr/selectableItemBackground"
-    android:gravity="center_vertical"
     android:minHeight="70dp"
     android:paddingBottom="10dp"
     android:paddingEnd="15dp"
@@ -33,10 +32,11 @@ limitations under the License.
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/icon"
+        android:layout_centerVertical="true"
         android:layout_toRightOf="@id/icon"
         android:text="Primary Text"
         android:textColor="?primaryTextColor"
-        android:textSize="20sp"
+        android:textSize="17sp"
         android:textStyle="bold" />
 
     <TextView
