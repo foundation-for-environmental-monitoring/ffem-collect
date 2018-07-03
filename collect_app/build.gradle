@@ -119,6 +119,7 @@ android {
                 // https://discuss.circleci.com/t/11207/24
                 // it seems any number works, but 1024 - 2048 seem reasonable 
                 maxHeapSize = "2048M"
+                systemProperty 'robolectric.enabledSdks', '21'
             }
         }
     }
@@ -165,7 +166,7 @@ dependencies {
     implementation "com.google.firebase:firebase-core:16.0.1"
     implementation "com.crashlytics.sdk.android:crashlytics:2.9.4"
 
-    implementation("com.google.code.gson:gson:2.6.2") {
+    implementation("com.google.code.gson:gson:2.8.2") {
         exclude group: 'org.apache.httpcomponents'
     }
 
@@ -247,26 +248,26 @@ dependencies {
 
     // Testing-only dependencies
     testImplementation "junit:junit:4.12"
-    testImplementation "org.mockito:mockito-core:2.11.0"
-    testImplementation "org.robolectric:robolectric:3.6.1"
-    testImplementation "org.robolectric:shadows-multidex:3.5.1"
+    testImplementation "org.mockito:mockito-core:2.19.0"
+    testImplementation "org.robolectric:robolectric:3.8"
+    testImplementation "org.robolectric:shadows-multidex:3.8"
 
     // power mock (for mocking final methods which is not handled by mockito)
     testImplementation "org.powermock:powermock-module-junit4:2.0.0-beta.5"
     testImplementation "org.powermock:powermock-api-mockito2:2.0.0-beta.5"
 
-    androidTestImplementation "org.mockito:mockito-android:2.11.0"
-    androidTestImplementation("com.android.support.test:runner:1.0.1") {
+    androidTestImplementation "org.mockito:mockito-android:2.19.0"
+    androidTestImplementation("com.android.support.test:runner:1.0.2") {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     }
 
-    androidTestImplementation("com.android.support.test.espresso:espresso-intents:3.0.1") {
+    androidTestImplementation("com.android.support.test.espresso:espresso-intents:3.0.2") {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     }
 
-    androidTestImplementation "com.squareup.okhttp3:mockwebserver:3.9.1"
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:3.10.0"
 }
 
 // Must be at bottom to prevent dependency collisions
