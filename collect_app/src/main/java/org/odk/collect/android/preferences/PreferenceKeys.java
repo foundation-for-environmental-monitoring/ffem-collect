@@ -69,9 +69,9 @@ public final class PreferenceKeys {
 
     // values
     public static final String NAVIGATION_SWIPE             = "swipe";
-    public static final String CONSTRAINT_BEHAVIOR_ON_SWIPE = "on_finalize";
+    public static final String CONSTRAINT_BEHAVIOR_ON_SWIPE = "on_swipe";
     public static final String NAVIGATION_BUTTONS           = "buttons";
-    public static final String NAVIGATION_SWIPE_BUTTONS = "swipe_buttons";
+    public static final String NAVIGATION_SWIPE_BUTTONS     = "swipe_buttons";
     private static final String GOOGLE_MAPS                 = "osmdroid";
     private static final String AUTOSEND_OFF                = "off";
     private static final String GUIDANCE_HINT_OFF           = "no";
@@ -89,7 +89,7 @@ public final class PreferenceKeys {
         hashMap.put(KEY_GUIDANCE_HINT,              GUIDANCE_HINT_OFF);
         hashMap.put(KEY_DELETE_AFTER_SEND,          false);
         hashMap.put(KEY_COMPLETED_DEFAULT,          true);
-        hashMap.put(KEY_CONSTRAINT_BEHAVIOR,        CONSTRAINT_BEHAVIOR_ON_SWIPE);
+        hashMap.put(KEY_CONSTRAINT_BEHAVIOR,        "on_finalize");
         hashMap.put(KEY_HIGH_RESOLUTION,            true);
         hashMap.put(KEY_IMAGE_SIZE,                 "original_image_size");
         hashMap.put(KEY_INSTANCE_SYNC,              true);

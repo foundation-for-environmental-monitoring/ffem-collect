@@ -2,7 +2,6 @@ package io.ffem.collect.android.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -15,8 +14,6 @@ public class RowView extends TableRow {
 
     public RowView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        setGravity(Gravity.CENTER_HORIZONTAL);
 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
