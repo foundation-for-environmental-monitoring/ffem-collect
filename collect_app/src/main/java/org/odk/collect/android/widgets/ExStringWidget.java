@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
@@ -255,10 +256,10 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
 
             } catch (ExternalParamsException e) {
                 Timber.d(e);
-                onException(e.getMessage());
+                onException(e.getMessage(), intentName);
             }
         } else {
-            onException(errorString);
+            onException(errorString, intentName);
         }
     }
 
@@ -266,8 +267,8 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         SoftKeyboardUtils.showSoftKeyboard(answer);
     }
 
-    private void onException(String toastText) {
-//        hasExApp = false;
+    private void onException(String toastText, String intentName) {
+        hasExApp = false;
 //        if (!getFormEntryPrompt().isReadOnly()) {
 //            answer.setBackground(textBackground);
 //            answer.setFocusable(true);
@@ -276,25 +277,27 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
 //        }
 //        launchIntentButton.setEnabled(false);
 //        launchIntentButton.setFocusable(false);
-//        cancelWaitingForData();
+        cancelWaitingForData();
 
-//        Toast.makeText(getContext(),
-//                toastText, Toast.LENGTH_SHORT)
-//                .show();
-//        Timber.d(toastText);
+        if (intentName.startsWith("io.ffem")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.Theme_AppCompat_Light_Dialog);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.Theme_AppCompat_Light_Dialog);
-
-        builder.setTitle(R.string.app_not_found)
-                .setMessage(R.string.install_app)
-                .setPositiveButton(R.string.go_to_play_store, (dialogInterface, i) -> {
-                    getContext().startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("https://play.google.com/store/apps/developer?id=Foundation+for+Environmental+Monitoring")));
-                })
-                .setNegativeButton(android.R.string.cancel,
-                        (dialogInterface, i) -> dialogInterface.dismiss())
-                .setCancelable(false)
-                .show();
+            builder.setTitle(R.string.app_not_found)
+                    .setMessage(R.string.install_app)
+                    .setPositiveButton(R.string.go_to_play_store, (dialogInterface, i) -> {
+                        getContext().startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("https://play.google.com/store/apps/developer?id=Foundation+for+Environmental+Monitoring")));
+                    })
+                    .setNegativeButton(android.R.string.cancel,
+                            (dialogInterface, i) -> dialogInterface.dismiss())
+                    .setCancelable(false)
+                    .show();
+        } else {
+            Toast.makeText(getContext(),
+                    toastText, Toast.LENGTH_SHORT)
+                    .show();
+            Timber.d(toastText);
+        }
 
         focusAnswer();
     }
