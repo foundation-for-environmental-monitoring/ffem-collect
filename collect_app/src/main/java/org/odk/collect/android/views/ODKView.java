@@ -384,7 +384,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
             TextView tv = new TextView(getContext());
             tv.setText(path);
             tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Collect.getQuestionFontsize());
-            tv.setPadding(5, 0, 5, 7);
+            tv.setPadding(4, 0, 5, 7);
             view.addView(tv, 0, layout);
         }
     }
@@ -402,7 +402,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10, 0, 10, 10);
+            params.setMargins(12, 0, 12, 10);
 
             // set button formatting
             Button launchIntentButton = new Button(getContext());

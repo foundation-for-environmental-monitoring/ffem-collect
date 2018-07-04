@@ -250,7 +250,7 @@ public abstract class QuestionWidget
         // Add the text view. Textview always exists, regardless of whether there's text.
         questionText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getQuestionFontSize() + 2);
         questionText.setTypeface(null, Typeface.BOLD);
-        questionText.setPadding(0, 10, 0, 0);
+        questionText.setPadding(7, 10, 0, 0);
         questionText.setTextColor(themeUtils.getPrimaryTextColor());
         questionText.setText(TextUtils.textToHtml(FormEntryPromptUtils.markQuestionIfIsRequired(promptText, prompt.isRequired())));
         questionText.setMovementMethod(LinkMovementMethod.getInstance());
@@ -375,7 +375,7 @@ public abstract class QuestionWidget
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
         params.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
-        params.setMargins(6, 0, 6, 0);
+//        params.setMargins(6, 0, 6, 0);
         addView(v, params);
     }
 
