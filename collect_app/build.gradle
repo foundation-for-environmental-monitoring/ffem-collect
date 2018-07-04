@@ -119,7 +119,6 @@ android {
                 // https://discuss.circleci.com/t/11207/24
                 // it seems any number works, but 1024 - 2048 seem reasonable 
                 maxHeapSize = "2048M"
-                systemProperty 'robolectric.enabledSdks', '21'
             }
         }
     }
@@ -241,7 +240,7 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
 
     // Firebase Cloud Messaging
-    implementation 'com.google.firebase:firebase-messaging:17.0.0'
+    implementation 'com.google.firebase:firebase-messaging:17.1.0'
 
     // Used to generate documentation screenshots.
     androidTestImplementation "tools.fastlane:screengrab:1.1.0"

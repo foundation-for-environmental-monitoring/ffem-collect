@@ -63,6 +63,7 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAct
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasData;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE;
+import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
@@ -77,6 +78,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.odk.collect.android.activities.FormEntryActivity.EXTRA_TESTING_PATH;
 import static org.odk.collect.android.application.Collect.APP_FOLDER;
+import static org.odk.collect.android.test.MoreTestUtils.setTextInTextView;
 
 // import android.support.annotation.Nullable;
 // import org.odk.collect.android.activities.BearingActivity;
@@ -313,14 +315,16 @@ public class AllWidgetsFormTest {
                .thenReturn(false);
 
         onView(withText("Launch")).perform(click());
-        onVisibleEditText().perform(replaceText(exStringWidgetFirstText));
+        onView(allOf(withText(""), hasSibling(withId(R.id.simple_button))))
+                .perform(setTextInTextView(exStringWidgetFirstText));
 
         openWidgetList();
         onView(withText("Ex string widget")).perform(click());
 
         Screengrab.screenshot("ex-string");
 
-        onVisibleEditText().check(matches(withText(exStringWidgetFirstText)));
+        onView(allOf(withText(exStringWidgetFirstText), hasSibling(withId(R.id.simple_button))))
+                .check(matches(isDisplayed()));
 
         // Replace with Intent value:
         String exStringWidgetSecondText = randomString();
@@ -347,7 +351,7 @@ public class AllWidgetsFormTest {
         openWidgetList();
         onView(withText("Ex string widget")).perform(click());
 
-        onVisibleEditText().check(matches(withText(exStringWidgetSecondText)));
+        onView(withText(exStringWidgetSecondText)).check(matches(isDisplayed()));
 
         onView(withText("Ex string widget")).perform(swipeLeft());
     }
@@ -405,14 +409,16 @@ public class AllWidgetsFormTest {
                 .thenReturn(false);
 
         onView(withText("Launch")).perform(click());
-        onVisibleEditText().perform(replaceText(exIntegerFirstValue));
+        onView(allOf(withText(""), hasSibling(withId(R.id.simple_button))))
+                .perform(setTextInTextView(exIntegerFirstValue));
 
         Screengrab.screenshot("ex-integer");
 
         openWidgetList();
         onView(withText("Ex integer widget")).perform(click());
 
-        onVisibleEditText().check(matches(withText(exIntegerFirstValue)));
+        onView(allOf(withText(exIntegerFirstValue), hasSibling(withId(R.id.simple_button))))
+                .check(matches(isDisplayed()));
 
         // Replace with Intent value:
         String exIntegerSecondValue = randomIntegerString();
@@ -439,7 +445,7 @@ public class AllWidgetsFormTest {
         openWidgetList();
         onView(withText("Ex integer widget")).perform(click());
 
-        onVisibleEditText().check(matches(withText(exIntegerSecondValue)));
+        onView(withText(exIntegerSecondValue)).check(matches(isDisplayed()));
 
         onView(withText("Ex integer widget")).perform(swipeLeft());
     }
@@ -466,14 +472,16 @@ public class AllWidgetsFormTest {
                 .thenReturn(false);
 
         onView(withText("Launch")).perform(click());
-        onVisibleEditText().perform(replaceText(exDecimalFirstValue));
+        onView(allOf(withText(""), hasSibling(withId(R.id.simple_button))))
+                .perform(setTextInTextView(exDecimalFirstValue));
 
         Screengrab.screenshot("ex-decimal");
 
         openWidgetList();
         onView(withText("Ex decimal widget")).perform(click());
 
-        onVisibleEditText().check(matches(withText(exDecimalFirstValue)));
+        onView(allOf(withText(exDecimalFirstValue), hasSibling(withId(R.id.simple_button))))
+                .check(matches(isDisplayed()));
 
         // Replace with Intent value:
         String exDecimalSecondValue = randomDecimalString();
@@ -500,7 +508,7 @@ public class AllWidgetsFormTest {
         openWidgetList();
         onView(withText("Ex decimal widget")).perform(click());
 
-        onVisibleEditText().check(matches(withText(exDecimalSecondValue)));
+        onView(withText(exDecimalSecondValue)).check(matches(isDisplayed()));
 
         onView(withText("Ex decimal widget")).perform(swipeLeft());
     }
