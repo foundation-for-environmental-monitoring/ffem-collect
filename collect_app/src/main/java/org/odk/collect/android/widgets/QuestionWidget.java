@@ -90,6 +90,7 @@ public abstract class QuestionWidget
     private Bundle state;
     protected ThemeUtils themeUtils;
     private int playColor;
+    private View container;
 
     public QuestionWidget(Context context, FormEntryPrompt prompt) {
         super(context);
@@ -708,5 +709,13 @@ public abstract class QuestionWidget
 
     public String getQuestionText() {
         return promptText;
+    }
+
+    public View getContainer() {
+        return container;
+    }
+
+    public void setContainer(View container) {
+        this.container = container;
     }
 }

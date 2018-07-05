@@ -22,9 +22,11 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -118,13 +120,8 @@ public class ODKView extends ScrollView implements OnLongClickListener {
         // get the group we are showing -- it will be the last of the groups in the groups list
         if (groups != null && groups.length > 0) {
             final FormEntryCaption c = groups[groups.length - 1];
-
-            String intentString;
-            String longText;
             IFormElement formElement = c.getFormElement();
-
-            intentString = getIntentString(formElement);
-
+            String intentString = getIntentString(formElement);
             if (formElement instanceof GroupDef && intentString != null) {
 
                 addGroupText(groups);
@@ -137,15 +134,15 @@ public class ODKView extends ScrollView implements OnLongClickListener {
                     }
                 }
 
-                longText = formElement.getLabelInnerText();
-
-                addExternalQuestion(context, longText, formEntryPrompts.toArray(new FormEntryPrompt[0]),
+                addExternalQuestion(context, formElement.getLabelInnerText(),
+                        formEntryPrompts.toArray(new FormEntryPrompt[0]),
                         themeUtils, c, intentString);
 
             } else {
 
                 for (int i = 0; i < formElement.getChildren().size(); i++) {
-                    if (formElement.getChild(i) instanceof QuestionDef) {
+                    if (formElement.getChild(i) instanceof QuestionDef
+                            || formElement.getChild(i) instanceof GroupDef) {
 
                         intentString = getIntentString(formElement.getChild(i));
 
@@ -163,52 +160,28 @@ public class ODKView extends ScrollView implements OnLongClickListener {
                                 }
                             }
 
-                            longText = formElement.getChildren().get(i).getLabelInnerText();
-                            addExternalQuestion(context, longText, formEntryPrompts.toArray(new FormEntryPrompt[0]),
-                                    themeUtils, c, intentString);
-                        }
-
-                    } else if (formElement.getChild(i) instanceof GroupDef) {
-
-                        intentString = getIntentString(formElement.getChild(i));
-
-                        if (intentString != null) {
-
-                            if (!groupAdded) {
-                                addGroupText(groups);
-                                groupAdded = true;
-                            }
-
-                            List<FormEntryPrompt> formEntryPrompts = new ArrayList<>();
-                            for (FormEntryPrompt prompt : questionPrompts) {
-                                if (prompt != null && prompt.getIndex().getNextLevel().getLocalIndex() == i) {
-                                    formEntryPrompts.add(prompt);
-                                }
-                            }
-
-                            longText = formElement.getChildren().get(i).getLabelInnerText();
-                            addExternalQuestion(context, longText, formEntryPrompts
-                                    .toArray(new FormEntryPrompt[0]), themeUtils, c, intentString);
+                            addExternalQuestion(context, formElement.getChildren().get(i).getLabelInnerText(),
+                                    formEntryPrompts.toArray(new FormEntryPrompt[0]), themeUtils, c, intentString);
                         }
                     }
                 }
             }
         }
 
-        boolean first = true;
         boolean isRequired = false;
         for (FormEntryPrompt p : questionPrompts) {
             if (p.isRequired() && !isRequired) {
                 isRequired = true;
             }
-            if (!first) {
-                View divider = new View(getContext());
-                divider.setBackgroundResource(new ThemeUtils(getContext()).getDivider());
-                divider.setMinimumHeight(3);
-                view.addView(divider, bottomMargin);
-            }
 
             if (p.getQuestion().getAdditionalAttribute("", "done") == null) {
+
+                if (view.getChildCount() > 1) {
+                    View divider = new View(getContext());
+                    divider.setBackgroundResource(new ThemeUtils(getContext()).getDivider());
+                    divider.setMinimumHeight(3);
+                    view.addView(divider);
+                }
 
                 if (!groupAdded) {
                     addGroupText(groups);
@@ -224,8 +197,6 @@ public class ODKView extends ScrollView implements OnLongClickListener {
 
                 widgets.add(qw);
                 view.addView(qw, layout);
-
-                first = false;
             }
         }
 
@@ -272,28 +243,39 @@ public class ODKView extends ScrollView implements OnLongClickListener {
                                      ThemeUtils themeUtils, FormEntryCaption c, String intentString) {
         if (formEntryPrompts.length > 0) {
 
-            AddQuestionText(formEntryPrompts, themeUtils, longText);
+            LinearLayout linearLayout = new LinearLayout(context);
+            linearLayout.setPadding(0, 0, 0, 10);
+
+            if (view.getChildCount() > 1) {
+                View divider = new View(getContext());
+                divider.setBackgroundResource(new ThemeUtils(getContext()).getDivider());
+                divider.setMinimumHeight(3);
+                linearLayout.addView(divider);
+            }
+
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+            TextView questionText = getQuestionText(formEntryPrompts, themeUtils, longText);
+            linearLayout.addView(questionText, layout);
 
             for (FormEntryPrompt p : formEntryPrompts) {
-                // if question or answer type is not supported, use text widget
                 QuestionWidget qw =
                         WidgetFactory.createWidgetFromPrompt(p, getContext(), false);
+                qw.setContainer(linearLayout);
 
                 widgets.add(qw);
                 if (qw.getAnswer() != null) {
                     RowView answerRow = new RowView(context);
                     answerRow.setPrimaryText(qw.getQuestionText() + ": ");
                     answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
-                    view.addView(answerRow, layout);
+                    linearLayout.addView(answerRow, layout);
                 }
             }
 
-            AddLauncherButton(context, formEntryPrompts, c, intentString);
+            Button button = getLauncherButton(context, formEntryPrompts, c, intentString);
+            linearLayout.addView(button);
 
-            View divider = new View(getContext());
-            divider.setBackgroundResource(new ThemeUtils(getContext()).getDivider());
-            divider.setMinimumHeight(3);
-            view.addView(divider, bottomMargin);
+            view.addView(linearLayout);
         }
     }
 
@@ -389,76 +371,87 @@ public class ODKView extends ScrollView implements OnLongClickListener {
         }
     }
 
-    private void AddLauncherButton(Context context, FormEntryPrompt[] questionPrompts,
-                                   FormEntryCaption c, String intentString) {
-        if (intentString != null && intentString.length() != 0) {
+    private Button getLauncherButton(Context context, FormEntryPrompt[] questionPrompts,
+                                     FormEntryCaption c, String intentString) {
+        final String buttonText;
+        final String errorString;
+        String v = c.getSpecialFormQuestionText("buttonText");
+        buttonText = (v != null) ? v : context.getString(R.string.launch_app);
+        v = c.getSpecialFormQuestionText("noAppErrorString");
+        errorString = (v != null) ? v : context.getString(R.string.no_app);
 
-            final String buttonText;
-            final String errorString;
-            String v = c.getSpecialFormQuestionText("buttonText");
-            buttonText = (v != null) ? v : context.getString(R.string.launch_app);
-            v = c.getSpecialFormQuestionText("noAppErrorString");
-            errorString = (v != null) ? v : context.getString(R.string.no_app);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(12, 0, 12, 10);
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(12, 0, 12, 10);
+        // set button formatting
+        Button launchIntentButton = new Button(getContext());
+        launchIntentButton.setId(ViewIds.generateViewId());
+        launchIntentButton.setText(buttonText);
+        launchIntentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
+                Collect.getQuestionFontsize() + 4);
+        launchIntentButton.setPadding(10, 30, 10, 30);
+        launchIntentButton.setLayoutParams(params);
 
-            // set button formatting
-            Button launchIntentButton = new Button(getContext());
-            launchIntentButton.setId(ViewIds.generateViewId());
-            launchIntentButton.setText(buttonText);
-            launchIntentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
-                    Collect.getQuestionFontsize() + 4);
-            launchIntentButton.setPadding(10, 30, 10, 30);
-            launchIntentButton.setLayoutParams(params);
+        launchIntentButton.setOnClickListener(v1 -> {
+            String intentName = ExternalAppsUtils.extractIntentName(intentString);
+            Map<String, String> parameters = ExternalAppsUtils.extractParameters(
+                    intentString);
 
-            launchIntentButton.setOnClickListener(v1 -> {
-                String intentName = ExternalAppsUtils.extractIntentName(intentString);
-                Map<String, String> parameters = ExternalAppsUtils.extractParameters(
-                        intentString);
+            Intent i = new Intent(intentName);
+            try {
+                ExternalAppsUtils.populateParameters(i, parameters,
+                        c.getIndex().getReference());
 
-                Intent i = new Intent(intentName);
-                try {
-                    ExternalAppsUtils.populateParameters(i, parameters,
-                            c.getIndex().getReference());
-
-                    for (FormEntryPrompt p : questionPrompts) {
-                        IFormElement formElement = p.getFormElement();
-                        if (formElement instanceof QuestionDef) {
-                            TreeReference reference =
-                                    (TreeReference) formElement.getBind().getReference();
-                            IAnswerData answerValue = p.getAnswerValue();
-                            Object value =
-                                    answerValue == null ? null : answerValue.getValue();
-                            switch (p.getDataType()) {
-                                case Constants.DATATYPE_TEXT:
-                                case Constants.DATATYPE_INTEGER:
-                                case Constants.DATATYPE_DECIMAL:
-                                    i.putExtra(reference.getNameLast(),
-                                            (Serializable) value);
-                                    break;
-                            }
+                for (FormEntryPrompt p : questionPrompts) {
+                    IFormElement formElement = p.getFormElement();
+                    if (formElement instanceof QuestionDef) {
+                        TreeReference reference =
+                                (TreeReference) formElement.getBind().getReference();
+                        IAnswerData answerValue = p.getAnswerValue();
+                        Object value =
+                                answerValue == null ? null : answerValue.getValue();
+                        switch (p.getDataType()) {
+                            case Constants.DATATYPE_TEXT:
+                            case Constants.DATATYPE_INTEGER:
+                            case Constants.DATATYPE_DECIMAL:
+                                i.putExtra(reference.getNameLast(),
+                                        (Serializable) value);
+                                break;
                         }
                     }
+                }
 
-                    ((Activity) getContext()).startActivityForResult(i, RequestCodes.EX_GROUP_CAPTURE);
-                } catch (ExternalParamsException e) {
-                    Timber.e(e, "ExternalParamsException");
+                ((Activity) getContext()).startActivityForResult(i, RequestCodes.EX_GROUP_CAPTURE);
+            } catch (ExternalParamsException e) {
+                Timber.e(e, "ExternalParamsException");
 
-                    ToastUtils.showShortToast(e.getMessage());
-                } catch (ActivityNotFoundException e) {
-                    Timber.d(e, "ActivityNotFoundExcept");
+                ToastUtils.showShortToast(e.getMessage());
+            } catch (ActivityNotFoundException e) {
+                Timber.d(e, "ActivityNotFoundExcept");
 
+                if (intentName.startsWith("io.ffem.soil") || intentName.startsWith("io.ffem.water")) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.Theme_AppCompat_Light_Dialog);
+
+                    builder.setTitle(R.string.app_not_found)
+                            .setMessage(R.string.install_app)
+                            .setPositiveButton(R.string.go_to_play_store, (dialogInterface, i1)
+                                    -> ODKView.this.getContext().startActivity(new Intent(Intent.ACTION_VIEW,
+                                    Uri.parse("https://play.google.com/store/apps/developer?id=Foundation+for+Environmental+Monitoring"))))
+                            .setNegativeButton(android.R.string.cancel,
+                                    (dialogInterface, i1) -> dialogInterface.dismiss())
+                            .setCancelable(false)
+                            .show();
+                } else {
                     ToastUtils.showShortToast(errorString);
                 }
-            });
+            }
+        });
 
-            view.addView(launchIntentButton, params);
-        }
+        return launchIntentButton;
     }
 
-    private void AddQuestionText(FormEntryPrompt[] questionPrompts, ThemeUtils themeUtils, String longText) {
+    private TextView getQuestionText(FormEntryPrompt[] questionPrompts, ThemeUtils themeUtils, String longText) {
         TextView questionText = new TextView(getContext());
 
         boolean isRequired = false;
@@ -475,13 +468,14 @@ public class ODKView extends ScrollView implements OnLongClickListener {
 
         questionText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Collect.getQuestionFontsize() + 2);
         questionText.setTypeface(null, Typeface.BOLD);
-        questionText.setPadding(5, 0, 5, 0);
+        questionText.setPadding(5, 5, 5, 0);
         questionText.setTextColor(themeUtils.getPrimaryTextColor());
         questionText.setMovementMethod(LinkMovementMethod.getInstance());
 
         // Wrap to the size of the parent view
         questionText.setHorizontallyScrolling(false);
-        view.addView(questionText, layout);
+
+        return questionText;
     }
 
     public void setFocus(Context context) {
@@ -573,8 +567,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
         }
 
         if (count != 1) {
-            Timber.w("Attempting to cancel waiting for binary data to a widget or set of widgets "
-                            + "not looking for data");
+            Timber.w("Attempting to cancel waiting for binary data to a widget or set of widgets not looking for data");
         }
     }
 
@@ -648,8 +641,13 @@ public class ODKView extends ScrollView implements OnLongClickListener {
 
     public void highlightWidget(FormIndex formIndex) {
         QuestionWidget qw = getQuestionWidget(formIndex);
-
+        View viewToHighlight;
         if (qw != null) {
+            if (qw.getContainer() != null) {
+                viewToHighlight = qw.getContainer();
+            } else {
+                viewToHighlight = qw;
+            }
             // postDelayed is needed because otherwise scrolling may not work as expected in case when
             // answers are validated during form finalization.
             new Handler().postDelayed(() -> {
@@ -658,7 +656,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
                 ValueAnimator va = new ValueAnimator();
                 va.setIntValues(getResources().getColor(R.color.red), getDrawingCacheBackgroundColor());
                 va.setEvaluator(new ArgbEvaluator());
-                va.addUpdateListener(valueAnimator -> qw.setBackgroundColor((int) valueAnimator.getAnimatedValue()));
+                va.addUpdateListener(valueAnimator -> viewToHighlight.setBackgroundColor((int) valueAnimator.getAnimatedValue()));
                 va.setDuration(2500);
                 va.start();
             }, 100);
