@@ -43,23 +43,24 @@ public class ViewFormHierarchyActivity extends FormHierarchyActivity {
 
         Collect.getInstance().getFormController().stepToOuterScreenEvent();
 
-        Button exitButton = findViewById(R.id.exitButton);
-        exitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "exit",
-                        "click");
-                setResult(RESULT_OK);
-                finish();
-            }
-        });
-
-        exitButton.setVisibility(View.VISIBLE);
+//        Button exitButton = findViewById(R.id.exitButton);
+//        exitButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Collect.getInstance().getActivityLogger().logInstanceAction(this, "exit",
+//                        "click");
+//                setResult(RESULT_OK);
+//                finish();
+//            }
+//        });
+//
+//        exitButton.setVisibility(View.VISIBLE);
 
         jumpBeginningButton.setVisibility(View.GONE);
         jumpEndButton.setVisibility(View.GONE);
 
         recyclerView.setBackgroundColor(getResources().getColor(R.color.disabled_gray));
+        path.setBackgroundColor(getResources().getColor(R.color.disabled_gray));
     }
 
 

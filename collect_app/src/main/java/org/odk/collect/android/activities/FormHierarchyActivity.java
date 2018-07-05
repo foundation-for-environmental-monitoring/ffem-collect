@@ -22,6 +22,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -59,7 +60,7 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
 
     FormIndex startIndex;
     private FormIndex currentIndex;
-    protected Button jumpPreviousButton;
+//    protected Button jumpPreviousButton;
     protected Button jumpBeginningButton;
     protected Button jumpEndButton;
     protected RecyclerView recyclerView;
@@ -94,15 +95,15 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
 
         path = findViewById(R.id.pathtext);
 
-        jumpPreviousButton = findViewById(R.id.jumpPreviousButton);
-        jumpPreviousButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "goUpLevelButton",
-                        "click");
-                goUpLevel();
-            }
-        });
+//        jumpPreviousButton = findViewById(R.id.jumpPreviousButton);
+//        jumpPreviousButton.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Collect.getInstance().getActivityLogger().logInstanceAction(this, "goUpLevelButton",
+//                        "click");
+//                goUpLevel();
+//            }
+//        });
 
         jumpBeginningButton = findViewById(R.id.jumpBeginningButton);
         jumpBeginningButton.setOnClickListener(new OnClickListener() {
@@ -246,11 +247,11 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
                 contextGroupRef =
                         formController.getFormIndex().getReference().getParentRef().toString(true);
                 path.setVisibility(View.GONE);
-                jumpPreviousButton.setEnabled(false);
+//                jumpPreviousButton.setEnabled(false);
             } else {
                 path.setVisibility(View.VISIBLE);
                 path.setText(getCurrentPath());
-                jumpPreviousButton.setEnabled(true);
+//                jumpPreviousButton.setEnabled(true);
             }
 
             // Refresh the current event in case we did step forward.
@@ -446,5 +447,28 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
     private String getLabel(FormEntryCaption formEntryCaption) {
         return formEntryCaption.getShortText() != null && !formEntryCaption.getShortText().isEmpty()
                 ? formEntryCaption.getShortText() : formEntryCaption.getLongText();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        FormController formController = Collect.getInstance().getFormController();
+        int event = formController.getEvent();
+        if (event == FormEntryController.EVENT_REPEAT) {
+            Collect.getInstance().getActivityLogger().logInstanceAction(this, "goUpLevelButton",
+                    "click");
+            goUpLevel();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

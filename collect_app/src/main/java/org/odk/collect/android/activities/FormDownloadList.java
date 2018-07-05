@@ -384,6 +384,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
                                     showDialog(CANCELLATION_DIALOG);
                                     downloadFormsTask.cancel(true);
                                 }
+                                finish();
                             }
                         };
                 progressDialog.setTitle(getString(R.string.downloading_data));
