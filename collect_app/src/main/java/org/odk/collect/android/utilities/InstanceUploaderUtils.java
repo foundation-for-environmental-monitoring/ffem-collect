@@ -26,7 +26,7 @@ import java.util.HashMap;
 
 public class InstanceUploaderUtils {
 
-    public static final String DEFAULT_SUCCESSFUL_TEXT = "full submission upload was successful!";
+    public static final String DEFAULT_SUCCESSFUL_TEXT = "Successful submission.";
 
     private InstanceUploaderUtils() {
     }
