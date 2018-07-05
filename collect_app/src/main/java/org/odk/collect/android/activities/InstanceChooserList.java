@@ -22,6 +22,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -89,6 +90,16 @@ public class InstanceChooserList extends InstanceListActivity implements
                     getString(R.string.sort_by_date_asc), getString(R.string.sort_by_date_desc)
             };
             ((TextView) findViewById(android.R.id.empty)).setText(R.string.no_items_display_sent_forms);
+
+            if(!PreferenceManager
+                    .getDefaultSharedPreferences(Collect.getInstance())
+                    .contains(getSortingOrderKey())){
+                PreferenceManager.getDefaultSharedPreferences(Collect.getInstance())
+                        .edit()
+                        .putInt(getSortingOrderKey(), 2)
+                        .apply();
+
+            }
         }
 
         requestStoragePermissions(this, new PermissionListener() {
@@ -167,7 +178,7 @@ public class InstanceChooserList extends InstanceListActivity implements
                     }
                     startActivity(intent);
                 }
-                finish();
+                stopManagingCursor(c);
             }
         }
     }

@@ -33,6 +33,16 @@ the License.
             android:layout_height="0dp"
             android:layout_weight="1" />
 
+        <Button
+            android:id="@+id/buttonGetBlankForm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="20dp"
+            android:paddingEnd="50dp"
+            android:paddingStart="50dp"
+            android:text="@string/get_forms"
+            android:textSize="18sp" />
     </LinearLayout>
 
     <FrameLayout
@@ -55,7 +65,7 @@ the License.
             android:paddingEnd="50dp"
             android:paddingStart="50dp"
             android:text="@string/get_forms"
-            android:textSize="18dp" />
+            android:textSize="18sp" />
     </FrameLayout>
 
     <include
@@ -64,15 +74,4 @@ the License.
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar" />
 
-    <Button
-        android:id="@+id/buttonGetBlankForm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="center_horizontal"
-        android:padding="20dp"
-        android:paddingEnd="50dp"
-        android:paddingStart="50dp"
-        android:text="@string/get_forms"
-        android:textSize="18dp" />
 </RelativeLayout>

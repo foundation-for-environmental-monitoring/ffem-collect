@@ -168,8 +168,12 @@ abstract class AppListActivity extends CollectAbstractActivity {
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
+        boolean allowDelete = getIntent().getBooleanExtra("allowDelete", false);
         getMenuInflater().inflate(R.menu.list_delete_menu, menu);
         final MenuItem deleteItem = menu.findItem(R.id.menu_delete);
+        if (!allowDelete) {
+            deleteItem.setVisible(false);
+        }
         final MenuItem sortItem = menu.findItem(R.id.menu_sort);
         final MenuItem searchItem = menu.findItem(R.id.menu_filter);
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
@@ -202,7 +206,9 @@ abstract class AppListActivity extends CollectAbstractActivity {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                deleteItem.setVisible(true);
+                if (allowDelete) {
+                    deleteItem.setVisible(true);
+                }
                 sortItem.setVisible(true);
                 return true;
             }

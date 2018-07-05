@@ -6,7 +6,7 @@
     android:paddingBottom="8dip"
     android:paddingLeft="8dip"
     android:paddingRight="8dip"
-    android:paddingTop="4dip">
+    android:paddingTop="8dip">
 
     <TextView
         android:id="@+id/text1"
@@ -16,7 +16,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:gravity="center_vertical"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="19sp"
         android:layout_toLeftOf="@+id/visible_off"
         android:layout_toStartOf="@+id/visible_off" />
 

@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.utilities.AuthDialogUtility;
 
 import io.ffem.collect.android.activities.SignInActivity;
 
@@ -47,7 +48,16 @@ public class ServerPreferences extends ServerPreferencesFragment {
 
         Preference serverPreferences = findPreference("server_credentials");
         if (serverPreferences != null) {
-            serverPreferences.setSummary(R.string.sign_in_to_account);
+
+            String username = AuthDialogUtility.getUserNameFromPreferences();
+            String password = AuthDialogUtility.getPasswordFromPreferences();
+
+            if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+                serverPreferences.setSummary(R.string.sign_in_to_account);
+            } else {
+                serverPreferences.setSummary(username);
+            }
+
             serverPreferences.setOnPreferenceClickListener(preference -> {
                 final Intent intent = new Intent(getActivity(), SignInActivity.class);
                 intent.putExtra("isSettings", true);

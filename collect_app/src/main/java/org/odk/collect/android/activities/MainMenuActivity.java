@@ -148,6 +148,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
                     Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
                     i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
                             ApplicationConstants.FormModes.EDIT_SAVED);
+                    i.putExtra("allowDelete", true);
                     startActivity(i);
                 }
             }
@@ -295,6 +296,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
                             .logAction(this, "fillBlankForm", "click");
                     Intent i = new Intent(getApplicationContext(),
                             FormChooserList.class);
+                    i.putExtra("allowDelete", true);
                     startActivity(i);
                 }
             }
@@ -664,6 +666,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
             } else {
                 i = new Intent(getApplicationContext(),
                         FormDownloadList.class);
+//                i.putExtra("isDownloadForms", true);
             }
             startActivity(i);
         }
