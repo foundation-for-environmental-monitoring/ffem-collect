@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -29,6 +30,8 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferenceKeys;
+
+import timber.log.Timber;
 
 /**
  * Used to present auth dialog and update credentials in the system as needed.
@@ -99,6 +102,9 @@ public class AuthDialogUtility {
                     public void onClick(DialogInterface dialog, int which) {
                         Collect.getInstance().getActivityLogger().logAction(this, TAG, "Cancel");
 
+                        closeKeyboard(context, username);
+                        closeKeyboard(context, password);
+
                         resultListener.cancelledUpdatingCredentials();
                     }
                 });
@@ -107,10 +113,15 @@ public class AuthDialogUtility {
 
         AlertDialog dialog = builder.create();
 
+        showKeyboard(context);
+
         dialog.setOnShowListener(dialogInterface -> {
 
             Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             button.setOnClickListener(view -> {
+
+                closeKeyboard(context, username);
+                closeKeyboard(context, password);
 
                 Collect.getInstance().getActivityLogger().logAction(this, TAG, "OK");
 
@@ -175,5 +186,30 @@ public class AuthDialogUtility {
         void updatedCredentials();
 
         void cancelledUpdatingCredentials();
+    }
+
+    private void showKeyboard(Context context) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
+    }
+
+    /**
+     * Hides the keyboard.
+     *
+     * @param input the EditText for which the keyboard is open
+     */
+    private void closeKeyboard(Context context, EditText input) {
+        try {
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+            }
+        } catch (Exception e) {
+            Timber.e(e);
+        }
     }
 }

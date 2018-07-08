@@ -10,7 +10,6 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.view.MenuItem;
 import android.widget.EditText;
 
@@ -39,6 +38,7 @@ public class SignInActivity extends AppCompatActivity {
     private EditText editPassword;
     private TextInputLayout layoutUserName;
     private TextInputLayout layoutPassword;
+    private boolean isSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
 
-        boolean isSettings = getIntent().getBooleanExtra("isSettings", false);
+        isSettings = getIntent().getBooleanExtra("isSettings", false);
 
         if (isUserSignedIn() && !isSettings) {
             startActivity(new Intent(getBaseContext(), MainMenuActivity.class));
@@ -97,10 +97,6 @@ public class SignInActivity extends AppCompatActivity {
 
         initialize();
 
-        if (!isUserSignedIn() || isSettings) {
-            editText.setText(AuthDialogUtility.getUserNameFromPreferences());
-            editPassword.setText(maskPassword(AuthDialogUtility.getPasswordFromPreferences()));
-        }
     }
 
     private String maskPassword(String password) {
@@ -154,7 +150,20 @@ public class SignInActivity extends AppCompatActivity {
         });
 
         layoutUserName = findViewById(R.id.layoutUsername);
+        layoutUserName.setHintAnimationEnabled(false);
+        layoutUserName.setHint(getString(R.string.username));
+
         layoutPassword = findViewById(R.id.passwordLayout);
+        layoutPassword.setHintAnimationEnabled(false);
+        layoutPassword.setHint(getString(R.string.password));
+
+        if (!isUserSignedIn() || isSettings) {
+            editText.setText(AuthDialogUtility.getUserNameFromPreferences());
+            editPassword.setText(maskPassword(AuthDialogUtility.getPasswordFromPreferences()));
+        }
+
+        layoutUserName.setHintAnimationEnabled(true);
+        layoutPassword.setHintAnimationEnabled(true);
 
         AdjustingViewGlobalLayoutListener listen =
                 new AdjustingViewGlobalLayoutListener(findViewById(R.id.authLayout));
@@ -200,7 +209,6 @@ public class SignInActivity extends AppCompatActivity {
     private void createErrorDialog(String errorMsg, final boolean shouldExit) {
         Collect.getInstance().getActivityLogger().logAction(this, "createErrorDialog", "show");
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setIcon(android.R.drawable.ic_dialog_info);
         alertDialog.setMessage(errorMsg);
         DialogInterface.OnClickListener errorListener = new DialogInterface.OnClickListener() {
             @Override

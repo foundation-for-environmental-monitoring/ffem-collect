@@ -39,6 +39,7 @@
         android:gravity="fill_horizontal"
         android:inputType="textNoSuggestions"
         android:scrollHorizontally="true"
+        android:selectAllOnFocus="true"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -61,6 +62,7 @@
         android:gravity="fill_horizontal"
         android:inputType="textPassword"
         android:scrollHorizontally="true"
+        android:selectAllOnFocus="true"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>
