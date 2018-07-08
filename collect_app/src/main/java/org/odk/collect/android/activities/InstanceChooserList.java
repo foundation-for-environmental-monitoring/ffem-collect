@@ -273,7 +273,7 @@ public class InstanceChooserList extends InstanceListActivity implements
         Collect.getInstance().getActivityLogger().logAction(this, "createErrorDialog", "show");
 
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setIcon(android.R.drawable.ic_dialog_info);
+//        alertDialog.setIcon(R.drawable.ic_dialog_info);
         alertDialog.setMessage(errorMsg);
         DialogInterface.OnClickListener errorListener = new DialogInterface.OnClickListener() {
             @Override

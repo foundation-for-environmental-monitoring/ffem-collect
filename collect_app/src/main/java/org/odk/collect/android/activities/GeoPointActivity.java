@@ -192,7 +192,7 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
 
         locationDialog.setCancelable(false); // taping outside the dialog doesn't cancel
         locationDialog.setIndeterminate(true);
-        locationDialog.setIcon(android.R.drawable.ic_dialog_info);
+//        locationDialog.setIcon(R.drawable.ic_dialog_info);
         locationDialog.setTitle(getString(R.string.getting_location));
         dialogMessage = getString(R.string.please_wait_long);
 

@@ -377,7 +377,7 @@ public class InstanceUploaderList extends InstanceListActivity implements
         logger.logAction(this, "changeView", "show");
 
         AlertDialog alertDialog = new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_info)
+//                .setIcon(R.drawable.ic_dialog_info)
                 .setTitle(getString(R.string.change_view))
                 .setNeutralButton(getString(R.string.cancel), (dialog, id) -> {
                     logger.logAction(this, "changeView", "cancel");

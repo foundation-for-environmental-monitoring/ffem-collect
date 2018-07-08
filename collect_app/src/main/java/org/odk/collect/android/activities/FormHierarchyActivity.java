@@ -423,7 +423,7 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
 
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 
-        alertDialog.setIcon(android.R.drawable.ic_dialog_info);
+//        alertDialog.setIcon(R.drawable.ic_dialog_info);
         alertDialog.setTitle(getString(R.string.error_occured));
         alertDialog.setMessage(errorMsg);
         DialogInterface.OnClickListener errorListener = new DialogInterface.OnClickListener() {

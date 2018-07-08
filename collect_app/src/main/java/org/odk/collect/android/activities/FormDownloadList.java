@@ -389,7 +389,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
                         };
                 progressDialog.setTitle(getString(R.string.downloading_data));
                 progressDialog.setMessage(alertMsg);
-                progressDialog.setIcon(android.R.drawable.ic_dialog_info);
+//                progressDialog.setIcon(R.drawable.ic_dialog_info);
                 progressDialog.setIndeterminate(true);
                 progressDialog.setCancelable(false);
                 progressDialog.setButton(getString(R.string.cancel), loadingButtonListener);
@@ -405,7 +405,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
                 cancelDialog = new ProgressDialog(this);
                 cancelDialog.setTitle(getString(R.string.canceling));
                 cancelDialog.setMessage(getString(R.string.please_wait));
-                cancelDialog.setIcon(android.R.drawable.ic_dialog_info);
+//                cancelDialog.setIcon(R.drawable.ic_dialog_info);
                 cancelDialog.setIndeterminate(true);
                 cancelDialog.setCancelable(false);
                 return cancelDialog;
@@ -687,7 +687,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
         };
         alertDialog.setCancelable(false);
         alertDialog.setButton(getString(R.string.ok), quitListener);
-        alertDialog.setIcon(android.R.drawable.ic_dialog_info);
+//        alertDialog.setIcon(R.drawable.ic_dialog_info);
         alertMsg = message;
         alertTitle = title;
         alertShowing = true;
