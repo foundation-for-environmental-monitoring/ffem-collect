@@ -141,8 +141,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
             } else {
 
                 for (int i = 0; i < formElement.getChildren().size(); i++) {
-                    if (formElement.getChild(i) instanceof QuestionDef
-                            || formElement.getChild(i) instanceof GroupDef) {
+                    if (formElement.getChild(i) instanceof GroupDef) {
 
                         intentString = getIntentString(formElement.getChild(i));
 
@@ -654,10 +653,10 @@ public class ODKView extends ScrollView implements OnLongClickListener {
                 scrollTo(0, qw.getTop());
 
                 ValueAnimator va = new ValueAnimator();
-                va.setIntValues(getResources().getColor(R.color.red), getDrawingCacheBackgroundColor());
+                va.setIntValues(getResources().getColor(R.color.highlight), getDrawingCacheBackgroundColor());
                 va.setEvaluator(new ArgbEvaluator());
                 va.addUpdateListener(valueAnimator -> viewToHighlight.setBackgroundColor((int) valueAnimator.getAnimatedValue()));
-                va.setDuration(2500);
+                va.setDuration(3500);
                 va.start();
             }, 100);
         }
