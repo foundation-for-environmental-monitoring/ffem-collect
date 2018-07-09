@@ -1084,6 +1084,9 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 Intent pref = new Intent(this, PreferencesActivity.class);
                 startActivity(pref);
                 return true;
+            case android.R.id.home:
+                createQuitDialog();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
