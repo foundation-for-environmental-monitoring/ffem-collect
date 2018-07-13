@@ -393,7 +393,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             // Not a restart from a screen orientation change (or other).
             Collect.getInstance().setFormController(null);
             supportInvalidateOptionsMenu();
-
             Intent intent = getIntent();
             if (intent != null) {
                 loadFromIntent(intent);

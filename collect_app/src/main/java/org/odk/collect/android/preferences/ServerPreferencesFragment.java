@@ -22,9 +22,12 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v7.content.res.AppCompatResources;
+import android.telephony.PhoneNumberUtils;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -56,6 +59,8 @@ import java.util.List;
 import static android.app.Activity.RESULT_OK;
 import static io.ffem.collect.android.utilities.ListViewUtil.setListViewHeightBasedOnChildren;
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_FORMLIST_URL;
+import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SMS_GATEWAY;
+import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SUBMISSION_URL;
 import static org.odk.collect.android.utilities.gdrive.GoogleAccountsManager.REQUEST_ACCOUNT_PICKER;
 
@@ -65,6 +70,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     protected EditTextPreference serverUrlPreference;
 //    protected EditTextPreference usernamePreference;
 //    protected EditTextPreference passwordPreference;
+    protected ExtendedEditTextPreference smsGatewayPreference;
     protected boolean credentialsHaveChanged;
     protected EditTextPreference submissionUrlPreference;
     protected EditTextPreference formListUrlPreference;
@@ -72,6 +78,8 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     private List<String> urlList;
     private Preference selectedGoogleAccountPreference;
     private GoogleAccountsManager accountsManager;
+    private ListPreference transportPreference;
+    private ExtendedPreferenceCategory smsPreferenceCategory;
     private ListView list;
 
     public void addAggregatePreferences() {
@@ -115,6 +123,59 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
 //        maskPasswordSummary(passwordPreference.getText());
 //        passwordPreference.getEditText().setFilters(
 //                new InputFilter[]{new ControlCharacterFilter()});
+
+        setupTransportPreferences();
+    }
+
+    public void setupTransportPreferences() {
+        transportPreference = (ListPreference) findPreference(KEY_SUBMISSION_TRANSPORT_TYPE);
+        transportPreference.setOnPreferenceChangeListener(createTransportChangeListener());
+        transportPreference.setSummary(transportPreference.getEntry());
+
+        smsPreferenceCategory = (ExtendedPreferenceCategory) findPreference(getString(R.string.sms_submission_preference_key));
+
+        smsGatewayPreference = (ExtendedEditTextPreference) findPreference(KEY_SMS_GATEWAY);
+
+        smsGatewayPreference.setOnPreferenceChangeListener(createChangeListener());
+        smsGatewayPreference.setSummary(smsGatewayPreference.getText());
+        smsGatewayPreference.getEditText().setFilters(
+                new InputFilter[]{new ControlCharacterFilter()});
+
+        String transportSetting = (String) GeneralSharedPreferences.getInstance().get(KEY_SUBMISSION_TRANSPORT_TYPE);
+
+        if (transportSetting.equals(getString(R.string.transport_type_value_internet))) {
+            smsGatewayPreference.setEnabled(false);
+            smsPreferenceCategory.setEnabled(false);
+        } else if (transportSetting.equals(getString(R.string.transport_type_value_sms))) {
+            smsGatewayPreference.setEnabled(true);
+            smsPreferenceCategory.setEnabled(true);
+        }
+    }
+
+    private Preference.OnPreferenceChangeListener createTransportChangeListener() {
+        return (preference, newValue) -> {
+            if (preference.getKey().equals(KEY_SUBMISSION_TRANSPORT_TYPE)) {
+                String stringValue = (String) newValue;
+                ListPreference pref = (ListPreference) preference;
+                String oldValue = pref.getValue();
+
+                if (!newValue.equals(oldValue)) {
+                    pref.setValue(stringValue);
+
+                    if (newValue.equals(getString(R.string.transport_type_value_internet))) {
+                        smsGatewayPreference.setEnabled(true);
+                        smsGatewayPreference.setEnabled(false);
+                        smsPreferenceCategory.setEnabled(false);
+                        transportPreference.setSummary(R.string.transport_type_internet);
+                    } else if (newValue.equals(getString(R.string.transport_type_value_sms))) {
+                        smsGatewayPreference.setEnabled(true);
+                        smsPreferenceCategory.setEnabled(true);
+                        transportPreference.setSummary(R.string.transport_type_sms);
+                    }
+                }
+            }
+            return true;
+        };
     }
 
     public void addGooglePreferences() {
@@ -135,6 +196,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
                 new ControlCharacterFilter(), new WhitespaceFilter()
         });
         initAccountPreferences();
+        setupTransportPreferences();
     }
 
     public void addOtherPreferences() {
@@ -193,11 +255,9 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         setupUrlDropdownAdapter();
         listPopupWindow.setAnchorView(serverUrlPreference.getEditText());
         listPopupWindow.setModal(true);
-        listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                serverUrlPreference.getEditText().setText(urlList.get(position));
-                listPopupWindow.dismiss();
-            }
+        listPopupWindow.setOnItemClickListener((parent, view, position, id) -> {
+            serverUrlPreference.getEditText().setText(urlList.get(position));
+            listPopupWindow.dismiss();
         });
     }
 
@@ -315,6 +375,17 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
                         ToastUtils.showShortToast(R.string.url_error);
                         return false;
                     }
+                    break;
+
+                case KEY_SMS_GATEWAY:
+                    String phoneNumber = newValue.toString();
+
+                    if (!PhoneNumberUtils.isGlobalPhoneNumber(phoneNumber)) {
+                        ToastUtils.showShortToast(getString(R.string.sms_invalid_phone_number));
+                        return false;
+                    }
+
+                    preference.setSummary(phoneNumber);
                     break;
                 case KEY_FORMLIST_URL:
                 case KEY_SUBMISSION_URL:

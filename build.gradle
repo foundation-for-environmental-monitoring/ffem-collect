@@ -24,6 +24,7 @@ allprojects {
         google()
         jcenter()
         maven { url = 'https://oss.sonatype.org/content/groups/public' }
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -34,6 +35,6 @@ configurations.all {
 ext {
     supportLibraryVersion = '27.1.1'
     leakyCanaryVersion = '1.5.4'
-    daggerVersion = '2.14'
+    daggerVersion = '2.16'
     rxLifecycleVersion = '2.2.1'
 }

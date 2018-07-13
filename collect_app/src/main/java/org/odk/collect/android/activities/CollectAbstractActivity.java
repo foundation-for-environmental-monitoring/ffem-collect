@@ -26,6 +26,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.injection.config.AppComponent;
 import org.odk.collect.android.R;
 import org.odk.collect.android.utilities.SnackbarUtils;
 import org.odk.collect.android.utilities.LocaleHelper;
@@ -71,6 +73,10 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
                     .setCancelable(false)
                     .show();
         }
+    }
+
+    public AppComponent getComponent() {
+        return Collect.getInstance().getComponent();
     }
 
     @Override
