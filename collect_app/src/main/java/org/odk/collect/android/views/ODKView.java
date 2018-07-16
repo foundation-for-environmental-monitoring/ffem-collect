@@ -1,11 +1,11 @@
 /*
  * Copyright (C) 2011 University of Washington
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -83,16 +83,20 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
 @SuppressLint("ViewConstructor")
 public class ODKView extends ScrollView implements OnLongClickListener {
 
+    public static final String FIELD_LIST = "field-list";
     private final LinearLayout view;
     private final LinearLayout.LayoutParams layout;
     private final LinearLayout.LayoutParams bottomMargin;
     private final ArrayList<QuestionWidget> widgets;
-
-    public static final String FIELD_LIST = "field-list";
+    private boolean groupAdded = false;
 
     public ODKView(Context context, final FormEntryPrompt[] questionPrompts,
-            FormEntryCaption[] groups, boolean advancingPage) {
+                   FormEntryCaption[] groups, boolean advancingPage) {
         super(context);
+
+        for (FormEntryPrompt prompt : questionPrompts) {
+            prompt.getQuestion().setAdditionalAttribute("", "done", null);
+        }
 
         setScrollBarSize(10);
 
@@ -114,8 +118,6 @@ public class ODKView extends ScrollView implements OnLongClickListener {
         bottomMargin.setMargins(0, 20, 0, 0);
 
         ThemeUtils themeUtils = new ThemeUtils(context);
-
-        boolean groupAdded = false;
 
         // get the group we are showing -- it will be the last of the groups in the groups list
         if (groups != null && groups.length > 0) {
@@ -162,6 +164,10 @@ public class ODKView extends ScrollView implements OnLongClickListener {
                             addExternalQuestion(context, formElement.getChildren().get(i).getLabelInnerText(),
                                     formEntryPrompts.toArray(new FormEntryPrompt[0]), themeUtils, c, intentString);
                         }
+                    } else {
+                        if (questionPrompts[i].getQuestion().getAdditionalAttribute("", "done") == null) {
+                            addEntryPrompt(groups, questionPrompts[i]);
+                        }
                     }
                 }
             }
@@ -174,28 +180,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
             }
 
             if (p.getQuestion().getAdditionalAttribute("", "done") == null) {
-
-                if (view.getChildCount() > 1) {
-                    View divider = new View(getContext());
-                    divider.setBackgroundResource(new ThemeUtils(getContext()).getDivider());
-                    divider.setMinimumHeight(3);
-                    view.addView(divider);
-                }
-
-                if (!groupAdded) {
-                    addGroupText(groups);
-                    groupAdded = true;
-                }
-
-                // if question or answer type is not supported, use text widget
-                QuestionWidget qw =
-                        WidgetFactory.createWidgetFromPrompt(p, getContext(), false);
-                qw.setLongClickable(true);
-                qw.setOnLongClickListener(this);
-                qw.setId(ViewIds.generateViewId());
-
-                widgets.add(qw);
-                view.addView(qw, layout);
+                addEntryPrompt(groups, p);
             }
         }
 
@@ -217,6 +202,31 @@ public class ODKView extends ScrollView implements OnLongClickListener {
                 }, 150);
             }
         }
+    }
+
+    private void addEntryPrompt(FormEntryCaption[] groups, FormEntryPrompt p) {
+        if (view.getChildCount() > 1) {
+            View divider = new View(getContext());
+            divider.setBackgroundResource(new ThemeUtils(getContext()).getDivider());
+            divider.setMinimumHeight(3);
+            view.addView(divider);
+        }
+
+        if (!groupAdded) {
+            addGroupText(groups);
+            groupAdded = true;
+        }
+
+        // if question or answer type is not supported, use text widget
+        QuestionWidget qw =
+                WidgetFactory.createWidgetFromPrompt(p, getContext(), false);
+        qw.setLongClickable(true);
+        qw.setOnLongClickListener(this);
+        qw.setId(ViewIds.generateViewId());
+        p.getQuestion().setAdditionalAttribute("", "done", "true");
+
+        widgets.add(qw);
+        view.addView(qw, layout);
     }
 
     private String getIntentString(IFormElement formElement) {
@@ -499,7 +509,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
                     } catch (Exception e) {
                         Timber.e(e);
                         ToastUtils.showLongToast(getContext().getString(R.string.error_attaching_binary_file,
-                                        e.getMessage()));
+                                e.getMessage()));
                     }
                     set = true;
                     break;
@@ -571,7 +581,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
     }
 
     public boolean suppressFlingGesture(MotionEvent e1, MotionEvent e2, float velocityX,
-            float velocityY) {
+                                        float velocityY) {
         for (QuestionWidget q : widgets) {
             if (q.suppressFlingGesture(e1, e2, velocityX, velocityY)) {
                 return true;
