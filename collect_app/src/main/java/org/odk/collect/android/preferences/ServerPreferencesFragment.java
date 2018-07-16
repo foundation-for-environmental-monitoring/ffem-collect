@@ -124,33 +124,33 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
 //        passwordPreference.getEditText().setFilters(
 //                new InputFilter[]{new ControlCharacterFilter()});
 
-        setupTransportPreferences();
+//        setupTransportPreferences();
     }
 
-    public void setupTransportPreferences() {
-        transportPreference = (ListPreference) findPreference(KEY_SUBMISSION_TRANSPORT_TYPE);
-        transportPreference.setOnPreferenceChangeListener(createTransportChangeListener());
-        transportPreference.setSummary(transportPreference.getEntry());
-
-        smsPreferenceCategory = (ExtendedPreferenceCategory) findPreference(getString(R.string.sms_submission_preference_key));
-
-        smsGatewayPreference = (ExtendedEditTextPreference) findPreference(KEY_SMS_GATEWAY);
-
-        smsGatewayPreference.setOnPreferenceChangeListener(createChangeListener());
-        smsGatewayPreference.setSummary(smsGatewayPreference.getText());
-        smsGatewayPreference.getEditText().setFilters(
-                new InputFilter[]{new ControlCharacterFilter()});
-
-        String transportSetting = (String) GeneralSharedPreferences.getInstance().get(KEY_SUBMISSION_TRANSPORT_TYPE);
-
-        if (transportSetting.equals(getString(R.string.transport_type_value_internet))) {
-            smsGatewayPreference.setEnabled(false);
-            smsPreferenceCategory.setEnabled(false);
-        } else if (transportSetting.equals(getString(R.string.transport_type_value_sms))) {
-            smsGatewayPreference.setEnabled(true);
-            smsPreferenceCategory.setEnabled(true);
-        }
-    }
+//    public void setupTransportPreferences() {
+//        transportPreference = (ListPreference) findPreference(KEY_SUBMISSION_TRANSPORT_TYPE);
+//        transportPreference.setOnPreferenceChangeListener(createTransportChangeListener());
+//        transportPreference.setSummary(transportPreference.getEntry());
+//
+//        smsPreferenceCategory = (ExtendedPreferenceCategory) findPreference(getString(R.string.sms_submission_preference_key));
+//
+//        smsGatewayPreference = (ExtendedEditTextPreference) findPreference(KEY_SMS_GATEWAY);
+//
+//        smsGatewayPreference.setOnPreferenceChangeListener(createChangeListener());
+//        smsGatewayPreference.setSummary(smsGatewayPreference.getText());
+//        smsGatewayPreference.getEditText().setFilters(
+//                new InputFilter[]{new ControlCharacterFilter()});
+//
+//        String transportSetting = (String) GeneralSharedPreferences.getInstance().get(KEY_SUBMISSION_TRANSPORT_TYPE);
+//
+//        if (transportSetting.equals(getString(R.string.transport_type_value_internet))) {
+//            smsGatewayPreference.setEnabled(false);
+//            smsPreferenceCategory.setEnabled(false);
+//        } else if (transportSetting.equals(getString(R.string.transport_type_value_sms))) {
+//            smsGatewayPreference.setEnabled(true);
+//            smsPreferenceCategory.setEnabled(true);
+//        }
+//    }
 
     private Preference.OnPreferenceChangeListener createTransportChangeListener() {
         return (preference, newValue) -> {
@@ -196,7 +196,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
                 new ControlCharacterFilter(), new WhitespaceFilter()
         });
         initAccountPreferences();
-        setupTransportPreferences();
+//        setupTransportPreferences();
     }
 
     public void addOtherPreferences() {
