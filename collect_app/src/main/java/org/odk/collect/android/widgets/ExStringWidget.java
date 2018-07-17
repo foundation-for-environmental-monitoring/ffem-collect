@@ -19,7 +19,11 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.text.method.TextKeyListener;
+import android.text.method.TextKeyListener.Capitalize;
+import android.util.TypedValue;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.widget.Button;
@@ -92,6 +96,11 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
  */
 @SuppressLint("ViewConstructor")
 public class ExStringWidget extends QuestionWidget implements BinaryWidget {
+    // If an extra with this key is specified, it will be parsed as a URI and used as intent data
+    private static final String URI_KEY = "uri_data";
+    // Placeholder URI to ensure an activity to handle the intent is found
+    private static final Uri PLACEHOLDER_URI = Uri.parse("smsto:5555555");
+
 
     private final Button launchIntentButton;
     protected RowView answer;
@@ -245,15 +254,24 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         errorString = (v != null) ? v : getContext().getString(R.string.no_app);
 
         Intent i = new Intent(intentName);
+        if (exParams.containsKey(URI_KEY)) {
+            i.setData(PLACEHOLDER_URI);
+        }
+
         if (activityAvailability.isActivityAvailable(i)) {
             try {
                 ExternalAppsUtils.populateParameters(i, exParams,
                         getFormEntryPrompt().getIndex().getReference());
 
+                if (exParams.containsKey(URI_KEY)) {
+                    i.setData(Uri.parse(i.getStringExtra(URI_KEY)));
+                    i.removeExtra(URI_KEY);
+                }
+
                 waitForData();
                 fireActivity(i);
 
-            } catch (ExternalParamsException e) {
+            } catch (ExternalParamsException | ActivityNotFoundException e) {
                 Timber.d(e);
                 onException(e.getMessage(), intentName);
             }
