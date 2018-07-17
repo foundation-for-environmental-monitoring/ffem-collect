@@ -19,8 +19,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.text.InputFilter;
-import android.text.InputType;
-import android.text.method.DigitsKeyListener;
 
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.IntegerData;
@@ -45,20 +43,20 @@ public class ExIntegerWidget extends ExStringWidget {
     public ExIntegerWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
 
-        answer.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
+//        answer.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
 
         // only allows numbers and no periods
-        answer.setKeyListener(new DigitsKeyListener(true, false));
+//        answer.setKeyListener(new DigitsKeyListener(true, false));
 
         // ints can only hold 2,147,483,648. we allow 999,999,999
         InputFilter[] fa = new InputFilter[1];
         fa[0] = new InputFilter.LengthFilter(9);
-        answer.setFilters(fa);
+//        answer.setFilters(fa);
 
         Integer i = getIntegerAnswerValue();
 
         if (i != null) {
-            answer.setText(String.format(Locale.US, "%d", i));
+            answer.setSecondaryText(String.format(Locale.US, "%d", i));
         }
     }
 
@@ -91,7 +89,7 @@ public class ExIntegerWidget extends ExStringWidget {
 
     @Override
     public IAnswerData getAnswer() {
-        String s = answer.getText().toString();
+        String s = answer.getSecondaryText().toString();
         if (s.equals("")) {
             return null;
         } else {
@@ -105,11 +103,11 @@ public class ExIntegerWidget extends ExStringWidget {
 
 
     /**
-     * Allows answer to be set externally in {@link FormEntryActivity}.
+     * Allows answer to be set externally in {@link org.odk.collect.android.activities.FormEntryActivity}.
      */
     @Override
     public void setBinaryData(Object answer) {
         IntegerData integerData = ExternalAppsUtils.asIntegerData(answer);
-        this.answer.setText(integerData == null ? null : integerData.getValue().toString());
+        this.answer.setSecondaryText(integerData == null ? null : integerData.getValue().toString());
     }
 }

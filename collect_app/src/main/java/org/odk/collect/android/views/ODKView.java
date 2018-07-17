@@ -165,8 +165,12 @@ public class ODKView extends ScrollView implements OnLongClickListener {
                                     formEntryPrompts.toArray(new FormEntryPrompt[0]), themeUtils, c, intentString);
                         }
                     } else {
-                        if (questionPrompts[i].getQuestion().getAdditionalAttribute("", "done") == null) {
-                            addEntryPrompt(groups, questionPrompts[i]);
+                        for (FormEntryPrompt prompt : questionPrompts) {
+                            if (formElement.getChild(i).getID() == prompt.getQuestion().getID()) {
+                                if (prompt.getQuestion().getAdditionalAttribute("", "done") == null) {
+                                    addEntryPrompt(groups, prompt);
+                                }
+                            }
                         }
                     }
                 }
@@ -391,7 +395,7 @@ public class ODKView extends ScrollView implements OnLongClickListener {
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(12, 0, 12, 10);
+        params.setMargins(12, 5, 12, 10);
 
         // set button formatting
         Button launchIntentButton = new Button(getContext());

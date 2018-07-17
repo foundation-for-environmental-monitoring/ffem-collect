@@ -21,14 +21,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
-import android.text.method.TextKeyListener;
-import android.text.method.TextKeyListener.Capitalize;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.javarosa.core.model.data.IAnswerData;
@@ -48,6 +44,7 @@ import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 
 import java.util.Map;
 
+import io.ffem.collect.android.widget.RowView;
 import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
@@ -96,39 +93,33 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
 @SuppressLint("ViewConstructor")
 public class ExStringWidget extends QuestionWidget implements BinaryWidget {
 
-    protected TextView answer;
-    private boolean hasExApp = true;
     private final Button launchIntentButton;
-//    private final Drawable textBackground;
-
+    protected RowView answer;
+    private boolean hasExApp = true;
+    //    private final Drawable textBackground;
     private ActivityAvailability activityAvailability;
 
     public ExStringWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
 
         TableLayout.LayoutParams params = new TableLayout.LayoutParams();
-        params.setMargins(7, 2, 7, 4);
+        params.setMargins(5, 4, 7, 5);
 
         // set text formatting
-        answer = new TextView(context);
+        answer = new RowView(context);
         answer.setId(ViewIds.generateViewId());
-        answer.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize());
+//        answer.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize());
         answer.setLayoutParams(params);
 //        textBackground = answer.getBackground();
         answer.setBackground(null);
-        answer.setTextColor(themeUtils.getPrimaryTextColor());
+//        answer.setTextColor(themeUtils.getPrimaryTextColor());
 
         // capitalize nothing
-        answer.setKeyListener(new TextKeyListener(Capitalize.NONE, false));
+//        answer.setKeyListener(new TextKeyListener(Capitalize.NONE, false));
 
         // needed to make long read only text scroll
-        answer.setHorizontallyScrolling(false);
-        answer.setSingleLine(false);
-
-        String s = prompt.getAnswerText();
-        if (s != null) {
-            answer.setText(s);
-        }
+//        answer.setHorizontallyScrolling(false);
+//        answer.setSingleLine(false);
 
         if (getFormEntryPrompt().isReadOnly() || hasExApp) {
             answer.setFocusable(false);
@@ -144,8 +135,15 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         // finish complex layout
         LinearLayout answerLayout = new LinearLayout(getContext());
         answerLayout.setOrientation(LinearLayout.VERTICAL);
+
+        String s = prompt.getAnswerText();
+        if (s != null) {
+            answer.setPrimaryText("Result: ");
+            answer.setSecondaryText(s);
+            answerLayout.addView(answer);
+        }
+
         answerLayout.addView(launchIntentButton);
-        answerLayout.addView(answer);
         addAnswerView(answerLayout);
     }
 
@@ -159,13 +157,14 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
 
     @Override
     public void clearAnswer() {
-        answer.setText(null);
+        answer.setPrimaryText(null);
+        answer.setSecondaryText(null);
     }
 
 
     @Override
     public IAnswerData getAnswer() {
-        String s = answer.getText().toString();
+        String s = answer.getSecondaryText().toString();
         return !s.isEmpty() ? new StringData(s) : null;
     }
 
@@ -176,7 +175,7 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
     @Override
     public void setBinaryData(Object answer) {
         StringData stringData = ExternalAppsUtils.asStringData(answer);
-        this.answer.setText(stringData == null ? null : stringData.getValue().toString());
+        this.answer.setSecondaryText(stringData == null ? null : stringData.getValue().toString());
     }
 
     @Override

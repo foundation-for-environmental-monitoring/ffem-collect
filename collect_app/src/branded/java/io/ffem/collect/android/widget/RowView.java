@@ -35,6 +35,10 @@ public class RowView extends TableRow {
         textPrimary.setText(s);
     }
 
+    public CharSequence getSecondaryText() {
+        return textSecondary.getText();
+    }
+
     public void setSecondaryText(String s) {
         textSecondary.setText(s);
     }

@@ -523,7 +523,7 @@ public abstract class QuestionWidget
         button.setPadding(10, 30, 10, 30);
 
         TableLayout.LayoutParams params = new TableLayout.LayoutParams();
-//        params.setMargins(5, 5, 5, 5);
+        params.setMargins(0, 5, 0, 14);
 
         button.setLayoutParams(params);
 

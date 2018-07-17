@@ -19,8 +19,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.text.InputFilter;
-import android.text.InputType;
-import android.text.method.DigitsKeyListener;
 
 import org.javarosa.core.model.data.DecimalData;
 import org.javarosa.core.model.data.IAnswerData;
@@ -47,15 +45,15 @@ public class ExDecimalWidget extends ExStringWidget {
     public ExDecimalWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
 
-        answer.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+//        answer.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
         // only allows numbers and no periods
-        answer.setKeyListener(new DigitsKeyListener(true, true));
+//        answer.setKeyListener(new DigitsKeyListener(true, true));
 
         // only 15 characters allowed
         InputFilter[] fa = new InputFilter[1];
         fa[0] = new InputFilter.LengthFilter(15);
-        answer.setFilters(fa);
+//        answer.setFilters(fa);
 
         Double d = getDoubleAnswerValue();
 
@@ -67,7 +65,7 @@ public class ExDecimalWidget extends ExStringWidget {
             nf.setGroupingUsed(false);
 
             String formattedValue = nf.format(d);
-            answer.setText(formattedValue);
+            answer.setSecondaryText(formattedValue);
 
 //            Selection.setSelection(answer.getText(), answer.getText().length());
         }
@@ -101,7 +99,7 @@ public class ExDecimalWidget extends ExStringWidget {
 
     @Override
     public IAnswerData getAnswer() {
-        String s = answer.getText().toString();
+        String s = answer.getSecondaryText().toString();
         if (s.equals("")) {
             return null;
         } else {
@@ -120,6 +118,6 @@ public class ExDecimalWidget extends ExStringWidget {
     @Override
     public void setBinaryData(Object answer) {
         DecimalData decimalData = ExternalAppsUtils.asDecimalData(answer);
-        this.answer.setText(decimalData == null ? null : decimalData.getValue().toString());
+        this.answer.setSecondaryText(decimalData == null ? null : decimalData.getValue().toString());
     }
 }
