@@ -19,30 +19,22 @@ package org.odk.collect.android.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.View;
 
+import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.injection.config.AppComponent;
-import org.odk.collect.android.R;
-import org.odk.collect.android.utilities.SnackbarUtils;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.ThemeUtils;
-
-import io.ffem.collect.android.util.PermissionsDelegate;
 
 import static org.odk.collect.android.utilities.PermissionUtils.checkIfStoragePermissionsGranted;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 import static org.odk.collect.android.utilities.PermissionUtils.isEntryPointActivity;
 
 public abstract class CollectAbstractActivity extends AppCompatActivity {
-
-    PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
-    View currentClickedView;
 
     private boolean isInstanceStateSaved;
     protected ThemeUtils themeUtils;
@@ -114,49 +106,6 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void getAudioPermission(View clickedView) {
-        currentClickedView = clickedView;
-        permissionsDelegate.requestAudioPermission();
-    }
-
-    public void getCameraPermission(View clickedView) {
-        currentClickedView = clickedView;
-        permissionsDelegate.requestCameraPermission();
-    }
-
-    public void getLocationPermission(View clickedView) {
-        currentClickedView = clickedView;
-        permissionsDelegate.requestLocationPermission();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (PermissionsDelegate.resultGranted(grantResults)) {
-            if (currentClickedView != null) {
-                currentClickedView.performClick();
-                currentClickedView = null;
-            }
-        } else {
-            String message = "";
-            switch (requestCode) {
-                case 100:
-                    message = getString(R.string.audio_permission);
-                    break;
-                case 110:
-                    message = getString(R.string.camera_permission);
-                    break;
-                case 120:
-                    message = getString(R.string.location_permission);
-                    break;
-            }
-            SnackbarUtils.showSettingsSnackbar(this,
-                    getWindow().getDecorView().getRootView(), message);
-        }
     }
 
     @Override
