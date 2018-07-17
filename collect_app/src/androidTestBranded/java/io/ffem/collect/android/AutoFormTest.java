@@ -27,7 +27,6 @@ import android.widget.SeekBar;
 import net.bytebuddy.utility.RandomString;
 
 import org.apache.commons.io.IOUtils;
-import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -217,28 +216,6 @@ public class AutoFormTest {
         };
     }
 
-    private static Matcher<View> getElementFromMatchAtPosition(final Matcher<View> matcher, final int position) {
-        return new BaseMatcher<View>() {
-            int counter = 0;
-            @Override
-            public boolean matches(final Object item) {
-                if (matcher.matches(item)) {
-                    if(counter == position) {
-                        counter++;
-                        return true;
-                    }
-                    counter++;
-                }
-                return false;
-            }
-
-            @Override
-            public void describeTo(final Description description) {
-                description.appendText("Element at hierarchy position "+position);
-            }
-        };
-    }
-
     @Before
     public void prepareDependencies() {
         FormEntryActivity activity = activityTestRule.getActivity();
@@ -250,13 +227,15 @@ public class AutoFormTest {
     @Test
     public void testActivityOpen() {
 
+        int textIndex = 0;
+
         ArrayList<String> extras = new ArrayList<>();
 
         skipInitialLabel();
 
         extras.add("value");
         testExternal("io.ffem.experiment", "Coliforms 1", extras,
-                "", 1, 0, false);
+                "", ++textIndex, 0, false);
         extras.clear();
 
         extras.add("Result");
@@ -264,7 +243,20 @@ public class AutoFormTest {
         extras.add("Broth");
         extras.add("Time_to_detect");
         testExternal("io.ffem.experiment", "Coliforms 2", extras,
-                "", 2, 0, true);
+                "", ++textIndex, 0, true);
+        extras.clear();
+
+        extras.add("value");
+        testExternal("io.ffem.water", "Arsenic (0 - 500)", extras,
+                "", ++textIndex, 0, false);
+        extras.clear();
+
+        ++textIndex;
+
+        extras.add("Arsenic");
+        extras.add("Arsenic_Unit");
+        testExternal("io.ffem.water", "Arsenic (0 - 500)", extras,
+                "", ++textIndex, 2, true);
         extras.clear();
 
         testpH();
@@ -274,12 +266,12 @@ public class AutoFormTest {
         extras.add("Exchangeable_Calcium");
         extras.add("Exchangeable_Magnesium");
         testExternal("io.ffem.soil", "Exchangeable Calcium & Magnesium", extras,
-                "_001", 9, 0, true);
+                "_001", 12, 0, true);
         extras.clear();
 
         extras.add("value");
         testExternal("io.ffem.water", "Fluoride", extras,
-                "", 12, 2, true);
+                "", 15, 2, true);
         extras.clear();
 
         testFreeChlorine();
@@ -290,24 +282,11 @@ public class AutoFormTest {
         extras.add("Fluoride_Unit");
         extras.add("Fluoride_Dilution");
         testExternal("io.ffem.water", "Fluoride - Borewell", extras,
-                "_xBorewell", 17, 1, true);
+                "_xBorewell", 20, 1, true);
         extras.clear();
 
         testEnd();
 
-    }
-
-    public Activity getActivityInstance() {
-        final Activity[] currentActivity = new Activity[1];
-        getInstrumentation().runOnMainSync(() -> {
-            Collection resumedActivities = ActivityLifecycleMonitorRegistry
-                    .getInstance().getActivitiesInStage(Stage.RESUMED);
-            if (resumedActivities.iterator().hasNext()) {
-                currentActivity[0] = (Activity) resumedActivities.iterator().next();
-            }
-        });
-
-        return currentActivity[0];
     }
 
     private void testpH() {
@@ -387,11 +366,12 @@ public class AutoFormTest {
                 .thenReturn(true);
 
         if (extras.size() == 1 && extras.get(0).equals("value")) {
-            onView(getElementFromMatchAtPosition(withId(R.id.simple_button), buttonIndex)).perform(click());
+            onView(withIndex(withId(R.id.simple_button), buttonIndex)).perform(click());
             onView(withText(exStringWidgetSecondText)).check(matches(isDisplayed()));
         } else {
             onView(allOf(withText("Launch"), hasSibling(withText(title)))).perform(click());
-            onView(withText(extras.get(0).replace("_", " ") + ": ")).check(matches(isDisplayed()));
+            onView(withIndex(withText(extras.get(0).replace("_", " ") + ": "), 0)).check(matches(isDisplayed()));
+            onView(withIndex(withText(exStringWidgetSecondText), 0)).check(matches(isDisplayed()));
         }
 
 //        Screengrab.screenshot("ex-string2");
@@ -404,11 +384,12 @@ public class AutoFormTest {
         if (extras.size() == 1 && extras.get(0).equals("value")) {
             onView(withText(exStringWidgetSecondText)).check(matches(isDisplayed()));
         } else {
-            onView(withText(extras.get(0).replace("_", " ") + ": ")).check(matches(isDisplayed()));
+            onView(withIndex(withText(exStringWidgetSecondText), 0)).check(matches(isDisplayed()));
+            onView(withIndex(withText(extras.get(0).replace("_", " ") + ": "), 0)).check(matches(isDisplayed()));
         }
 
         if (goNext) {
-            onView(withText(startsWith(title))).perform(swipeLeft());
+            onView(withIndex(withText(startsWith(title)), 0)).perform(swipeLeft());
         }
     }
 
@@ -529,6 +510,20 @@ public class AutoFormTest {
 
     //endregion
 
+    public Activity getActivityInstance() {
+        final Activity[] currentActivity = new Activity[1];
+        getInstrumentation().runOnMainSync(() -> {
+            Collection resumedActivities = ActivityLifecycleMonitorRegistry
+                    .getInstance().getActivitiesInStage(Stage.RESUMED);
+            if (resumedActivities.iterator().hasNext()) {
+                currentActivity[0] = (Activity) resumedActivities.iterator().next();
+            }
+        });
+
+        return currentActivity[0];
+    }
+    //endregion
+
     //region Custom TestRule.
     private class FormEntryActivityTestRule extends IntentsTestRule<FormEntryActivity> {
 
@@ -546,5 +541,5 @@ public class AutoFormTest {
             return intent;
         }
     }
-    //endregion
+
 }

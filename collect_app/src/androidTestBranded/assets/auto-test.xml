@@ -20,6 +20,14 @@
               <Time_to_detect/>
             </group_coliforms>
           </group_ro1iv44>
+          <group_zc3re54>
+            <Arsenic_0_500/>
+            <Arsenic_0_4000/>
+            <group_arsenic>
+              <Arsenic/>
+              <Arsenic_Unit/>
+            </group_arsenic>
+          </group_zc3re54>
           <group_hw5xj60>
             <pH/>
             <Available_Nitrogen/>
@@ -72,6 +80,10 @@
       <bind nodeset="/data/group_ro1iv44/group_coliforms/Sample_volume" required="false()" type="string"/>
       <bind nodeset="/data/group_ro1iv44/group_coliforms/Broth" required="false()" type="string"/>
       <bind nodeset="/data/group_ro1iv44/group_coliforms/Time_to_detect" required="false()" type="string"/>
+      <bind nodeset="/data/group_zc3re54/Arsenic_0_500" required="false()" type="string"/>
+      <bind nodeset="/data/group_zc3re54/Arsenic_0_4000" required="false()" type="string"/>
+      <bind nodeset="/data/group_zc3re54/group_arsenic/Arsenic" required="false()" type="string"/>
+      <bind nodeset="/data/group_zc3re54/group_arsenic/Arsenic_Unit" required="false()" type="string"/>
       <bind nodeset="/data/group_hw5xj60/pH" required="false()" type="string"/>
       <bind nodeset="/data/group_hw5xj60/Available_Nitrogen" required="false()" type="string"/>
       <bind nodeset="/data/group_hw5xj60/Available_Phosphorous" required="false()" type="string"/>
@@ -118,6 +130,24 @@
         </input>
         <input ref="/data/group_ro1iv44/group_coliforms/Time_to_detect">
           <label>Time to detect</label>
+        </input>
+      </group>
+    </group>
+    <group appearance="field-list" ref="/data/group_zc3re54">
+      <label>Arsenic</label>
+      <input appearance="ex:io.ffem.water(testId='32b6d11b-c7f3-475f-adf9-32d9b8f4aecf')" ref="/data/group_zc3re54/Arsenic_0_500">
+        <label>Arsenic (0 - 500)</label>
+      </input>
+      <input appearance="ex:io.ffem.water(testId='beca9731-63f4-434f-a3c2-ac33b44f9992')" ref="/data/group_zc3re54/Arsenic_0_4000">
+        <label>Arsenic (0 - 4000)</label>
+      </input>
+      <group appearance="field-list" intent="io.ffem.water(testId='32b6d11b-c7f3-475f-adf9-32d9b8f4aecf')" ref="/data/group_zc3re54/group_arsenic">
+        <label>Arsenic (0 - 500)</label>
+        <input ref="/data/group_zc3re54/group_arsenic/Arsenic">
+          <label>Arsenic</label>
+        </input>
+        <input ref="/data/group_zc3re54/group_arsenic/Arsenic_Unit">
+          <label>Unit</label>
         </input>
       </group>
     </group>
