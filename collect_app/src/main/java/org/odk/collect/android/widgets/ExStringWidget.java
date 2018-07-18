@@ -19,11 +19,7 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.text.method.TextKeyListener;
-import android.text.method.TextKeyListener.Capitalize;
-import android.util.TypedValue;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.widget.Button;
@@ -196,16 +192,16 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         } else {
             if (!getFormEntryPrompt().isReadOnly()) {
                 SoftKeyboardUtils.showSoftKeyboard(answer);
-            /*
-             * If you do a multi-question screen after a "add another group" dialog, this won't
-             * automatically pop up. It's an Android issue.
-             *
-             * That is, if I have an edit text in an activity, and pop a dialog, and in that
-             * dialog's button's OnClick() I call edittext.requestFocus() and
-             * showSoftInput(edittext, 0), showSoftinput() returns false. However, if the
-             * edittext
-             * is focused before the dialog pops up, everything works fine. great.
-             */
+                /*
+                 * If you do a multi-question screen after a "add another group" dialog, this won't
+                 * automatically pop up. It's an Android issue.
+                 *
+                 * That is, if I have an edit text in an activity, and pop a dialog, and in that
+                 * dialog's button's OnClick() I call edittext.requestFocus() and
+                 * showSoftInput(edittext, 0), showSoftinput() returns false. However, if the
+                 * edittext
+                 * is focused before the dialog pops up, everything works fine. great.
+                 */
             } else {
                 SoftKeyboardUtils.hideSoftKeyboard(answer);
             }

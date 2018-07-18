@@ -27,7 +27,7 @@ android {
         applicationId('io.ffem.collect')
         minSdkVersion(19)
         targetSdkVersion(27)
-        versionCode 4
+        versionCode 5
         versionName "Beta 1.1"
         testInstrumentationRunner('android.support.test.runner.AndroidJUnitRunner')
         multiDexEnabled true
