@@ -254,12 +254,12 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         if (exParams.containsKey(URI_KEY)) {
             try {
                 String uriValue = (String) ExternalAppsUtils.getValueRepresentedBy(exParams.get(URI_KEY),
-                            getFormEntryPrompt().getIndex().getReference());
+                        getFormEntryPrompt().getIndex().getReference());
                 i.setData(Uri.parse(uriValue));
                 exParams.remove(URI_KEY);
             } catch (XPathSyntaxException e) {
                 Timber.d(e);
-                onException(e.getMessage());
+                onException(e.getMessage(), intentName);
             }
         }
 
@@ -301,10 +301,9 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
 
             builder.setTitle(R.string.app_not_found)
                     .setMessage(R.string.install_app)
-                    .setPositiveButton(R.string.go_to_play_store, (dialogInterface, i) -> {
-                        getContext().startActivity(new Intent(Intent.ACTION_VIEW,
-                                Uri.parse("https://play.google.com/store/apps/developer?id=Foundation+for+Environmental+Monitoring")));
-                    })
+                    .setPositiveButton(R.string.go_to_play_store, (dialogInterface, i)
+                            -> getContext().startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("https://play.google.com/store/apps/developer?id=Foundation+for+Environmental+Monitoring"))))
                     .setNegativeButton(android.R.string.cancel,
                             (dialogInterface, i) -> dialogInterface.dismiss())
                     .setCancelable(false)
