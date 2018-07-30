@@ -18,6 +18,7 @@ import android.widget.EditText;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialog;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminPreferencesActivity;
 import org.odk.collect.android.preferences.FormManagementPreferences;
@@ -27,7 +28,8 @@ import org.odk.collect.android.utilities.ToastUtils;
 import io.ffem.collect.android.preferences.AdminPreferenceFragment;
 import io.ffem.collect.android.preferences.OtherPreferenceFragment;
 
-public class SettingsActivity extends CollectAbstractActivity {
+public class SettingsActivity extends CollectAbstractActivity
+        implements ResetSettingsResultDialog.ResetSettingsResultDialogListener {
 
     private static final int PASSWORD_DIALOG = 1;
 
@@ -162,5 +164,10 @@ public class SettingsActivity extends CollectAbstractActivity {
 
         }
         return null;
+    }
+
+    @Override
+    public void onDialogClosed() {
+        finish();
     }
 }

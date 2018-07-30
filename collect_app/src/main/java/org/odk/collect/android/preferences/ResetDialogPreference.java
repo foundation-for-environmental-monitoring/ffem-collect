@@ -42,13 +42,13 @@ import static org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialo
 import static org.odk.collect.android.utilities.ResetUtility.ResetAction.RESET_PREFERENCES;
 
 public class ResetDialogPreference extends DialogPreference implements CompoundButton.OnCheckedChangeListener {
+    private final Context context;
     private CheckBox preferences;
     private CheckBox instances;
     private CheckBox forms;
     private CheckBox layers;
     private CheckBox cache;
     private CheckBox osmDroid;
-    private final Context context;
     private ProgressDialog progressDialog;
 
     public ResetDialogPreference(Context context, AttributeSet attrs) {
@@ -205,7 +205,7 @@ public class ResetDialogPreference extends DialogPreference implements CompoundB
                     }
                     ResetSettingsResultDialog resetSettingsResultDialog = ResetSettingsResultDialog.newInstance(String.valueOf(resultMessage));
                     try {
-                        resetSettingsResultDialog.show(((AdminPreferencesActivity) getContext()).getSupportFragmentManager(), RESET_SETTINGS_RESULT_DIALOG_TAG);
+                        resetSettingsResultDialog.show(((CollectAbstractActivity) getContext()).getSupportFragmentManager(), RESET_SETTINGS_RESULT_DIALOG_TAG);
                     } catch (ClassCastException e) {
                         Timber.i(e);
                     }
