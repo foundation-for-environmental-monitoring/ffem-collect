@@ -121,6 +121,10 @@ public class HierarchyListAdapter extends RecyclerView.Adapter<HierarchyListAdap
         return hierarchyElements.size();
     }
 
+    public int getItemIndex(HierarchyElement hierarchyElement) {
+        return hierarchyElements.indexOf(hierarchyElement);
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView icon;
         TextView primaryText;

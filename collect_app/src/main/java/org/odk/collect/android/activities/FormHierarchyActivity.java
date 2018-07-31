@@ -147,7 +147,7 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
                 int position = 0;
                 for (HierarchyElement hierarchyElement : formList) {
                     if (shouldScrollToTheGivenIndex(hierarchyElement.getFormIndex(), formController)) {
-                        position = formList.indexOf(hierarchyElement);
+                        position = ((HierarchyListAdapter) recyclerView.getAdapter()).getItemIndex(hierarchyElement);
                         break;
                     }
                 }
