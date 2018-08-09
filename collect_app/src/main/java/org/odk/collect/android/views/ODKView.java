@@ -367,7 +367,6 @@ public class ODKView extends ScrollView implements OnLongClickListener {
         return answers;
     }
 
-
     /**
      * // * Add a TextView containing the hierarchy of groups to which the question belongs. //
      */
@@ -497,7 +496,6 @@ public class ODKView extends ScrollView implements OnLongClickListener {
         }
     }
 
-
     /**
      * Called when another activity returns information to answer this question.
      */
@@ -608,11 +606,9 @@ public class ODKView extends ScrollView implements OnLongClickListener {
         }
     }
 
-
     public ArrayList<QuestionWidget> getWidgets() {
         return widgets;
     }
-
 
     @Override
     public void setOnFocusChangeListener(OnFocusChangeListener l) {
@@ -622,12 +618,10 @@ public class ODKView extends ScrollView implements OnLongClickListener {
         }
     }
 
-
     @Override
     public boolean onLongClick(View v) {
         return false;
     }
-
 
     @Override
     public void cancelLongPress() {

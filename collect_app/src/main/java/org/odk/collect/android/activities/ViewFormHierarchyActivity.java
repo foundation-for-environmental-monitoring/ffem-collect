@@ -69,7 +69,6 @@ public class ViewFormHierarchyActivity extends FormHierarchyActivity {
         path.setBackgroundColor(getResources().getColor(R.color.disabled_gray));
     }
 
-
     @Override
     public void onElementClick(HierarchyElement element) {
         int position = formList.indexOf(element);

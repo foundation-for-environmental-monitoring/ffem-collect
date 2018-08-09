@@ -86,7 +86,6 @@ public class ExIntegerWidget extends ExStringWidget {
                 RequestCodes.EX_INT_CAPTURE);
     }
 
-
     @Override
     public IAnswerData getAnswer() {
         String s = answer.getSecondaryText().toString();
@@ -100,7 +99,6 @@ public class ExIntegerWidget extends ExStringWidget {
             }
         }
     }
-
 
     /**
      * Allows answer to be set externally in {@link org.odk.collect.android.activities.FormEntryActivity}.

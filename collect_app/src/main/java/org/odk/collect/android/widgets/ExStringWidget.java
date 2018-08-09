@@ -164,13 +164,11 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         answer.setSecondaryText(null);
     }
 
-
     @Override
     public IAnswerData getAnswer() {
         String s = answer.getSecondaryText().toString();
         return !s.isEmpty() ? new StringData(s) : null;
     }
-
 
     /**
      * Allows answer to be set externally in {@link FormEntryActivity}.
@@ -216,7 +214,6 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         answer.setOnLongClickListener(l);
         launchIntentButton.setOnLongClickListener(l);
     }
-
 
     @Override
     public void cancelLongPress() {

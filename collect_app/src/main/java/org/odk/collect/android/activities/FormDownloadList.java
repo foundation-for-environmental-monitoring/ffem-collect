@@ -267,7 +267,6 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
         downloadButton.setEnabled(false);
     }
 
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         toggleButtonLabel(toggleButton, listView);
@@ -337,7 +336,6 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
         }
     }
 
-
     @Override
     protected void onRestoreInstanceState(Bundle state) {
         super.onRestoreInstanceState(state);
@@ -357,7 +355,6 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
         outState.putSerializable(FORMLIST, formList);
         outState.putSerializable(SELECTED_FORMS, selectedForms);
     }
-
 
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -502,7 +499,6 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
         }
     }
 
-
     @Override
     public Object onRetainCustomNonConfigurationInstance() {
         if (downloadFormsTask != null) {
@@ -511,7 +507,6 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
             return downloadFormListTask;
         }
     }
-
 
     @Override
     protected void onDestroy() {
@@ -523,7 +518,6 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
         }
         super.onDestroy();
     }
-
 
     @Override
     protected void onResume() {
@@ -538,7 +532,6 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
         }
         super.onResume();
     }
-
 
     @Override
     protected void onPause() {
@@ -659,7 +652,6 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
         }
     }
 
-
     /**
      * Creates an alert dialog with the given tite and message. If shouldExit is set to true, the
      * activity will exit when the user clicks "ok".
@@ -696,13 +688,11 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
         alertDialog.show();
     }
 
-
     @Override
     public void progressUpdate(String currentFile, int progress, int total) {
         alertMsg = getString(R.string.fetching_file, currentFile, String.valueOf(progress), String.valueOf(total));
         progressDialog.setMessage(alertMsg);
     }
-
 
     @Override
     public void formsDownloadingComplete(HashMap<FormDetails, String> result) {

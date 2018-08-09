@@ -116,7 +116,6 @@ public class FormManagementPreferences extends PreferenceFragment {
         }
     }
 
-
     private void initGuidancePrefs() {
         final ListPreference guidance = (ListPreference) findPreference(KEY_GUIDANCE_HINT);
 

@@ -334,7 +334,6 @@ public class Collect extends Application implements HasActivityInjector {
         return tracker;
     }
 
-
     private static class CrashReportingTree extends Timber.Tree {
         @Override
         protected void log(int priority, String tag, String message, Throwable t) {

@@ -31,7 +31,6 @@ import java.util.Locale;
 
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
 
-
 /**
  * Launch an external app to supply a decimal value. If the app
  * does not launch, enable the text area for regular data entry.
@@ -96,7 +95,6 @@ public class ExDecimalWidget extends ExStringWidget {
                 RequestCodes.EX_DECIMAL_CAPTURE);
     }
 
-
     @Override
     public IAnswerData getAnswer() {
         String s = answer.getSecondaryText().toString();
@@ -110,7 +108,6 @@ public class ExDecimalWidget extends ExStringWidget {
             }
         }
     }
-
 
     /**
      * Allows answer to be set externally in {@link .FormEntryActivity}.

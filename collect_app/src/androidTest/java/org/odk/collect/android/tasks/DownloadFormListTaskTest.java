@@ -46,7 +46,6 @@ public class DownloadFormListTaskTest extends MockedServerTest {
         assertFalse(f1.isNewerFormVersionAvailable());
         assertFalse(f1.areNewerMediaFilesAvailable());
 
-
         // and
         FormDetails f2 = fetched.get("two");
         assertNull(f2.getErrorStr());

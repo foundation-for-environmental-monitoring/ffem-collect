@@ -89,7 +89,7 @@ public abstract class InstanceUploader extends AsyncTask<Long, Integer, Instance
                             results =
                                     new InstancesDao().getInstancesCursor(selection.toString(),
                                             selectionArgs);
-                            if (results.getCount() > 0) {
+                            if (results != null && results.getCount() > 0) {
                                 List<Long> toDelete = new ArrayList<>();
                                 results.moveToPosition(-1);
 
@@ -155,7 +155,6 @@ public abstract class InstanceUploader extends AsyncTask<Long, Integer, Instance
 
     static class Outcome {
         Uri authRequestingServer;
-        boolean invalidOAuth;
         HashMap<String, String> messagesByInstanceId = new HashMap<>();
     }
 }
