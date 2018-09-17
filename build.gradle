@@ -12,6 +12,7 @@ buildscript {
         // https://github.com/jacoco/jacoco/issues/639#issuecomment-355424756
         classpath 'org.jacoco:org.jacoco.core:0.8.0'
         classpath 'io.fabric.tools:gradle:1.25.4'
+        classpath 'com.google.firebase:firebase-plugins:1.1.5'
     }
 }
 
@@ -30,6 +31,18 @@ allprojects {
 
 configurations.all {
     transitive = true
+}
+
+task checkAll(type: GradleBuild) {
+    tasks = ['checkCode', 'checkTests']
+}
+
+task checkCode(type: GradleBuild) {
+    tasks = ['pmd', 'checkstyle', 'lintDebug', 'spotbugsDebug']
+}
+
+task checkTests(type: GradleBuild) {
+    tasks = ['testDebugUnitTest', 'connectedDebugAndroidTest']
 }
 
 ext {

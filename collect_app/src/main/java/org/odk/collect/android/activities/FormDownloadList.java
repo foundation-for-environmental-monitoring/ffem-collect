@@ -19,11 +19,15 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,13 +39,16 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.FormDownloadListAdapter;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.http.HttpCredentialsInterface;
 import org.odk.collect.android.listeners.DownloadFormsTaskListener;
 import org.odk.collect.android.listeners.FormListDownloaderListener;
 import org.odk.collect.android.logic.FormDetails;
 import org.odk.collect.android.tasks.DownloadFormListTask;
 import org.odk.collect.android.tasks.DownloadFormsTask;
+import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.AuthDialogUtility;
 import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.utilities.WebCredentialsUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,6 +57,8 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
+
+import javax.inject.Inject;
 
 import timber.log.Timber;
 
@@ -87,6 +96,13 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
     private static final String DIALOG_SHOWING = "dialogshowing";
     private static final String FORMLIST = "formlist";
     private static final String SELECTED_FORMS = "selectedForms";
+    private static final String IS_DOWNLOAD_ONLY_MODE = "isDownloadOnlyMode";
+    private static final String FORM_IDS_TO_DOWNLOAD = "formIdsToDownload";
+    private static final String URL = "url";
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password";
+    private static final String FORMS_FOUND = "formsFound";
+    private static final String FORM_RESULT = "formResult";
 
     public static final String FORMNAME = "formname";
     private static final String FORMDETAIL_KEY = "formdetailkey";
@@ -120,16 +136,54 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
 
     private boolean displayOnlyUpdatedForms;
 
+    // Variables for the external app intent call
+    private boolean isDownloadOnlyMode;
+    private String[] formIdsToDownload;
+    private String url;
+    private String username;
+    private String password;
+    private ArrayList<String> formsFound;
+    private HashMap<String, Boolean> formResult;
+
+    @Inject
+    WebCredentialsUtils webCredentialsUtils;
+
     @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.remote_file_manage_list);
+        getComponent().inject(this);
         setTitle(getString(R.string.get_forms));
 
+        formsFound = new ArrayList<>();
+        formResult = new HashMap<>();
+
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null && bundle.containsKey(DISPLAY_ONLY_UPDATED_FORMS)) {
-            displayOnlyUpdatedForms = (boolean) bundle.get(DISPLAY_ONLY_UPDATED_FORMS);
+        if (bundle != null) {
+            if (bundle.containsKey(DISPLAY_ONLY_UPDATED_FORMS)) {
+                displayOnlyUpdatedForms = (boolean) bundle.get(DISPLAY_ONLY_UPDATED_FORMS);
+            }
+
+            if (bundle.containsKey(ApplicationConstants.BundleKeys.FORM_IDS)) {
+                isDownloadOnlyMode = true;
+                formIdsToDownload = bundle.getStringArray(ApplicationConstants.BundleKeys.FORM_IDS);
+
+                if (formIdsToDownload == null) {
+                    setReturnResult(false, "Form Ids is null", null);
+                    finish();
+                }
+
+                if (bundle.containsKey(ApplicationConstants.BundleKeys.URL)) {
+                    url = bundle.getString(ApplicationConstants.BundleKeys.URL);
+
+                    if (bundle.containsKey(ApplicationConstants.BundleKeys.USERNAME)
+                            && bundle.containsKey(ApplicationConstants.BundleKeys.PASSWORD)) {
+                        username = bundle.getString(ApplicationConstants.BundleKeys.USERNAME);
+                        password = bundle.getString(ApplicationConstants.BundleKeys.PASSWORD);
+                    }
+                }
+            }
         }
 
         alertMsg = getString(R.string.please_wait);
@@ -204,6 +258,20 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
             }
             if (savedInstanceState.containsKey(SELECTED_FORMS)) {
                 selectedForms = (LinkedHashSet<String>) savedInstanceState.getSerializable(SELECTED_FORMS);
+            }
+
+            if (savedInstanceState.containsKey(IS_DOWNLOAD_ONLY_MODE) && savedInstanceState.getBoolean(IS_DOWNLOAD_ONLY_MODE)) {
+                isDownloadOnlyMode = true;
+
+                formIdsToDownload = savedInstanceState.getStringArray(FORM_IDS_TO_DOWNLOAD);
+                url = savedInstanceState.getString(URL);
+                username = savedInstanceState.getString(USERNAME);
+                password = savedInstanceState.getString(PASSWORD);
+                formsFound = savedInstanceState.getStringArrayList(FORMS_FOUND);
+                formResult = (HashMap<String, Boolean>) savedInstanceState.getSerializable(FORM_RESULT);
+
+                formsFound = formsFound == null ? new ArrayList<>() : formsFound;
+                formResult = formResult == null ? new HashMap<>() : formResult;
             }
         }
 
@@ -296,21 +364,17 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
      * Starts the download task and shows the progress dialog.
      */
     private void downloadFormList() {
-
-        String username = AuthDialogUtility.getUserNameFromPreferences();
-        String password = AuthDialogUtility.getPasswordFromPreferences();
-
-        if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
-            showDialog(AUTH_DIALOG);
-            return;
-        }
-
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
 
         if (ni == null || !ni.isConnected()) {
             ToastUtils.showShortToast(R.string.no_connection);
+
+            if (isDownloadOnlyMode) {
+                setReturnResult(false, getString(R.string.no_connection), formResult);
+                finish();
+            }
         } else {
 
             formNamesAndURLs = new HashMap<String, FormDetails>();
@@ -331,8 +395,13 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
 
             downloadFormListTask = new DownloadFormListTask();
             downloadFormListTask.setDownloaderListener(this);
-            downloadFormListTask.execute();
 
+            if (isDownloadOnlyMode) {
+                // Pass over the nulls -> They have no effect if even one of them is a null
+                downloadFormListTask.setAlternateCredentials(url, username, password);
+            }
+
+            downloadFormListTask.execute();
         }
     }
 
@@ -354,6 +423,19 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
         outState.putBoolean(SHOULD_EXIT, shouldExit);
         outState.putSerializable(FORMLIST, formList);
         outState.putSerializable(SELECTED_FORMS, selectedForms);
+
+        // Download mode variables
+
+        outState.putBoolean(IS_DOWNLOAD_ONLY_MODE, isDownloadOnlyMode);
+        if (isDownloadOnlyMode) {
+            // String can be stored and retrieved
+            outState.putStringArray(FORM_IDS_TO_DOWNLOAD, formIdsToDownload);
+            outState.putString(URL, url);
+            outState.putString(USERNAME, username);
+            outState.putString(PASSWORD, password);
+            outState.putStringArrayList(FORMS_FOUND, formsFound);
+            outState.putSerializable(FORM_RESULT, formResult);
+        }
     }
 
     @Override
@@ -376,17 +458,25 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
                                     downloadFormListTask.setDownloaderListener(null);
                                     downloadFormListTask.cancel(true);
                                     downloadFormListTask = null;
+
+                                    // Only explicitly exit if DownloadFormListTask is running since
+                                    // DownloadFormTask has a callback when cancelled and has code to handle
+                                    // cancellation when in download mode only
+                                    if (isDownloadOnlyMode) {
+                                        setReturnResult(false, "User cancelled the operation", formResult);
+                                        finish();
+                                    }
                                 }
+
                                 if (downloadFormsTask != null) {
                                     showDialog(CANCELLATION_DIALOG);
                                     downloadFormsTask.cancel(true);
                                 }
-                                finish();
                             }
                         };
                 progressDialog.setTitle(getString(R.string.downloading_data));
                 progressDialog.setMessage(alertMsg);
-//                progressDialog.setIcon(R.drawable.ic_dialog_info);
+                progressDialog.setIcon(android.R.drawable.ic_dialog_info);
                 progressDialog.setIndeterminate(true);
                 progressDialog.setCancelable(false);
                 progressDialog.setButton(getString(R.string.cancel), loadingButtonListener);
@@ -397,12 +487,18 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
 
                 alertShowing = false;
 
-                return new AuthDialogUtility().createDialog(this, this, null);
+                AuthDialogUtility authDialogUtility = new AuthDialogUtility();
+                if (url != null && username != null && password != null) {
+                    authDialogUtility.setCustomUsername(username);
+                    authDialogUtility.setCustomPassword(password);
+                }
+
+                return authDialogUtility.createDialog(this, this, url);
             case CANCELLATION_DIALOG:
                 cancelDialog = new ProgressDialog(this);
                 cancelDialog.setTitle(getString(R.string.canceling));
                 cancelDialog.setMessage(getString(R.string.please_wait));
-//                cancelDialog.setIcon(R.drawable.ic_dialog_info);
+                cancelDialog.setIcon(android.R.drawable.ic_dialog_info);
                 cancelDialog.setIndeterminate(true);
                 cancelDialog.setCancelable(false);
                 return cancelDialog;
@@ -469,9 +565,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
     /**
      * starts the task to download the selected forms, also shows progress dialog
      */
-    @SuppressWarnings("unchecked")
     private void downloadSelectedFiles() {
-        int totalCount = 0;
         ArrayList<FormDetails> filesToDownload = new ArrayList<FormDetails>();
 
         SparseBooleanArray sba = listView.getCheckedItemPositions();
@@ -482,7 +576,13 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
                 filesToDownload.add(formNamesAndURLs.get(item.get(FORMDETAIL_KEY)));
             }
         }
-        totalCount = filesToDownload.size();
+
+        startFormsDownload(filesToDownload);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void startFormsDownload(@NonNull ArrayList<FormDetails> filesToDownload) {
+        int totalCount = filesToDownload.size();
 
         Collect.getInstance().getActivityLogger().logAction(this, "downloadSelectedFiles",
                 Integer.toString(totalCount));
@@ -493,6 +593,15 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
 
             downloadFormsTask = new DownloadFormsTask();
             downloadFormsTask.setDownloaderListener(this);
+
+            if (url != null) {
+                if (username != null && password != null) {
+                    webCredentialsUtils.saveCredentials(url, username, password);
+                } else {
+                    webCredentialsUtils.clearCredentials(url);
+                }
+            }
+
             downloadFormsTask.execute(filesToDownload);
         } else {
             ToastUtils.showShortToast(R.string.noselect_error);
@@ -550,8 +659,8 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
         Cursor formCursor = null;
         try {
             formCursor = new FormsDao().getFormsCursorForFormId(formId);
-            // formCursor.getCount() == 0 // form does not already exist locally
-            return formNamesAndURLs.get(formId).isNewerFormVersionAvailable() // or a newer version of this form is available
+            return formCursor.getCount() == 0 // form does not already exist locally
+                    || formNamesAndURLs.get(formId).isNewerFormVersionAvailable() // or a newer version of this form is available
                     || formNamesAndURLs.get(formId).areNewerMediaFilesAvailable(); // or newer versions of media files are available
         } finally {
             if (formCursor != null) {
@@ -583,13 +692,16 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
      */
     public void formListDownloadingComplete(HashMap<String, FormDetails> result) {
         dismissDialog(PROGRESS_DIALOG);
-        removeDialog(AUTH_DIALOG);
         downloadFormListTask.setDownloaderListener(null);
         downloadFormListTask = null;
 
         if (result == null) {
             Timber.e("Formlist Downloading returned null.  That shouldn't happen");
             // Just displayes "error occured" to the user, but this should never happen.
+            if (isDownloadOnlyMode) {
+                setReturnResult(false, "Formlist Downloading returned null.  That shouldn't happen", null);
+            }
+
             createAlertDialog(getString(R.string.load_remote_form_error),
                     getString(R.string.error_occured), EXIT);
             return;
@@ -604,6 +716,11 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
                     getString(R.string.list_failed_with_error,
                             result.get(DL_ERROR_MSG).getErrorStr());
             String dialogTitle = getString(R.string.load_remote_form_error);
+
+            if (isDownloadOnlyMode) {
+                setReturnResult(false, getString(R.string.load_remote_form_error), formResult);
+            }
+
             createAlertDialog(dialogTitle, dialogMessage, DO_NOT_EXIT);
         } else {
             // Everything worked. Clear the list and add the results.
@@ -621,8 +738,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
                     item.put(FORMNAME, details.getFormName());
                     item.put(FORMID_DISPLAY,
                             ((details.getFormVersion() == null) ? "" : (getString(R.string.version) + " "
-                                    + details.getFormVersion() + " ")));
-                    //+ "ID: " + details.getFormID());
+                                    + details.getFormVersion() + " ")) + "ID: " + details.getFormID());
                     item.put(FORMDETAIL_KEY, formDetailsKey);
                     item.put(FORM_ID_KEY, details.getFormID());
                     item.put(FORM_VERSION_KEY, details.getFormVersion());
@@ -649,6 +765,35 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
             downloadButton.setEnabled(listView.getCheckedItemCount() > 0);
             toggleButton.setEnabled(listView.getCount() > 0);
             toggleButtonLabel(toggleButton, listView);
+
+            if (isDownloadOnlyMode) {
+                //1. First check if all form IDS could be found on the server - Register forms that could not be found
+
+                for (String formId: formIdsToDownload) {
+                    formResult.put(formId, false);
+                }
+
+                ArrayList<FormDetails> filesToDownload  = new ArrayList<>();
+
+                for (FormDetails formDetails: formNamesAndURLs.values()) {
+                    String formId = formDetails.getFormID();
+
+                    if (formResult.containsKey(formId)) {
+                        formsFound.add(formId);
+                        filesToDownload.add(formDetails);
+                    }
+                }
+
+                //2. Select forms and start downloading
+                if (!filesToDownload.isEmpty()) {
+                    startFormsDownload(filesToDownload);
+                } else {
+                    // None of the forms was found
+                    setReturnResult(false, "Forms not found on server", formResult);
+                    finish();
+                }
+
+            }
         }
     }
 
@@ -671,7 +816,8 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
                         // just close the dialog
                         alertShowing = false;
                         // successful download, so quit
-                        if (shouldExit) {
+                        // Also quit if in download_mode only(called by another app/activity just to download)
+                        if (shouldExit || isDownloadOnlyMode) {
                             finish();
                         }
                         break;
@@ -680,7 +826,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
         };
         alertDialog.setCancelable(false);
         alertDialog.setButton(getString(R.string.ok), quitListener);
-//        alertDialog.setIcon(R.drawable.ic_dialog_info);
+        alertDialog.setIcon(android.R.drawable.ic_dialog_info);
         alertMsg = message;
         alertTitle = title;
         alertShowing = true;
@@ -700,25 +846,38 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
             downloadFormsTask.setDownloaderListener(null);
         }
 
+        cleanUpWebCredentials();
+
         if (progressDialog.isShowing()) {
             // should always be true here
             progressDialog.dismiss();
         }
 
-        ToastUtils.showLongToast(getDownloadResultMessage(result));
+        createAlertDialog(getString(R.string.download_forms_result), getDownloadResultMessage(result), EXIT);
 
-//        createAlertDialog(getString(R.string.download_forms_result), getDownloadResultMessage(result), EXIT);
-        finish();
+        // Set result to true for forms which were downloaded
+        if (isDownloadOnlyMode) {
+            for (FormDetails formDetails: result.keySet()) {
+                String successKey = result.get(formDetails);
+                if (Collect.getInstance().getString(R.string.success).equals(successKey)) {
+                    if (formResult.containsKey(formDetails.getFormID())) {
+                        formResult.put(formDetails.getFormID(), true);
+                    }
+                }
+            }
+
+            setReturnResult(true, null, formResult);
+        }
     }
 
     public static String getDownloadResultMessage(HashMap<FormDetails, String> result) {
         Set<FormDetails> keys = result.keySet();
         StringBuilder b = new StringBuilder();
         for (FormDetails k : keys) {
-            b.append(result.get(k) + " - " + k.getFormName() + " ("
+            b.append(k.getFormName() + " ("
                     + ((k.getFormVersion() != null)
                     ? (Collect.getInstance().getString(R.string.version) + ": " + k.getFormVersion() + " ")
-                    : "") + "ID: " + k.getFormID() + ")");
+                    : "") + "ID: " + k.getFormID() + ") - " + result.get(k));
             b.append("\n\n");
         }
 
@@ -731,18 +890,61 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
             downloadFormsTask.setDownloaderListener(null);
             downloadFormsTask = null;
         }
+
+        cleanUpWebCredentials();
+
         if (cancelDialog.isShowing()) {
             cancelDialog.dismiss();
+        }
+
+        if (isDownloadOnlyMode) {
+            setReturnResult(false, "Download cancelled", null);
+            finish();
         }
     }
 
     @Override
     public void updatedCredentials() {
+        // If the user updated the custom credentials using the dialog, let us update our
+        // variables holding the custom credentials
+        if (url != null) {
+            HttpCredentialsInterface httpCredentials = webCredentialsUtils.getCachedCredentials(url);
+
+            if (httpCredentials != null) {
+                username = httpCredentials.getUsername();
+                password = httpCredentials.getPassword();
+            }
+        }
+
         downloadFormList();
     }
 
     @Override
     public void cancelledUpdatingCredentials() {
         finish();
+    }
+
+    private void setReturnResult(boolean successful, @Nullable String message, @Nullable HashMap<String, Boolean> resultFormIds) {
+        Intent intent = new Intent();
+        intent.putExtra(ApplicationConstants.BundleKeys.SUCCESS_KEY, successful);
+        if (message != null) {
+            intent.putExtra(ApplicationConstants.BundleKeys.MESSAGE, message);
+        }
+        if (resultFormIds != null) {
+            intent.putExtra(ApplicationConstants.BundleKeys.FORM_IDS, resultFormIds);
+        }
+
+        setResult(RESULT_OK, intent);
+    }
+
+    private void cleanUpWebCredentials() {
+        if (url != null) {
+            String host = Uri.parse(url)
+                    .getHost();
+
+            if (host != null) {
+                webCredentialsUtils.clearCredentials(url);
+            }
+        }
     }
 }

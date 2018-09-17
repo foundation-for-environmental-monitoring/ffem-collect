@@ -42,7 +42,6 @@ import static org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialo
 import static org.odk.collect.android.utilities.ResetUtility.ResetAction.RESET_PREFERENCES;
 
 public class ResetDialogPreference extends DialogPreference implements CompoundButton.OnCheckedChangeListener {
-    private final Context context;
     private CheckBox preferences;
     private CheckBox instances;
     private CheckBox forms;
@@ -54,7 +53,6 @@ public class ResetDialogPreference extends DialogPreference implements CompoundB
     public ResetDialogPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         setDialogLayoutResource(R.layout.reset_dialog_layout);
-        this.context = context;
     }
 
     @Override
@@ -125,8 +123,8 @@ public class ResetDialogPreference extends DialogPreference implements CompoundB
 
     private void showProgressDialog() {
         progressDialog = ProgressDialog.show(getContext(),
-                context.getString(R.string.please_wait),
-                context.getString(R.string.reset_in_progress),
+                getContext().getString(R.string.please_wait),
+                getContext().getString(R.string.reset_in_progress),
                 true);
     }
 
@@ -197,20 +195,18 @@ public class ResetDialogPreference extends DialogPreference implements CompoundB
                 resultMessage.append("\n\n");
             }
         }
-        if (!((CollectAbstractActivity) getContext()).isInstanceStateSaved()) {
-            ((CollectAbstractActivity) getContext()).runOnUiThread(new Thread(new Runnable() {
-                public void run() {
-                    if (resetActions.contains(RESET_PREFERENCES)) {
-                        ((CollectAbstractActivity) getContext()).recreate();
-                    }
-                    ResetSettingsResultDialog resetSettingsResultDialog = ResetSettingsResultDialog.newInstance(String.valueOf(resultMessage));
-                    try {
-                        resetSettingsResultDialog.show(((CollectAbstractActivity) getContext()).getSupportFragmentManager(), RESET_SETTINGS_RESULT_DIALOG_TAG);
-                    } catch (ClassCastException e) {
-                        Timber.i(e);
-                    }
+        if (!((AdminPreferencesActivity) getContext()).isInstanceStateSaved()) {
+            ((AdminPreferencesActivity) getContext()).runOnUiThread(() -> {
+                if (resetActions.contains(RESET_PREFERENCES)) {
+                    ((AdminPreferencesActivity) getContext()).recreate();
                 }
-            }));
+                ResetSettingsResultDialog resetSettingsResultDialog = ResetSettingsResultDialog.newInstance(String.valueOf(resultMessage));
+                try {
+                    resetSettingsResultDialog.show(((AdminPreferencesActivity) getContext()).getSupportFragmentManager(), RESET_SETTINGS_RESULT_DIALOG_TAG);
+                } catch (ClassCastException e) {
+                    Timber.i(e);
+                }
+            });
         }
     }
 
