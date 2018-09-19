@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.odk.collect.android.R;
-import org.odk.collect.android.utilities.AuthDialogUtility;
 
 import io.ffem.collect.android.activities.SignInActivity;
 
@@ -49,8 +48,8 @@ public class ServerPreferences extends ServerPreferencesFragment {
         Preference serverPreferences = findPreference("server_credentials");
         if (serverPreferences != null) {
 
-            String username = AuthDialogUtility.getUserNameFromPreferences();
-            String password = AuthDialogUtility.getPasswordFromPreferences();
+            String username = webCredentialsUtils.getUserNameFromPreferences();
+            String password = webCredentialsUtils.getPasswordFromPreferences();
 
             if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
                 serverPreferences.setSummary(R.string.sign_in_to_account);

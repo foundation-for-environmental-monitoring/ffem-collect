@@ -21,8 +21,10 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferenceKeys;
-import org.odk.collect.android.utilities.AuthDialogUtility;
 import org.odk.collect.android.utilities.ThemeUtils;
+import org.odk.collect.android.utilities.WebCredentialsUtils;
+
+import javax.inject.Inject;
 
 import io.ffem.collect.android.util.AdjustingViewGlobalLayoutListener;
 
@@ -35,7 +37,8 @@ import static org.odk.collect.android.utilities.PermissionUtils.requestStoragePe
 public class SignInActivity extends AppCompatActivity {
     private static final boolean EXIT = true;
     private static final String MASK = "**********";
-
+    @Inject
+    WebCredentialsUtils webCredentialsUtils;
     private EditText editText;
     private EditText editPassword;
     private TextInputLayout layoutUserName;
@@ -44,6 +47,8 @@ public class SignInActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Collect.getInstance().getComponent().inject(this);
 
         requestStoragePermissions(this, new PermissionListener() {
             @Override
@@ -144,7 +149,7 @@ public class SignInActivity extends AppCompatActivity {
                             editPassword.getText().toString().trim());
                 }
 
-                AuthDialogUtility.setWebCredentialsFromPreferences();
+//                AuthDialogUtility.setWebCredentialsFromPreferences();
 
                 startActivity(new Intent(getBaseContext(), MainMenuActivity.class));
                 finish();
@@ -160,8 +165,8 @@ public class SignInActivity extends AppCompatActivity {
         layoutPassword.setHint(getString(R.string.password));
 
         if (!isUserSignedIn() || isSettings) {
-            editText.setText(AuthDialogUtility.getUserNameFromPreferences());
-            editPassword.setText(maskPassword(AuthDialogUtility.getPasswordFromPreferences()));
+            editText.setText(webCredentialsUtils.getUserNameFromPreferences());
+            editPassword.setText(maskPassword(webCredentialsUtils.getPasswordFromPreferences()));
         }
 
         layoutUserName.setHintAnimationEnabled(true);

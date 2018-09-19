@@ -298,7 +298,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {
-                    readPhoneStatePermissionRequestNeeded = true;
+                    readPhoneStatePermissionRequestNeeded = false;
                 }));
 
         errorMessage = null;
@@ -1042,10 +1042,10 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         menu.findItem(R.id.menu_languages).setVisible(useability)
                 .setEnabled(useability);
 
-        useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_ACCESS_SETTINGS);
+//        useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_ACCESS_SETTINGS);
 
-        menu.findItem(R.id.menu_preferences).setVisible(useability)
-                .setEnabled(useability);
+//        menu.findItem(R.id.menu_preferences).setVisible(useability)
+//                .setEnabled(useability);
         return true;
     }
 
@@ -2874,7 +2874,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     }
 
     private void sendSavedBroadcast() {
-        sendBroadcast(new Intent("org.odk.collect.android.FormSaved"));
+        sendBroadcast(new Intent(BuildConfig.APPLICATION_ID + ".FormSaved"));
     }
 
     @Override

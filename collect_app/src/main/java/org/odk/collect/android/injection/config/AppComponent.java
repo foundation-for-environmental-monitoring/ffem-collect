@@ -26,6 +26,7 @@ import org.odk.collect.android.utilities.FormDownloader;
 import dagger.BindsInstance;
 import dagger.Component;
 import dagger.android.support.AndroidSupportInjectionModule;
+import io.ffem.collect.android.activities.SignInActivity;
 
 /**
  * Primary module, bootstraps the injection system and
@@ -85,4 +86,6 @@ public interface AppComponent {
     void inject(AuthDialogUtility authDialogUtility);
   
     void inject(FormDownloadList formDownloadList);
+
+    void inject(SignInActivity signInActivity);
 }

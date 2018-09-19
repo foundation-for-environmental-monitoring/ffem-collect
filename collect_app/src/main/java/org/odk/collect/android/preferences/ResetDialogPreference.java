@@ -195,14 +195,14 @@ public class ResetDialogPreference extends DialogPreference implements CompoundB
                 resultMessage.append("\n\n");
             }
         }
-        if (!((AdminPreferencesActivity) getContext()).isInstanceStateSaved()) {
-            ((AdminPreferencesActivity) getContext()).runOnUiThread(() -> {
+        if (!((CollectAbstractActivity) getContext()).isInstanceStateSaved()) {
+            ((CollectAbstractActivity) getContext()).runOnUiThread(() -> {
                 if (resetActions.contains(RESET_PREFERENCES)) {
-                    ((AdminPreferencesActivity) getContext()).recreate();
+                    ((CollectAbstractActivity) getContext()).recreate();
                 }
                 ResetSettingsResultDialog resetSettingsResultDialog = ResetSettingsResultDialog.newInstance(String.valueOf(resultMessage));
                 try {
-                    resetSettingsResultDialog.show(((AdminPreferencesActivity) getContext()).getSupportFragmentManager(), RESET_SETTINGS_RESULT_DIALOG_TAG);
+                    resetSettingsResultDialog.show(((CollectAbstractActivity) getContext()).getSupportFragmentManager(), RESET_SETTINGS_RESULT_DIALOG_TAG);
                 } catch (ClassCastException e) {
                     Timber.i(e);
                 }
