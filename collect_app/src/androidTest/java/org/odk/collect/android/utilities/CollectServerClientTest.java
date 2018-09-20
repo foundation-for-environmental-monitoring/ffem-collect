@@ -2,6 +2,7 @@ package org.odk.collect.android.utilities;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.http.CollectServerClient;
 import org.odk.collect.android.http.HttpClientConnection;
 import org.odk.collect.android.test.MockedServerTest;
@@ -32,7 +33,7 @@ public class CollectServerClientTest extends MockedServerTest {
             // then
             RecordedRequest r = nextRequest();
             assertEquals("GET /some-path HTTP/1.1", r.getRequestLine());
-            assertTrue(r.getHeader("User-Agent").matches("Dalvik/.* org.odk.collect.android/.*"));
+            assertTrue(r.getHeader("User-Agent").matches("Dalvik/.* " + BuildConfig.APPLICATION_ID + "/.*"));
         }
 
     @Test
@@ -43,7 +44,7 @@ public class CollectServerClientTest extends MockedServerTest {
         // then
         String header = nextRequest().getHeader("User-Agent");
 
-        assertMatches("Dalvik/.* org.odk.collect.android/.*", header);
+        assertMatches("Dalvik/.* " + BuildConfig.APPLICATION_ID + "/.*", header);
     }
 
     @Test

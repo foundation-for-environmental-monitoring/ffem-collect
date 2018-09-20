@@ -51,6 +51,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -1095,6 +1096,9 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 Intent pref = new Intent(this, PreferencesActivity.class);
                 startActivity(pref);
                 return true;
+            case android.R.id.home:
+                createQuitDialog();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -1253,6 +1257,12 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 final CheckBox instanceComplete = endView
                         .findViewById(R.id.mark_finished);
                 instanceComplete.setChecked(InstancesDaoHelper.isInstanceComplete(true));
+
+                Button endButton = endView.findViewById(R.id.save_exit_button);
+                setEndButtonText(endButton, instanceComplete);
+                instanceComplete.setOnClickListener(view -> {
+                    setEndButtonText(endButton, instanceComplete);
+                });
 
                 if (!(boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_MARK_AS_FINALIZED)) {
                     instanceComplete.setVisibility(View.GONE);
@@ -2953,5 +2963,12 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         }
     }
 
+    private void setEndButtonText(Button endButton, CheckBox instanceComplete) {
+        if (instanceComplete.isChecked()) {
+            endButton.setText(R.string.send_form);
+        } else {
+            endButton.setText(R.string.quit_entry);
+        }
+    }
 }
 

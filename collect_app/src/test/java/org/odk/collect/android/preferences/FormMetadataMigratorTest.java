@@ -31,7 +31,7 @@ import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SELECTED_GO
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_USERNAME;
 
 /** Tests the FormMetadataFragment */
-@Config(constants = BuildConfig.class)
+//@Config(constants = BuildConfig.class)
 @RunWith(RobolectricTestRunner.class)
 public class FormMetadataMigratorTest {
 

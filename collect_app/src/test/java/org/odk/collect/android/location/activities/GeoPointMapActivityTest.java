@@ -32,7 +32,7 @@ import static org.odk.collect.android.activities.FormEntryActivity.LOCATION_RESU
 import static org.odk.collect.android.location.activities.GeoPointActivityTest.newMockLocation;
 import static org.robolectric.Shadows.shadowOf;
 
-@Config(constants = BuildConfig.class)
+//@Config(constants = BuildConfig.class)
 @RunWith(RobolectricTestRunner.class)
 public class GeoPointMapActivityTest extends BaseGeoActivityTest {
 

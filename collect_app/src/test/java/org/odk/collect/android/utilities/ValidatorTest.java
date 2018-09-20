@@ -26,7 +26,7 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+//@Config(constants = BuildConfig.class)
 public class ValidatorTest {
 
     @Test

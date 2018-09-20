@@ -22,7 +22,7 @@ import static org.odk.collect.android.preferences.PreferenceKeys.KEY_APP_THEME;
  * Unit tests for checking the behaviour of updating themes from User Interface settings
  */
 
-@Config(constants = BuildConfig.class)
+//@Config(constants = BuildConfig.class)
 @RunWith(RobolectricTestRunner.class)
 public class ThemeUtilsTests {
 

@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author James Knight
  */
-@Config(constants = BuildConfig.class)
+//@Config(constants = BuildConfig.class)
 @RunWith(RobolectricTestRunner.class)
 public class DrawWidgetTest extends FileWidgetTest<DrawWidget> {
 

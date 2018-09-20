@@ -31,7 +31,7 @@ import java.util.TimeZone;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+//@Config(constants = BuildConfig.class)
 public class DateTimeUtilsTest {
 
     private DatePickerDetails gregorian;

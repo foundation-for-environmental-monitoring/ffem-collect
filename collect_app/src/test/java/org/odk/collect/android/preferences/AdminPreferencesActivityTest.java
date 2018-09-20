@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Tests for Admin Preferences
  */
-@Config(constants = BuildConfig.class)
+//@Config(constants = BuildConfig.class)
 @RunWith(RobolectricTestRunner.class)
 public class AdminPreferencesActivityTest {
 

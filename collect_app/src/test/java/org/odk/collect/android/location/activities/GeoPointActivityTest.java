@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 import static org.odk.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
 import static org.robolectric.Shadows.shadowOf;
 
-@Config(constants = BuildConfig.class)
+//@Config(constants = BuildConfig.class)
 @RunWith(RobolectricTestRunner.class)
 public class GeoPointActivityTest extends BaseGeoActivityTest {
 

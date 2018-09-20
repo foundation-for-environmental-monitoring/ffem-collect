@@ -17,7 +17,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import static org.mockito.Mockito.when;
 
-@Config(constants = BuildConfig.class)
+//@Config(constants = BuildConfig.class)
 @RunWith(RobolectricTestRunner.class)
 public abstract class WidgetTest {
 

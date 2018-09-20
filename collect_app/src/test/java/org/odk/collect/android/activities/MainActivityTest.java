@@ -25,7 +25,7 @@ import static org.robolectric.Shadows.shadowOf;
 /**
  * Unit test for checking {@link Button}'s behaviour  in {@link MainMenuActivity}
  */
-@Config(constants = BuildConfig.class)
+//@Config(constants = BuildConfig.class)
 @RunWith(RobolectricTestRunner.class)
 public class MainActivityTest {
     private MainMenuActivity mainMenuActivity;

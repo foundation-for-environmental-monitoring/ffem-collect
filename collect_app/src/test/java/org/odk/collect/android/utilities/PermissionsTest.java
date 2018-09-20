@@ -16,7 +16,7 @@ import java.util.List;
  * Test for checking permissions in {@link AndroidManifest}
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+//@Config(constants = BuildConfig.class)
 public class PermissionsTest {
 
     @Test
