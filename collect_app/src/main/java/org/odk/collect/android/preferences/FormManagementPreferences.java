@@ -25,7 +25,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.google.android.gms.analytics.HitBuilders;
+
 import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.activities.FileManagerTabs;
 import org.odk.collect.android.tasks.ServerPollingJob;
 
@@ -88,8 +91,17 @@ public class FormManagementPreferences extends PreferenceFragment {
                 int index = ((ListPreference) preference).findIndexOfValue(newValue.toString());
                 CharSequence entry = ((ListPreference) preference).getEntries()[index];
                 preference.setSummary(entry);
+
                 if (key.equals(KEY_PERIODIC_FORM_UPDATES_CHECK)) {
                     ServerPollingJob.schedulePeriodicJob((String) newValue);
+
+                    Collect.getInstance().getDefaultTracker()
+                            .send(new HitBuilders.EventBuilder()
+                                    .setCategory("PreferenceChange")
+                                    .setAction("Periodic form updates check")
+                                    .setLabel((String) newValue)
+                                    .build());
+
                     if (newValue.equals(getString(R.string.never_value))) {
                         Preference automaticUpdatePreference = findPreference(KEY_AUTOMATIC_UPDATE);
                         if (automaticUpdatePreference != null) {
@@ -111,7 +123,22 @@ public class FormManagementPreferences extends PreferenceFragment {
 
         if (pref != null) {
             if (key.equals(KEY_AUTOMATIC_UPDATE)) {
-                pref.setEnabled(!GeneralSharedPreferences.getInstance().get(KEY_PERIODIC_FORM_UPDATES_CHECK).equals(getString(R.string.never_value)));
+                String formUpdateCheckPeriod = (String) GeneralSharedPreferences.getInstance()
+                        .get(KEY_PERIODIC_FORM_UPDATES_CHECK);
+
+                // Only enable automatic form updates if periodic updates are set
+                pref.setEnabled(!formUpdateCheckPeriod.equals(getString(R.string.never_value)));
+
+                pref.setOnPreferenceChangeListener((preference, newValue) -> {
+                    Collect.getInstance().getDefaultTracker()
+                            .send(new HitBuilders.EventBuilder()
+                                    .setCategory("PreferenceChange")
+                                    .setAction("Automatic form updates")
+                                    .setLabel(newValue + " " + formUpdateCheckPeriod)
+                                    .build());
+
+                    return true;
+                });
             }
         }
     }
