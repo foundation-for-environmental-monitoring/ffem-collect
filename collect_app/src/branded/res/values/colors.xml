@@ -8,14 +8,14 @@
     <color name="darkPopupDialogColor">#3f3f3f</color>
     <color name="darkIconColor">@android:color/white</color>
     <color name="darkBackgroundColor">@android:color/black</color>
-    <color name="darkTintColor">#3d5264</color>
+    <color name="darkTintColor">#2196F3</color>
 
     <!-- Light Theme Palette -->
     <color name="lightPrimaryTextColor">#232323</color>
     <color name="lightIconColor">@android:color/black</color>
     <color name="lightBackgroundColor">@android:color/white</color>
-    <color name="tintColor">#3d5264</color>
     <color name="lightAccentColor">#355774</color>
+    <color name="tintColor">#04467b</color>
 
     <!-- Dark Theme Palette Custom -->
     <color name="darkWindowBackground">#121212</color>
@@ -26,9 +26,9 @@
     <color name="lightWindowBackground">#fff</color>
     <color name="lightCardBackground">#fff</color>
     <color name="lightMainButton">#cdcdcd</color>
-    <color name="primary_dark">#3d5264</color>
+    <color name="primary_dark">#4d4d4d</color>
 
-    <color name="primary">#4A6279</color>
+    <color name="primary">#585858</color>
     <color name="white">@android:color/white</color>
     <color name="lightTintColor">#1a8302</color>
     <color name="button_text">#e33b3b3b</color>
