@@ -405,7 +405,8 @@
   <string name="sort_by_name_desc">नाम, Z-A</string>
   <string name="sort_by_date_asc">दिनांक, नयी पहले </string>
   <string name="sort_by_date_desc">दिनांक, सबसे पुराना पहले</string>
-  <string name="sort_by_status_desc">अवस्था, बिना फाइनल हुए शब्द</string>
+  <string name="sort_by_status_asc">अवस्था, पहले फाइनल हुए</string>
+  <string name="sort_by_status_desc">अवस्था, पहले बिना फाइनल हुए</string>
   <string name="sort_the_list">सूची को सॉर्ट करें</string>
   <string name="filter_the_list">सूची को फ़िल्टर करें</string>
   <string name="language">भाषा</string>
@@ -465,16 +466,24 @@
   <string name="form_submission_category">फॉर्म भेजना</string>
   <string name="form_filling_category">फॉर्म भरना</string>
   <string name="high_resolution_title">उच्च रेज़ोल्युशन वीडियो</string>
+  <string name="image_size_title">तस्वीर का आकार</string>
   <string name="form_import_category">फॉर्म आयात </string>
   <string name="user_and_device_identity_title">प्रयोगकर्ता और डिवाइस पहचान</string>
   <string name="constraint_behavior_title">बाधा प्रसंस्करण</string>
   <string name="show_splash_title">स्प्लैश स्क्रीन</string>
   <string name="server_settings_title">सर्वर</string>
+  <string name="sort_by">द्वारा क्रमबद्ध</string>
   <string name="type">प्रकार</string>
   <string name="form_entry">फॉर्म एंट्री से छुपाने के लिए चेक हटायें</string>
   <string name="use_device_language">डिवाइस की भाषा प्रयोग करें </string>
   <string name="not_supported_offline_layer_format">चयनित ऑफलाइन लेयर फाइल PBF फॉर्मेट उपयोग करती है जो कि समर्थित नहीं है! </string>
   <string name="search">खोज</string>
+  <string name="image_size_large">बड़ा (3072 पीएक्स)</string>
+  <string name="image_size_medium">मध्यम (2048 पीएक्स)</string>
+  <string name="image_size_small">छोटा (1024 पीएक्स)</string>
+  <string name="image_size_very_small">बहुत छोटा (640 पीएक्स)</string>
+  <string name="image_size_original">कैमरा से मूल आकार (डिफ़ॉल्ट)</string>
+  <string name="image_size_dialog_title">तस्वीर के लंबे किनारे का अधिकतम पिक्सेल</string>
   <!--Displays dates in specialized calendars with the Gregorian dates in parentheses. This is translated so right-to-left languages can specify the correct order-->
   <string name="moving_backwards_title">पीछे की ओर बढ़ रहा है</string>
   <string name="yes">हाँ</string>

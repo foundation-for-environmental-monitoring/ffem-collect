@@ -2,6 +2,6 @@
     <io.ffem.collect.android.preferences.PreferenceCategoryCustom android:title="@string/info">
         <Preference
             android:key="about"
-            android:title="@string/about" />
+            android:title="@string/about_preferences" />
     </io.ffem.collect.android.preferences.PreferenceCategoryCustom>
 </PreferenceScreen>

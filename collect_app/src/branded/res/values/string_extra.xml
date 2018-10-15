@@ -6,9 +6,6 @@
     <string name="general">General</string>
     <string name="other">Other</string>
     <string name="info">Info</string>
-    <string name="audio_permission">Record audio permission is required</string>
-    <string name="camera_permission">Camera permission is required</string>
-    <string name="location_permission">Location permission is required</string>
     <string name="sign_in_to_account">Sign in to your KoBoToolbox account</string>
     <string name="forgot">Forgot?</string>
     <string name="sign_in">Sign In</string>
