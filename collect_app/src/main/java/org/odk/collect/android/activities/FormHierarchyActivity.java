@@ -441,8 +441,6 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
         FormController formController = Collect.getInstance().getFormController();
         int event = formController.getEvent();
         if (event == FormEntryController.EVENT_REPEAT) {
-            Collect.getInstance().getActivityLogger().logInstanceAction(this, "goUpLevelButton",
-                    "click");
             goUpLevel();
         } else {
             super.onBackPressed();

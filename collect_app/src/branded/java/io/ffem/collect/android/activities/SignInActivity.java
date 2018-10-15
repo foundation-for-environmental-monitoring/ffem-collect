@@ -56,7 +56,6 @@ public class SignInActivity extends AppCompatActivity {
                 // must be at the beginning of any activity that can be called from an external intent
                 try {
                     Collect.createODKDirs();
-                    Collect.getInstance().getActivityLogger().open();
                 } catch (RuntimeException e) {
                     createErrorDialog(e.getMessage(), EXIT);
                 }
@@ -110,18 +109,6 @@ public class SignInActivity extends AppCompatActivity {
         return password != null && password.length() > 0
                 ? MASK
                 : "";
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Collect.getInstance().getActivityLogger().logOnStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        Collect.getInstance().getActivityLogger().logOnStop(this);
-        super.onStop();
     }
 
     private void initialize() {
@@ -250,7 +237,6 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void createErrorDialog(String errorMsg, final boolean shouldExit) {
-        Collect.getInstance().getActivityLogger().logAction(this, "createErrorDialog", "show");
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setMessage(errorMsg);
         DialogInterface.OnClickListener errorListener = new DialogInterface.OnClickListener() {
@@ -258,8 +244,6 @@ public class SignInActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int i) {
                 switch (i) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        Collect.getInstance().getActivityLogger().logAction(this,
-                                "createErrorDialog", "OK");
                         if (shouldExit) {
                             finish();
                         }

@@ -137,10 +137,6 @@ public class SettingsActivity extends CollectAbstractActivity
                                     passwordDialog.dismiss();
                                 } else {
                                     ToastUtils.showShortToast(R.string.admin_password_incorrect);
-                                    Collect.getInstance()
-                                            .getActivityLogger()
-                                            .logAction(this, "adminPasswordDialog",
-                                                    "PASSWORD_INCORRECT");
                                 }
                             }
                         });
@@ -150,10 +146,6 @@ public class SettingsActivity extends CollectAbstractActivity
                         new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int which) {
-                                Collect.getInstance()
-                                        .getActivityLogger()
-                                        .logAction(this, "adminPasswordDialog",
-                                                "cancel");
                                 input.setText("");
                             }
                         });

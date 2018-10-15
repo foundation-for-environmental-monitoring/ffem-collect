@@ -66,7 +66,7 @@ public class NetworkReceiver extends BroadcastReceiver implements InstanceUpload
         NetworkInfo currentNetworkInfo = manager.getActiveNetworkInfo();
 
         if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)
-                || action.equals((BuildConfig.APPLICATION_ID _ ".FormSaved")) {
+                || action.equals(BuildConfig.APPLICATION_ID + ".FormSaved")) {
             if (currentNetworkInfo != null && currentNetworkInfo.isConnected()) {
                 autoSendInstances(context, networkTypeMatchesAutoSendSetting(currentNetworkInfo));
 

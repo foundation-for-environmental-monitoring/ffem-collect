@@ -61,10 +61,6 @@ public class GeneralPreferenceFragment extends PreferenceFragment {
         Preference generalSettings = findPreference("general_settings");
         if (generalSettings != null) {
             generalSettings.setOnPreferenceClickListener(preference -> {
-                Collect.getInstance()
-                        .getActivityLogger()
-                        .logAction(this, "onOptionsItemSelected",
-                                "MENU_PREFERENCES");
                 startActivity(new Intent(getActivity(), PreferencesActivity.class));
                 return true;
             });
@@ -73,16 +69,12 @@ public class GeneralPreferenceFragment extends PreferenceFragment {
         Preference adminSettings = findPreference("admin_settings");
         if (adminSettings != null) {
             adminSettings.setOnPreferenceClickListener(preference -> {
-                Collect.getInstance().getActivityLogger()
-                        .logAction(this, "onOptionsItemSelected", "MENU_ADMIN");
                 String pw = adminPreferences.getString(
                         AdminKeys.KEY_ADMIN_PW, "");
                 if ("".equalsIgnoreCase(pw)) {
                     startActivity(new Intent(getActivity(), AdminPreferencesActivity.class));
                 } else {
                     getActivity().showDialog(PASSWORD_DIALOG);
-                    Collect.getInstance().getActivityLogger()
-                            .logAction(this, "createAdminPasswordDialog", "show");
                 }
                 return true;
             });

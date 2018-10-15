@@ -48,16 +48,4 @@ public class DeleteFormsActivity extends CollectAbstractActivity {
         }
         setSupportActionBar(toolbar);
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Collect.getInstance().getActivityLogger().logOnStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        Collect.getInstance().getActivityLogger().logOnStop(this);
-        super.onStop();
-    }
 }

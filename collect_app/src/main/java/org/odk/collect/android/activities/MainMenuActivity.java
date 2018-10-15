@@ -281,8 +281,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
             @Override
             public void onClick(View v) {
                 if (Collect.allowClick()) {
-                    Collect.getInstance().getActivityLogger()
-                            .logAction(this, "fillBlankForm", "click");
                     Intent i = new Intent(getApplicationContext(),
                             FormChooserList.class);
                     i.putExtra("allowDelete", true);
@@ -616,8 +614,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
 
     private void getBlankForm() {
         if (Collect.allowClick()) {
-            Collect.getInstance().getActivityLogger()
-                    .logAction(this, "downloadBlankForms", "click");
             SharedPreferences sharedPreferences = PreferenceManager
                     .getDefaultSharedPreferences(MainMenuActivity.this);
             String protocol = sharedPreferences.getString(

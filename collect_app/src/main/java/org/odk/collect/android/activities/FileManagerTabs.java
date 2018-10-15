@@ -14,6 +14,7 @@
 
 package org.odk.collect.android.activities;
 
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
