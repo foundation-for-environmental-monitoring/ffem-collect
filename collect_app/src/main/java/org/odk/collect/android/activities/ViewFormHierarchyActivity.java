@@ -53,8 +53,6 @@ public class ViewFormHierarchyActivity extends FormHierarchyActivity {
 //        exitButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                Collect.getInstance().getActivityLogger().logInstanceAction(this, "exit",
-//                        "click");
 //                setResult(RESULT_OK);
 //                finish();
 //            }
@@ -80,8 +78,6 @@ public class ViewFormHierarchyActivity extends FormHierarchyActivity {
 
         switch (element.getType()) {
             case EXPANDED:
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick",
-                        "COLLAPSED", element.getFormIndex());
                 element.setType(COLLAPSED);
                 ArrayList<HierarchyElement> children = element.getChildren();
                 for (int i = 0; i < children.size(); i++) {
@@ -90,8 +86,6 @@ public class ViewFormHierarchyActivity extends FormHierarchyActivity {
                 element.setIcon(ContextCompat.getDrawable(this, R.drawable.expander_ic_minimized));
                 break;
             case COLLAPSED:
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick",
-                        "EXPANDED", element.getFormIndex());
                 element.setType(EXPANDED);
                 ArrayList<HierarchyElement> children1 = element.getChildren();
                 for (int i = 0; i < children1.size(); i++) {
@@ -103,8 +97,6 @@ public class ViewFormHierarchyActivity extends FormHierarchyActivity {
                 break;
             case QUESTION:
             case EVENT_GROUP:
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick",
-                        "QUESTION-JUMP", index);
                 Collect.getInstance().getFormController().jumpToIndex(index);
                 if (Collect.getInstance().getFormController().indexIsInFieldList()) {
                     try {
@@ -118,8 +110,6 @@ public class ViewFormHierarchyActivity extends FormHierarchyActivity {
                 setResult(RESULT_OK);
                 return;
             case CHILD:
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick",
-                        "REPEAT-JUMP", element.getFormIndex());
                 Collect.getInstance().getFormController().jumpToIndex(element.getFormIndex());
                 setResult(RESULT_OK);
                 refreshView();

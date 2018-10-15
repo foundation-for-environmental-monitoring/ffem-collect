@@ -34,6 +34,19 @@ ffem Collect renders forms that are compliant with the [ODK XForms standard](htt
 
         git clone https://github.com/YOUR-GITHUB-USERNAME/collect
 
- If you prefer not to use the command line, you can use Android Studio to create a new project from version control using `https://github.com/YOUR-GITHUB-USERNAME/collect`. 
+    If you prefer not to use the command line, you can use Android Studio to create a new project from version control using `https://github.com/YOUR-GITHUB-USERNAME/collect`.
 
-1. Open the project in the folder of your clone from Android Studio. To run the project, click on the green arrow at the top of the screen. The emulator is very slow so we generally recommend using a physical device when possible.
+1. Open the project in the folder of your clone from Android Studio. To run the project, click on the green arrow at the top of the screen.
+
+1. Make sure you can run unit tests by running everything under `collect_app/src/test/java` in Android Studio or on the command line:
+
+    ```
+    ./gradlew testDebug
+    ```
+
+1. Make sure you can run instrumented tests by running everything under `collect_app/src/androidTest/java` in Android Studio or on the command line:
+
+    ```
+    ./gradlew connectedAndroidTest
+    ```
+    **Note:** You can see the emulator setup used on CI in  `.circleci/config.yml`.

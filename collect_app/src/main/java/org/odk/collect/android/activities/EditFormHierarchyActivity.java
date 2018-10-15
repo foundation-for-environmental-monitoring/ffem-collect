@@ -53,8 +53,6 @@ public class EditFormHierarchyActivity extends FormHierarchyActivity {
 
         switch (element.getType()) {
             case EXPANDED:
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick",
-                        "COLLAPSED", element.getFormIndex());
                 element.setType(COLLAPSED);
                 ArrayList<HierarchyElement> children = element.getChildren();
                 for (int i = 0; i < children.size(); i++) {
@@ -63,8 +61,6 @@ public class EditFormHierarchyActivity extends FormHierarchyActivity {
                 element.setIcon(ContextCompat.getDrawable(this, R.drawable.expander_ic_minimized));
                 break;
             case COLLAPSED:
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick",
-                        "EXPANDED", element.getFormIndex());
                 element.setType(EXPANDED);
                 ArrayList<HierarchyElement> children1 = element.getChildren();
                 for (int i = 0; i < children1.size(); i++) {
@@ -76,8 +72,6 @@ public class EditFormHierarchyActivity extends FormHierarchyActivity {
                 break;
             case QUESTION:
             case EVENT_GROUP:
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick",
-                        "QUESTION-JUMP", index);
                 Collect.getInstance().getFormController().jumpToIndex(index);
 
                 String intentString = null;
@@ -100,8 +94,6 @@ public class EditFormHierarchyActivity extends FormHierarchyActivity {
                 finish();
                 return;
             case CHILD:
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick",
-                        "REPEAT-JUMP", element.getFormIndex());
                 Collect.getInstance().getFormController().jumpToIndex(element.getFormIndex());
                 setResult(RESULT_OK);
                 refreshView();
@@ -149,8 +141,6 @@ public class EditFormHierarchyActivity extends FormHierarchyActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-                Collect.getInstance().getActivityLogger().logInstanceAction(this, "onKeyDown",
-                        "KEYCODE_BACK.JUMP", startIndex);
                 FormController fc = Collect.getInstance().getFormController();
                 if (fc != null) {
                     fc.getTimerLogger().exitView();

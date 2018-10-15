@@ -212,16 +212,10 @@ the specific language governing permissions and limitations under the License.
             android:name=".activities.GeoPointOsmMapActivity"
             android:configChanges="orientation" />
         <activity
-            android:name=".activities.GeoShapeOsmMapActivity"
+            android:name=".activities.GeoShapeActivity"
             android:configChanges="orientation" />
         <activity
-            android:name=".activities.GeoShapeGoogleMapActivity"
-            android:configChanges="orientation" />
-        <activity
-            android:name=".activities.GeoTraceOsmMapActivity"
-            android:configChanges="orientation" />
-        <activity
-            android:name=".activities.GeoTraceGoogleMapActivity"
+            android:name=".activities.GeoTraceActivity"
             android:configChanges="orientation" />
         <activity android:name=".activities.BearingActivity" />
         <activity android:name=".activities.SplashScreenActivity" />
@@ -352,5 +346,4 @@ the specific language governing permissions and limitations under the License.
         </receiver>
         <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
     </application>
-
 </manifest>

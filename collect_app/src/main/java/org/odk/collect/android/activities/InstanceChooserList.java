@@ -108,7 +108,6 @@ public class InstanceChooserList extends InstanceListActivity implements
                 // must be at the beginning of any activity that can be called from an external intent
                 try {
                     Collect.createODKDirs();
-                    Collect.getInstance().getActivityLogger().open();
                 } catch (RuntimeException e) {
                     createErrorDialog(e.getMessage(), EXIT);
                     return;
@@ -143,9 +142,6 @@ public class InstanceChooserList extends InstanceListActivity implements
             Uri instanceUri =
                     ContentUris.withAppendedId(InstanceColumns.CONTENT_URI,
                             c.getLong(c.getColumnIndex(InstanceColumns._ID)));
-
-            Collect.getInstance().getActivityLogger().logAction(this, "onListItemClick",
-                    instanceUri.toString());
 
             if (view.findViewById(R.id.visible_off).getVisibility() != View.VISIBLE) {
                 String action = getIntent().getAction();
@@ -209,18 +205,6 @@ public class InstanceChooserList extends InstanceListActivity implements
         showSnackbar(result);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Collect.getInstance().getActivityLogger().logOnStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        Collect.getInstance().getActivityLogger().logOnStop(this);
-        super.onStop();
-    }
-
     private void setupAdapter() {
         String[] data = new String[]{
                 InstanceColumns.DISPLAY_NAME, InstanceColumns.DISPLAY_SUBTEXT, InstanceColumns.DELETED_DATE
@@ -270,8 +254,6 @@ public class InstanceChooserList extends InstanceListActivity implements
     }
 
     private void createErrorDialog(String errorMsg, final boolean shouldExit) {
-        Collect.getInstance().getActivityLogger().logAction(this, "createErrorDialog", "show");
-
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 //        alertDialog.setIcon(R.drawable.ic_dialog_info);
         alertDialog.setMessage(errorMsg);
@@ -280,9 +262,6 @@ public class InstanceChooserList extends InstanceListActivity implements
             public void onClick(DialogInterface dialog, int i) {
                 switch (i) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        Collect.getInstance().getActivityLogger().logAction(this,
-                                "createErrorDialog",
-                                shouldExit ? "exitApplication" : "OK");
                         if (shouldExit) {
                             finish();
                         }

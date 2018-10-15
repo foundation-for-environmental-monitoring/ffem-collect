@@ -142,8 +142,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
             @Override
             public void onClick(View v) {
                 if (Collect.allowClick()) {
-                    Collect.getInstance().getActivityLogger()
-                            .logAction(this, ApplicationConstants.FormModes.EDIT_SAVED, "click");
                     Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
                     i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
                             ApplicationConstants.FormModes.EDIT_SAVED);
@@ -161,8 +159,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
             @Override
             public void onClick(View v) {
                 if (Collect.allowClick()) {
-                    Collect.getInstance().getActivityLogger()
-                            .logAction(this, "uploadForms", "click");
                     Intent i = new Intent(getApplicationContext(),
                             InstanceUploaderList.class);
                     startActivity(i);
@@ -177,8 +173,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
             @Override
             public void onClick(View v) {
                 if (Collect.allowClick()) {
-                    Collect.getInstance().getActivityLogger().logAction(this,
-                            ApplicationConstants.FormModes.VIEW_SENT, "click");
                     Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
                     i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
                             ApplicationConstants.FormModes.VIEW_SENT);
@@ -194,13 +188,11 @@ public class MainMenuActivity extends CollectAbstractActivity {
 //            @Override
 //            public void onClick(View v) {
 //                if (Collect.allowClick()) {
-//                    Collect.getInstance().getActivityLogger()
-//                            .logAction(this, "downloadBlankForms", "click");
 //                    SharedPreferences sharedPreferences = PreferenceManager
 //                            .getDefaultSharedPreferences(MainMenuActivity.this);
 //                    String protocol = sharedPreferences.getString(
 //                            PreferenceKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default));
-//                    Intent i;
+//                    Intent i = null;
 //                    if (protocol.equalsIgnoreCase(getString(R.string.protocol_google_sheets))) {
 //                        if (PlayServicesUtil.isGooglePlayServicesAvailable(MainMenuActivity.this)) {
 //                            i = new Intent(getApplicationContext(),
@@ -225,8 +217,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
 //            @Override
 //            public void onClick(View v) {
 //                if (Collect.allowClick()) {
-//                    Collect.getInstance().getActivityLogger()
-//                            .logAction(this, "deleteSavedForms", "click");
 //                    Intent i = new Intent(getApplicationContext(),
 //                            FileManagerTabs.class);
 //                    startActivity(i);
@@ -355,21 +345,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        Collect.getInstance().getActivityLogger().logOnStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        Collect.getInstance().getActivityLogger().logOnStop(this);
-        super.onStop();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Collect.getInstance().getActivityLogger()
-                .logAction(this, "onCreateOptionsMenu", "show");
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -386,8 +362,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
     }
 
     private void createErrorDialog(String errorMsg, final boolean shouldExit) {
-        Collect.getInstance().getActivityLogger()
-                .logAction(this, "createErrorDialog", "show");
         alertDialog = new AlertDialog.Builder(this).create();
 //        alertDialog.setIcon(R.drawable.ic_dialog_info);
         alertDialog.setMessage(errorMsg);
@@ -396,10 +370,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
             public void onClick(DialogInterface dialog, int i) {
                 switch (i) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        Collect.getInstance()
-                                .getActivityLogger()
-                                .logAction(this, "createErrorDialog",
-                                        shouldExit ? "exitApplication" : "OK");
                         if (shouldExit) {
                             finish();
                         }

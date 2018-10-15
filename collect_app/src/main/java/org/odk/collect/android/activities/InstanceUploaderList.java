@@ -164,14 +164,12 @@ public class InstanceUploaderList extends InstanceListActivity implements
                 ToastUtils.showShortToast(R.string.send_in_progress);
                 return;
             } else if (ni == null || !ni.isConnected()) {
-                logger.logAction(this, "uploadButton", "noConnection");
                 ToastUtils.showShortToast(R.string.no_connection);
                 return;
             }
         }
 
         int checkedItemCount = getCheckedCount();
-        logger.logAction(this, "uploadButton", Integer.toString(checkedItemCount));
 
         if (checkedItemCount > 0) {
             // items selected
@@ -280,18 +278,6 @@ public class InstanceUploaderList extends InstanceListActivity implements
         showSnackbar(result);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        logger.logOnStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        logger.logOnStop(this);
-        super.onStop();
-    }
-
     private void uploadSelectedFiles(int buttonId) {
         long[] instanceIds = listView.getCheckedItemIds();
         Transport transport = Transport.fromPreference(GeneralSharedPreferences.getInstance().get(KEY_SUBMISSION_TRANSPORT_TYPE));
@@ -355,11 +341,9 @@ public class InstanceUploaderList extends InstanceListActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_preferences:
-                logger.logAction(this, "onMenuItemSelected", "MENU_PREFERENCES");
                 createPreferencesMenu();
                 return true;
             case R.id.menu_change_view:
-                logger.logAction(this, "onMenuItemSelected", "MENU_SHOW_UNSENT");
                 showSentAndUnsentChoices();
                 return true;
         }
@@ -373,8 +357,6 @@ public class InstanceUploaderList extends InstanceListActivity implements
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long rowId) {
-        logger.logAction(this, "onListItemClick", Long.toString(rowId));
-
         if (listView.isItemChecked(position)) {
             selectedInstances.add(listView.getItemIdAtPosition(position));
         } else {
@@ -396,6 +378,7 @@ public class InstanceUploaderList extends InstanceListActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == RESULT_CANCELED) {
+            selectedInstances.clear();
             return;
         }
         switch (requestCode) {
@@ -454,7 +437,6 @@ public class InstanceUploaderList extends InstanceListActivity implements
 
     @Override
     public boolean onLongClick(View v) {
-        logger.logAction(this, "toggleButton.longClick", "");
         return showSentAndUnsentChoices();
     }
 
@@ -466,25 +448,20 @@ public class InstanceUploaderList extends InstanceListActivity implements
         String[] items = {getString(R.string.show_unsent_forms),
                 getString(R.string.show_sent_and_unsent_forms)};
 
-        logger.logAction(this, "changeView", "show");
-
         AlertDialog alertDialog = new AlertDialog.Builder(this)
 //                .setIcon(R.drawable.ic_dialog_info)
                 .setTitle(getString(R.string.change_view))
                 .setNeutralButton(getString(R.string.cancel), (dialog, id) -> {
-                    logger.logAction(this, "changeView", "cancel");
                     dialog.cancel();
                 })
                 .setItems(items, (dialog, which) -> {
                     switch (which) {
                         case 0: // show unsent
-                            logger.logAction(this, "changeView", "showUnsent");
                             showAllMode = false;
                             updateAdapter();
                             break;
 
                         case 1: // show all
-                            logger.logAction(this, "changeView", "showAll");
                             showAllMode = true;
                             updateAdapter();
                             Collect.getInstance().getDefaultTracker()
