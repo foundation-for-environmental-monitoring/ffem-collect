@@ -44,7 +44,6 @@ the specific language governing permissions and limitations under the License.
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-
     <!-- Removed in API 23 -->
     <uses-permission
         android:name="android.permission.USE_CREDENTIALS"
@@ -52,6 +51,7 @@ the specific language governing permissions and limitations under the License.
     <uses-permission
         android:name="android.permission.MANAGE_ACCOUNTS"
         android:maxSdkVersion="22" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -233,16 +233,6 @@ the specific language governing permissions and limitations under the License.
         <activity android:name=".activities.CaptureSelfieActivity" />
         <activity android:name=".activities.CaptureSelfieActivityNewApi" />
 
-        <receiver
-            android:name=".receivers.NetworkReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="io.ffem.collect.FormSaved" />
-            </intent-filter>
-        </receiver>
         <!--
         Register AnalyticsReceiver and AnalyticsService to support background
         dispatching on non-Google Play devices.

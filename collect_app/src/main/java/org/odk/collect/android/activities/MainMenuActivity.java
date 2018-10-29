@@ -129,6 +129,20 @@ public class MainMenuActivity extends CollectAbstractActivity {
 
         initToolbar();
 
+        // enter data button. expects a result.
+        Button enterDataButton = findViewById(R.id.enter_data);
+        enterDataButton.setText(getString(R.string.enter_data_button));
+        enterDataButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Collect.allowClick(getClass().getName())) {
+                    Intent i = new Intent(getApplicationContext(),
+                            FormChooserList.class);
+                    startActivity(i);
+                }
+            }
+        });
+
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 broadcastReceiver,
                 new IntentFilter("DOWNLOAD_FORMS_ACTION")
@@ -141,7 +155,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
         reviewDataButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Collect.allowClick()) {
+                if (Collect.allowClick(getClass().getName())) {
                     Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
                     i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
                             ApplicationConstants.FormModes.EDIT_SAVED);
@@ -158,7 +172,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
         sendDataButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Collect.allowClick()) {
+                if (Collect.allowClick(getClass().getName())) {
                     Intent i = new Intent(getApplicationContext(),
                             InstanceUploaderList.class);
                     startActivity(i);
@@ -172,7 +186,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
         viewSentFormsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Collect.allowClick()) {
+                if (Collect.allowClick(getClass().getName())) {
                     Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
                     i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
                             ApplicationConstants.FormModes.VIEW_SENT);
@@ -187,7 +201,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
 //        getFormsButton.setOnClickListener(new OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                if (Collect.allowClick()) {
+//                if (Collect.allowClick(getClass().getName())) {
 //                    SharedPreferences sharedPreferences = PreferenceManager
 //                            .getDefaultSharedPreferences(MainMenuActivity.this);
 //                    String protocol = sharedPreferences.getString(
@@ -216,7 +230,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
 //        manageFilesButton.setOnClickListener(new OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                if (Collect.allowClick()) {
+//                if (Collect.allowClick(getClass().getName())) {
 //                    Intent i = new Intent(getApplicationContext(),
 //                            FileManagerTabs.class);
 //                    startActivity(i);

@@ -22,9 +22,11 @@ plugins {
 
 allprojects {
     repositories {
+        // Needs to go first to get specialty libraries https://stackoverflow.com/a/48438866/137744
         google()
+
         jcenter()
-        maven { url = 'https://oss.sonatype.org/content/groups/public' }
+        maven { url 'https://oss.sonatype.org/content/groups/public' }
         maven { url 'https://jitpack.io' }
         maven { url 'https://staging.dev.medicmobile.org/_couch/maven-repo' }
     }
@@ -51,4 +53,5 @@ ext {
     leakyCanaryVersion = '1.6.1'
     daggerVersion = '2.17'
     rxLifecycleVersion = '2.2.2'
+    workManagerVersion = "1.0.0-alpha10"
 }
