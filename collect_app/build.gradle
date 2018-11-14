@@ -152,13 +152,13 @@ dependencies {
     implementation "com.android.support:exifinterface:${rootProject.supportLibraryVersion}"
     implementation "com.android.support:multidex:1.0.3"
 
-    implementation "com.google.android.gms:play-services-analytics:16.0.4"
+    implementation "com.google.android.gms:play-services-analytics:16.0.5"
     implementation "com.google.android.gms:play-services-auth:16.0.1"
     implementation "com.google.android.gms:play-services-maps:16.0.0"
     implementation "com.google.android.gms:play-services-location:16.0.0"
 
-    implementation "com.google.firebase:firebase-core:16.0.4"
-    implementation "com.crashlytics.sdk.android:crashlytics:2.9.5"
+    implementation "com.google.firebase:firebase-core:16.0.5"
+    implementation "com.crashlytics.sdk.android:crashlytics:2.9.6"
 
     implementation("com.google.guava:guava:26.0-android")
 
@@ -175,7 +175,7 @@ dependencies {
 
     implementation 'bikramsambat:bikram-sambat:1.0.0'
     implementation "com.evernote:android-job:1.2.5"
-    implementation "com.rarepebble:colorpicker:2.3.1"
+    implementation "com.rarepebble:colorpicker:2.4.1"
     implementation "commons-io:commons-io:2.6"
     implementation "net.sf.kxml:kxml2:2.3.0"
     implementation "net.sf.opencsv:opencsv:2.3"
@@ -251,7 +251,7 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
 
     // Firebase Cloud Messaging
-    implementation 'com.google.firebase:firebase-messaging:17.3.3'
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
 
     // Annotations understood by FindBugs
     compileOnly 'com.google.code.findbugs:annotations:3.0.1'
@@ -262,15 +262,15 @@ dependencies {
 
     // Testing-only dependencies
     testImplementation "junit:junit:4.12"
-    testImplementation "org.mockito:mockito-core:2.19.0"
-    testImplementation "org.robolectric:robolectric:4.0-beta-1"
-    testImplementation "org.robolectric:shadows-multidex:4.0-beta-1"
+    testImplementation "org.mockito:mockito-core:2.23.0"
+    testImplementation "org.robolectric:robolectric:4.0"
+    testImplementation "org.robolectric:shadows-multidex:4.0"
 
     // power mock (for mocking final methods which is not handled by mockito)
-    testImplementation "org.powermock:powermock-module-junit4:2.0.0-beta.5"
-    testImplementation "org.powermock:powermock-api-mockito2:2.0.0-beta.5"
+    testImplementation "org.powermock:powermock-module-junit4:2.0.0-RC.1"
+    testImplementation "org.powermock:powermock-api-mockito2:2.0.0-RC.1"
 
-    androidTestImplementation "org.mockito:mockito-android:2.19.0"
+    androidTestImplementation "org.mockito:mockito-android:2.23.0"
     androidTestImplementation("com.android.support.test:runner:1.0.2") {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs', module: 'jsr305'

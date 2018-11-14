@@ -289,19 +289,19 @@ public class MainMenuActivity extends CollectAbstractActivity {
         InstancesDao instancesDao = new InstancesDao();
 
         // enter data button. expects a result.
-        enterDataButton = findViewById(R.id.enter_data);
-        enterDataButton.setText(getString(R.string.enter_data_button));
-        enterDataButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Collect.allowClick()) {
-                    Intent i = new Intent(getApplicationContext(),
-                            FormChooserList.class);
-                    i.putExtra("allowDelete", true);
-                    startActivity(i);
-                }
-            }
-        });
+//        enterDataButton = findViewById(R.id.enter_data);
+//        enterDataButton.setText(getString(R.string.enter_data_button));
+//        enterDataButton.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (Collect.allowClick()) {
+//                    Intent i = new Intent(getApplicationContext(),
+//                            FormChooserList.class);
+//                    i.putExtra("allowDelete", true);
+//                    startActivity(i);
+//                }
+//            }
+//        });
 
         // count for finalized instances
         try {
@@ -627,7 +627,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
     }
 
     private void getBlankForm() {
-        if (Collect.allowClick()) {
+        if (Collect.allowClick(getClass().getName())) {
             SharedPreferences sharedPreferences = PreferenceManager
                     .getDefaultSharedPreferences(MainMenuActivity.this);
             String protocol = sharedPreferences.getString(
