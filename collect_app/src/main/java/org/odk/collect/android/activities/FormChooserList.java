@@ -43,7 +43,6 @@ import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.tasks.DiskSyncTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
-import org.odk.collect.android.utilities.FormUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.VersionHidingCursorAdapter;
 
@@ -230,16 +229,15 @@ public class FormChooserList extends FormListActivity implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         showProgressBar();
-        return new FormsDao().getFormsCursorLoader(getFilterText(), getSortingOrder());
+
+        boolean newestByFormId = GeneralSharedPreferences.getInstance().getBoolean(PreferenceKeys.KEY_HIDE_OLD_FORM_VERSIONS, false);
+        return new FormsDao().getFormsCursorLoader(getFilterText(), getSortingOrder(), newestByFormId);
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         hideProgressBarIfAllowed();
-        listAdapter.changeCursor(
-                GeneralSharedPreferences.getInstance().getBoolean(PreferenceKeys.KEY_HIDE_OLD_FORM_VERSIONS, false)
-                        ? FormUtils.removeOldForms(cursor)
-                        : cursor);
+        listAdapter.swapCursor(cursor);
         if (listAdapter.getCount() == 0) {
             findViewById(R.id.buttonGetBlankForm).setVisibility(View.GONE);
         } else {
