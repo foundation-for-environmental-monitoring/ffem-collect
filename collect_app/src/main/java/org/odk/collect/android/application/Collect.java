@@ -33,7 +33,6 @@ import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobManagerCreateException;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -260,8 +259,6 @@ public class Collect extends Application implements HasActivityInjector {
         }
 
         UpdateCheck.setNextUpdateCheck(this, -1);
-
-        FirebaseMessaging.getInstance().subscribeToTopic("updateCheck");
 
         setupLeakCanary();
     }

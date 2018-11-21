@@ -16,6 +16,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowIntent;
 
+import io.ffem.collect.android.activities.SettingsActivity;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static org.robolectric.Shadows.shadowOf;
@@ -49,7 +51,7 @@ public class MainActivityTest {
     @Test
     public void titleTest() throws Exception {
         Toolbar toolbar = mainMenuActivity.findViewById(R.id.toolbar);
-        assertEquals(mainMenuActivity.getString(R.string.main_menu), toolbar.getTitle());
+        assertEquals(mainMenuActivity.getString(R.string.app_name), toolbar.getTitle());
     }
 
     /**
@@ -67,10 +69,10 @@ public class MainActivityTest {
         ShadowActivity shadowActivity = shadowOf(mainMenuActivity);
         Intent startedIntent = shadowActivity.getNextStartedActivity();
         ShadowIntent shadowIntent = shadowOf(startedIntent);
-        assertEquals(AboutActivity.class.getName(), shadowIntent.getIntentClass().getName());
+        assertEquals(SettingsActivity.class.getName(), shadowIntent.getIntentClass().getName());
 
         //Test for About Menu Title
-        String menuTitle = mainMenuActivity.getResources().getString(R.string.about_preferences);
+        String menuTitle = mainMenuActivity.getResources().getString(R.string.settings);
         String shadowTitle = menu.getItem(0).getTitle().toString();
         assertEquals(shadowTitle, menuTitle);
 
@@ -79,17 +81,17 @@ public class MainActivityTest {
         shadowActivity = shadowOf(mainMenuActivity);
         startedIntent = shadowActivity.getNextStartedActivity();
         shadowIntent = shadowOf(startedIntent);
-        assertEquals(PreferencesActivity.class.getName(), shadowIntent.getIntentClass().getName());
+        assertEquals(SettingsActivity.class.getName(), shadowIntent.getIntentClass().getName());
 
         //Test for General Settings Menu Title
-        menuTitle = mainMenuActivity.getResources().getString(R.string.general_preferences);
+        menuTitle = mainMenuActivity.getResources().getString(R.string.settings);
         shadowTitle = menu.getItem(1).getTitle().toString();
         assertEquals(shadowTitle, menuTitle);
 
         //Test for Admin Settings Menu Title
-        menuTitle = mainMenuActivity.getResources().getString(R.string.admin_preferences);
-        shadowTitle = menu.getItem(2).getTitle().toString();
-        assertEquals(shadowTitle, menuTitle);
+//        menuTitle = mainMenuActivity.getResources().getString(R.string.settings);
+//        shadowTitle = menu.getItem(2).getTitle().toString();
+//        assertEquals(shadowTitle, menuTitle);
     }
 
     /**
@@ -168,33 +170,33 @@ public class MainActivityTest {
                 shadowIntent.getIntentClass().getName());
     }
 
-    /**
-     * {@link Test} to assert getFormButton's functioning.
-     */
-    @Test
-    public void getFormButtonTest() throws Exception {
-        Button getFormButton = mainMenuActivity.findViewById(R.id.get_forms);
-        assertNotNull(getFormButton);
-        assertEquals(View.VISIBLE, getFormButton.getVisibility());
-        assertEquals(mainMenuActivity.getString(R.string.get_forms), getFormButton.getText());
-    }
-
-    /**
-     * {@link Test} to assert manageFilesButton's functioning.
-     */
-    @Test
-    public void manageFilesButtonTest() throws Exception {
-        Button manageFilesButton = mainMenuActivity.findViewById(R.id.manage_forms);
-
-        assertNotNull(manageFilesButton);
-        assertEquals(View.VISIBLE, manageFilesButton.getVisibility());
-        assertEquals(mainMenuActivity.getString(R.string.manage_files), manageFilesButton.getText());
-
-        manageFilesButton.performClick();
-        ShadowActivity shadowActivity = shadowOf(mainMenuActivity);
-        Intent startedIntent = shadowActivity.getNextStartedActivity();
-        ShadowIntent shadowIntent = shadowOf(startedIntent);
-        assertEquals(FileManagerTabs.class.getName(),
-                shadowIntent.getIntentClass().getName());
-    }
+//    /**
+//     * {@link Test} to assert getFormButton's functioning.
+//     */
+//    @Test
+//    public void getFormButtonTest() throws Exception {
+//        Button getFormButton = mainMenuActivity.findViewById(R.id.get_forms);
+//        assertNotNull(getFormButton);
+//        assertEquals(View.VISIBLE, getFormButton.getVisibility());
+//        assertEquals(mainMenuActivity.getString(R.string.get_forms), getFormButton.getText());
+//    }
+//
+//    /**
+//     * {@link Test} to assert manageFilesButton's functioning.
+//     */
+//    @Test
+//    public void manageFilesButtonTest() throws Exception {
+//        Button manageFilesButton = mainMenuActivity.findViewById(R.id.manage_forms);
+//
+//        assertNotNull(manageFilesButton);
+//        assertEquals(View.VISIBLE, manageFilesButton.getVisibility());
+//        assertEquals(mainMenuActivity.getString(R.string.manage_files), manageFilesButton.getText());
+//
+//        manageFilesButton.performClick();
+//        ShadowActivity shadowActivity = shadowOf(mainMenuActivity);
+//        Intent startedIntent = shadowActivity.getNextStartedActivity();
+//        ShadowIntent shadowIntent = shadowOf(startedIntent);
+//        assertEquals(FileManagerTabs.class.getName(),
+//                shadowIntent.getIntentClass().getName());
+//    }
 }
