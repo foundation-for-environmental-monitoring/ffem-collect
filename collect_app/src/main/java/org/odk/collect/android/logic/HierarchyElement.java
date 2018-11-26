@@ -15,24 +15,59 @@
 package org.odk.collect.android.logic;
 
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.javarosa.core.model.FormIndex;
 
 import java.util.ArrayList;
 
+/**
+ * Represents a question or repeat to be shown in
+ * {@link org.odk.collect.android.activities.FormHierarchyActivity}.
+ */
 public class HierarchyElement {
+    /**
+     * Repeat instances (always of type {@link Type#CHILD}) if this element is a repeat
+     * ({@link Type#COLLAPSED} or {@link Type#EXPANDED}). Not relevant otherwise.
+     */
     private final ArrayList<HierarchyElement> children = new ArrayList<>();
     private final ArrayList<HierarchyElement> intentChildren = new ArrayList<>();
 
-    private int type;
+    /**
+     * The type and state of this element. See {@link Type}.
+     */
+    @NonNull
+    private Type type;
+
+    /**
+     * The form index of this element.
+     */
+    @NonNull
     private final FormIndex formIndex;
+
+    /**
+     * The primary text this element should be displayed with.
+     */
+    @NonNull
     private final String primaryText;
+
+    /**
+     * The secondary text this element should be displayed with.
+     */
+    @Nullable
     private final String secondaryText;
+
+    /**
+     * The collapsed or expanded icon if this element is a repeat ({@link Type#COLLAPSED} or
+     * {@link Type#EXPANDED}). Not relevant otherwise.
+     */
+    @Nullable
     private Drawable icon;
     private boolean isRequired;
 
-    public HierarchyElement(String primaryText, String secondaryText, Drawable icon,
-                            int type, FormIndex formIndex, boolean isRequired) {
+    public HierarchyElement(@NonNull String primaryText, @Nullable String secondaryText,
+                            @Nullable Drawable icon, @NonNull Type type, @NonNull FormIndex formIndex) {
         this.primaryText = primaryText;
         this.secondaryText = secondaryText;
         this.icon = icon;
@@ -41,31 +76,36 @@ public class HierarchyElement {
         this.isRequired = isRequired;
     }
 
+    @NonNull
     public String getPrimaryText() {
         return primaryText;
     }
 
+    @Nullable
     public String getSecondaryText() {
         return secondaryText;
     }
 
+    @Nullable
     public Drawable getIcon() {
         return icon;
     }
 
-    public void setIcon(Drawable icon) {
+    public void setIcon(@Nullable Drawable icon) {
         this.icon = icon;
     }
 
+    @NonNull
     public FormIndex getFormIndex() {
         return formIndex;
     }
 
-    public int getType() {
+    @NonNull
+    public Type getType() {
         return type;
     }
 
-    public void setType(int newType) {
+    public void setType(@NonNull Type newType) {
         type = newType;
     }
 
@@ -81,15 +121,28 @@ public class HierarchyElement {
         children.add(h);
     }
 
-    public void addIntentChild(HierarchyElement h) {
-        intentChildren.add(h);
-    }
+    /**
+     * The type and state of this element.
+     */
+    public enum Type {
+        /**
+         * A repeat instance.
+         */
+        CHILD,
 
-    public boolean isRequired() {
-        return isRequired;
-    }
+        /**
+         * A repeat that should be displayed as expanded.
+         */
+        EXPANDED,
 
-    public void setRequired(boolean required) {
-        isRequired = required;
+        /**
+         * A repeat that should be displayed as collapsed.
+         */
+        COLLAPSED,
+
+        /**
+         * A question.
+         */
+        QUESTION;
     }
 }
