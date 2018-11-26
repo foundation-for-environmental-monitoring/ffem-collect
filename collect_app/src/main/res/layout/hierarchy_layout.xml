@@ -37,6 +37,16 @@ the License.
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/jumpPreviousButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="12dp"
+            android:text="@string/jump_to_previous"
+            android:textAllCaps="false"
+            android:textSize="16sp" />
+
+        <Button
             android:id="@+id/jumpBeginningButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -56,6 +66,16 @@ the License.
             android:textAllCaps="false"
             android:textSize="16sp" />
 
+        <Button
+            android:id="@+id/exitButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="12dp"
+            android:text="@string/exit"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:visibility="gone" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

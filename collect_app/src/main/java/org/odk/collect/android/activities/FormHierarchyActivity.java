@@ -22,7 +22,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -45,8 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
-
-import static org.javarosa.form.api.FormEntryController.EVENT_GROUP;
 
 /**
  * Displays the structure of a form along with the answers for the current instance. Different form
@@ -95,12 +92,11 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
      * to edit a question that caused an error in the hierarchy.
      */
     private FormIndex currentIndex;
-//    protected Button jumpPreviousButton;
+
+    protected Button jumpPreviousButton;
     protected Button jumpBeginningButton;
     protected Button jumpEndButton;
     protected RecyclerView recyclerView;
-
-    protected boolean isEnabled;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,9 +126,9 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
 
         groupPathTextView = findViewById(R.id.pathtext);
 
-//        jumpPreviousButton = findViewById(R.id.jumpPreviousButton);
-//        jumpBeginningButton = findViewById(R.id.jumpBeginningButton);
-//        jumpEndButton = findViewById(R.id.jumpEndButton);
+        jumpPreviousButton = findViewById(R.id.jumpPreviousButton);
+        jumpBeginningButton = findViewById(R.id.jumpBeginningButton);
+        jumpEndButton = findViewById(R.id.jumpEndButton);
 
         configureButtons(formController);
         refreshView();
@@ -156,8 +152,6 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                 ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
             });
         }
-
-        goUpLevel();
     }
 
 
@@ -235,7 +229,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                 // If we have a 'group' tag, we want to step back until we hit a repeat or the
                 // beginning.
                 while (startTest != null
-                        && formController.getEvent(startTest) == EVENT_GROUP) {
+                        && formController.getEvent(startTest) == FormEntryController.EVENT_GROUP) {
                     startTest = formController.stepIndexOut(startTest);
                 }
                 if (startTest == null) {
@@ -265,11 +259,11 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                 contextGroupRef =
                         formController.getFormIndex().getReference().getParentRef().toString(true);
                 groupPathTextView.setVisibility(View.GONE);
-//                jumpPreviousButton.setEnabled(false);
+                jumpPreviousButton.setEnabled(false);
             } else {
                 groupPathTextView.setVisibility(View.VISIBLE);
                 groupPathTextView.setText(getCurrentPath());
-//                jumpPreviousButton.setEnabled(true);
+                jumpPreviousButton.setEnabled(true);
             }
 
             // Refresh the current event in case we did step forward.
@@ -330,18 +324,8 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                                             HierarchyElement.Type.QUESTION, fp.getIndex()));
                         }
                         break;
-                    case EVENT_GROUP:
+                    case FormEntryController.EVENT_GROUP:
                         // ignore group events
-                        FormEntryCaption fp1 = formController.getCaptionPrompt();
-                        if (ODKView.FIELD_LIST.equalsIgnoreCase(fp1.getFormElement().getAppearanceAttr())) {
-                            String intentString = fp1.getFormElement().getAdditionalAttribute(null, "intent");
-                            if ((intentString != null && !intentString.isEmpty()) && fp1.getFormElement().getChildren().size() > 0) {
-                                formList.add(
-                                        new HierarchyElement(fp1.getQuestionText(), "",
-                                                null, EVENT_GROUP, fp1.getIndex(), false));
-                            }
-                        }
-
                         break;
                     case FormEntryController.EVENT_PROMPT_NEW_REPEAT:
                         // this would display the 'add new repeat' dialog
@@ -484,7 +468,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
     protected void createErrorDialog(String errorMsg) {
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 
-//        alertDialog.setIcon(R.drawable.ic_dialog_info);
+        alertDialog.setIcon(android.R.drawable.ic_dialog_info);
         alertDialog.setTitle(getString(R.string.error_occured));
         alertDialog.setMessage(errorMsg);
         DialogInterface.OnClickListener errorListener = new DialogInterface.OnClickListener() {
@@ -506,26 +490,5 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
     private String getLabel(FormEntryCaption formEntryCaption) {
         return formEntryCaption.getShortText() != null && !formEntryCaption.getShortText().isEmpty()
                 ? formEntryCaption.getShortText() : formEntryCaption.getLongText();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                break;
-        }
-        return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        FormController formController = Collect.getInstance().getFormController();
-        int event = formController.getEvent();
-        if (event == FormEntryController.EVENT_REPEAT) {
-            goUpLevel();
-        } else {
-            super.onBackPressed();
-        }
     }
 }
