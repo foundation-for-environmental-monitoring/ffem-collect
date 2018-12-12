@@ -27,9 +27,9 @@ import android.view.ViewGroup;
 
 import org.odk.collect.android.R;
 
-import io.ffem.collect.android.activities.SignInActivity;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_PROTOCOL;
 
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_PROTOCOL;
+import io.ffem.collect.android.activities.SignInActivity;
 
 public class ServerPreferences extends ServerPreferencesFragment {
 

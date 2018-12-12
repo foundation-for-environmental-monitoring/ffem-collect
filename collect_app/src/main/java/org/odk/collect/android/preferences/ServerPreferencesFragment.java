@@ -69,14 +69,14 @@ import javax.inject.Inject;
 
 import static android.app.Activity.RESULT_OK;
 import static io.ffem.collect.android.utilities.ListViewUtil.setListViewHeightBasedOnChildren;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_FORMLIST_URL;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_PROTOCOL;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SELECTED_GOOGLE_ACCOUNT;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SMS_GATEWAY;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SMS_PREFERENCE;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SUBMISSION_URL;
 import static org.odk.collect.android.utilities.DialogUtils.showDialog;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_FORMLIST_URL;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_PROTOCOL;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_SELECTED_GOOGLE_ACCOUNT;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_SMS_GATEWAY;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_SMS_PREFERENCE;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_URL;
 import static org.odk.collect.android.utilities.gdrive.GoogleAccountsManager.REQUEST_ACCOUNT_PICKER;
 
 public class ServerPreferencesFragment extends BasePreferenceFragment implements View.OnTouchListener,
@@ -94,7 +94,8 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     private Preference selectedGoogleAccountPreference;
     private GoogleAccountsManager accountsManager;
 
-    @Inject CollectServerClient collectServerClient;
+    @Inject
+    CollectServerClient collectServerClient;
 
     @Inject
     WebCredentialsUtils webCredentialsUtils;
@@ -109,11 +110,22 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     private ExtendedPreferenceCategory smsPreferenceCategory;
     private ListView list;
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        ((PreferencesActivity) activity).setOnBackPressedListener(this);
+    }
+
     public void addAggregatePreferences() {
         addPreferencesFromResource(R.xml.aggregate_preferences_custom);
+        if (!new AggregatePreferencesAdder(this).add()) {
+            return;
+        }
 
         serverUrlPreference = (EditTextPreference) findPreference(
-                PreferenceKeys.KEY_SERVER_URL);
+                GeneralKeys.KEY_SERVER_URL);
+        usernamePreference = (EditTextPreference) findPreference(GeneralKeys.KEY_USERNAME);
+        passwordPreference = (EditTextPreference) findPreference(GeneralKeys.KEY_PASSWORD);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String urlListString = prefs.getString(KNOWN_URL_LIST, "");
@@ -207,7 +219,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         selectedGoogleAccountPreference = findPreference(KEY_SELECTED_GOOGLE_ACCOUNT);
 
         EditTextPreference googleSheetsUrlPreference = (EditTextPreference) findPreference(
-                PreferenceKeys.KEY_GOOGLE_SHEETS_URL);
+                GeneralKeys.KEY_GOOGLE_SHEETS_URL);
         googleSheetsUrlPreference.setOnPreferenceChangeListener(createChangeListener());
 
         String currentGoogleSheetsURL = googleSheetsUrlPreference.getText();
@@ -310,7 +322,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     private Preference.OnPreferenceChangeListener createChangeListener() {
         return (preference, newValue) -> {
             switch (preference.getKey()) {
-                case PreferenceKeys.KEY_SERVER_URL:
+                case GeneralKeys.KEY_SERVER_URL:
 
                     String url = newValue.toString();
 
@@ -346,7 +358,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
                     }
                     break;
 
-                case PreferenceKeys.KEY_USERNAME:
+                case GeneralKeys.KEY_USERNAME:
                     String username = newValue.toString();
 
                     // do not allow leading and trailing whitespace
@@ -363,7 +375,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
 
                     return true;
 
-                case PreferenceKeys.KEY_PASSWORD:
+                case GeneralKeys.KEY_PASSWORD:
                     String pw = newValue.toString();
 
                     // do not allow leading and trailing whitespace
@@ -379,7 +391,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
                     credentialsHaveChanged = true;
                     break;
 
-                case PreferenceKeys.KEY_GOOGLE_SHEETS_URL:
+                case GeneralKeys.KEY_GOOGLE_SHEETS_URL:
                     url = newValue.toString();
 
                     // remove all trailing "/"s

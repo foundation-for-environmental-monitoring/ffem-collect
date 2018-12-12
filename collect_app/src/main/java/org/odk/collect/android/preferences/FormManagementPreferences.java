@@ -34,13 +34,13 @@ import org.odk.collect.android.tasks.ServerPollingJob;
 
 import static io.ffem.collect.android.utilities.ListViewUtil.setListViewHeightBasedOnChildren;
 import static org.odk.collect.android.preferences.AdminKeys.ALLOW_OTHER_WAYS_OF_EDITING_FORM;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_AUTOMATIC_UPDATE;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_AUTOSEND;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_CONSTRAINT_BEHAVIOR;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_DELETE_FORMS;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_GUIDANCE_HINT;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_IMAGE_SIZE;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_PERIODIC_FORM_UPDATES_CHECK;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_AUTOMATIC_UPDATE;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_AUTOSEND;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_CONSTRAINT_BEHAVIOR;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_GUIDANCE_HINT;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_IMAGE_SIZE;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_PERIODIC_FORM_UPDATES_CHECK;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_DELETE_FORMS;
 
 public class FormManagementPreferences extends PreferenceFragment {
 

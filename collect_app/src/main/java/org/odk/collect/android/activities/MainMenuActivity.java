@@ -47,7 +47,8 @@ import org.odk.collect.android.preferences.AdminPreferencesActivity;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.preferences.PreferenceKeys;
+import org.odk.collect.android.preferences.GeneralKeys;
+import org.odk.collect.android.preferences.PreferencesActivity;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PlayServicesUtil;
@@ -205,7 +206,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
 //                    SharedPreferences sharedPreferences = PreferenceManager
 //                            .getDefaultSharedPreferences(MainMenuActivity.this);
 //                    String protocol = sharedPreferences.getString(
-//                            PreferenceKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default));
+//                            GeneralKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default));
 //                    Intent i = null;
 //                    if (protocol.equalsIgnoreCase(getString(R.string.protocol_google_sheets))) {
 //                        if (PlayServicesUtil.isGooglePlayServicesAvailable(MainMenuActivity.this)) {
@@ -286,22 +287,10 @@ public class MainMenuActivity extends CollectAbstractActivity {
 //        reviewSpacer = findViewById(R.id.review_spacer);
 //        getFormsSpacer = findViewById(R.id.get_forms_spacer);
 
-        InstancesDao instancesDao = new InstancesDao();
+//        adminPreferences = this.getSharedPreferences(
+//                AdminPreferencesActivity.ADMIN_PREFERENCES, 0);
 
-        // enter data button. expects a result.
-//        enterDataButton = findViewById(R.id.enter_data);
-//        enterDataButton.setText(getString(R.string.enter_data_button));
-//        enterDataButton.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (Collect.allowClick()) {
-//                    Intent i = new Intent(getApplicationContext(),
-//                            FormChooserList.class);
-//                    i.putExtra("allowDelete", true);
-//                    startActivity(i);
-//                }
-//            }
-//        });
+        InstancesDao instancesDao = new InstancesDao();
 
         // count for finalized instances
         try {
@@ -348,60 +337,11 @@ public class MainMenuActivity extends CollectAbstractActivity {
         setupGoogleAnalytics();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (alertDialog != null && alertDialog.isShowing()) {
-            alertDialog.dismiss();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_settings:
-                final Intent intent = new Intent(this, SettingsActivity.class);
-                startActivityForResult(intent, 100);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void createErrorDialog(String errorMsg, final boolean shouldExit) {
-        alertDialog = new AlertDialog.Builder(this).create();
-//        alertDialog.setIcon(R.drawable.ic_dialog_info);
-        alertDialog.setMessage(errorMsg);
-        DialogInterface.OnClickListener errorListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                switch (i) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        if (shouldExit) {
-                            finish();
-                        }
-                        break;
-                }
-            }
-        };
-        alertDialog.setCancelable(false);
-        alertDialog.setButton(getString(R.string.ok), errorListener);
-        alertDialog.show();
-    }
-
-    // This flag must be set each time the app starts up
-    private void setupGoogleAnalytics() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(Collect
-                .getInstance());
-        boolean isAnalyticsEnabled = settings.getBoolean(PreferenceKeys.KEY_ANALYTICS, true);
-        GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(getApplicationContext());
-        googleAnalytics.setAppOptOut(!isAnalyticsEnabled);
-    }
+//    private void initToolbar() {
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        setTitle(getString(R.string.main_menu));
+//        setSupportActionBar(toolbar);
+//    }
 
     @Override
     protected void onResume() {
@@ -450,115 +390,121 @@ public class MainMenuActivity extends CollectAbstractActivity {
                 viewSentFormsButton.setVisibility(View.VISIBLE);
             }
         }
-
-//        boolean getBlank = sharedPreferences.getBoolean(
-//                AdminKeys.KEY_GET_BLANK, true);
-//        if (!getBlank) {
-//            if (getFormsButton != null) {
-//                getFormsButton.setVisibility(View.GONE);
-//            }
-//            if (getFormsSpacer != null) {
-//                getFormsSpacer.setVisibility(View.GONE);
-//            }
-//        } else {
-//            if (getFormsButton != null) {
-//                getFormsButton.setVisibility(View.VISIBLE);
-//            }
-//            if (getFormsSpacer != null) {
-//                getFormsSpacer.setVisibility(View.VISIBLE);
-//            }
-//        }
-//
-//        boolean deleteSaved = sharedPreferences.getBoolean(
-//                AdminKeys.KEY_DELETE_SAVED, true);
-//        if (!deleteSaved) {
-//            if (manageFilesButton != null) {
-//                manageFilesButton.setVisibility(View.GONE);
-//            }
-//        } else {
-//            if (manageFilesButton != null) {
-//                manageFilesButton.setVisibility(View.VISIBLE);
-//            }
-//        }
-
-        ((Collect) getApplication())
-                .getDefaultTracker()
-                .enableAutoActivityTracking(true);
     }
 
-    private boolean loadSharedPreferencesFromFile(File src) {
-        // this should probably be in a thread if it ever gets big
-        boolean res = false;
-        ObjectInputStream input = null;
-        try {
-            input = new ObjectInputStream(new FileInputStream(src));
-            GeneralSharedPreferences.getInstance().clear();
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (alertDialog != null && alertDialog.isShowing()) {
+            alertDialog.dismiss();
+        }
+    }
 
-            // first object is preferences
-            Map<String, ?> entries = (Map<String, ?>) input.readObject();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
-            AutoSendPreferenceMigrator.migrate(entries);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_settings:
+                final Intent intent = new Intent(this, SettingsActivity.class);
+                startActivityForResult(intent, 100);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-            for (Entry<String, ?> entry : entries.entrySet()) {
-                GeneralSharedPreferences.getInstance().save(entry.getKey(), entry.getValue());
-            }
-
-            AdminSharedPreferences.getInstance().clear();
-
-            // second object is admin options
-            Map<String, ?> adminEntries = (Map<String, ?>) input.readObject();
-            for (Entry<String, ?> entry : adminEntries.entrySet()) {
-                AdminSharedPreferences.getInstance().save(entry.getKey(), entry.getValue());
-            }
-            Collect.getInstance().initProperties();
-            res = true;
-        } catch (IOException | ClassNotFoundException e) {
-            Timber.e(e, "Exception while loading preferences from file due to : %s ", e.getMessage());
-        } finally {
-            try {
-                if (input != null) {
-                    input.close();
+    private void createErrorDialog(String errorMsg, final boolean shouldExit) {
+        alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setIcon(android.R.drawable.ic_dialog_info);
+        alertDialog.setMessage(errorMsg);
+        DialogInterface.OnClickListener errorListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                switch (i) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        if (shouldExit) {
+                            finish();
+                        }
+                        break;
                 }
-            } catch (IOException ex) {
-                Timber.e(ex, "Exception thrown while closing an input stream due to: %s ", ex.getMessage());
             }
-        }
-        return res;
+        };
+        alertDialog.setCancelable(false);
+        alertDialog.setButton(getString(R.string.ok), errorListener);
+        alertDialog.show();
     }
 
-    /*
-     * Used to prevent memory leaks
-     */
-    static class IncomingHandler extends Handler {
-        private final WeakReference<MainMenuActivity> target;
+//    @Override
+//    protected Dialog onCreateDialog(int id) {
+//        switch (id) {
+//            case PASSWORD_DIALOG:
+//
+//                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//                final AlertDialog passwordDialog = builder.create();
+//                passwordDialog.setTitle(getString(R.string.enter_admin_password));
+//                LayoutInflater inflater = this.getLayoutInflater();
+//                View dialogView = inflater.inflate(R.layout.dialogbox_layout, null);
+//                passwordDialog.setView(dialogView, 20, 10, 20, 10);
+//                final CheckBox checkBox = dialogView.findViewById(R.id.checkBox);
+//                final EditText input = dialogView.findViewById(R.id.editText);
+//                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                    @Override
+//                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                        if (!checkBox.isChecked()) {
+//                            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+//                        } else {
+//                            input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+//                        }
+//                    }
+//                });
+//                passwordDialog.setButton(AlertDialog.BUTTON_POSITIVE,
+//                        getString(R.string.ok),
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog,
+//                                                int whichButton) {
+//                                String value = input.getText().toString();
+//                                String pw = adminPreferences.getString(
+//                                        AdminKeys.KEY_ADMIN_PW, "");
+//                                if (pw.compareTo(value) == 0) {
+//                                    Intent i = new Intent(getApplicationContext(),
+//                                            AdminPreferencesActivity.class);
+//                                    startActivity(i);
+//                                    input.setText("");
+//                                    passwordDialog.dismiss();
+//                                } else {
+//                                    ToastUtils.showShortToast(R.string.admin_password_incorrect);
+//                                }
+//                            }
+//                        });
+//
+//                passwordDialog.setButton(AlertDialog.BUTTON_NEGATIVE,
+//                        getString(R.string.cancel),
+//                        new DialogInterface.OnClickListener() {
+//
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                input.setText("");
+//                            }
+//                        });
+//
+//                passwordDialog.getWindow().setSoftInputMode(
+//                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+//                return passwordDialog;
+//
+//        }
+//        return null;
+//    }
 
-        IncomingHandler(MainMenuActivity target) {
-            this.target = new WeakReference<>(target);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            MainMenuActivity target = this.target.get();
-            if (target != null) {
-                target.updateButtons();
-            }
-        }
-    }
-
-    /**
-     * notifies us that something changed
-     */
-    private class MyContentObserver extends ContentObserver {
-
-        MyContentObserver() {
-            super(null);
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
-            handler.sendEmptyMessage(0);
-        }
+    // This flag must be set each time the app starts up
+    private void setupGoogleAnalytics() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(Collect
+                .getInstance());
+        boolean isAnalyticsEnabled = settings.getBoolean(GeneralKeys.KEY_ANALYTICS, true);
+        GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(getApplicationContext());
+        googleAnalytics.setAppOptOut(!isAnalyticsEnabled);
     }
 
     private void updateButtons() {
@@ -631,7 +577,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
             SharedPreferences sharedPreferences = PreferenceManager
                     .getDefaultSharedPreferences(MainMenuActivity.this);
             String protocol = sharedPreferences.getString(
-                    PreferenceKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default));
+                    GeneralKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default));
             Intent i;
             if (protocol.equalsIgnoreCase(getString(R.string.protocol_google_sheets))) {
                 if (PlayServicesUtil.isGooglePlayServicesAvailable(MainMenuActivity.this)) {
@@ -650,5 +596,79 @@ public class MainMenuActivity extends CollectAbstractActivity {
         }
     }
 
+    private boolean loadSharedPreferencesFromFile(File src) {
+        // this should probably be in a thread if it ever gets big
+        boolean res = false;
+        ObjectInputStream input = null;
+        try {
+            input = new ObjectInputStream(new FileInputStream(src));
+            GeneralSharedPreferences.getInstance().clear();
+
+            // first object is preferences
+            Map<String, ?> entries = (Map<String, ?>) input.readObject();
+
+            AutoSendPreferenceMigrator.migrate(entries);
+
+            for (Entry<String, ?> entry : entries.entrySet()) {
+                GeneralSharedPreferences.getInstance().save(entry.getKey(), entry.getValue());
+            }
+
+            AdminSharedPreferences.getInstance().clear();
+
+            // second object is admin options
+            Map<String, ?> adminEntries = (Map<String, ?>) input.readObject();
+            for (Entry<String, ?> entry : adminEntries.entrySet()) {
+                AdminSharedPreferences.getInstance().save(entry.getKey(), entry.getValue());
+            }
+            Collect.getInstance().initProperties();
+            res = true;
+        } catch (IOException | ClassNotFoundException e) {
+            Timber.e(e, "Exception while loading preferences from file due to : %s ", e.getMessage());
+        } finally {
+            try {
+                if (input != null) {
+                    input.close();
+                }
+            } catch (IOException ex) {
+                Timber.e(ex, "Exception thrown while closing an input stream due to: %s ", ex.getMessage());
+            }
+        }
+        return res;
+    }
+
+    /*
+     * Used to prevent memory leaks
+     */
+    static class IncomingHandler extends Handler {
+        private final WeakReference<MainMenuActivity> target;
+
+        IncomingHandler(MainMenuActivity target) {
+            this.target = new WeakReference<MainMenuActivity>(target);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            MainMenuActivity target = this.target.get();
+            if (target != null) {
+                target.updateButtons();
+            }
+        }
+    }
+
+    /**
+     * notifies us that something changed
+     */
+    private class MyContentObserver extends ContentObserver {
+
+        MyContentObserver() {
+            super(null);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            handler.sendEmptyMessage(0);
+        }
+    }
 
 }
