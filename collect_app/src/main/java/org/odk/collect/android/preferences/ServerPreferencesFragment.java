@@ -110,11 +110,11 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     private ExtendedPreferenceCategory smsPreferenceCategory;
     private ListView list;
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        ((PreferencesActivity) activity).setOnBackPressedListener(this);
-    }
+//    @Override
+//    public void onAttach(Activity activity) {
+//        super.onAttach(activity);
+//        ((PreferencesActivity) activity).setOnBackPressedListener(this);
+//    }
 
     public void addAggregatePreferences() {
         addPreferencesFromResource(R.xml.aggregate_preferences_custom);
@@ -550,7 +550,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
 
     private void clearCachedCrendentials() {
         String server = (String) GeneralSharedPreferences
-                .getInstance().get(PreferenceKeys.KEY_SERVER_URL);
+                .getInstance().get(GeneralKeys.KEY_SERVER_URL);
         Uri u = Uri.parse(server);
         webCredentialsUtils.clearCredentials(u.getHost());
 //        Collect.getInstance().getCookieStore().clear();

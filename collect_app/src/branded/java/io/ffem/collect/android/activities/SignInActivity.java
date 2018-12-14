@@ -19,8 +19,8 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.activities.MainMenuActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.PermissionListener;
+import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 
@@ -129,10 +129,10 @@ public class SignInActivity extends AppCompatActivity {
 
         findViewById(R.id.buttonSignIn).setOnClickListener(view -> {
             if (isInputValid()) {
-                GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_USERNAME,
+                GeneralSharedPreferences.getInstance().save(GeneralKeys.KEY_USERNAME,
                         editText.getText().toString().trim());
                 if (!editPassword.getText().toString().equals(MASK)) {
-                    GeneralSharedPreferences.getInstance().save(PreferenceKeys.KEY_PASSWORD,
+                    GeneralSharedPreferences.getInstance().save(GeneralKeys.KEY_PASSWORD,
                             editPassword.getText().toString().trim());
                 }
 
@@ -227,8 +227,8 @@ public class SignInActivity extends AppCompatActivity {
 
     private boolean isUserSignedIn() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        String storedUsername = settings.getString(PreferenceKeys.KEY_USERNAME, null);
-        String storedPassword = settings.getString(PreferenceKeys.KEY_PASSWORD, null);
+        String storedUsername = settings.getString(GeneralKeys.KEY_USERNAME, null);
+        String storedPassword = settings.getString(GeneralKeys.KEY_PASSWORD, null);
 
         return storedUsername != null
                 && storedUsername.trim().length() != 0

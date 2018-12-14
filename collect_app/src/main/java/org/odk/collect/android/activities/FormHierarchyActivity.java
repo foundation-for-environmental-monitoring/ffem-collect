@@ -45,6 +45,8 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static org.javarosa.form.api.FormEntryController.EVENT_GROUP;
+
 /**
  * Displays the structure of a form along with the answers for the current instance. Different form
  * elements are displayed in the following ways:
@@ -91,6 +93,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
      * TODO: Is keeping this as a field necessary? I believe what it is used for is to send the user
      * to edit a question that caused an error in the hierarchy.
      */
+
     private FormIndex currentIndex;
 
     protected Button jumpPreviousButton;
@@ -321,11 +324,21 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                             String answerDisplay = FormEntryPromptUtils.getAnswerText(fp, this, formController);
                             elementsToDisplay.add(
                                     new HierarchyElement(FormEntryPromptUtils.markQuestionIfIsRequired(label, fp.isRequired()), answerDisplay, null,
-                                            HierarchyElement.Type.QUESTION, fp.getIndex()));
+                                            HierarchyElement.Type.QUESTION, fp.getIndex(), fp.isRequired()));
                         }
                         break;
                     case FormEntryController.EVENT_GROUP:
                         // ignore group events
+                        FormEntryCaption fp1 = formController.getCaptionPrompt();
+                        if (ODKView.FIELD_LIST.equalsIgnoreCase(fp1.getFormElement().getAppearanceAttr())) {
+                            String intentString = fp1.getFormElement().getAdditionalAttribute(null, "intent");
+                            if ((intentString != null && !intentString.isEmpty()) && fp1.getFormElement().getChildren().size() > 0) {
+                                elementsToDisplay.add(
+                                        new HierarchyElement(fp1.getQuestionText(), "",
+                                                null, HierarchyElement.Type.PROPERTY, fp1.getIndex(), false));
+                            }
+                        }
+
                         break;
                     case FormEntryController.EVENT_PROMPT_NEW_REPEAT:
                         // this would display the 'add new repeat' dialog
@@ -349,7 +362,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                             HierarchyElement group =
                                     new HierarchyElement(getLabel(fc), null, ContextCompat
                                             .getDrawable(this, R.drawable.expander_ic_minimized),
-                                            HierarchyElement.Type.COLLAPSED, fc.getIndex());
+                                            HierarchyElement.Type.COLLAPSED, fc.getIndex(), false);
                             elementsToDisplay.add(group);
                         }
                         String repeatLabel = getLabel(fc);
@@ -363,14 +376,48 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                         repeatLabel += " (" + (fc.getMultiplicity() + 1) + ")\u200E";
                         // Add this group name to the drop down list for this repeating group.
                         HierarchyElement h = elementsToDisplay.get(elementsToDisplay.size() - 1);
-                        h.addChild(new HierarchyElement(repeatLabel, null, null, HierarchyElement.Type.CHILD, fc.getIndex()));
+                        h.addChild(new HierarchyElement(repeatLabel, null, null, HierarchyElement.Type.CHILD, fc.getIndex(), false));
                         break;
                 }
                 event =
                         formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
             }
 
-            recyclerView.setAdapter(new HierarchyListAdapter(elementsToDisplay, this::onElementClick));
+            List<HierarchyElement> newFormList = new ArrayList<>();
+
+            int i = 0;
+            while (i < elementsToDisplay.size()) {
+                boolean isRequired = false;
+                HierarchyElement item = elementsToDisplay.get(i);
+                item.getIntentChildren().clear();
+                newFormList.add(item);
+
+                if (item.getType() == HierarchyElement.Type.PROPERTY) {
+                    item.setType(HierarchyElement.Type.QUESTION);
+                    for (int ii = i + 1; ii < elementsToDisplay.size(); ii++) {
+                        HierarchyElement childItem = elementsToDisplay.get(ii);
+                        if (childItem.getType() != HierarchyElement.Type.COLLAPSED) {
+                            if (childItem.getFormIndex().toString().startsWith(item.getFormIndex().toString())) {
+                                if (!isRequired && childItem.isRequired()) {
+                                    isRequired = true;
+                                    childItem.setRequired(false);
+                                }
+                                item.addIntentChild(childItem);
+                                i++;
+                            } else {
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+
+                    }
+                    item.setRequired(isRequired);
+                }
+                i++;
+            }
+
+            recyclerView.setAdapter(new HierarchyListAdapter(newFormList, this::onElementClick, false));
 
             formController.jumpToIndex(currentIndex);
         } catch (Exception e) {
@@ -420,7 +467,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                 return;
         }
 
-        recyclerView.setAdapter(new HierarchyListAdapter(elementsToDisplay, this::onElementClick));
+        recyclerView.setAdapter(new HierarchyListAdapter(elementsToDisplay, this::onElementClick, false));
         ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
     }
 

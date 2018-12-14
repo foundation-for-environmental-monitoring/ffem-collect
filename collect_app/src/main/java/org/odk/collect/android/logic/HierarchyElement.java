@@ -67,7 +67,7 @@ public class HierarchyElement {
     private boolean isRequired;
 
     public HierarchyElement(@NonNull String primaryText, @Nullable String secondaryText,
-                            @Nullable Drawable icon, @NonNull Type type, @NonNull FormIndex formIndex) {
+                            @Nullable Drawable icon, @NonNull Type type, @NonNull FormIndex formIndex, boolean isRequired) {
         this.primaryText = primaryText;
         this.secondaryText = secondaryText;
         this.icon = icon;
@@ -121,6 +121,18 @@ public class HierarchyElement {
         children.add(h);
     }
 
+    public void addIntentChild(HierarchyElement h) {
+        intentChildren.add(h);
+    }
+
+    public boolean isRequired() {
+        return isRequired;
+    }
+
+    public void setRequired(boolean required) {
+        isRequired = required;
+    }
+
     /**
      * The type and state of this element.
      */
@@ -143,6 +155,11 @@ public class HierarchyElement {
         /**
          * A question.
          */
-        QUESTION;
+        QUESTION,
+
+        /**
+         * A property.
+         */
+        PROPERTY
     }
 }

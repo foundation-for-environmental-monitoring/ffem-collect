@@ -10,14 +10,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foreground="?android:attr/selectableItemBackground"
     android:minHeight="70dp"
-    android:paddingBottom="10dp"
-    android:paddingEnd="15dp"
     android:paddingStart="15dp"
-    android:paddingTop="10dp">
+    android:paddingTop="10dp"
+    android:paddingEnd="15dp"
+    android:paddingBottom="10dp">
 
     <ImageView
         android:id="@+id/icon"
@@ -25,27 +26,26 @@ limitations under the License.
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp" />
+        android:contentDescription="@null" />
 
     <TextView
         android:id="@+id/primary_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/icon"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/icon"
-        android:text="Primary Text"
+        android:layout_toEndOf="@id/icon"
         android:textColor="?primaryTextColor"
         android:textSize="17sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:text="Primary Text" />
 
     <TextView
         android:id="@+id/secondary_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/primary_text"
-        android:text="Secondary Text"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        tools:text="Secondary Text" />
 
 </RelativeLayout>
