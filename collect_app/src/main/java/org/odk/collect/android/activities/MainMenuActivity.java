@@ -139,6 +139,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
                 if (Collect.allowClick(getClass().getName())) {
                     Intent i = new Intent(getApplicationContext(),
                             FormChooserList.class);
+                    i.putExtra("allowDelete", true);
                     startActivity(i);
                 }
             }
