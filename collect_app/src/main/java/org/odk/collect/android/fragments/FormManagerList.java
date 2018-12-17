@@ -201,6 +201,10 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
             getListView().setItemChecked(i, false);
         }
         deleteButton.setEnabled(false);
+
+        if (getListView().getCount() == 0) {
+            getActivity().finish();
+        }
     }
 
     @Override

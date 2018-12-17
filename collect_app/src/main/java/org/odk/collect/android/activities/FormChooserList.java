@@ -29,6 +29,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -238,11 +239,13 @@ public class FormChooserList extends FormListActivity implements
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         hideProgressBarIfAllowed();
         listAdapter.swapCursor(cursor);
+        cursor.requery();
         if (listAdapter.getCount() == 0) {
             findViewById(R.id.buttonGetBlankForm).setVisibility(View.GONE);
         } else {
             findViewById(R.id.buttonGetBlankForm).setVisibility(View.VISIBLE);
         }
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -275,5 +278,31 @@ public class FormChooserList extends FormListActivity implements
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (findViewById(R.id.buttonGetBlankForm).getVisibility() == View.GONE) {
+            MenuItem deleteItem = (menu.findItem(R.id.menu_delete));
+            deleteItem.setEnabled(false);
+            deleteItem.getIcon().setAlpha(50);
+            MenuItem sortItem = (menu.findItem(R.id.menu_sort));
+            sortItem.setEnabled(false);
+            sortItem.getIcon().setAlpha(60);
+            MenuItem filterItem = (menu.findItem(R.id.menu_filter));
+            filterItem.setEnabled(false);
+            filterItem.getIcon().setAlpha(60);
+        } else {
+            MenuItem deleteItem = (menu.findItem(R.id.menu_delete));
+            deleteItem.setEnabled(true);
+            deleteItem.getIcon().setAlpha(255);
+            MenuItem sortItem = (menu.findItem(R.id.menu_sort));
+            sortItem.setEnabled(true);
+            sortItem.getIcon().setAlpha(255);
+            MenuItem filterItem = (menu.findItem(R.id.menu_filter));
+            filterItem.setEnabled(true);
+            filterItem.getIcon().setAlpha(255);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 }

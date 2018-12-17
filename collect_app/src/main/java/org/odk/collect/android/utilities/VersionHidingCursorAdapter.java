@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import org.odk.collect.android.R;
 import org.odk.collect.android.provider.FormsProviderAPI;
 
 /**
@@ -29,7 +30,7 @@ import org.odk.collect.android.provider.FormsProviderAPI;
  */
 public class VersionHidingCursorAdapter extends SimpleCursorAdapter {
 
-//    private final Context ctxt;
+    private final Context ctxt;
     private final String versionColumnName;
     private final ViewBinder originalBinder;
 
@@ -37,7 +38,7 @@ public class VersionHidingCursorAdapter extends SimpleCursorAdapter {
             Cursor c, String[] from, int[] to) {
         super(context, layout, c, from, to);
         this.versionColumnName = versionColumnName;
-//        ctxt = context;
+        ctxt = context;
         originalBinder = getViewBinder();
         setViewBinder(new ViewBinder() {
 
@@ -61,7 +62,7 @@ public class VersionHidingCursorAdapter extends SimpleCursorAdapter {
                         int idColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.DISPLAY_SUBTEXT);
                         String id = cursor.getString(idColumnIndex);
                         if (id != null) {
-                            v.append(id);
+                            v.append(String.format(ctxt.getString(R.string.id_number), id));
                             v.setVisibility(View.VISIBLE);
                         }
                     }

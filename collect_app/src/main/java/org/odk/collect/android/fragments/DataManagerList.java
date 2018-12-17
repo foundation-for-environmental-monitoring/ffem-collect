@@ -249,6 +249,10 @@ public class DataManagerList extends InstanceListFragment
         deleteButton.setEnabled(false);
 
         progressDialog.dismiss();
+
+        if (getListView().getCount() == 0) {
+            getActivity().finish();
+        }
     }
 
     @Override
