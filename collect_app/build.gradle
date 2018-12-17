@@ -161,13 +161,13 @@ dependencies {
     implementation "com.android.support:exifinterface:${rootProject.supportLibraryVersion}"
     implementation "com.android.support:multidex:1.0.3"
 
-    implementation "com.google.android.gms:play-services-analytics:16.0.5"
+    implementation "com.google.android.gms:play-services-analytics:16.0.6"
     implementation "com.google.android.gms:play-services-auth:16.0.1"
     implementation "com.google.android.gms:play-services-maps:16.0.0"
     implementation "com.google.android.gms:play-services-location:16.0.0"
 
-    implementation "com.google.firebase:firebase-core:16.0.5"
-    implementation "com.crashlytics.sdk.android:crashlytics:2.9.6"
+    implementation "com.google.firebase:firebase-core:16.0.6"
+    implementation "com.crashlytics.sdk.android:crashlytics:2.9.7"
 
     implementation("com.google.guava:guava:26.0-android")
 
