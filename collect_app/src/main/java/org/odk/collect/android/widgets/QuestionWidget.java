@@ -678,4 +678,16 @@ public abstract class QuestionWidget
     public PermissionUtils getPermissionUtils() {
         return permissionUtils;
     }
+
+    public String getQuestionText() {
+        return promptText;
+    }
+
+    public View getContainer() {
+        return container;
+    }
+
+    public void setContainer(View container) {
+        this.container = container;
+    }
 }

@@ -46,8 +46,6 @@ import java.util.List;
 
 import timber.log.Timber;
 
-import static org.javarosa.form.api.FormEntryController.EVENT_GROUP;
-
 /**
  * Displays the structure of a form along with the answers for the current instance. Different form
  * elements are displayed in the following ways:
@@ -490,14 +488,14 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
 
                             HierarchyElement instance = new HierarchyElement(
                                     repeatLabel, null,
-                                    null, HierarchyElement.Type.REPEAT_INSTANCE, fc.getIndex());
+                                    null, HierarchyElement.Type.REPEAT_INSTANCE, fc.getIndex(), false);
                             elementsToDisplay.add(instance);
                         } else if (fc.getMultiplicity() == 0) {
                             // Display the repeat header for the group.
                             HierarchyElement group = new HierarchyElement(
                                     getLabel(fc), getString(R.string.repeatable_group_label),
                                     ContextCompat.getDrawable(this, R.drawable.ic_repeat),
-                                    HierarchyElement.Type.REPEATABLE_GROUP, fc.getIndex());
+                                    HierarchyElement.Type.REPEATABLE_GROUP, fc.getIndex(), false);
                             elementsToDisplay.add(group);
                         }
 

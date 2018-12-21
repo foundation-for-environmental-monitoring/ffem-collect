@@ -21,6 +21,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 
@@ -29,7 +30,6 @@ import javax.inject.Inject;
 import io.ffem.collect.android.util.AdjustingViewGlobalLayoutListener;
 
 import static android.view.View.GONE;
-import static org.odk.collect.android.utilities.PermissionUtils.requestStoragePermissions;
 
 /**
  * Sign in screen shown on app first launch
@@ -50,7 +50,7 @@ public class SignInActivity extends AppCompatActivity {
 
         Collect.getInstance().getComponent().inject(this);
 
-        requestStoragePermissions(this, new PermissionListener() {
+        new PermissionUtils(this).requestStoragePermissions(new PermissionListener() {
             @Override
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent
@@ -239,16 +239,13 @@ public class SignInActivity extends AppCompatActivity {
     private void createErrorDialog(String errorMsg, final boolean shouldExit) {
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setMessage(errorMsg);
-        DialogInterface.OnClickListener errorListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                switch (i) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        if (shouldExit) {
-                            finish();
-                        }
-                        break;
-                }
+        DialogInterface.OnClickListener errorListener = (dialog, i) -> {
+            switch (i) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    if (shouldExit) {
+                        finish();
+                    }
+                    break;
             }
         };
         alertDialog.setCancelable(false);
