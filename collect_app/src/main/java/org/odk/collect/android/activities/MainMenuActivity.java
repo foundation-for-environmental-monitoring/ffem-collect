@@ -60,10 +60,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.lang.ref.WeakReference;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import io.ffem.collect.android.activities.SettingsActivity;
+import io.ffem.collect.android.common.AppConfig;
+import io.ffem.collect.android.util.ApkHelper;
 import timber.log.Timber;
 
 /**
@@ -336,6 +342,8 @@ public class MainMenuActivity extends CollectAbstractActivity {
 
         updateButtons();
         setupGoogleAnalytics();
+
+        displayExpiryInfo();
     }
 
 //    private void initToolbar() {
@@ -669,6 +677,39 @@ public class MainMenuActivity extends CollectAbstractActivity {
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);
             handler.sendEmptyMessage(0);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Stop if the app version has expired
+        ApkHelper.isAppVersionExpired(this);
+    }
+
+    private void displayExpiryInfo() {
+        try {
+
+            TextView textVersionExpiry = findViewById(R.id.textVersionExpiry);
+
+            if (AppConfig.APP_EXPIRY && ApkHelper.isNonStoreVersion(this)) {
+                final GregorianCalendar appExpiryDate = new GregorianCalendar(AppConfig.APP_EXPIRY_YEAR,
+                        AppConfig.APP_EXPIRY_MONTH - 1, AppConfig.APP_EXPIRY_DAY);
+
+                DateFormat df = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
+                textVersionExpiry.setText(String.format("Version expiry: %s", df.format(appExpiryDate.getTime())));
+
+                textVersionExpiry.setVisibility(View.VISIBLE);
+            } else {
+                textVersionExpiry.setText(Collect.getInstance().getVersionedAppName());
+                textVersionExpiry.setVisibility(View.VISIBLE);
+            }
+
+            // If app has expired then close this activity
+            ApkHelper.isAppVersionExpired(this);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

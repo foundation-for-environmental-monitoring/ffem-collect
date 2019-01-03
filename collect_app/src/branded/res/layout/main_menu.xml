@@ -207,4 +207,26 @@
 
         </ScrollView>
     </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textVersionExpiry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:clickable="false"
+            android:ellipsize="none"
+            android:gravity="center_horizontal"
+            android:singleLine="true"
+            android:textAllCaps="true"
+            android:textColor="#000"
+            android:textSize="12dp"
+            android:visibility="gone"
+            tools:ignore="SpUsage"
+            tools:text="Version expires: 15 Jan 2018"
+            tools:visibility="visible" />
+    </RelativeLayout>
 </RelativeLayout>

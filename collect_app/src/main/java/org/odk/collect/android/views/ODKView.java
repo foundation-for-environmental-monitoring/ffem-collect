@@ -47,6 +47,8 @@ import org.javarosa.core.model.QuestionDef;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.instance.TreeReference;
 import org.javarosa.form.api.FormEntryCaption;
+import org.javarosa.form.api.FormEntryController;
+import org.javarosa.form.api.FormEntryModel;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
@@ -413,6 +415,22 @@ public class ODKView extends FrameLayout implements OnLongClickListener {
             try {
                 ExternalAppsUtils.populateParameters(i, parameters,
                         c.getIndex().getReference());
+
+                int event;
+                FormEntryModel formEntryModelToBeValidated = new FormEntryModel(Collect.getInstance().getFormController().getFormDef());
+                FormEntryController formEntryController = new FormEntryController(formEntryModelToBeValidated);
+                while ((event =
+                        formEntryController.stepToNextEvent()) != FormEntryController.EVENT_END_OF_FORM) {
+                    if (event == FormEntryController.EVENT_QUESTION) {
+                        //if (formEntryController.getModel().getEvent() != FormEntryController.EVENT_QUESTION) {
+                        FormEntryPrompt prompt = formEntryController.getModel().getQuestionPrompt();
+                        if (prompt.getAnswerValue() != null) {
+                            String value = prompt.getAnswerValue().getDisplayText();
+                            i.putExtra(prompt.getQuestion().getLabelInnerText(), (Serializable) value);
+                        }
+                        //}
+                    }
+                }
 
                 for (FormEntryPrompt p : questionPrompts) {
                     IFormElement formElement = p.getFormElement();

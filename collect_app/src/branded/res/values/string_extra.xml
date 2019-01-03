@@ -28,4 +28,9 @@
     <string name="remindLater">Remind later</string>
     <string name="continue_send">Continue</string>
 
+    <!--Alerts-->
+    <string name="versionExpired">Version expired</string>
+    <string name="thisVersionHasExpired">This version of the app has expired.</string>
+    <string name="uninstallAndInstallFromStore">Please uninstall and then install the latest version from Play Store.</string>
+
 </resources>
