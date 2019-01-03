@@ -157,7 +157,7 @@ import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_MOVING_BACKWARDS;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
-import static org.odk.collect.android.utilities.PermissionUtils.isStoragePermissionGranted;
+import static org.odk.collect.android.utilities.PermissionUtils.areStoragePermissionsGranted;
 
 /**
  * FormEntryActivity is responsible for displaying questions, animating
@@ -2126,7 +2126,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     protected void onResume() {
         super.onResume();
 
-        if (!isStoragePermissionGranted(this)) {
+        if (!areStoragePermissionsGranted(this)) {
             onResumeWasCalledWithoutPermissions = true;
             return;
         }
