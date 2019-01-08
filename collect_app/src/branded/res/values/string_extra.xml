@@ -21,6 +21,8 @@
     <string name="send_form">Send Form</string>
     <string name="admin">Admin</string>
 
+    <string name="delete_sent_forms">Delete Sent Forms</string>
+
     <!--Update-->
     <string name="update">Update</string>
     <string name="updateTitle">Update ffem Collect</string>

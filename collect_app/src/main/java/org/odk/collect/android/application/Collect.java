@@ -28,7 +28,7 @@ import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
+//import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobManagerCreateException;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -298,15 +298,15 @@ public class Collect extends Application implements HasActivityInjector {
     private static class CrashReportingTree extends Timber.Tree {
         @Override
         protected void log(int priority, String tag, String message, Throwable t) {
-            if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
-                return;
-            }
+//            if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
+//                return;
+//            }
 
-            Crashlytics.log(priority, tag, message);
+//            Crashlytics.log(priority, tag, message);
 
-            if (t != null && priority == Log.ERROR) {
-                Crashlytics.logException(t);
-            }
+//            if (t != null && priority == Log.ERROR) {
+//                Crashlytics.logException(t);
+//            }
         }
     }
 

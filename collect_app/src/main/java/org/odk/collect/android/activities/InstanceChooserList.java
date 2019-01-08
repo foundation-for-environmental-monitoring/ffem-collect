@@ -282,6 +282,8 @@ public class InstanceChooserList extends InstanceListActivity implements
         switch (item.getItemId()) {
             case R.id.menu_delete:
                 Intent i = new Intent(this, DeleteFormsActivity.class);
+                String formMode = getIntent().getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE);
+                i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, formMode);
                 startActivity(i);
                 return true;
         }

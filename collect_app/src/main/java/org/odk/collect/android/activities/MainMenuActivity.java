@@ -198,6 +198,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
                     Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
                     i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
                             ApplicationConstants.FormModes.VIEW_SENT);
+                    i.putExtra("allowDelete", true);
                     startActivity(i);
                 }
             }

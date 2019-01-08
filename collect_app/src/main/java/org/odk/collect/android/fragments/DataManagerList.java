@@ -37,6 +37,7 @@ import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.tasks.DeleteInstancesTask;
 import org.odk.collect.android.tasks.InstanceSyncTask;
 import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
+import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.Arrays;
@@ -63,6 +64,7 @@ public class DataManagerList extends InstanceListFragment
     private ProgressDialog progressDialog;
     @Inject
     SmsSubmissionManagerContract smsSubmissionManager;
+    private static String formMode = ApplicationConstants.FormModes.EDIT_SAVED;
 
     public static DataManagerList newInstance() {
         return new DataManagerList();
@@ -150,7 +152,11 @@ public class DataManagerList extends InstanceListFragment
 
     @Override
     protected CursorLoader getCursorLoader() {
-        return new InstancesDao().getSavedInstancesCursorLoader(getFilterText(), getSortingOrder());
+        if (formMode == null || ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)) {
+            return new InstancesDao().getSavedInstancesCursorLoader(getFilterText(), getSortingOrder());
+        } else {
+            return new InstancesDao().getSentInstancesCursorLoader(getFilterText(), getSortingOrder());
+        }
     }
 
     /**
@@ -283,4 +289,7 @@ public class DataManagerList extends InstanceListFragment
         }
     }
 
+    public void setFormMode(String formModeValue) {
+        formMode = formModeValue;
+    }
 }

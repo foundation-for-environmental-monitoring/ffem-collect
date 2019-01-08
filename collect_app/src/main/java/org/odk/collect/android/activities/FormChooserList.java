@@ -273,7 +273,6 @@ public class FormChooserList extends FormListActivity implements
         switch (item.getItemId()) {
             case R.id.menu_delete:
                 Intent i = new Intent(this, DeleteFormsActivity.class);
-                i.putExtra("blankForms", true);
                 startActivity(i);
                 return true;
         }
