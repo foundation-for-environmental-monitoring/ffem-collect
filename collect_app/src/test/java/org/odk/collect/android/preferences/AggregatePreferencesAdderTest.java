@@ -35,7 +35,7 @@ public class AggregatePreferencesAdderTest {
         AggregatePreferencesAdder loader = new AggregatePreferencesAdder(fragment);
 
         boolean result = loader.add();
-        assertFalse(result);
+        assertTrue(result);
 
         String toastText = ShadowToast.getTextOfLatestToast();
         assertEquals(toastText, getString(R.string.corrupt_imported_preferences_error));

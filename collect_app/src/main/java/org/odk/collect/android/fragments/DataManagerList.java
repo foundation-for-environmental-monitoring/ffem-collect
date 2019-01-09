@@ -19,6 +19,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.CursorLoader;
@@ -42,6 +43,7 @@ import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -256,9 +258,11 @@ public class DataManagerList extends InstanceListFragment
 
         progressDialog.dismiss();
 
-        if (getListView().getCount() == 0) {
-            getActivity().finish();
-        }
+        (new Handler()).postDelayed(() -> {
+            if (getListView().getCount() == 0) {
+                Objects.requireNonNull(getActivity()).finish();
+            }
+        }, 300);
     }
 
     @Override
