@@ -742,7 +742,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
             }
             filteredFormList.addAll(formList);
             updateAdapter();
-            selectSupersededForms();
+            //selectSupersededForms();
             downloadButton.setEnabled(listView.getCheckedItemCount() > 0);
             toggleButton.setEnabled(listView.getCount() > 0);
             toggleButtonLabel(toggleButton, listView);
