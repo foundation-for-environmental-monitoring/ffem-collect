@@ -29,7 +29,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.text.method.LinkMovementMethod;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -298,40 +297,6 @@ public class ODKView extends FrameLayout implements OnLongClickListener {
         }
     }
 
-    @NonNull
-    public static String getGroupsPath(FormEntryCaption[] groups) {
-        StringBuilder path = new StringBuilder("");
-        if (groups != null) {
-            String longText;
-            int multiplicity;
-            int index = 1;
-            // list all groups in one string
-            for (FormEntryCaption group : groups) {
-                multiplicity = group.getMultiplicity() + 1;
-                String intentString = group.getFormElement()
-                        .getAdditionalAttribute(null, "intent");
-                if ((intentString == null || intentString.isEmpty())) {
-                    longText = group.getLongText();
-                    if (longText != null) {
-                        path.append(longText);
-                        if (group.repeats() && multiplicity > 0) {
-                            path
-                                    .append(" (")
-                                    .append(multiplicity)
-                                    .append(")\u200E");
-                        }
-                        if (index < groups.length) {
-                            path.append(" > ");
-                        }
-                        index++;
-                    }
-                }
-            }
-        }
-
-        return path.toString();
-    }
-
     public Bundle getState() {
         Bundle state = new Bundle();
         for (QuestionWidget qw : getWidgets()) {
@@ -546,7 +511,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener {
             index++;
         }
 
-        return TextUtils.join(" > ", segments);
+        return android.text.TextUtils.join(" > ", segments);
     }
 
     public void setFocus(Context context) {
