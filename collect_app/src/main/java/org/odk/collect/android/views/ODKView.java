@@ -86,15 +86,17 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
 @SuppressLint("ViewConstructor")
 public class ODKView extends FrameLayout implements OnLongClickListener {
 
-    public static final String FIELD_LIST = "field-list";
     private final LinearLayout view;
     private final LinearLayout.LayoutParams layout;
-    private final LinearLayout.LayoutParams bottomMargin;
     private final ArrayList<QuestionWidget> widgets;
+
+    public static final String FIELD_LIST = "field-list";
+
+    private final LinearLayout.LayoutParams bottomMargin;
     private boolean groupAdded = false;
 
     public ODKView(Context context, final FormEntryPrompt[] questionPrompts,
-                   FormEntryCaption[] groups, boolean advancingPage) {
+            FormEntryCaption[] groups, boolean advancingPage) {
         super(context);
 
         for (FormEntryPrompt prompt : questionPrompts) {
@@ -297,58 +299,6 @@ public class ODKView extends FrameLayout implements OnLongClickListener {
         }
     }
 
-    public Bundle getState() {
-        Bundle state = new Bundle();
-        for (QuestionWidget qw : getWidgets()) {
-            state.putAll(qw.getCurrentState());
-        }
-
-        return state;
-    }
-
-    /**
-     * http://code.google.com/p/android/issues/detail?id=8488
-     */
-    public void recycleDrawables() {
-        this.destroyDrawingCache();
-        view.destroyDrawingCache();
-        for (QuestionWidget q : widgets) {
-            q.recycleDrawables();
-        }
-    }
-
-    /**
-     * @return a HashMap of answers entered by the user for this set of widgets
-     */
-    public HashMap<FormIndex, IAnswerData> getAnswers() {
-        HashMap<FormIndex, IAnswerData> answers = new LinkedHashMap<>();
-        for (QuestionWidget q : widgets) {
-            /*
-             * The FormEntryPrompt has the FormIndex, which is where the answer gets stored. The
-             * QuestionWidget has the answer the user has entered.
-             */
-            FormEntryPrompt p = q.getFormEntryPrompt();
-            answers.put(p.getIndex(), q.getAnswer());
-        }
-
-        return answers;
-    }
-
-    /**
-     * // * Add a TextView containing the hierarchy of groups to which the question belongs. //
-     */
-    private void addGroupText(FormEntryCaption[] groups) {
-        String path = getGroupsPath(groups);
-
-        // build view
-        if (!path.isEmpty()) {
-            TextView tv = new TextView(getContext());
-            tv.setText(path);
-            tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Collect.getQuestionFontsize());
-            tv.setPadding(4, 0, 5, 7);
-            view.addView(tv, 0, layout);
-        }
-    }
 
     private Button getLauncherButton(Context context, FormEntryPrompt[] questionPrompts,
                                      FormEntryCaption c, String intentString) {
@@ -473,6 +423,59 @@ public class ODKView extends FrameLayout implements OnLongClickListener {
         return questionText;
     }
 
+    public Bundle getState() {
+        Bundle state = new Bundle();
+        for (QuestionWidget qw : getWidgets()) {
+            state.putAll(qw.getCurrentState());
+        }
+
+        return state;
+    }
+
+    /**
+     * http://code.google.com/p/android/issues/detail?id=8488
+     */
+    public void recycleDrawables() {
+        this.destroyDrawingCache();
+        view.destroyDrawingCache();
+        for (QuestionWidget q : widgets) {
+            q.recycleDrawables();
+        }
+    }
+
+    /**
+     * @return a HashMap of answers entered by the user for this set of widgets
+     */
+    public HashMap<FormIndex, IAnswerData> getAnswers() {
+        HashMap<FormIndex, IAnswerData> answers = new LinkedHashMap<>();
+        for (QuestionWidget q : widgets) {
+            /*
+             * The FormEntryPrompt has the FormIndex, which is where the answer gets stored. The
+             * QuestionWidget has the answer the user has entered.
+             */
+            FormEntryPrompt p = q.getFormEntryPrompt();
+            answers.put(p.getIndex(), q.getAnswer());
+        }
+
+        return answers;
+    }
+
+    /**
+     * // * Add a TextView containing the hierarchy of groups to which the question belongs. //
+     */
+    private void addGroupText(FormEntryCaption[] groups) {
+        String path = getGroupsPath(groups);
+
+        // build view
+        if (!path.isEmpty()) {
+            TextView tv = new TextView(getContext());
+            tv.setText(path);
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Collect.getQuestionFontsize());
+            tv.setPadding(4, 0, 5, 7);
+            view.addView(tv, 0, layout);
+        }
+    }
+
     /**
      * @see #getGroupsPath(FormEntryCaption[], boolean)
      */
@@ -535,7 +538,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener {
                     } catch (Exception e) {
                         Timber.e(e);
                         ToastUtils.showLongToast(getContext().getString(R.string.error_attaching_binary_file,
-                                e.getMessage()));
+                                        e.getMessage()));
                     }
                     set = true;
                     break;
@@ -602,12 +605,13 @@ public class ODKView extends FrameLayout implements OnLongClickListener {
         }
 
         if (count != 1) {
-            Timber.w("Attempting to cancel waiting for binary data to a widget or set of widgets not looking for data");
+            Timber.w("Attempting to cancel waiting for binary data to a widget or set of widgets "
+                            + "not looking for data");
         }
     }
 
     public boolean suppressFlingGesture(MotionEvent e1, MotionEvent e2, float velocityX,
-                                        float velocityY) {
+            float velocityY) {
         for (QuestionWidget q : widgets) {
             if (q.suppressFlingGesture(e1, e2, velocityX, velocityY)) {
                 return true;
