@@ -231,7 +231,11 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
         showAddButton(shouldShowAdd);
 
         boolean shouldShowGoUp = !isAtBeginning;
-        showGoUpButton(shouldShowGoUp);
+        //ffem: disable the up menu button
+        //showGoUpButton(shouldShowGoUp);
+        if (shouldShowGoUp){
+            goUpLevel();
+        }
     }
 
     /**

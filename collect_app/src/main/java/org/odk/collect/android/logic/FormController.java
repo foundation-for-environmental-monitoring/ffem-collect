@@ -372,6 +372,16 @@ public class FormController {
             return false;
         }
 
+        //ffem: handle nested multiple result questions
+        FormEntryCaption[] captions = getCaptionHierarchy(index);
+        if (captions.length == 1) {
+            if (element.getAdditionalAttributes().size() > 0) {
+                if (element.getAdditionalAttributes().get(0).getValue() != null) {
+                    return false;
+                }
+            }
+        }
+
         return ODKView.FIELD_LIST.equalsIgnoreCase(element.getAppearanceAttr());
     }
 
@@ -408,6 +418,7 @@ public class FormController {
                 // no group
                 return false;
             }
+
             // If at least one of the groups you are inside is a field list, your index is in a field list
             for (FormEntryCaption caption : captions) {
                 if (groupIsFieldList(caption.getIndex())) {
