@@ -609,50 +609,49 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                         }
                         break;
                     }
-                    case FormEntryController.EVENT_GROUP: {
-                        FormIndex index = formController.getFormIndex();
-
-                        // Only display groups with a specific appearance attribute.
-                        if (!formController.isDisplayableGroup(index)) {
-                            break;
-                        }
-
-                        // Don't render other groups' instances.
-                        if (!contextGroupRef.isParentOf(currentRef, false)) {
-                            break;
-                        }
-
-                        visibleGroupRef = currentRef;
-
-                        FormEntryCaption caption = formController.getCaptionPrompt();
-                        HierarchyElement groupElement = new HierarchyElement(
-                                caption.getShortText(), getString(R.string.group_label),
-                                ContextCompat.getDrawable(this, R.drawable.ic_folder_open),
-                                HierarchyElement.Type.VISIBLE_GROUP, caption.getIndex());
-                        elementsToDisplay.add(groupElement);
-
-                        // Skip to the next item outside the group.
-                        event = formController.stepOverGroup();
-                        continue;
-                    }
-//                    case FormEntryController.EVENT_GROUP:
-//                        // ignore group events
-//                        FormEntryCaption fp1 = formController.getCaptionPrompt();
-//                        if (ODKView.FIELD_LIST.equalsIgnoreCase(fp1.getFormElement().getAppearanceAttr())) {
-//                            String intentString = fp1.getFormElement().getAdditionalAttribute(null, "intent");
-//                            if ((intentString != null && !intentString.isEmpty()) && fp1.getFormElement().getChildren().size() > 0) {
-//                                elementsToDisplay.add(
-//                                        new HierarchyElement(fp1.getQuestionText(), "",
-//                                                null, HierarchyElement.Type.PROPERTY, fp1.getIndex(), false));
-//                            }
+//                    case FormEntryController.EVENT_GROUP: {
+//                        FormIndex index = formController.getFormIndex();
+//
+//                        // Only display groups with a specific appearance attribute.
+//                        if (!formController.isDisplayableGroup(index)) {
+//                            break;
 //                        }
 //
-//                        break;
+//                        // Don't render other groups' instances.
+//                        if (!contextGroupRef.isParentOf(currentRef, false)) {
+//                            break;
+//                        }
+//
+//                        visibleGroupRef = currentRef;
+//
+//                        FormEntryCaption caption = formController.getCaptionPrompt();
+//                        HierarchyElement groupElement = new HierarchyElement(
+//                                caption.getShortText(), getString(R.string.group_label),
+//                                ContextCompat.getDrawable(this, R.drawable.ic_folder_open),
+//                                HierarchyElement.Type.VISIBLE_GROUP, caption.getIndex(), false);
+//                        elementsToDisplay.add(groupElement);
+//
+//                        // Skip to the next item outside the group.
+//                        event = formController.stepOverGroup();
+//                        continue;
+//                    }
+                    case FormEntryController.EVENT_GROUP:
+                        // ignore group events
+                        FormEntryCaption fp1 = formController.getCaptionPrompt();
+                        if (ODKView.FIELD_LIST.equalsIgnoreCase(fp1.getFormElement().getAppearanceAttr())) {
+                            String intentString = fp1.getFormElement().getAdditionalAttribute(null, "intent");
+                            if ((intentString != null && !intentString.isEmpty()) && fp1.getFormElement().getChildren().size() > 0) {
+                                elementsToDisplay.add(
+                                        new HierarchyElement(fp1.getQuestionText(), "",
+                                                null, HierarchyElement.Type.PROPERTY, fp1.getIndex(), false));
+                            }
+                        }
+
+                        break;
                     case FormEntryController.EVENT_PROMPT_NEW_REPEAT:
                         // this would display the 'add new repeat' dialog
                         // ignore it.
                         break;
-                    }
                     case FormEntryController.EVENT_REPEAT: {
                         visibleGroupRef = currentRef;
 
