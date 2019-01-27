@@ -365,7 +365,7 @@ public class FormController {
      * displayed as a multi-question view. This is useful for returning from the formhierarchy view
      * to a selected index.
      */
-    private boolean groupIsFieldList(FormIndex index) {
+    private boolean groupIsFieldList(FormIndex index, boolean isHierarchy) {
         // if this isn't a group, return right away
         IFormElement element = formEntryController.getModel().getForm().getChild(index);
         if (!(element instanceof GroupDef)) {
@@ -373,11 +373,13 @@ public class FormController {
         }
 
         //ffem: handle nested multiple result questions
-        FormEntryCaption[] captions = getCaptionHierarchy(index);
-        if (captions.length == 1) {
-            if (element.getAdditionalAttributes().size() > 0) {
-                if (element.getAdditionalAttributes().get(0).getValue() != null) {
-                    return false;
+        if (isHierarchy) {
+            FormEntryCaption[] captions = getCaptionHierarchy(index);
+            if (captions.length == 1) {
+                if (element.getAdditionalAttributes().size() > 0) {
+                    if (element.getAdditionalAttributes().get(0).getValue() != null) {
+                        return false;
+                    }
                 }
             }
         }
@@ -386,7 +388,7 @@ public class FormController {
     }
 
     private boolean repeatIsFieldList(FormIndex index) {
-        return groupIsFieldList(index);
+        return groupIsFieldList(index, false);
     }
 
     /**
@@ -407,7 +409,7 @@ public class FormController {
      *
      * @return true if index is in a "field-list". False otherwise.
      */
-    public boolean indexIsInFieldList(FormIndex index) {
+    public boolean indexIsInFieldList(FormIndex index, boolean isHierarchy) {
         int event = getEvent(index);
         if (event == FormEntryController.EVENT_QUESTION) {
             // caption[0..len-1]
@@ -421,13 +423,13 @@ public class FormController {
 
             // If at least one of the groups you are inside is a field list, your index is in a field list
             for (FormEntryCaption caption : captions) {
-                if (groupIsFieldList(caption.getIndex())) {
+                if (groupIsFieldList(caption.getIndex(), isHierarchy)) {
                     return true;
                 }
             }
             return false;
         } else if (event == FormEntryController.EVENT_GROUP) {
-            return groupIsFieldList(index);
+            return groupIsFieldList(index, isHierarchy);
         } else if (event == FormEntryController.EVENT_REPEAT) {
             return repeatIsFieldList(index);
         } else {
@@ -444,7 +446,12 @@ public class FormController {
      * @return true if index is in a "field-list". False otherwise.
      */
     public boolean indexIsInFieldList() {
-        return indexIsInFieldList(getFormIndex());
+        return indexIsInFieldList(getFormIndex(), false);
+    }
+
+    //ffem: new isHierarchy parameter
+    public boolean indexIsInFieldList(boolean isHierarchy) {
+        return indexIsInFieldList(getFormIndex(), isHierarchy);
     }
 
     public boolean currentPromptIsQuestion() {
@@ -590,7 +597,7 @@ public class FormController {
                             // jump to outermost containing field-list
                             FormEntryCaption[] fclist = this.getCaptionHierarchy(currentIndex);
                             for (FormEntryCaption caption : fclist) {
-                                if (groupIsFieldList(caption.getIndex())) {
+                                if (groupIsFieldList(caption.getIndex(), false)) {
                                     formEntryController.jumpToIndex(caption.getIndex());
                                     break;
                                 }

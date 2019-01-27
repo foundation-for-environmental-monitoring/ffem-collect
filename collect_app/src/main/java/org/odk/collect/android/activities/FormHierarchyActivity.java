@@ -174,7 +174,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                 for (HierarchyElement hierarchyElement : elementsToDisplay) {
                     FormIndex indexToCheck = hierarchyElement.getFormIndex();
                     if (startIndex.equals(indexToCheck)
-                            || (formController.indexIsInFieldList(startIndex) && indexToCheck.toString().startsWith(startIndex.toString()))) {
+                            || (formController.indexIsInFieldList(startIndex, false) && indexToCheck.toString().startsWith(startIndex.toString()))) {
                         position = elementsToDisplay.indexOf(hierarchyElement);
                         break;
                     }
@@ -799,7 +799,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
      */
     void onQuestionClicked(FormIndex index) {
         Collect.getInstance().getFormController().jumpToIndex(index);
-        if (Collect.getInstance().getFormController().indexIsInFieldList()) {
+        if (Collect.getInstance().getFormController().indexIsInFieldList(true)) {
             try {
                 Collect.getInstance().getFormController().stepToPreviousScreenEvent();
             } catch (JavaRosaException e) {
