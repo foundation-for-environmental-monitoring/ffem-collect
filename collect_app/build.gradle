@@ -26,8 +26,8 @@ android {
         applicationId('io.ffem.collect')
         minSdkVersion(19)
         targetSdkVersion(28)
-        versionCode 7
-        versionName "Beta 1.21"
+        versionCode 8
+        versionName "Beta 1.22"
         testInstrumentationRunner('android.support.test.runner.AndroidJUnitRunner')
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -160,12 +160,12 @@ dependencies {
     implementation "com.android.support:exifinterface:${rootProject.supportLibraryVersion}"
     implementation "com.android.support:multidex:1.0.3"
 
-    implementation "com.google.android.gms:play-services-analytics:16.0.6"
+    implementation "com.google.android.gms:play-services-analytics:16.0.7"
     implementation "com.google.android.gms:play-services-auth:16.0.1"
-    implementation "com.google.android.gms:play-services-maps:16.0.0"
+    implementation "com.google.android.gms:play-services-maps:16.1.0"
     implementation "com.google.android.gms:play-services-location:16.0.0"
 
-    implementation "com.google.firebase:firebase-core:16.0.6"
+    implementation "com.google.firebase:firebase-core:16.0.7"
 
     implementation("com.google.guava:guava:26.0-android")
 
@@ -267,7 +267,7 @@ dependencies {
     // Testing-only dependencies
     testImplementation "junit:junit:4.12"
     testImplementation "org.mockito:mockito-core:2.23.0"
-    testImplementation "org.robolectric:robolectric:4.1"
+    testImplementation "org.robolectric:robolectric:4.2"
     testImplementation "org.robolectric:shadows-multidex:4.0"
 
     // power mock (for mocking final methods which is not handled by mockito)
