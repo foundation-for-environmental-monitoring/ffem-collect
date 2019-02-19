@@ -529,7 +529,7 @@ public class FormController {
     public int stepToNextEvent(boolean stepIntoGroup) {
         if ((getEvent() == FormEntryController.EVENT_GROUP
                 || getEvent() == FormEntryController.EVENT_REPEAT)
-                && indexIsInFieldList() && getQuestionPrompts().length > 0 && !stepIntoGroup) {
+                && indexIsInFieldList() && !isGroupEmpty() && !stepIntoGroup) {
             return stepOverGroup();
         } else {
             return formEntryController.stepToNextEvent();
@@ -918,6 +918,11 @@ public class FormController {
         }
 
         return questions;
+    }
+
+    private boolean isGroupEmpty() {
+        GroupDef group = (GroupDef) formEntryController.getModel().getForm().getChild(getFormIndex());
+        return getIndicesForGroup(group).isEmpty();
     }
 
     /**
