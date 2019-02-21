@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -74,6 +75,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import io.ffem.collect.android.common.AppConfig;
 import io.ffem.collect.android.widget.RowView;
 import timber.log.Timber;
 
@@ -256,7 +258,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener {
                 return null;
             }
 
-            if (BuildConfig.DEBUG) {
+            if (BuildConfig.DEBUG && AppConfig.USE_EXPERIMENT) {
                 intentString = intentString.replace("water", "experiment")
                         .replace("soil", "experiment");
             }

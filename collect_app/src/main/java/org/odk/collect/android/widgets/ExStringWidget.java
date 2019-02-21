@@ -48,6 +48,7 @@ import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 
 import java.util.Map;
 
+import io.ffem.collect.android.common.AppConfig;
 import io.ffem.collect.android.widget.RowView;
 import timber.log.Timber;
 
@@ -247,7 +248,7 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
     @Override
     public void onButtonClick(int buttonId) {
         String exSpec = getFormEntryPrompt().getAppearanceHint().replaceFirst("^ex[:]", "");
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG && AppConfig.USE_EXPERIMENT) {
             exSpec = exSpec.replace("water", "experiment")
                     .replace("soil", "experiment");
         }

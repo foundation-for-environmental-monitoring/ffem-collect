@@ -21,21 +21,26 @@ import android.accounts.AccountManager;
 //import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 //import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.content.res.AppCompatResources;
 import android.telephony.PhoneNumberUtils;
 import android.text.InputFilter;
 //import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListPopupWindow;
+import android.widget.ListView;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.gson.Gson;
@@ -52,6 +57,7 @@ import org.odk.collect.android.utilities.PlayServicesUtil;
 import org.odk.collect.android.utilities.SoftKeyboardUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.Validator;
+import org.odk.collect.android.utilities.WebCredentialsUtils;
 import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
 
 import java.io.ByteArrayInputStream;
@@ -62,6 +68,7 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import static android.app.Activity.RESULT_OK;
+import static io.ffem.collect.android.utilities.ListViewUtil.setListViewHeightBasedOnChildren;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_FORMLIST_URL;
 //import static org.odk.collect.android.preferences.GeneralKeys.KEY_PROTOCOL;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SELECTED_GOOGLE_ACCOUNT;
@@ -91,11 +98,16 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     @Inject
     CollectServerClient collectServerClient;
 
+    @Inject
+    WebCredentialsUtils webCredentialsUtils;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Collect.getInstance().getComponent().inject(this);
     }
+
+    private ListView list;
 
     /*
     private ListPreference transportPreference;
@@ -109,6 +121,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     */
 
     public void addAggregatePreferences() {
+        addPreferencesFromResource(R.xml.aggregate_preferences_custom);
         if (!new AggregatePreferencesAdder(this).add()) {
             return;
         }
@@ -131,30 +144,30 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
             addUrlToPreferencesList(getString(R.string.default_server_url), prefs);
         }
 
-        urlDropdownSetup();
-
-        // TODO: use just 'serverUrlPreference.getEditText().setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_drop_down, 0);' once minSdkVersion is >= 21
-        serverUrlPreference.getEditText().setCompoundDrawablesWithIntrinsicBounds(null, null,
-                AppCompatResources.getDrawable(getActivity(), R.drawable.ic_arrow_drop_down), null);
-        serverUrlPreference.getEditText().setOnTouchListener(this);
-        serverUrlPreference.setOnPreferenceChangeListener(createChangeListener());
-        serverUrlPreference.setSummary(serverUrlPreference.getText());
-        serverUrlPreference.getEditText().setFilters(
-                new InputFilter[]{new ControlCharacterFilter(), new WhitespaceFilter()});
-
-        usernamePreference.setOnPreferenceChangeListener(createChangeListener());
-        usernamePreference.setSummary(usernamePreference.getText());
-        usernamePreference.getEditText().setFilters(
-                new InputFilter[]{new ControlCharacterFilter()});
-
-        passwordPreference.setOnPreferenceChangeListener(createChangeListener());
-        maskPasswordSummary(passwordPreference.getText());
-        passwordPreference.getEditText().setFilters(
-                new InputFilter[]{new ControlCharacterFilter()});
+//        urlDropdownSetup();
+//
+//        // TODO: use just 'serverUrlPreference.getEditText().setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_drop_down, 0);' once minSdkVersion is >= 21
+//        serverUrlPreference.getEditText().setCompoundDrawablesWithIntrinsicBounds(null, null,
+//                AppCompatResources.getDrawable(getActivity(), R.drawable.ic_arrow_drop_down), null);
+//        serverUrlPreference.getEditText().setOnTouchListener(this);
+//        serverUrlPreference.setOnPreferenceChangeListener(createChangeListener());
+//        serverUrlPreference.setSummary(serverUrlPreference.getText());
+//        serverUrlPreference.getEditText().setFilters(
+//                new InputFilter[]{new ControlCharacterFilter(), new WhitespaceFilter()});
+//
+//        usernamePreference.setOnPreferenceChangeListener(createChangeListener());
+//        usernamePreference.setSummary(usernamePreference.getText());
+//        usernamePreference.getEditText().setFilters(
+//                new InputFilter[]{new ControlCharacterFilter()});
+//
+//        passwordPreference.setOnPreferenceChangeListener(createChangeListener());
+//        maskPasswordSummary(passwordPreference.getText());
+//        passwordPreference.getEditText().setFilters(
+//                new InputFilter[]{new ControlCharacterFilter()});
 
         //setupTransportPreferences();
-        getPreferenceScreen().removePreference(findPreference(KEY_TRANSPORT_PREFERENCE));
-        getPreferenceScreen().removePreference(findPreference(KEY_SMS_PREFERENCE));
+//        getPreferenceScreen().removePreference(findPreference(KEY_TRANSPORT_PREFERENCE));
+//        getPreferenceScreen().removePreference(findPreference(KEY_SMS_PREFERENCE));
     }
 
     /*
@@ -532,4 +545,29 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         runSmsPhoneNumberValidation();
     }
     */
+
+    private void clearCachedCrendentials() {
+        String server = (String) GeneralSharedPreferences
+                .getInstance().get(GeneralKeys.KEY_SERVER_URL);
+        Uri u = Uri.parse(server);
+        webCredentialsUtils.clearCredentials(u.getHost());
+//        Collect.getInstance().getCookieStore().clear();
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.card_row, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        list = view.findViewById(android.R.id.list);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setListViewHeightBasedOnChildren(list, 0);
+    }
 }

@@ -22,14 +22,13 @@ public class PermissionsTest {
         List<String> permissions = androidManifest.getUsedPermissions();
 
         //List of expected permissions to be present in AndroidManifest.xml
-        String[] expectedPermissions = {"android.permission.READ_PHONE_STATE",
+        String[] expectedPermissions = {
                 "android.permission.ACCESS_WIFI_STATE",
                 "android.permission.INTERNET",
                 "android.permission.ACCESS_FINE_LOCATION",
                 "android.permission.ACCESS_COARSE_LOCATION",
                 "android.permission.READ_EXTERNAL_STORAGE",
                 "android.permission.WRITE_EXTERNAL_STORAGE",
-                "android.permission.GET_ACCOUNTS",
                 "android.permission.USE_CREDENTIALS",
                 "android.permission.ACCESS_NETWORK_STATE",
                 "android.permission.MANAGE_ACCOUNTS",
