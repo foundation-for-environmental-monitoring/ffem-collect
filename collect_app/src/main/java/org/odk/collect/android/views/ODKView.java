@@ -50,6 +50,7 @@ import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryController;
 import org.javarosa.form.api.FormEntryModel;
 import org.javarosa.form.api.FormEntryPrompt;
+import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.exception.ExternalParamsException;
@@ -254,6 +255,11 @@ public class ODKView extends FrameLayout implements OnLongClickListener {
             if (intentString.length() < 36 || !intentString.startsWith("io.ffem")) {
                 return null;
             }
+
+            if (BuildConfig.DEBUG) {
+                intentString = intentString.replace("water", "experiment")
+                        .replace("soil", "experiment");
+            }
         }
 
         return intentString;
@@ -318,7 +324,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener {
         launchIntentButton.setId(ViewIds.generateViewId());
         launchIntentButton.setText(buttonText);
         launchIntentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
-                Collect.getQuestionFontsize() + 4);
+                Collect.getQuestionFontsize());
         launchIntentButton.setPadding(10, 30, 10, 30);
         launchIntentButton.setLayoutParams(params);
 

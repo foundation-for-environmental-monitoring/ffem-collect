@@ -33,6 +33,7 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.parser.XPathSyntaxException;
+import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.application.Collect;
@@ -246,6 +247,10 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
     @Override
     public void onButtonClick(int buttonId) {
         String exSpec = getFormEntryPrompt().getAppearanceHint().replaceFirst("^ex[:]", "");
+        if (BuildConfig.DEBUG) {
+            exSpec = exSpec.replace("water", "experiment")
+                    .replace("soil", "experiment");
+        }
         final String intentName = ExternalAppsUtils.extractIntentName(exSpec);
         final Map<String, String> exParams = ExternalAppsUtils.extractParameters(exSpec);
         final String errorString;
