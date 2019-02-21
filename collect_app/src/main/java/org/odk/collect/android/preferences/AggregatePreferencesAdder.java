@@ -33,7 +33,7 @@ class AggregatePreferencesAdder {
 
     public boolean add() {
         try {
-//            fragment.addPreferencesFromResource(R.xml.aggregate_preferences);
+            fragment.addPreferencesFromResource(R.xml.aggregate_preferences_custom);
             return true;
         } catch (ClassCastException e) {
             Toast.makeText(fragment.getActivity(), R.string.corrupt_imported_preferences_error, Toast.LENGTH_LONG).show();

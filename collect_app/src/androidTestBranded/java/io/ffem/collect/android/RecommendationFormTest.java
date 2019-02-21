@@ -21,6 +21,8 @@ import android.support.test.runner.AndroidJUnit4;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.support.test.runner.lifecycle.Stage;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.NumberPicker;
 import android.widget.SeekBar;
 
@@ -52,6 +54,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
+import androidx.test.uiautomator.By;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject2;
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 import tools.fastlane.screengrab.locale.LocaleTestRule;
@@ -60,6 +65,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -74,6 +80,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -89,11 +96,13 @@ import static org.odk.collect.android.application.Collect.APP_FOLDER;
  */
 
 @RunWith(AndroidJUnit4.class)
-public class AutoFormTest {
+public class RecommendationFormTest {
+
+    private static UiDevice mDevice;
 
     @ClassRule
     public static final LocaleTestRule LOCALE_TEST_RULE = new LocaleTestRule();
-    private static final String ALL_WIDGETS_FORM = "auto-test.xml";
+    private static final String ALL_WIDGETS_FORM = "recommendation-test.xml";
     private static final String FORMS_DIRECTORY = File.separator + APP_FOLDER + "/forms/";
     private final Random random = new Random();
     private final ActivityResult okResult = new ActivityResult(RESULT_OK, new Intent());
@@ -110,6 +119,32 @@ public class AutoFormTest {
 
     @Mock
     private ActivityAvailability activityAvailability;
+
+    @BeforeClass
+    public static void initialize() {
+        if (mDevice == null) {
+            mDevice = UiDevice.getInstance(getInstrumentation());
+        }
+    }
+
+    private static Matcher<View> childAtPosition(
+            final Matcher<View> parentMatcher, final int position) {
+
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("Child at position " + position + " in parent ");
+                parentMatcher.describeTo(description);
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                ViewParent parent = view.getParent();
+                return parent instanceof ViewGroup && parentMatcher.matches(parent)
+                        && view.equals(((ViewGroup) parent).getChildAt(position));
+            }
+        };
+    }
 
     //region Test prep.
     @BeforeClass
@@ -229,74 +264,109 @@ public class AutoFormTest {
     @Test
     public void testActivityOpen() {
 
-        int textIndex = 0;
+        onView(withText("Select date")).perform(click());
 
-        ArrayList<String> extras = new ArrayList<>();
+        ViewInteraction appCompatButton3 = onView(
+                allOf(withId(android.R.id.button1), withText("OK"),
+                        childAtPosition(
+                                allOf(withClassName(is("com.android.internal.widget.ButtonBarLayout")),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.LinearLayout")),
+                                                3)),
+                                3),
+                        isDisplayed()));
+        appCompatButton3.perform(click());
 
-        skipInitialLabel();
+        ViewInteraction editText = onView(
+                allOf(childAtPosition(
+                        childAtPosition(
+                                withClassName(is("android.widget.LinearLayout")),
+                                3),
+                        2),
+                        isDisplayed()));
+        editText.perform(replaceText("Test"), closeSoftKeyboard());
 
-        extras.add("value");
-        testExternal("io.ffem.experiment", "Coliforms 1", extras,
-                "", ++textIndex, 0, false);
-        extras.clear();
+        ViewInteraction editText2 = onView(
+                allOf(childAtPosition(
+                        childAtPosition(
+                                withClassName(is("android.widget.LinearLayout")),
+                                5),
+                        2),
+                        isDisplayed()));
+        editText2.perform(replaceText("123"), closeSoftKeyboard());
 
-        extras.add("Result");
-        extras.add("Sample_volume");
-        extras.add("Broth");
-        extras.add("Time_to_detect");
-        testExternal("io.ffem.experiment", "Coliforms 2", extras,
-                "", ++textIndex, 0, true);
-        extras.clear();
+        onView(withText(startsWith("Phone"))).perform(swipeLeft());
 
-        extras.add("value");
-        testExternal("io.ffem.water", "Arsenic (0 - 500)", extras,
-                "", ++textIndex, 0, false);
-        extras.clear();
+        ViewInteraction editText3 = onView(
+                allOf(childAtPosition(
+                        childAtPosition(
+                                withClassName(is("android.widget.LinearLayout")),
+                                1),
+                        2),
+                        isDisplayed()));
+        editText3.perform(replaceText("Abc"), closeSoftKeyboard());
 
-        ++textIndex;
+        ViewInteraction editText4 = onView(
+                allOf(childAtPosition(
+                        childAtPosition(
+                                withClassName(is("android.widget.LinearLayout")),
+                                5),
+                        2),
+                        isDisplayed()));
+        editText4.perform(replaceText("456"), closeSoftKeyboard());
 
-        extras.add("Arsenic");
-        extras.add("Arsenic_Unit");
-        testExternal("io.ffem.water", "Arsenic (0 - 500)", extras,
-                "", ++textIndex, 2, true);
-        extras.clear();
+        onView(withText(startsWith("Sample"))).perform(swipeLeft());
 
-        testpH();
+        startExternalTest("Available Nitrogen", 6, 0, false);
+        startExternalTest("Available Phosphorous", 7, 1, false);
+        startExternalTest("Available Potassium", 8, 2, true);
 
-        testBoron();
+        onView(withText(startsWith("Crop Group"))).perform(swipeLeft());
 
-        extras.add("Exchangeable_Calcium");
-        extras.add("Exchangeable_Magnesium");
-        testExternal("io.ffem.soil", "Exchangeable Calcium & Magnesium", extras,
-                "_001", 12, 0, true);
-        extras.clear();
+        ViewInteraction button2 = onView(
+                allOf(withText("Launch"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.LinearLayout")),
+                                        1),
+                                1),
+                        isDisplayed()));
+        button2.perform(click());
 
-        extras.add("value");
-        testExternal("io.ffem.water", "Fluoride", extras,
-                "", 15, 2, true);
-        extras.clear();
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(12000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        testFreeChlorine();
+        UiObject2 save = mDevice.findObject(By.text("Save"));
 
-        testTotalIron();
+        save.click();
 
-        extras.add("Fluoride");
-        extras.add("Fluoride_Unit");
-        extras.add("Fluoride_Dilution");
-        testExternal("io.ffem.water", "Fluoride - Borewell", extras,
-                "_xBorewell", 20, 1, true);
-        extras.clear();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        onView(withIndex(withText("Crop Recommendation"), 1)).perform(swipeLeft());
 
         testEnd();
 
     }
 
-    private void testpH() {
-        onView(withText(startsWith("pH"))).perform(swipeLeft());
-    }
+    private void startExternalTest(String name, int questionIndex, int buttonIndex, boolean goNext) {
+        ArrayList<String> extras = new ArrayList<>();
 
-    private void testBoron() {
-        onView(withText(startsWith("Available Boron"))).perform(swipeLeft());
+        String codeName = name.replace(" ", "_");
+        extras.add(codeName);
+        extras.add(codeName + "_Unit");
+        extras.add(codeName + "_Dilution");
+        testExternal("io.ffem.soil", name, extras,
+                "", questionIndex, buttonIndex, goNext);
     }
 
     private void testExternal(String action, String title, ArrayList<String> extras,
@@ -325,8 +395,17 @@ public class AutoFormTest {
         String exStringWidgetSecondText = randomString();
 
         Intent stringIntent = new Intent();
-        for (String extra : extras) {
-            stringIntent.putExtra(extra + suffix, exStringWidgetSecondText);
+        for (int i = 0; i < extras.size(); i++) {
+            String extra = extras.get(i);
+            String value = exStringWidgetSecondText;
+            if (extra.contains("Dilution")) {
+                value = randomIntegerString();
+            }
+            if (i == 0){
+                value = String.valueOf(randomFloat());
+            }
+
+            stringIntent.putExtra(extra + suffix, value);
         }
 
         ActivityResult exStringResult = new ActivityResult(RESULT_OK, stringIntent);
@@ -397,24 +476,12 @@ public class AutoFormTest {
         }
     }
 
-    private void testFreeChlorine() {
-        onView(withText(startsWith("Free Chlorine"))).perform(swipeLeft());
-    }
-
-    private void testTotalIron() {
-//        onView(withText(startsWith("Total Iron"))).perform(swipeLeft());
-    }
-
     private void testEnd() {
-        onView(withText("You are at the end of Automated Testing.")).check(matches(isDisplayed()));
+        onView(withText("You are at the end of Fertilizer Recommendation.")).check(matches(isDisplayed()));
         onView(withText("Mark form as finalized")).check(matches(isDisplayed()));
         onView(withText("Send Form")).check(matches(isDisplayed()));
         onView(withText("Mark form as finalized")).perform(click());
         onView(withText("Save Form and Exit")).check(matches(isDisplayed()));
-    }
-
-    public void skipInitialLabel() {
-        onView(withText(startsWith("\nWelcome to automated testing survey form!"))).perform(swipeLeft());
     }
 
     public void testStringWidget() {
@@ -492,6 +559,10 @@ public class AutoFormTest {
 
     private int randomInt() {
         return Math.abs(random.nextInt());
+    }
+
+    private float randomFloat() {
+        return Math.abs(random.nextFloat());
     }
 
     private String randomIntegerString() {

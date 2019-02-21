@@ -21,6 +21,7 @@ if (secretsFile.exists()) {
 
 android {
     compileSdkVersion(28)
+    testOptions.unitTests.includeAndroidResources = true
 
     defaultConfig {
         applicationId('io.ffem.collect')
@@ -295,6 +296,10 @@ dependencies {
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:${rootProject.okhttp3Version}"
 
     androidTestImplementation "android.arch.work:work-testing:${rootProject.workManagerVersion}"
+
+    // UIAutomator
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+
 }
 
 // Must be at bottom to prevent dependency collisions

@@ -121,7 +121,6 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     */
 
     public void addAggregatePreferences() {
-        addPreferencesFromResource(R.xml.aggregate_preferences_custom);
         if (!new AggregatePreferencesAdder(this).add()) {
             return;
         }
