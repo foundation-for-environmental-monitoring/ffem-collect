@@ -49,6 +49,7 @@ import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.PreferencesActivity;
+import org.odk.collect.android.preferences.Transport;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PlayServicesUtil;
@@ -71,6 +72,8 @@ import io.ffem.collect.android.activities.SettingsActivity;
 import io.ffem.collect.android.common.AppConfig;
 import io.ffem.collect.android.util.ApkHelper;
 import timber.log.Timber;
+
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
 
 /**
  * Responsible for displaying buttons to launch the major activities. Launches
@@ -135,6 +138,8 @@ public class MainMenuActivity extends CollectAbstractActivity {
         }
 
         initToolbar();
+
+        disableSmsIfNeeded();
 
         // enter data button. expects a result.
         Button enterDataButton = findViewById(R.id.enter_data);
@@ -681,6 +686,26 @@ public class MainMenuActivity extends CollectAbstractActivity {
         }
     }
 
+    private void disableSmsIfNeeded() {
+        if (Transport.Internet != Transport.fromPreference(GeneralSharedPreferences.getInstance().get(KEY_SUBMISSION_TRANSPORT_TYPE))) {
+            GeneralSharedPreferences.getInstance().save(KEY_SUBMISSION_TRANSPORT_TYPE, getString(R.string.transport_type_value_internet));
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder
+                    .setTitle(R.string.sms_feature_disabled_dialog_title)
+                    .setMessage(R.string.sms_feature_disabled_dialog_message)
+                    .setPositiveButton(R.string.read_details, (dialog, which) -> {
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("url", "https://forum.opendatakit.org/t/17973");
+                        startActivity(intent);
+                    })
+                    .setNegativeButton(R.string.ok, (dialog, which) -> dialog.dismiss());
+
+            builder
+                    .create()
+                    .show();
+        }
+    }
     @Override
     protected void onStart() {
         super.onStart();

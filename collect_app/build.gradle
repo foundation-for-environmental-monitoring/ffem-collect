@@ -180,6 +180,9 @@ dependencies {
         exclude group: 'org.apache.httpcomponents'
     }
 
+    implementation "com.squareup.okhttp3:okhttp:${rootProject.okhttp3Version}"
+    implementation 'com.burgstaller:okhttp-digest:1.18'
+
     implementation 'bikramsambat:bikram-sambat:1.1.0'
     implementation "com.evernote:android-job:1.2.5"
     implementation "com.rarepebble:colorpicker:2.4.1"
@@ -289,7 +292,7 @@ dependencies {
         exclude group: 'javax.inject'
     }
 
-    androidTestImplementation "com.squareup.okhttp3:mockwebserver:3.10.0"
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:${rootProject.okhttp3Version}"
 
     androidTestImplementation "android.arch.work:work-testing:${rootProject.workManagerVersion}"
 }
