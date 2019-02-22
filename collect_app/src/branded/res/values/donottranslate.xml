@@ -3,4 +3,13 @@
     <string name="reset_password_link">"https://kf.kobotoolbox.org/accounts/password/reset/"</string>
     <string name="create_account_link">"https://kf.kobotoolbox.org/accounts/register/"</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="diagnosticModeKey">diagnosticMode</string>
+
+    <!--Diagnostic Mode: Messages -->
+    <string name="diagnosticModeEnabled">Diagnostic mode enabled</string>
+    <string name="diagnosticModeDisabled">Diagnostic mode disabled</string>
+
+    <!--Diagnostic-->
+    <string name="diagnostics">Diagnostics</string>
+
 </resources>

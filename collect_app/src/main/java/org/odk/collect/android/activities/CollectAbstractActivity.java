@@ -17,18 +17,25 @@
 package org.odk.collect.android.activities;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.injection.config.AppComponent;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.ThemeUtils;
+
+import io.ffem.collect.android.preferences.AppPreferences;
 
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 import static org.odk.collect.android.utilities.PermissionUtils.isEntryPointActivity;
@@ -72,6 +79,12 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        changeActionBarStyleBasedOnCurrentMode();
+    }
+
+    @Override
     protected void onPostResume() {
         super.onPostResume();
         isInstanceStateSaved = false;
@@ -111,5 +124,39 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(new LocaleHelper().updateLocale(base));
+    }
+
+    /**
+     * Changes the action bar style depending on if the app is in user mode or diagnostic mode
+     * This serves as a visual indication as to what mode the app is running in.
+     */
+    protected void changeActionBarStyleBasedOnCurrentMode() {
+        if (AppPreferences.isDiagnosticMode(this)) {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(
+                        ContextCompat.getColor(this, R.color.diagnostic)));
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.diagnostic_status));
+            }
+
+        } else {
+
+            TypedValue typedValue = new TypedValue();
+            getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+            int color = typedValue.data;
+
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(color));
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+                getTheme().resolveAttribute(R.attr.colorPrimaryDark, typedValue, true);
+                color = typedValue.data;
+
+                getWindow().setStatusBarColor(color);
+            }
+        }
     }
 }

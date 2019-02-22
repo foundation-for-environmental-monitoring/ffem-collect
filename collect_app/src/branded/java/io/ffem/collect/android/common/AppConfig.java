@@ -14,7 +14,6 @@ public final class AppConfig {
     public static final int APP_EXPIRY_DAY = 15;
     public static final int APP_EXPIRY_MONTH = 3;
     public static final int APP_EXPIRY_YEAR = 2019;
-    public static final boolean USE_EXPERIMENT = false;
 
     private AppConfig() {
     }

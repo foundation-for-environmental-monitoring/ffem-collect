@@ -40,4 +40,9 @@
     <color name="lightTintColor">#1a8302</color>
     <color name="button_text">#e33b3b3b</color>
     <color name="linkBlue">#517cc6</color>
+
+    <!-- Diagnostic -->
+    <color name="diagnostic">#910228</color>
+    <color name="diagnostic_status">#830023</color>
+
 </resources>

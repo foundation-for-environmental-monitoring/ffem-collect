@@ -33,7 +33,6 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.parser.XPathSyntaxException;
-import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.application.Collect;
@@ -48,7 +47,7 @@ import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 
 import java.util.Map;
 
-import io.ffem.collect.android.common.AppConfig;
+import io.ffem.collect.android.preferences.AppPreferences;
 import io.ffem.collect.android.widget.RowView;
 import timber.log.Timber;
 
@@ -248,7 +247,7 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
     @Override
     public void onButtonClick(int buttonId) {
         String exSpec = getFormEntryPrompt().getAppearanceHint().replaceFirst("^ex[:]", "");
-        if (BuildConfig.DEBUG && AppConfig.USE_EXPERIMENT) {
+        if (AppPreferences.isDiagnosticMode(getContext())) {
             exSpec = exSpec.replace("water", "experiment")
                     .replace("soil", "experiment");
         }

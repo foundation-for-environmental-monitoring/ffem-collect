@@ -75,7 +75,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import io.ffem.collect.android.common.AppConfig;
+import io.ffem.collect.android.preferences.AppPreferences;
 import io.ffem.collect.android.widget.RowView;
 import timber.log.Timber;
 
@@ -258,7 +258,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener {
                 return null;
             }
 
-            if (BuildConfig.DEBUG && AppConfig.USE_EXPERIMENT) {
+            if (AppPreferences.isDiagnosticMode(getContext())) {
                 intentString = intentString.replace("water", "experiment")
                         .replace("soil", "experiment");
             }

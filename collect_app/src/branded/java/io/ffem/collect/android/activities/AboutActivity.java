@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
@@ -13,12 +14,17 @@ import org.odk.collect.android.activities.WebViewActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.CustomTabHelper;
 
+import io.ffem.collect.android.preferences.AppPreferences;
+
 /**
  * Activity to display info about the app.
  */
 public class AboutActivity extends CollectAbstractActivity {
 
+    private static final int CHANGE_MODE_MIN_CLICKS = 10;
     private static final String LICENSES_HTML_PATH = "file:///android_asset/open_source_licenses.html";
+
+    private int clickCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,5 +63,58 @@ public class AboutActivity extends CollectAbstractActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Turn on diagnostic mode if user clicks on version section CHANGE_MODE_MIN_CLICKS times.
+     */
+    public void switchToDiagnosticMode(View view) {
+        if (!AppPreferences.isDiagnosticMode(this)) {
+            clickCount++;
+
+            if (clickCount >= CHANGE_MODE_MIN_CLICKS) {
+                clickCount = 0;
+                Toast.makeText(getBaseContext(), getString(
+                        R.string.diagnosticModeEnabled), Toast.LENGTH_SHORT).show();
+                AppPreferences.enableDiagnosticMode(this);
+
+                changeActionBarStyleBasedOnCurrentMode();
+
+                switchLayoutForDiagnosticOrUserMode();
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        switchLayoutForDiagnosticOrUserMode();
+    }
+
+    /**
+     * Show the diagnostic mode layout.
+     */
+    private void switchLayoutForDiagnosticOrUserMode() {
+        if (AppPreferences.isDiagnosticMode(this)) {
+            findViewById(R.id.layoutDiagnostics).setVisibility(View.VISIBLE);
+        } else {
+            if (findViewById(R.id.layoutDiagnostics).getVisibility() == View.VISIBLE) {
+                findViewById(R.id.layoutDiagnostics).setVisibility(View.GONE);
+            }
+        }
+    }
+
+    /**
+     * Disables diagnostic mode.
+     */
+    public void disableDiagnosticsMode(View view) {
+        Toast.makeText(getBaseContext(), getString(R.string.diagnosticModeDisabled),
+                Toast.LENGTH_SHORT).show();
+
+        AppPreferences.disableDiagnosticMode(this);
+
+        switchLayoutForDiagnosticOrUserMode();
+
+        changeActionBarStyleBasedOnCurrentMode();
     }
 }
