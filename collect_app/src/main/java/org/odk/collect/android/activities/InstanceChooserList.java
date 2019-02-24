@@ -247,7 +247,7 @@ public class InstanceChooserList extends InstanceListActivity implements
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         hideProgressBarIfAllowed();
         listAdapter.swapCursor(cursor);
-        if (listAdapter.getCount() == 0){
+        if (!isSearching() && listAdapter.getCount() == 0){
             finish();
         }
     }

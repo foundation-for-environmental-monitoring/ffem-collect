@@ -355,4 +355,8 @@ abstract class AppListActivity extends CollectAbstractActivity {
         progressBar.setVisibility(View.VISIBLE);
         progressBarVisible = true;
     }
+
+    protected boolean isSearching() {
+        return searchView != null && !searchView.isIconified();
+    }
 }

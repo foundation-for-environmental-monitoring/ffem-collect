@@ -289,7 +289,7 @@
     <string name="google_set_account">You have selected Google Sheets as your server, please select a corresponding Google account in the General Settings before continuing</string>
     <string name="media_upload_error">Failed to upload media file that does not exist: %1$s</string>
     <string name="odk_permissions_fail">Auto send permission failure, please make sure your have granted all required permissions</string>
-    <string name="odk_auto_note">Auto Send results</string>
+    <string name="odk_auto_note">ffem Collect - Auto Send</string>
     <string name="odk_auto_download_notification_title">ODK auto-download results</string>
     <string name="notification_error">Error displaying notification text</string>
     <string name="delete_after_send">Delete after send</string>

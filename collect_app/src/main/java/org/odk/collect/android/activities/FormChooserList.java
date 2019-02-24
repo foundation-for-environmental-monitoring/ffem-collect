@@ -239,13 +239,17 @@ public class FormChooserList extends FormListActivity implements
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         hideProgressBarIfAllowed();
         listAdapter.swapCursor(cursor);
-        cursor.requery();
-        if (listAdapter.getCount() == 0) {
+        if (isSearching()) {
             findViewById(R.id.buttonGetBlankForm).setVisibility(View.GONE);
         } else {
-            findViewById(R.id.buttonGetBlankForm).setVisibility(View.VISIBLE);
+            cursor.requery();
+            if (listAdapter.getCount() == 0) {
+                findViewById(R.id.buttonGetBlankForm).setVisibility(View.GONE);
+            } else {
+                findViewById(R.id.buttonGetBlankForm).setVisibility(View.VISIBLE);
+            }
+            invalidateOptionsMenu();
         }
-        invalidateOptionsMenu();
     }
 
     @Override

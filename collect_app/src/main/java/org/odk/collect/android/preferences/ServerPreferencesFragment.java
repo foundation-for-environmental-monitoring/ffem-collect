@@ -21,7 +21,6 @@ import android.accounts.AccountManager;
 //import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 //import android.preference.ListPreference;
@@ -544,14 +543,6 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         runSmsPhoneNumberValidation();
     }
     */
-
-    private void clearCachedCrendentials() {
-        String server = (String) GeneralSharedPreferences
-                .getInstance().get(GeneralKeys.KEY_SERVER_URL);
-        Uri u = Uri.parse(server);
-        webCredentialsUtils.clearCredentials(u.getHost());
-//        Collect.getInstance().getCookieStore().clear();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -36,6 +36,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 
@@ -70,6 +71,7 @@ import java.util.Map.Entry;
 
 import io.ffem.collect.android.activities.SettingsActivity;
 import io.ffem.collect.android.common.AppConfig;
+import io.ffem.collect.android.preferences.AppPreferences;
 import io.ffem.collect.android.util.ApkHelper;
 import timber.log.Timber;
 
@@ -86,14 +88,13 @@ public class MainMenuActivity extends CollectAbstractActivity {
 
     private static final boolean EXIT = true;
     // buttons
-    private Button enterDataButton;
-    //    private Button manageFilesButton;
+//     private Button manageFilesButton;
     private Button sendDataButton;
     private Button viewSentFormsButton;
     private Button reviewDataButton;
-    //    private Button getFormsButton;
-    //    private View reviewSpacer;
-//    private View getFormsSpacer;
+//     private Button getFormsButton;
+//     private View reviewSpacer;
+//     private View getFormsSpacer;
     private AlertDialog alertDialog;
     private int completedCount;
     private int savedCount;
@@ -405,6 +406,8 @@ public class MainMenuActivity extends CollectAbstractActivity {
                 viewSentFormsButton.setVisibility(View.VISIBLE);
             }
         }
+
+        switchLayoutForDiagnosticOrUserMode();
     }
 
     @Override
@@ -706,6 +709,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
                     .show();
         }
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -739,4 +743,27 @@ public class MainMenuActivity extends CollectAbstractActivity {
         }
     }
 
+    /**
+     * Show the diagnostic mode layout.
+     */
+    private void switchLayoutForDiagnosticOrUserMode() {
+        if (AppPreferences.isDiagnosticMode(this)) {
+            findViewById(R.id.layoutDiagnostics).setVisibility(View.VISIBLE);
+        } else {
+            if (findViewById(R.id.layoutDiagnostics).getVisibility() == View.VISIBLE) {
+                findViewById(R.id.layoutDiagnostics).setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public void onDisableDiagnosticsClick(View view) {
+        Toast.makeText(getBaseContext(), getString(R.string.diagnosticModeDisabled),
+                Toast.LENGTH_SHORT).show();
+
+        AppPreferences.disableDiagnosticMode(this);
+
+        switchLayoutForDiagnosticOrUserMode();
+
+        changeActionBarStyleBasedOnCurrentMode();
+    }
 }
