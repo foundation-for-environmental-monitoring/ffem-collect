@@ -106,6 +106,12 @@ public class DownloadFormListUtils {
             }
         }
 
+        if (webCredentialsUtils.getPasswordFromPreferences().isEmpty() ||
+                webCredentialsUtils.getUserNameFromPreferences().isEmpty()) {
+            formList.put(DL_AUTH_REQUIRED, new FormDetails(""));
+            return formList;
+        }
+
         DocumentFetchResult result = collectServerClient.getXmlDocument(downloadListUrl);
 
         clearTemporaryCredentials(url);
