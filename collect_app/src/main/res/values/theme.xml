@@ -29,6 +29,15 @@
         <item name="android:textDirection" tools:targetApi="17">locale</item>
         <item name="warningColor">@color/red_500</item>
         <item name="dividerCompat">@android:drawable/divider_horizontal_dark</item>
+        <!--
+            The default tint mode for ImageViews is SRC_ATOP, which produces
+            incorrect blending results when tinting images with a colour that
+            has an alpha channel (for example, the alpha channel is used to
+            turn disabled buttons grey).  The correct tint mode is SRC_IN,
+            which is the default tint mode in Android everywhere else.  See:
+            https://developer.android.com/reference/android/widget/ImageView.html#attr_android:tint
+        -->
+        <item name="android:tintMode" tools:targetApi="21">src_in</item>
     </style>
 
     <style name="AlertDialogTheme.Dark" parent="Theme.AppCompat.Dialog.Alert">
@@ -36,6 +45,7 @@
     </style>
 
     <style name="AppTheme.SettingsTheme.Dark" parent="BaseDarkAppTheme">
+        <item name="android:textColor">?primaryTextColor</item>
         <item name="android:textDirection" tools:targetApi="17">locale</item>
         <item name="android:textSize">17sp</item>
         <item name="android:listDivider">@null</item>
@@ -75,6 +85,7 @@
         <item name="android:textDirection" tools:targetApi="17">locale</item>
         <item name="warningColor">@color/red_500</item>
         <item name="dividerCompat">@android:drawable/divider_horizontal_bright</item>
+        <item name="android:tintMode" tools:targetApi="21">src_in</item>
         <item name="warningColor">@color/red</item>
         <item name="toolbarIconColor">@color/darkIconColor</item>
         <item name="cardBackgroundColor">@color/lightCardBackground</item>
@@ -90,7 +101,12 @@
         <item name="colorAccent">@color/lightAccentColor</item>
     </style>
 
+    <style name="PermissionAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
     <style name="AppTheme.SettingsTheme.Light" parent="BaseLightAppTheme">
+        <item name="android:textColor">?primaryTextColor</item>
         <item name="android:textDirection" tools:targetApi="17">locale</item>
         <item name="android:textSize">17sp</item>
         <item name="android:listDivider">@null</item>
