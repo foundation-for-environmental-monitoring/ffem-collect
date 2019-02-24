@@ -247,7 +247,7 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
     @Override
     public void onButtonClick(int buttonId) {
         String exSpec = getFormEntryPrompt().getAppearanceHint().replaceFirst("^ex[:]", "");
-        if (AppPreferences.isDiagnosticMode(getContext())) {
+        if (AppPreferences.launchExperiment(getContext())) {
             exSpec = exSpec.replace("water", "experiment")
                     .replace("soil", "experiment");
         }

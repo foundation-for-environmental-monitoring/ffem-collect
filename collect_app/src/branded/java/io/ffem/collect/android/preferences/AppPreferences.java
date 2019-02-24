@@ -25,4 +25,9 @@ public final class AppPreferences {
     public static void disableDiagnosticMode(Context context) {
         PreferencesUtil.setBoolean(context, R.string.diagnosticModeKey, false);
     }
+
+    public static boolean launchExperiment(Context context) {
+        return isDiagnosticMode(context) && PreferencesUtil.getBoolean(context,
+                R.string.launchExperimentKey, false);
+    }
 }

@@ -1,0 +1,10 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <io.ffem.collect.android.preferences.PreferenceCategoryCustom
+        android:key="preferenceCategoryDiagnostics"
+        android:title="@string/testing">
+        <CheckBoxPreference
+            android:key="@string/launchExperimentKey"
+            android:summary="Force all questions to launch ffem Experiment app."
+            android:title="Always Launch ffem Experiment" />
+    </io.ffem.collect.android.preferences.PreferenceCategoryCustom>
+</PreferenceScreen>

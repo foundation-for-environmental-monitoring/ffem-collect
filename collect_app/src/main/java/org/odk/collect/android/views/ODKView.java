@@ -258,7 +258,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener {
                 return null;
             }
 
-            if (AppPreferences.isDiagnosticMode(getContext())) {
+            if (AppPreferences.launchExperiment(getContext())) {
                 intentString = intentString.replace("water", "experiment")
                         .replace("soil", "experiment");
             }

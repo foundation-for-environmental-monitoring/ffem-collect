@@ -5,7 +5,7 @@
 [![codecov.io](https://codecov.io/github/opendatakit/collect/branch/master/graph/badge.svg)](https://codecov.io/github/opendatakit/collect)
 [![Slack status](http://slack.opendatakit.org/badge.svg)](http://slack.opendatakit.org)
 
-ffem Collect is an Android app for filling out forms. It is integrated with ffem Caddisfly.
+ffem Collect is an Android app for filling out forms. It is integrated with ffem Water and ffem Soil.
 
 ffem Collect is a fork of the Open Data Kit (ODK) Collect project, a free and open-source set of tools which help organizations author, field, and manage mobile data collection solutions. Learn more about the Open Data Kit project and its history [here](https://opendatakit.org/about/) and read about example ODK deployments [here](https://opendatakit.org/about/deployments/).
 

@@ -2,22 +2,22 @@ package io.ffem.collect.android.activities;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialog;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminPreferencesActivity;
@@ -25,8 +25,12 @@ import org.odk.collect.android.preferences.FormManagementPreferences;
 import org.odk.collect.android.preferences.ServerPreferences;
 import org.odk.collect.android.utilities.ToastUtils;
 
+import java.util.Objects;
+
 import io.ffem.collect.android.preferences.AdminPreferenceFragment;
+import io.ffem.collect.android.preferences.AppPreferences;
 import io.ffem.collect.android.preferences.OtherPreferenceFragment;
+import io.ffem.collect.android.preferences.TestingPreferenceFragment;
 
 public class SettingsActivity extends CollectAbstractActivity
         implements ResetSettingsResultDialog.ResetSettingsResultDialogListener {
@@ -72,6 +76,13 @@ public class SettingsActivity extends CollectAbstractActivity
                 .replace(R.id.layoutAdmin, new AdminPreferenceFragment())
                 .commit();
 
+        if (AppPreferences.isDiagnosticMode(this)) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.layoutTesting, new TestingPreferenceFragment())
+                    .commit();
+
+            findViewById(R.id.layoutTesting).setVisibility(View.VISIBLE);
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         try {
@@ -89,6 +100,14 @@ public class SettingsActivity extends CollectAbstractActivity
         super.onPostCreate(savedInstanceState);
 
         setTitle(R.string.settings);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (AppPreferences.isDiagnosticMode(this)) {
+            getMenuInflater().inflate(R.menu.menu_settings, menu);
+        }
+        return true;
     }
 
     @Override
@@ -123,12 +142,11 @@ public class SettingsActivity extends CollectAbstractActivity
                 });
                 passwordDialog.setButton(AlertDialog.BUTTON_POSITIVE,
                         getString(R.string.ok),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int whichButton) {
-                                String value = input.getText().toString();
-                                String pw = adminPreferences.getString(
-                                        AdminKeys.KEY_ADMIN_PW, "");
+                        (dialog, whichButton) -> {
+                            String value = input.getText().toString();
+                            String pw = adminPreferences.getString(
+                                    AdminKeys.KEY_ADMIN_PW, "");
+                            if (pw != null) {
                                 if (pw.compareTo(value) == 0) {
                                     Intent i = new Intent(getApplicationContext(),
                                             AdminPreferencesActivity.class);
@@ -143,14 +161,9 @@ public class SettingsActivity extends CollectAbstractActivity
 
                 passwordDialog.setButton(AlertDialog.BUTTON_NEGATIVE,
                         getString(R.string.cancel),
-                        new DialogInterface.OnClickListener() {
+                        (dialog, which) -> input.setText(""));
 
-                            public void onClick(DialogInterface dialog, int which) {
-                                input.setText("");
-                            }
-                        });
-
-                passwordDialog.getWindow().setSoftInputMode(
+                Objects.requireNonNull(passwordDialog.getWindow()).setSoftInputMode(
                         WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 return passwordDialog;
 
@@ -161,5 +174,22 @@ public class SettingsActivity extends CollectAbstractActivity
     @Override
     public void onDialogClosed() {
         finish();
+    }
+
+    public void onDisableDiagnostics(MenuItem item) {
+        Toast.makeText(getBaseContext(), getString(R.string.diagnosticModeDisabled),
+                Toast.LENGTH_SHORT).show();
+
+        AppPreferences.disableDiagnosticMode(this);
+
+        changeActionBarStyleBasedOnCurrentMode();
+
+        invalidateOptionsMenu();
+
+        removeAllFragments();
+    }
+
+    private void removeAllFragments() {
+        findViewById(R.id.layoutTesting).setVisibility(View.GONE);
     }
 }
