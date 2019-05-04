@@ -33,6 +33,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import timber.log.Timber;
+
 public class InstanceListCursorAdapter extends SimpleCursorAdapter {
     private final Context context;
     private final boolean shouldCheckDisabled;
@@ -79,8 +81,13 @@ public class InstanceListCursorAdapter extends SimpleCursorAdapter {
             String disabledMessage;
 
             if (date != 0) {
-                String deletedTime = context.getString(R.string.deleted_on_date_at_time);
-                disabledMessage = new SimpleDateFormat(deletedTime, Locale.getDefault()).format(new Date(date));
+                try {
+                    String deletedTime = context.getString(R.string.deleted_on_date_at_time);
+                    disabledMessage = new SimpleDateFormat(deletedTime, Locale.getDefault()).format(new Date(date));
+                } catch (IllegalArgumentException e) {
+                    Timber.e(e);
+                    disabledMessage = context.getString(R.string.submission_deleted);
+                }
             } else if (!formExists) {
                 disabledMessage = context.getString(R.string.deleted_form);
             } else {
@@ -96,10 +103,18 @@ public class InstanceListCursorAdapter extends SimpleCursorAdapter {
     }
 
     private void setEnabled(View view) {
+        final TextView formTitle = view.findViewById(R.id.form_title);
+        final TextView formSubtitle = view.findViewById(R.id.form_subtitle);
         final TextView disabledCause = view.findViewById(R.id.form_subtitle2);
+        final ImageView imageView = view.findViewById(R.id.image);
 
         view.setEnabled(true);
         disabledCause.setVisibility(View.GONE);
+
+        formTitle.setAlpha(1f);
+        formSubtitle.setAlpha(1f);
+        disabledCause.setAlpha(1f);
+        imageView.setAlpha(1f);
     }
 
     private void setDisabled(View view, String disabledMessage) {

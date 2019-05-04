@@ -14,11 +14,12 @@
 
 package org.odk.collect.android.widgets;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.content.FileProvider;
+import androidx.core.content.FileProvider;
 import android.view.View;
 import android.widget.Button;
 
@@ -34,6 +35,8 @@ import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
 import java.util.Locale;
+
+import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
 
@@ -117,7 +120,7 @@ public class ImageWidget extends BaseImageWidget {
     public void onButtonClick(int buttonId) {
         switch (buttonId) {
             case R.id.capture_image:
-                getPermissionUtils().requestCameraPermission(new PermissionListener() {
+                getPermissionUtils().requestCameraPermission((Activity) getContext(), new PermissionListener() {
                     @Override
                     public void granted() {
                         captureImage();
@@ -160,13 +163,17 @@ public class ImageWidget extends BaseImageWidget {
             // images returned by the camera in 1.6 (and earlier) are ~1/4
             // the size. boo.
 
-            Uri uri = FileProvider.getUriForFile(getContext(),
-                    BuildConfig.APPLICATION_ID + ".provider",
-                    new File(Collect.TMPFILE_PATH));
-            // if this gets modified, the onActivityResult in
-            // FormEntyActivity will also need to be updated.
-            intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri);
-            FileUtils.grantFilePermissions(intent, uri, getContext());
+            try {
+                Uri uri = FileProvider.getUriForFile(getContext(),
+                        BuildConfig.APPLICATION_ID + ".provider",
+                        new File(Collect.TMPFILE_PATH));
+                // if this gets modified, the onActivityResult in
+                // FormEntyActivity will also need to be updated.
+                intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri);
+                FileUtils.grantFilePermissions(intent, uri, getContext());
+            } catch (IllegalArgumentException e) {
+                Timber.e(e);
+            }
         }
 
         imageCaptureHandler.captureImage(intent, RequestCodes.IMAGE_CAPTURE, R.string.capture_image);

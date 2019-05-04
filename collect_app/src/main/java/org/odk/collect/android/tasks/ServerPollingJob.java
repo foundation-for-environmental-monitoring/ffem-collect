@@ -24,7 +24,7 @@ import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobManager;
@@ -75,11 +75,11 @@ public class ServerPollingJob extends Job {
         DownloadFormListUtils downloadFormListTask = new DownloadFormListUtils();
         HashMap<String, FormDetails> formList = downloadFormListTask.downloadFormList(true);
 
-        if (formList != null && !formList.containsKey(DL_ERROR_MSG)) {
+        if (!formList.containsKey(DL_ERROR_MSG)) {
             if (formList.containsKey(DL_AUTH_REQUIRED)) {
                 formList = downloadFormListTask.downloadFormList(true);
 
-                if (formList == null || formList.containsKey(DL_AUTH_REQUIRED) || formList.containsKey(DL_ERROR_MSG)) {
+                if (formList.containsKey(DL_AUTH_REQUIRED) || formList.containsKey(DL_ERROR_MSG)) {
                     return Result.FAILURE;
                 }
             }

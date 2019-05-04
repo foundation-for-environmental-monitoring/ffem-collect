@@ -23,8 +23,8 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.annotation.Nullable;
+import androidx.annotation.IdRes;
+import androidx.annotation.Nullable;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -99,7 +99,7 @@ public abstract class QuestionWidget
 
         if (context instanceof FormEntryActivity) {
             state = ((FormEntryActivity) context).getState();
-            permissionUtils = new PermissionUtils((FormEntryActivity) getContext());
+            permissionUtils = new PermissionUtils();
         }
 
         if (context instanceof DependencyProvider) {
@@ -235,7 +235,7 @@ public abstract class QuestionWidget
     }
 
     private static boolean isRTL(Locale locale) {
-        if (locale == null || locale.getDisplayName() == null || locale.getDisplayName().isEmpty()) {
+        if (locale.getDisplayName().isEmpty()) {
             return false;
         }
         final int directionality = Character.getDirectionality(locale.getDisplayName().charAt(0));
@@ -533,7 +533,7 @@ public abstract class QuestionWidget
             button.setLayoutParams(params);
 
             button.setOnClickListener(v -> {
-                if (Collect.allowClick(getClass().getName())) {
+                if (Collect.allowClick(QuestionWidget.class.getName())) {
                     ((ButtonWidget) this).onButtonClick(withId);
                 }
             });
@@ -689,5 +689,9 @@ public abstract class QuestionWidget
 
     public void setContainer(View container) {
         this.container = container;
+    }
+
+    public void setPermissionUtils(PermissionUtils permissionUtils) {
+        this.permissionUtils = permissionUtils;
     }
 }

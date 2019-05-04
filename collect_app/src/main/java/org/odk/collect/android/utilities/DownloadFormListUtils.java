@@ -20,7 +20,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.javarosa.xform.parse.XFormParser;
 import org.kxml2.kdom.Element;
@@ -296,10 +296,10 @@ public class DownloadFormListUtils {
                     }
                     String downloadUrl = child.getAttributeValue(null, "url");
                     downloadUrl = downloadUrl.trim();
-                    if (downloadUrl != null && downloadUrl.length() == 0) {
+                    if (downloadUrl.length() == 0) {
                         downloadUrl = null;
                     }
-                    if (downloadUrl == null || formName == null) {
+                    if (formName == null) {
                         String error =
                                 "Forms list entry " + Integer.toString(i)
                                         + " is missing form name or url attribute";

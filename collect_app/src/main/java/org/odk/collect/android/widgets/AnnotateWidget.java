@@ -15,12 +15,13 @@
 package org.odk.collect.android.widgets;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.support.v4.content.FileProvider;
+import androidx.core.content.FileProvider;
 import android.view.View;
 import android.widget.Button;
 
@@ -34,6 +35,8 @@ import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
 import java.util.Locale;
+
+import timber.log.Timber;
 
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
@@ -119,7 +122,7 @@ public class AnnotateWidget extends BaseImageWidget {
     public void onButtonClick(int buttonId) {
         switch (buttonId) {
             case R.id.capture_image:
-                getPermissionUtils().requestCameraPermission(new PermissionListener() {
+                getPermissionUtils().requestCameraPermission((Activity) getContext(), new PermissionListener() {
                     @Override
                     public void granted() {
                         captureImage();
@@ -164,13 +167,17 @@ public class AnnotateWidget extends BaseImageWidget {
         // images returned by the camera in 1.6 (and earlier) are ~1/4
         // the size. boo.
 
-        Uri uri = FileProvider.getUriForFile(getContext(),
-                BuildConfig.APPLICATION_ID + ".provider",
-                new File(Collect.TMPFILE_PATH));
-        // if this gets modified, the onActivityResult in
-        // FormEntyActivity will also need to be updated.
-        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri);
-        FileUtils.grantFilePermissions(intent, uri, getContext());
+        try {
+            Uri uri = FileProvider.getUriForFile(getContext(),
+                    BuildConfig.APPLICATION_ID + ".provider",
+                    new File(Collect.TMPFILE_PATH));
+            // if this gets modified, the onActivityResult in
+            // FormEntyActivity will also need to be updated.
+            intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri);
+            FileUtils.grantFilePermissions(intent, uri, getContext());
+        } catch (IllegalArgumentException e) {
+            Timber.e(e);
+        }
 
         imageCaptureHandler.captureImage(intent, RequestCodes.IMAGE_CAPTURE, R.string.annotate_image);
     }

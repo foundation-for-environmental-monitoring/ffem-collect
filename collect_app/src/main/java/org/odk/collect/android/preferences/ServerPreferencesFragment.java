@@ -17,22 +17,17 @@
 package org.odk.collect.android.preferences;
 
 import android.accounts.AccountManager;
-//import android.app.Activity;
-//import android.app.AlertDialog;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.preference.EditTextPreference;
-//import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.content.res.AppCompatResources;
+import androidx.appcompat.content.res.AppCompatResources;
 import android.telephony.PhoneNumberUtils;
 import android.text.InputFilter;
-//import android.text.TextUtils;
-import android.view.LayoutInflater;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,10 +43,13 @@ import com.google.gson.reflect.TypeToken;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.http.CollectServerClient;
-//import org.odk.collect.android.listeners.OnBackPressedListener;
+import org.odk.collect.android.injection.DaggerUtils;
+import org.odk.collect.android.listeners.OnBackPressedListener;
+import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.filters.ControlCharacterFilter;
 import org.odk.collect.android.preferences.filters.WhitespaceFilter;
 import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.PlayServicesUtil;
 import org.odk.collect.android.utilities.SoftKeyboardUtils;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -69,18 +67,22 @@ import javax.inject.Inject;
 import static android.app.Activity.RESULT_OK;
 import static io.ffem.collect.android.utilities.ListViewUtil.setListViewHeightBasedOnChildren;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_FORMLIST_URL;
-//import static org.odk.collect.android.preferences.GeneralKeys.KEY_PROTOCOL;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_PROTOCOL;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SELECTED_GOOGLE_ACCOUNT;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SMS_GATEWAY;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SMS_PREFERENCE;
-//import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_URL;
-//import static org.odk.collect.android.utilities.DialogUtils.showDialog;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_TRANSPORT_PREFERENCE;
-import static org.odk.collect.android.utilities.gdrive.GoogleAccountsManager.REQUEST_ACCOUNT_PICKER;
+import static org.odk.collect.android.utilities.DialogUtils.showDialog;
+//import android.preference.ListPreference;
+//import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
 
-public class ServerPreferencesFragment extends BasePreferenceFragment implements View.OnTouchListener,
-        GoogleAccountsManager.GoogleAccountSelectionListener {
+//import static org.odk.collect.android.utilities.DialogUtils.showDialog;
+
+public class ServerPreferencesFragment extends BasePreferenceFragment implements
+        View.OnTouchListener, OnBackPressedListener {
+
+    private static final int REQUEST_ACCOUNT_PICKER = 1000;
     private static final String KNOWN_URL_LIST = "knownUrlList";
     protected EditTextPreference serverUrlPreference;
     protected EditTextPreference usernamePreference;
@@ -91,7 +93,6 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     private ListPopupWindow listPopupWindow;
     private List<String> urlList;
     private Preference selectedGoogleAccountPreference;
-    private GoogleAccountsManager accountsManager;
     private boolean allowClickSelectedGoogleAccountPreference = true;
 
     @Inject
@@ -105,19 +106,23 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         super.onCreate(savedInstanceState);
         Collect.getInstance().getComponent().inject(this);
     }
+    @Inject
+    GoogleAccountsManager accountsManager;
 
     private ListView list;
 
     /*
     private ListPreference transportPreference;
     private ExtendedPreferenceCategory smsPreferenceCategory;
+    */
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        DaggerUtils.getComponent(activity).inject(this);
+
         ((PreferencesActivity) activity).setOnBackPressedListener(this);
     }
-    */
 
     public void addAggregatePreferences() {
         if (!new AggregatePreferencesAdder(this).add()) {
@@ -264,21 +269,32 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     }
 
     public void initAccountPreferences() {
-        accountsManager = new GoogleAccountsManager(this);
-        accountsManager.setListener(this);
-        accountsManager.disableAutoChooseAccount();
-
-        selectedGoogleAccountPreference.setSummary(accountsManager.getSelectedAccount());
+        selectedGoogleAccountPreference.setSummary(accountsManager.getLastSelectedAccountIfValid());
         selectedGoogleAccountPreference.setOnPreferenceClickListener(preference -> {
             if (allowClickSelectedGoogleAccountPreference) {
                 if (PlayServicesUtil.isGooglePlayServicesAvailable(getActivity())) {
                     allowClickSelectedGoogleAccountPreference = false;
-                    accountsManager.chooseAccountAndRequestPermissionIfNeeded();
+                    requestAccountsPermission();
                 } else {
                     PlayServicesUtil.showGooglePlayServicesAvailabilityErrorDialog(getActivity());
                 }
             }
             return true;
+        });
+    }
+
+    private void requestAccountsPermission() {
+        new PermissionUtils().requestGetAccountsPermission(getActivity(), new PermissionListener() {
+            @Override
+            public void granted() {
+                Intent intent = accountsManager.getAccountChooserIntent();
+                startActivityForResult(intent, REQUEST_ACCOUNT_PICKER);
+            }
+
+            @Override
+            public void denied() {
+                allowClickSelectedGoogleAccountPreference = true;
+            }
         });
     }
 
@@ -472,16 +488,12 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
             case REQUEST_ACCOUNT_PICKER:
                 if (resultCode == RESULT_OK && data != null && data.getExtras() != null) {
                     String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                    accountsManager.setSelectedAccountName(accountName);
+                    accountsManager.selectAccount(accountName);
+                    selectedGoogleAccountPreference.setSummary(accountName);
                 }
                 allowClickSelectedGoogleAccountPreference = true;
                 break;
         }
-    }
-
-    @Override
-    public void onGoogleAccountSelected(String accountName) {
-        selectedGoogleAccountPreference.setSummary(accountName);
     }
 
     /**
@@ -513,6 +525,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
             runGoogleAccountValidation();
         }
     }
+    */
 
     private void runGoogleAccountValidation() {
         String account = (String) GeneralSharedPreferences.getInstance().get(KEY_SELECTED_GOOGLE_ACCOUNT);
@@ -540,7 +553,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
 
     @Override
     public void doBack() {
-        runSmsPhoneNumberValidation();
+        runGoogleAccountValidation();
     }
     */
 

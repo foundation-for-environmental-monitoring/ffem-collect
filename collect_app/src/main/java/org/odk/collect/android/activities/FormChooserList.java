@@ -25,12 +25,9 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.support.v4.content.LocalBroadcastManager;
-import android.view.Menu;
-import android.view.MenuItem;
+import androidx.annotation.NonNull;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -108,9 +105,9 @@ public class FormChooserList extends FormListActivity implements
             diskSyncTask.setDiskSyncListener(this);
             diskSyncTask.execute((Void[]) null);
         }
-        sortingOptions = new String[]{
-                getString(R.string.sort_by_name_asc), getString(R.string.sort_by_name_desc),
-                getString(R.string.sort_by_date_asc), getString(R.string.sort_by_date_desc),
+        sortingOptions = new int[] {
+                R.string.sort_by_name_asc, R.string.sort_by_name_desc,
+                R.string.sort_by_date_asc, R.string.sort_by_date_desc,
         };
 
         setupAdapter();

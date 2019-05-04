@@ -20,7 +20,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.support.v4.content.CursorLoader;
+import androidx.loader.content.CursorLoader;
 
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dto.Form;
@@ -166,14 +166,14 @@ public class FormsDao {
     }
 
     public void deleteFormsFromIDs(String[] idsToDelete) {
-        String selection = FormsProviderAPI.FormsColumns._ID + " in (";
+        StringBuilder selection = new StringBuilder(FormsProviderAPI.FormsColumns._ID + " in (");
         for (int i = 0; i < idsToDelete.length - 1; i++) {
-            selection += "?, ";
+            selection.append("?, ");
         }
-        selection += "? )";
+        selection.append("? )");
 
         //This will break if the number of forms to delete > SQLITE_MAX_VARIABLE_NUMBER (999)
-        Collect.getInstance().getContentResolver().delete(FormsProviderAPI.FormsColumns.CONTENT_URI, selection, idsToDelete);
+        Collect.getInstance().getContentResolver().delete(FormsProviderAPI.FormsColumns.CONTENT_URI, selection.toString(), idsToDelete);
     }
 
     public void deleteFormsFromMd5Hash(String... hashes) {

@@ -15,11 +15,8 @@
 package org.odk.collect.android.upload;
 
 import android.database.Cursor;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
@@ -40,9 +37,11 @@ import org.odk.collect.android.dto.Form;
 import org.odk.collect.android.dto.Instance;
 import org.odk.collect.android.exception.BadUrlException;
 import org.odk.collect.android.exception.MultipleFoldersFoundException;
-import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.GeneralKeys;
+import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.tasks.FormLoaderTask;
+import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.TextUtils;
 import org.odk.collect.android.utilities.UrlUtils;
 import org.odk.collect.android.utilities.gdrive.DriveHelper;
 import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
@@ -50,7 +49,6 @@ import org.odk.collect.android.utilities.gdrive.SheetsHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,32 +72,14 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
     private static final String ALTITUDE_TITLE_POSTFIX = "-altitude";
     private static final String ACCURACY_TITLE_POSTFIX = "-accuracy";
 
-    private final GoogleAccountsManager accountsManager;
     private final DriveHelper driveHelper;
     private final SheetsHelper sheetsHelper;
 
     private Spreadsheet spreadsheet;
 
     public InstanceGoogleSheetsUploader(GoogleAccountsManager accountsManager) {
-        this.accountsManager = accountsManager;
         driveHelper = accountsManager.getDriveHelper();
         sheetsHelper = accountsManager.getSheetsHelper();
-    }
-
-    public String getAuthToken() throws IOException, GoogleAuthException {
-        String token;
-        try {
-            token = accountsManager.getCredential().getToken();
-            // Immediately invalidate so we get a different one if we have to try again
-            GoogleAuthUtil.invalidateToken(accountsManager.getContext(), token);
-            return token;
-        } catch (UserRecoverableAuthException e) {
-            if (accountsManager.getActivity() != null) {
-                accountsManager.getActivity().startActivityForResult(e.getIntent(),
-                        GoogleAccountsManager.REQUEST_AUTHORIZATION);
-            }
-            return null;
-        }
     }
 
     /**
@@ -173,7 +153,7 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
 
     private void insertRows(Instance instance, TreeElement element, String parentKey, String key, File instanceFile, String sheetTitle)
             throws UploadException {
-        insertRow(instance, element, parentKey, key, instanceFile, sheetTitle);
+        insertRow(instance, element, parentKey, key, instanceFile, TextUtils.ellipsizeBeginning(sheetTitle));
 
         int repeatIndex = 0;
         for (TreeElement child : getChildElements(element, true)) {
@@ -301,12 +281,16 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
 
     private TreeElement getInstanceElement(String formFilePath, File instanceFile) throws UploadException {
         FormDef formDef;
+
+        File formXml = new File(formFilePath);
+        String lastSavedSrc = FileUtils.getOrCreateLastSavedSrc(formXml);
+
         try {
-            formDef = XFormUtils.getFormFromInputStream(new FileInputStream(new File(formFilePath)));
-        } catch (FileNotFoundException e) {
+            formDef = XFormUtils.getFormFromInputStream(new FileInputStream(formXml), lastSavedSrc);
+            FormLoaderTask.importData(instanceFile, new FormEntryController(new FormEntryModel(formDef)));
+        } catch (IOException | RuntimeException e) {
             throw new UploadException(e);
         }
-        FormLoaderTask.importData(instanceFile, new FormEntryController(new FormEntryModel(formDef)));
         return formDef.getMainInstance().getRoot();
     }
 
@@ -338,7 +322,7 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
         Set<String> sheetTitles = new HashSet<>();
         for (TreeElement childElement : getChildElements(element, false)) {
             if (childElement.isRepeatable()) {
-                sheetTitles.add(getElementTitle(childElement));
+                sheetTitles.add(TextUtils.ellipsizeBeginning(getElementTitle(childElement)));
                 sheetTitles.addAll(getSheetTitles(childElement));
             }
         }
@@ -351,7 +335,7 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
         for (TreeElement childElement : getChildElements(element, false)) {
             String elementTitle = getElementTitle(childElement);
             if (childElement.isRepeatable()) {
-                answers.put(elementTitle, getHyperlink(getSheetUrl(getSheetId(elementTitle)), elementTitle));
+                answers.put(elementTitle, getHyperlink(getSheetUrl(getSheetId(TextUtils.ellipsizeBeginning(elementTitle))), elementTitle));
             } else {
                 String answer = childElement.getValue() != null ? childElement.getValue().getDisplayText() : "";
                 if (new File(instanceFile.getParentFile() + "/" + answer).isFile()) {

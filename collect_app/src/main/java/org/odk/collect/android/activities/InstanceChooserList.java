@@ -22,11 +22,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.view.MenuItem;
+import androidx.annotation.NonNull;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -77,17 +75,17 @@ public class InstanceChooserList extends InstanceListActivity implements
 
             setTitle(getString(R.string.review_data));
             editMode = true;
-            sortingOptions = new String[]{
-                    getString(R.string.sort_by_name_asc), getString(R.string.sort_by_name_desc),
-                    getString(R.string.sort_by_date_asc), getString(R.string.sort_by_date_desc),
-                    getString(R.string.sort_by_status_asc), getString(R.string.sort_by_status_desc)
+            sortingOptions = new int[] {
+                    R.string.sort_by_name_asc, R.string.sort_by_name_desc,
+                    R.string.sort_by_date_asc, R.string.sort_by_date_desc,
+                    R.string.sort_by_status_asc, R.string.sort_by_status_desc
             };
         } else {
             setTitle(getString(R.string.view_sent_forms));
 
-            sortingOptions = new String[]{
-                    getString(R.string.sort_by_name_asc), getString(R.string.sort_by_name_desc),
-                    getString(R.string.sort_by_date_asc), getString(R.string.sort_by_date_desc)
+            sortingOptions = new int[] {
+                    R.string.sort_by_name_asc, R.string.sort_by_name_desc,
+                    R.string.sort_by_date_asc, R.string.sort_by_date_desc
             };
             ((TextView) findViewById(android.R.id.empty)).setText(R.string.no_items_display_sent_forms);
 
@@ -102,7 +100,7 @@ public class InstanceChooserList extends InstanceListActivity implements
             }
         }
 
-        new PermissionUtils(this).requestStoragePermissions(new PermissionListener() {
+        new PermissionUtils().requestStoragePermissions(this, new PermissionListener() {
             @Override
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent
@@ -137,13 +135,12 @@ public class InstanceChooserList extends InstanceListActivity implements
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (Collect.allowClick(getClass().getName())) {
-            Cursor c = (Cursor) listView.getAdapter().getItem(position);
-            startManagingCursor(c);
-            Uri instanceUri =
-                    ContentUris.withAppendedId(InstanceColumns.CONTENT_URI,
-                            c.getLong(c.getColumnIndex(InstanceColumns._ID)));
-
             if (view.isEnabled()) {
+                Cursor c = (Cursor) listView.getAdapter().getItem(position);
+                Uri instanceUri =
+                        ContentUris.withAppendedId(InstanceColumns.CONTENT_URI,
+                                c.getLong(c.getColumnIndex(InstanceColumns._ID)));
+
                 String action = getIntent().getAction();
                 if (Intent.ACTION_PICK.equals(action)) {
                     // caller is waiting on a picked form

@@ -18,9 +18,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
+import androidx.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -40,11 +38,21 @@ import static org.odk.collect.android.preferences.GeneralKeys.KEY_CONSTRAINT_BEH
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_GUIDANCE_HINT;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_IMAGE_SIZE;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_PERIODIC_FORM_UPDATES_CHECK;
-import static org.odk.collect.android.preferences.GeneralKeys.KEY_DELETE_FORMS;
+import static org.odk.collect.android.preferences.PreferencesActivity.INTENT_KEY_ADMIN_MODE;
 
 public class FormManagementPreferences extends PreferenceFragment {
 
     private ListView list;
+
+    public static FormManagementPreferences newInstance(boolean adminMode) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(INTENT_KEY_ADMIN_MODE, adminMode);
+
+        FormManagementPreferences formManagementPreferences = new FormManagementPreferences();
+        formManagementPreferences.setArguments(bundle);
+
+        return formManagementPreferences;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

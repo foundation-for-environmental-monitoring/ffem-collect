@@ -14,7 +14,6 @@
 
 package org.odk.collect.android.application;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -24,15 +23,16 @@ import android.net.NetworkInfo;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.multidex.MultiDex;
-import android.support.v7.app.AppCompatDelegate;
+import androidx.annotation.Nullable;
+import androidx.multidex.MultiDex;
+import androidx.appcompat.app.AppCompatDelegate;
 import android.util.Log;
 
 //import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobManagerCreateException;
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -42,8 +42,8 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.external.ExternalDataManager;
-import org.odk.collect.android.injection.config.AppComponent;
-import org.odk.collect.android.injection.config.DaggerAppComponent;
+import org.odk.collect.android.injection.config.AppDependencyComponent;
+import org.odk.collect.android.injection.config.DaggerAppDependencyComponent;
 import org.odk.collect.android.jobs.CollectJobCreator;
 import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.logic.PropertyManager;
@@ -62,11 +62,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.Locale;
 
-import javax.inject.Inject;
-
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasActivityInjector;
-import io.ffem.collect.android.updater.UpdateCheck;
 import timber.log.Timber;
 
 import static org.odk.collect.android.logic.PropertyManager.PROPMGR_USERNAME;
@@ -82,7 +77,7 @@ import static org.odk.collect.android.tasks.sms.SmsSender.SMS_SEND_ACTION;
  *
  * @author carlhartung
  */
-public class Collect extends Application implements HasActivityInjector {
+public class Collect extends Application {
 
     // Storage paths
     public static final String APP_FOLDER = "ffem Collect";
@@ -110,10 +105,7 @@ public class Collect extends Application implements HasActivityInjector {
     private FormController formController;
     private ExternalDataManager externalDataManager;
     private Tracker tracker;
-    private AppComponent applicationComponent;
-
-    @Inject
-    DispatchingAndroidInjector<Activity> androidInjector;
+    private AppDependencyComponent applicationComponent;
 
     public static Collect getInstance() {
         return singleton;
@@ -227,11 +219,8 @@ public class Collect extends Application implements HasActivityInjector {
         super.onCreate();
         singleton = this;
 
-        applicationComponent = DaggerAppComponent.builder()
-                .application(this)
-                .build();
+        setupDagger();
 
-        applicationComponent.inject(this);
         NotificationUtils.createNotificationChannel(singleton);
 
         registerReceiver(new SmsSentBroadcastReceiver(), new IntentFilter(SMS_SEND_ACTION));
@@ -268,6 +257,14 @@ public class Collect extends Application implements HasActivityInjector {
         UpdateCheck.setNextUpdateCheck(this, -1);
 
         setupLeakCanary();
+    }
+
+    private void setupDagger() {
+        applicationComponent = DaggerAppDependencyComponent.builder()
+                .application(this)
+                .build();
+
+        applicationComponent.inject(this);
     }
 
     protected RefWatcher setupLeakCanary() {
@@ -348,12 +345,13 @@ public class Collect extends Application implements HasActivityInjector {
         return allowClick;
     }
 
-    public AppComponent getComponent() {
+    public AppDependencyComponent getComponent() {
         return applicationComponent;
     }
 
-    public void setComponent(AppComponent applicationComponent) {
+    public void setComponent(AppDependencyComponent applicationComponent) {
         this.applicationComponent = applicationComponent;
+        applicationComponent.inject(this);
     }
 
     /**
@@ -376,9 +374,12 @@ public class Collect extends Application implements HasActivityInjector {
                 new ByteArrayInputStream(formIdentifier.getBytes()));
     }
 
-    @Override
-    public DispatchingAndroidInjector<Activity> activityInjector() {
-        return androidInjector;
+    public void logNullFormControllerEvent(String action) {
+        Collect.getInstance().getDefaultTracker()
+                .send(new HitBuilders.EventBuilder()
+                        .setCategory("NullFormControllerEvent")
+                        .setAction(action)
+                        .build());
     }
 
     public static void resetLastClickTime() {

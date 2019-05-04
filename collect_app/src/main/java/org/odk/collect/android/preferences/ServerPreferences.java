@@ -20,9 +20,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
+import androidx.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -31,8 +29,19 @@ import org.odk.collect.android.R;
 import io.ffem.collect.android.activities.SignInActivity;
 
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_PROTOCOL;
+import static org.odk.collect.android.preferences.PreferencesActivity.INTENT_KEY_ADMIN_MODE;
 
 public class ServerPreferences extends ServerPreferencesFragment {
+
+    public static ServerPreferences newInstance(boolean adminMode) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(INTENT_KEY_ADMIN_MODE, adminMode);
+
+        ServerPreferences serverPreferences = new ServerPreferences();
+        serverPreferences.setArguments(bundle);
+
+        return serverPreferences;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

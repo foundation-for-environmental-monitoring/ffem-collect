@@ -6,10 +6,11 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.1'
-        classpath 'com.google.gms:google-services:4.2.0'
-        classpath 'org.ow2.asm:asm:7.0' // https://github.com/jacoco/jacoco/issues/639#issuecomment-355424756
+        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.google.gms:google-services:4.0.1'
+        classpath 'org.ow2.asm:asm:6.0' // https://github.com/jacoco/jacoco/issues/639#issuecomment-355424756
         classpath 'org.jacoco:org.jacoco.core:0.8.0'
+        classpath 'io.fabric.tools:gradle:1.28.1'
         classpath 'com.google.firebase:firebase-plugins:1.1.5'
     }
 }
@@ -39,7 +40,7 @@ task checkAll(type: GradleBuild) {
 }
 
 task checkCode(type: GradleBuild) {
-    tasks = ['pmd', 'checkstyle', 'lintDebug', 'spotbugsDebug']
+    tasks = ['pmd', 'checkstyle', 'lintDebug', 'spotbugs']
 }
 
 task checkTests(type: GradleBuild) {
@@ -47,7 +48,6 @@ task checkTests(type: GradleBuild) {
 }
 
 ext {
-    supportLibraryVersion = '28.0.0'
     leakyCanaryVersion = '1.6.1'
     daggerVersion = '2.19'
     rxLifecycleVersion = '2.2.2'

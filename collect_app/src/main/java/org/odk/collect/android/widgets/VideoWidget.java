@@ -26,8 +26,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore.Video;
-import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
+import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -318,7 +318,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
         switch (id) {
             case R.id.capture_video:
                 if (selfie) {
-                    getPermissionUtils().requestCameraAndRecordAudioPermissions(new PermissionListener() {
+                    getPermissionUtils().requestCameraAndRecordAudioPermissions((Activity) getContext(), new PermissionListener() {
                         @Override
                         public void granted() {
                             captureVideo();
@@ -329,7 +329,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
                         }
                     });
                 } else {
-                    getPermissionUtils().requestCameraPermission(new PermissionListener() {
+                    getPermissionUtils().requestCameraPermission((Activity) getContext(), new PermissionListener() {
                         @Override
                         public void granted() {
                             captureVideo();
@@ -421,13 +421,17 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
     }
 
     private void playVideoFile() {
-        Intent intent = new Intent("android.intent.action.VIEW");
+        Intent intent = new Intent(Intent.ACTION_VIEW);
         File file = new File(getInstanceFolder() + File.separator + binaryName);
 
-        Uri uri =
-                FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".provider", file);
+        Uri uri = null;
+        try {
+            uri = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".provider", file);
+            FileUtils.grantFileReadPermissions(intent, uri, getContext());
+        } catch (IllegalArgumentException e) {
+            Timber.e(e);
+        }
 
-        FileUtils.grantFileReadPermissions(intent, uri, getContext());
         intent.setDataAndType(uri, "video/*");
         try {
             getContext().startActivity(intent);

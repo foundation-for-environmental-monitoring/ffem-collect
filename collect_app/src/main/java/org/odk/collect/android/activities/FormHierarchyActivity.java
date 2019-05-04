@@ -17,11 +17,11 @@ package org.odk.collect.android.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -143,6 +143,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
         if (formController == null) {
             finish();
             Timber.w("FormController is null");
+            Collect.getInstance().logNullFormControllerEvent("FormHierarchyActivity");
             return;
         }
 
@@ -210,12 +211,13 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
     }
 
     private void updateOptionsMenu() {
+        FormController formController = Collect.getInstance().getFormController();
+
         // Not ready yet. Menu will be updated automatically once it's been prepared.
-        if (optionsMenu == null) {
+        if (optionsMenu == null || formController == null) {
             return;
         }
 
-        FormController formController = Collect.getInstance().getFormController();
         boolean isAtBeginning = screenIndex.isBeginningOfFormIndex() && !shouldShowRepeatGroupPicker();
         boolean shouldShowPicker = shouldShowRepeatGroupPicker();
         boolean isInRepeat = formController.indexContainsRepeatableGroup();
@@ -481,6 +483,8 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
             if (formController.isDisplayableGroup(formController.getFormIndex())) {
                 contextGroupRef = getGroupRef(formController);
                 formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
+            } else {
+                // Let contextGroupRef be null.
             }
         }
     }
@@ -504,10 +508,6 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
 
     private TreeReference getGroupRef(FormIndex index) {
         return index.getReference();
-    }
-
-    private TreeReference getParentGroupRef(FormController formController) {
-        return formController.getFormIndex().getReference().getParentRef();
     }
 
     private boolean shouldShowRepeatGroupPicker() {
@@ -541,11 +541,6 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
 
             int event = formController.getEvent();
 
-            if (event == FormEntryController.EVENT_BEGINNING_OF_FORM) {
-                formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
-                contextGroupRef = getParentGroupRef(formController);
-            }
-
             if (event == FormEntryController.EVENT_BEGINNING_OF_FORM && !shouldShowRepeatGroupPicker()) {
                 // The beginning of form has no valid prompt to display.
                 groupPathTextView.setVisibility(View.GONE);
@@ -570,7 +565,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                 // retrieve the current group
                 TreeReference curGroup = (visibleGroupRef == null) ? contextGroupRef : visibleGroupRef;
 
-                if (!curGroup.isParentOf(currentRef, false)) {
+                if (curGroup != null && !curGroup.isParentOf(currentRef, false)) {
                     // We have left the current group
                     if (visibleGroupRef == null) {
                         // We are done.
@@ -605,6 +600,9 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                         break;
                     }
 //                    case FormEntryController.EVENT_GROUP: {
+//                        if (!formController.isGroupRelevant()) {
+//                            break;
+//                        }
 //                        // Nothing but repeat group instances should show up in the picker.
 //                        if (shouldShowRepeatGroupPicker()) {
 //                            break;
@@ -617,7 +615,24 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
 //                            break;
 //                        }
 //
-//                        break;
+//                        // Don't render other groups' children.
+//                        if (contextGroupRef != null && !contextGroupRef.isParentOf(currentRef, false)) {
+//                            break;
+//                        }
+//
+//                        visibleGroupRef = currentRef;
+//
+//                        FormEntryCaption caption = formController.getCaptionPrompt();
+//                        HierarchyElement groupElement = new HierarchyElement(
+//                                caption.getShortText(), getString(R.string.group_label),
+//                                ContextCompat.getDrawable(this, R.drawable.ic_folder_open),
+//                                HierarchyElement.Type.VISIBLE_GROUP, caption.getIndex());
+//                        elementsToDisplay.add(groupElement);
+//
+//                        // Skip to the next item outside the group.
+//                        event = formController.stepOverGroup();
+//                        continue;
+//                    }
                     case FormEntryController.EVENT_GROUP:
                         // ignore group events
                         FormEntryCaption fp1 = formController.getCaptionPrompt();
@@ -636,9 +651,18 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                         // ignore it.
                         break;
                     case FormEntryController.EVENT_REPEAT: {
+                        if (!formController.isGroupRelevant()) {
+                            break;
+                        }
+
                         visibleGroupRef = currentRef;
 
                         FormEntryCaption fc = formController.getCaptionPrompt();
+
+                        // Don't render other groups' children.
+                        if (contextGroupRef != null && !contextGroupRef.isParentOf(currentRef, false)) {
+                            break;
+                        }
 
                         if (shouldShowRepeatGroupPicker()) {
                             // Don't render other groups' instances.

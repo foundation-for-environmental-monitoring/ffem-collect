@@ -16,7 +16,7 @@ package org.odk.collect.android.widgets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectMultiData;
@@ -60,8 +60,6 @@ public class SelectMultiWidget extends SelectTextWidget implements MultiChoiceWi
     }
 
     private void createLayout() {
-        readItems();
-
         adapter = new SelectMultipleListAdapter(items, ve, this);
 
         if (items != null) {

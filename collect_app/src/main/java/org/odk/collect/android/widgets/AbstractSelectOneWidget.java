@@ -16,8 +16,8 @@ package org.odk.collect.android.widgets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 import android.widget.RadioButton;
 
 import org.javarosa.core.model.FormIndex;
@@ -89,8 +89,6 @@ public abstract class AbstractSelectOneWidget extends SelectTextWidget implement
     }
 
     protected void createLayout() {
-        readItems();
-
         adapter = new SelectOneListAdapter(items, selectedValue, this);
 
         if (items != null) {

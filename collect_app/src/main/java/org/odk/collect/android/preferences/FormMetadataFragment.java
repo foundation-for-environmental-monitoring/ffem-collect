@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.View;
 
 import org.odk.collect.android.R;
@@ -35,7 +35,7 @@ public class FormMetadataFragment extends BasePreferenceFragment {
         initNormalPrefs();
 
         if (savedInstanceState == null) {
-            new PermissionUtils(getActivity()).requestReadPhoneStatePermission(new PermissionListener() {
+            new PermissionUtils().requestReadPhoneStatePermission(getActivity(), true, new PermissionListener() {
                 @Override
                 public void granted() {
                     initDangerousPrefs();
@@ -44,7 +44,7 @@ public class FormMetadataFragment extends BasePreferenceFragment {
                 @Override
                 public void denied() {
                 }
-            }, true);
+            });
         }
     }
 
