@@ -25,6 +25,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
+
+import android.preference.PreferenceManager;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;

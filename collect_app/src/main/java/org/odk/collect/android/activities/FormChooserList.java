@@ -28,6 +28,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -73,7 +77,7 @@ public class FormChooserList extends FormListActivity implements
 
         findViewById(R.id.buttonGetBlankForm).setOnClickListener(view -> onClickGetBlankForm(view));
 
-        new PermissionUtils(this).requestStoragePermissions(new PermissionListener() {
+        new PermissionUtils().requestStoragePermissions(this, new PermissionListener() {
             @Override
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent

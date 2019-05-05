@@ -2163,7 +2163,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         String navigation = (String) GeneralSharedPreferences.getInstance().get(GeneralKeys.KEY_NAVIGATION);
         showNavigationButtons = navigation.contains(GeneralKeys.NAVIGATION_BUTTONS);
         findViewById(R.id.buttonholder).setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
-        findViewById(R.id.shadow_up).setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
+        //findViewById(R.id.shadow_up).setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
 
         if (errorMessage != null) {
             if (alertDialog != null && !alertDialog.isShowing()) {

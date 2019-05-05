@@ -148,19 +148,19 @@ dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.browser:browser:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0-alpha05'
+    implementation 'com.google.android.material:material:1.1.0-alpha06'
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha04'
-    implementation 'com.google.android.material:material:1.1.0-alpha05'
+    implementation 'com.google.android.material:material:1.1.0-alpha06'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.exifinterface:exifinterface:1.1.0-alpha01'
     implementation "androidx.multidex:multidex:2.0.1"
 
-    implementation "com.google.android.gms:play-services-analytics:16.0.7"
+    implementation "com.google.android.gms:play-services-analytics:16.0.8"
     implementation "com.google.android.gms:play-services-auth:16.0.1"
     implementation "com.google.android.gms:play-services-maps:16.1.0"
     implementation "com.google.android.gms:play-services-location:16.0.0"
 
-    implementation "com.google.firebase:firebase-core:16.0.7"
+    implementation "com.google.firebase:firebase-core:16.0.8"
 
     implementation("com.google.guava:guava:27.1-android")
 
@@ -204,6 +204,9 @@ dependencies {
 
     }
     implementation "com.jakewharton.timber:timber:4.7.1"
+    implementation "org.slf4j:slf4j-api:1.7.26"
+    implementation "com.arcao:slf4j-timber:3.1@aar"
+
     implementation "com.google.zxing:core:3.3.2"
     implementation "com.journeyapps:zxing-android-embedded:3.6.0"
     implementation "net.danlew:android.joda:2.9.9"
@@ -240,16 +243,18 @@ dependencies {
     implementation "com.jakewharton.rxbinding2:rxbinding:2.0.0"
 
     // RxLifecycle (binds subscription cleanup to component lifecycle):
-    implementation "com.trello.rxlifecycle2:rxlifecycle:${rootProject.rxLifecycleVersion}"
-    implementation "com.trello.rxlifecycle2:rxlifecycle-android:${rootProject.rxLifecycleVersion}"
-    implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:${rootProject.rxLifecycleVersion}"
+    implementation "com.trello.rxlifecycle2:rxlifecycle:2.2.2"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-android:2.2.2"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:2.2.2"
 
     // WorkManager for specifying deferrable, asynchronous tasks
-    implementation("android.arch.work:work-runtime:${rootProject.workManagerVersion}") {
+    implementation("android.arch.work:work-runtime:1.0.1") {
+        exclude group: 'com.android.support'
         exclude group: 'com.google.guava', module: 'listenablefuture'
     }
     // Optional JobDispatcher support so devices with Play Services do better than AlarmManager
-    implementation("android.arch.work:work-firebase:${rootProject.workManagerVersion}") {
+    implementation("android.arch.work:work-firebase:1.0.0-alpha11") {
+        exclude group: 'com.android.support'
         exclude group: 'com.google.guava', module: 'listenablefuture'
     }
 
@@ -262,40 +267,46 @@ dependencies {
     compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
 
     // Used to generate documentation screenshots.
-    androidTestImplementation "tools.fastlane:screengrab:1.1.0"
+    androidTestImplementation('tools.fastlane:screengrab:1.1.0') {
+        exclude group: 'com.android.support'
+    }
 
     // Testing-only dependencies
     testImplementation "junit:junit:4.12"
-    testImplementation "org.mockito:mockito-core:2.23.0"
+    testImplementation "org.mockito:mockito-core:2.27.0"
     testImplementation "org.robolectric:robolectric:4.2"
     testImplementation "org.robolectric:shadows-multidex:4.0"
 
     // power mock (for mocking final methods which is not handled by mockito)
-    testImplementation "org.powermock:powermock-module-junit4:2.0.0-RC.1"
-    testImplementation "org.powermock:powermock-api-mockito2:2.0.0-RC.1"
+    testImplementation "org.powermock:powermock-module-junit4:2.0.2"
+    testImplementation "org.powermock:powermock-api-mockito2:2.0.2"
 
     androidTestImplementation "org.mockito:mockito-android:2.23.0"
-    androidTestImplementation("com.android.support.test:runner:1.0.2") {
-        exclude group: 'com.android.support', module: 'support-annotations'
+    androidTestImplementation("androidx.test:runner:1.2.0-alpha05") {
+        exclude group: 'com.android.support'
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     }
 
-    androidTestImplementation("androidx.test.espresso:espresso-intents:3.2.0-alpha03") {
-        exclude group: 'com.android.support', module: 'support-annotations'
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.2.0-alpha05") {
+        exclude group: 'com.android.support'
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     }
-    androidTestImplementation('com.android.support.test.espresso:espresso-contrib:3.0.2') {
+
+    androidTestImplementation('androidx.test.espresso:espresso-contrib:3.1.0-alpha4') {
         exclude group: 'com.android.support'
         exclude group: 'javax.inject'
     }
 
-    androidTestImplementation "com.squareup.okhttp3:mockwebserver:${rootProject.okhttp3Version}"
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:3.11.0"
 
-    androidTestImplementation "android.arch.work:work-testing:${rootProject.workManagerVersion}"
+    androidTestImplementation "android.arch.work:work-testing:1.0.1"
 
     // UIAutomator
-    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+    androidTestImplementation('androidx.test.uiautomator:uiautomator:2.2.0') {
+        exclude group: 'com.android.support'
+    }
 
+    androidTestImplementation "androidx.test.ext:junit:1.1.0"
 }
 
 // Must be at bottom to prevent dependency collisions

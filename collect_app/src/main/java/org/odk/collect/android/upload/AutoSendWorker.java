@@ -91,16 +91,16 @@ public class AutoSendWorker extends Worker {
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)
                 || !(networkTypeMatchesAutoSendSetting(currentNetworkInfo) || atLeastOneFormSpecifiesAutoSend())) {
             if (!networkTypeMatchesAutoSendSetting(currentNetworkInfo)) {
-                return Result.RETRY;
+                return Result.retry();
             }
 
-            return Result.FAILURE;
+            return Result.failure();
         }
 
         List<Instance> toUpload = getInstancesToAutoSend(GeneralSharedPreferences.isAutoSendEnabled());
 
         if (toUpload.isEmpty()) {
-            return Result.SUCCESS;
+            return Result.success();
         }
 
         GeneralSharedPreferences settings = GeneralSharedPreferences.getInstance();
@@ -117,7 +117,7 @@ public class AutoSendWorker extends Worker {
                 String googleUsername = accountsManager.getLastSelectedAccountIfValid();
                 if (googleUsername.isEmpty()) {
                     showUploadStatusNotification(true, Collect.getInstance().getString(R.string.google_set_account));
-                    return Result.FAILURE;
+                    return Result.failure();
                 }
                 accountsManager.selectAccount(googleUsername);
                 uploader = new InstanceGoogleSheetsUploader(accountsManager);
@@ -127,11 +127,11 @@ public class AutoSendWorker extends Worker {
                 } catch (IOException | MultipleFoldersFoundException e) {
                     Timber.d(e, "Exception getting or creating root folder for submissions");
                     showUploadStatusNotification(true, "Exception getting or creating root folder for submissions");
-                    return Result.FAILURE;
+                    return Result.failure();
                 }
             } else {
                 showUploadStatusNotification(true, Collect.getInstance().getString(R.string.odk_permissions_fail));
-                return Result.FAILURE;
+                return Result.failure();
             }
         } else {
             uploader = new InstanceServerUploader(new HttpClientConnection(),
@@ -176,7 +176,7 @@ public class AutoSendWorker extends Worker {
         String message = formatOverallResultMessage(resultMessagesByInstanceId);
         showUploadStatusNotification(anyFailure, message);
 
-        return Result.SUCCESS;
+        return Result.success();
     }
 
     /**

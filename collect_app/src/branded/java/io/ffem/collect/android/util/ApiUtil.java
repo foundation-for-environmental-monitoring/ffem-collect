@@ -6,7 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 /**
  * Utility functions for api related actions.

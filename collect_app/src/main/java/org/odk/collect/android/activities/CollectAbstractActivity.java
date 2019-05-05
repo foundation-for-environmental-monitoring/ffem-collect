@@ -20,11 +20,17 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.MenuItem;
+
+import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.ThemeUtils;
 
@@ -67,9 +73,9 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
         }
     }
 
-    public AppComponent getComponent() {
-        return Collect.getInstance().getComponent();
-    }
+//    public AppComponent getComponent() {
+//        return Collect.getInstance().getComponent();
+//    }
 
     @Override
     protected void onResume() {

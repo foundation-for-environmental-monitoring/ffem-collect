@@ -7,7 +7,6 @@
 -dontwarn com.rarepebble.**
 
 -keep class org.javarosa.**
--keep class android.support.v7.widget.** { *; }
 -keep class com.google.android.gms.internal.firebase-perf.** { *; }
 
 -dontobfuscate

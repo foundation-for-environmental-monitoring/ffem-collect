@@ -16,11 +16,11 @@ package org.odk.collect.android.widgets;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.LinearLayout;

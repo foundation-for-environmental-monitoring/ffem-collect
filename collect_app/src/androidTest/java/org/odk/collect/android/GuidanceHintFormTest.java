@@ -6,7 +6,7 @@ import android.content.res.AssetManager;
 import android.os.Environment;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
-import androidx.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import android.text.TextUtils;
 
 import org.apache.commons.io.IOUtils;

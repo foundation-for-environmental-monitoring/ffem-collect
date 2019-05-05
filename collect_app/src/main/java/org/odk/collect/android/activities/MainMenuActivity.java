@@ -29,6 +29,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;

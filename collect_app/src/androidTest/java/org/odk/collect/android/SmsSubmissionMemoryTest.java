@@ -1,7 +1,7 @@
 package org.odk.collect.android;
 
 import android.app.Activity;
-import androidx.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import android.text.format.Formatter;
 
 import org.junit.Ignore;

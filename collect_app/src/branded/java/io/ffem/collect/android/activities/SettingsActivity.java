@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +14,8 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.Toolbar;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;

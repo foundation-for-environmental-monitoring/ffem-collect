@@ -4,11 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;

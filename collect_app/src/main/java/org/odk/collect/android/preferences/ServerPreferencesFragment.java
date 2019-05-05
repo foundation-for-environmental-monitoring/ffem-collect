@@ -21,13 +21,18 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import android.telephony.PhoneNumberUtils;
 import android.text.InputFilter;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,13 +121,13 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     private ExtendedPreferenceCategory smsPreferenceCategory;
     */
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        DaggerUtils.getComponent(activity).inject(this);
-
-        ((PreferencesActivity) activity).setOnBackPressedListener(this);
-    }
+//    @Override
+//    public void onAttach(Activity activity) {
+//        super.onAttach(activity);
+//        DaggerUtils.getComponent(activity).inject(this);
+//
+//        ((PreferencesActivity) activity).setOnBackPressedListener(this);
+//    }
 
     public void addAggregatePreferences() {
         if (!new AggregatePreferencesAdder(this).add()) {
@@ -555,7 +560,6 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     public void doBack() {
         runGoogleAccountValidation();
     }
-    */
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -15,7 +15,8 @@ import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.GrantPermissionRule;
-import androidx.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+
 import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.SeekBar;
@@ -309,19 +310,17 @@ public class AllWidgetsFormTest {
 //        String exStringWidgetFirstText = randomString();
 
         when(activityAvailability.isActivityAvailable(any(Intent.class)))
-               .thenReturn(false);
+                .thenReturn(false);
 
         onView(withText("Launch")).perform(click());
-//        onView(allOf(withText(""), hasSibling(withId(R.id.simple_button))))
-//                .perform(setTextInTextView(exStringWidgetFirstText));
+//        onVisibleEditText().perform(replaceText(exStringWidgetFirstText));
 
         openWidgetList();
         onView(withText("Ex string widget")).perform(click());
 
         Screengrab.screenshot("ex-string");
 
-//        onView(allOf(withText(exStringWidgetFirstText), hasSibling(withId(R.id.simple_button))))
-//                .check(matches(isDisplayed()));
+//        onVisibleEditText().check(matches(withText(exStringWidgetFirstText)));
 
         // Replace with Intent value:
         String exStringWidgetSecondText = randomString();
@@ -332,7 +331,7 @@ public class AllWidgetsFormTest {
         ActivityResult exStringResult = new ActivityResult(RESULT_OK, stringIntent);
         intending(allOf(
                 hasAction("change.uw.android.BREATHCOUNT")
-//                ,hasExtra("value", exStringWidgetFirstText)
+//                hasExtra("value", exStringWidgetFirstText)
 
         )).respondWith(exStringResult);
 
@@ -383,20 +382,20 @@ public class AllWidgetsFormTest {
         onView(withText("Integer widget")).perform(swipeLeft());
     }
 
-     public void testIntegerThousandSeparators() {
-          String randomInteger = randomIntegerSeparator();
-          onVisibleEditText().perform(replaceText(randomInteger));
+    public void testIntegerThousandSeparators() {
+        String randomInteger = randomIntegerSeparator();
+        onVisibleEditText().perform(replaceText(randomInteger));
 
-          Screengrab.screenshot("integer-separators");
+        Screengrab.screenshot("integer-separators");
 
-          openWidgetList();
-          onView(withText("Integer widget with thousands separators")).perform(click());
+        openWidgetList();
+        onView(withText("Integer widget with thousands separators")).perform(click());
 
-          onVisibleEditText().check(matches(withText(randomInteger)));
+        onVisibleEditText().check(matches(withText(randomInteger)));
 
-          onView(withText("Integer widget with thousands separators")).perform(swipeLeft());
+        onView(withText("Integer widget with thousands separators")).perform(swipeLeft());
 
-      }
+    }
 
     public void testExIntegerWidget() {
         // Manually input the value:
@@ -406,16 +405,14 @@ public class AllWidgetsFormTest {
                 .thenReturn(false);
 
         onView(withText("Launch")).perform(click());
-//        onView(allOf(withText(""), hasSibling(withId(R.id.simple_button))))
-//                .perform(setTextInTextView(exIntegerFirstValue));
+//        onVisibleEditText().perform(replaceText(exIntegerFirstValue));
 
         Screengrab.screenshot("ex-integer");
 
         openWidgetList();
         onView(withText("Ex integer widget")).perform(click());
 
-//        onView(allOf(withText(exIntegerFirstValue), hasSibling(withId(R.id.simple_button))))
-//                .check(matches(isDisplayed()));
+//        onVisibleEditText().check(matches(withText(exIntegerFirstValue)));
 
         // Replace with Intent value:
         String exIntegerSecondValue = randomIntegerString();
@@ -426,7 +423,7 @@ public class AllWidgetsFormTest {
         ActivityResult exStringResult = new ActivityResult(RESULT_OK, stringIntent);
         intending(allOf(
                 hasAction("change.uw.android.BREATHCOUNT")
-//                ,hasExtra("value", Integer.parseInt(exIntegerFirstValue))
+//                hasExtra("value", Integer.parseInt(exIntegerFirstValue))
 
         )).respondWith(exStringResult);
 
@@ -469,16 +466,14 @@ public class AllWidgetsFormTest {
                 .thenReturn(false);
 
         onView(withText("Launch")).perform(click());
-//        onView(allOf(withText(""), hasSibling(withId(R.id.simple_button))))
-//                .perform(setTextInTextView(exDecimalFirstValue));
+//        onVisibleEditText().perform(replaceText(exDecimalFirstValue));
 
         Screengrab.screenshot("ex-decimal");
 
         openWidgetList();
         onView(withText("Ex decimal widget")).perform(click());
 
-//        onView(allOf(withText(exDecimalFirstValue), hasSibling(withId(R.id.simple_button))))
-//                .check(matches(isDisplayed()));
+//        onVisibleEditText().check(matches(withText(exDecimalFirstValue)));
 
         // Replace with Intent value:
         String exDecimalSecondValue = randomDecimalString();
@@ -489,7 +484,7 @@ public class AllWidgetsFormTest {
         ActivityResult exStringResult = new ActivityResult(RESULT_OK, stringIntent);
         intending(allOf(
                 hasAction("change.uw.android.BREATHCOUNT")
-//                ,hasExtra("value", Double.parseDouble(exDecimalFirstValue))
+//                hasExtra("value", Double.parseDouble(exDecimalFirstValue))
 
         )).respondWith(exStringResult);
 
@@ -758,9 +753,9 @@ public class AllWidgetsFormTest {
 
     public void testEthiopianDateAppearance() {
 
-         Screengrab.screenshot("ethopian");
+        Screengrab.screenshot("ethopian");
 
-         onView(allOf(withText("Ethiopian date widget"), withEffectiveVisibility(VISIBLE)))
+        onView(allOf(withText("Ethiopian date widget"), withEffectiveVisibility(VISIBLE)))
                 .perform(swipeLeft());
 
     }
@@ -882,7 +877,7 @@ public class AllWidgetsFormTest {
 
     public void testGridSelectCompact2Appearance() {
 
-       Screengrab.screenshot("grid-select-compact2");
+        Screengrab.screenshot("grid-select-compact2");
 
         onView(withText("Grid select one widget")).perform(swipeLeft());
     }
@@ -1106,7 +1101,7 @@ public class AllWidgetsFormTest {
         int number = 123456;
         NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
         return numberFormat.format(number);
-     }
+    }
 
     //endregion
 

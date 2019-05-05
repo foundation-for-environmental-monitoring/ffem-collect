@@ -62,6 +62,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.Locale;
 
+import io.ffem.collect.android.updater.UpdateCheck;
 import timber.log.Timber;
 
 import static org.odk.collect.android.logic.PropertyManager.PROPMGR_USERNAME;

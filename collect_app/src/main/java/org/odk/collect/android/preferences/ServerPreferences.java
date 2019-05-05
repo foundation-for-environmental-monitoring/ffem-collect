@@ -20,7 +20,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import androidx.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 

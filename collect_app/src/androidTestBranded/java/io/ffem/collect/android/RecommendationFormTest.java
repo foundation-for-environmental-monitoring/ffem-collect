@@ -8,23 +8,27 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.contrib.RecyclerViewActions;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.espresso.matcher.BoundedMatcher;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.rule.GrantPermissionRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
-import android.support.test.runner.lifecycle.Stage;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.NumberPicker;
 import android.widget.SeekBar;
+
+import androidx.test.InstrumentationRegistry;
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.intent.rule.IntentsTestRule;
+import androidx.test.espresso.matcher.BoundedMatcher;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import androidx.test.runner.lifecycle.Stage;
+import androidx.test.uiautomator.By;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject2;
 
 import net.bytebuddy.utility.RandomString;
 
@@ -54,34 +58,31 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
-import androidx.test.uiautomator.By;
-import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiObject2;
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 import tools.fastlane.screengrab.locale.LocaleTestRule;
 
 import static android.app.Activity.RESULT_OK;
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.swipeLeft;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intending;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasData;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
-import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.swipeLeft;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intending;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra;
+import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
+import static org.hamcrest.core.AllOf.allOf;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.odk.collect.android.activities.FormEntryActivity.EXTRA_TESTING_PATH;
@@ -98,12 +99,11 @@ import static org.odk.collect.android.application.Collect.APP_FOLDER;
 @RunWith(AndroidJUnit4.class)
 public class RecommendationFormTest {
 
-    private static UiDevice mDevice;
-
     @ClassRule
     public static final LocaleTestRule LOCALE_TEST_RULE = new LocaleTestRule();
     private static final String ALL_WIDGETS_FORM = "recommendation-test.xml";
     private static final String FORMS_DIRECTORY = File.separator + APP_FOLDER + "/forms/";
+    private static UiDevice mDevice;
     private final Random random = new Random();
     private final ActivityResult okResult = new ActivityResult(RESULT_OK, new Intent());
     @Rule
@@ -401,7 +401,7 @@ public class RecommendationFormTest {
             if (extra.contains("Dilution")) {
                 value = randomIntegerString();
             }
-            if (i == 0){
+            if (i == 0) {
                 value = String.valueOf(randomFloat());
             }
 

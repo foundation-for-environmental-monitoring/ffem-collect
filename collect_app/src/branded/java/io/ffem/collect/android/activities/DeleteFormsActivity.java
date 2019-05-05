@@ -15,7 +15,8 @@
 package io.ffem.collect.android.activities;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+
+import androidx.appcompat.widget.Toolbar;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
