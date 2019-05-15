@@ -162,6 +162,8 @@ the specific language governing permissions and limitations under the License.
         <activity android:name=".activities.CaptureSelfieVideoActivity" />
         <activity android:name=".activities.CaptureSelfieVideoActivityNewApi" />
 
+        <activity android:name="io.ffem.collect.android.activities.SettingsActivity" />
+
         <!--
         Register AnalyticsReceiver and AnalyticsService to support background
         dispatching on non-Google Play devices.
@@ -288,17 +290,6 @@ the specific language governing permissions and limitations under the License.
             </intent-filter>
         </activity-alias>
 
-        <activity-alias
-            android:name=".activities.SplashScreenActivity"
-            android:targetActivity=".activities.SplashScreenActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity-alias>
-
         <!-- Enable Shortcuts for Command Actions -->
         <activity
             android:name=".activities.AndroidShortcuts"
@@ -310,5 +301,21 @@ the specific language governing permissions and limitations under the License.
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="io.ffem.collect.android.activities.SignInActivity"
+            android:theme="@style/LightAppTheme.Launcher">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="io.ffem.collect.android.activities.DeleteFormsActivity" />
+        <activity
+            android:name="io.ffem.collect.android.activities.AboutActivity"
+            android:screenOrientation="nosensor" />
+
     </application>
 </manifest>
