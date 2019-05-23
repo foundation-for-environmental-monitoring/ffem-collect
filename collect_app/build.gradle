@@ -204,6 +204,7 @@ dependencies {
         exclude group: 'com.google.guava'
 
     }
+
     implementation "com.jakewharton.timber:timber:4.7.1"
     implementation "org.slf4j:slf4j-api:1.7.26"
     implementation "com.arcao:slf4j-timber:3.1@aar"
@@ -250,12 +251,10 @@ dependencies {
 
     // WorkManager for specifying deferrable, asynchronous tasks
     implementation("android.arch.work:work-runtime:1.0.1") {
-        exclude group: 'com.android.support'
         exclude group: 'com.google.guava', module: 'listenablefuture'
     }
     // Optional JobDispatcher support so devices with Play Services do better than AlarmManager
     implementation("android.arch.work:work-firebase:1.0.0-alpha11") {
-        exclude group: 'com.android.support'
         exclude group: 'com.google.guava', module: 'listenablefuture'
     }
 
@@ -268,9 +267,7 @@ dependencies {
     compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
 
     // Used to generate documentation screenshots.
-    androidTestImplementation('tools.fastlane:screengrab:1.1.0') {
-        exclude group: 'com.android.support'
-    }
+    androidTestImplementation "tools.fastlane:screengrab:1.1.0"
 
     // Testing-only dependencies
     testImplementation "junit:junit:4.12"
@@ -289,7 +286,7 @@ dependencies {
     }
 
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.2.0-alpha05") {
-        exclude group: 'com.android.support'
+        exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     }
 
