@@ -69,10 +69,10 @@ the License.
                 android:text="@string/form_backward"
                 android:textAllCaps="true"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:textColor="?textColorPrimary"
                 android:textStyle="bold"
                 android:padding="10dp"
                 android:visibility="gone"
-                android:drawableLeft="@drawable/ic_navigate_back_wrapped"
                 android:drawableStart="@drawable/ic_navigate_back_wrapped" />
 
             <View
@@ -91,10 +91,10 @@ the License.
                 android:text="@string/form_forward"
                 android:textAllCaps="true"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:textColor="?textColorPrimary"
                 android:textStyle="bold"
                 android:padding="10dp"
                 android:visibility="gone"
-                android:drawableRight="@drawable/ic_navigate_forward_wrapped"
                 android:drawableEnd="@drawable/ic_navigate_forward_wrapped" />
         </LinearLayout>
     </FrameLayout>

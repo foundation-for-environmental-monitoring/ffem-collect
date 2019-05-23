@@ -187,7 +187,7 @@ public class AuditEventLogger {
     private boolean shouldEventBeLogged(AuditEvent aev) {
         FormController formController = Collect.getInstance().getFormController();
         if (aev.getAuditEventType().equals(AuditEvent.AuditEventType.QUESTION) && formController != null) {
-            return !formController.indexIsInFieldList(aev.getFormIndex())
+            return !formController.indexIsInFieldList(aev.getFormIndex(), false)
                     || (aev.hasNewAnswer() && auditConfig.isTrackingChangesEnabled());
         }
         return true;

@@ -159,7 +159,6 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
             if (formElement instanceof GroupDef && intentString != null) {
 
                 addGroupText(groups);
-                groupAdded = true;
 
                 List<FormEntryPrompt> formEntryPrompts = new ArrayList<>();
                 for (FormEntryPrompt prompt : questionPrompts) {
@@ -181,10 +180,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
 
                         if (intentString != null) {
 
-                            if (!groupAdded) {
-                                addGroupText(groups);
-                                groupAdded = true;
-                            }
+                            addGroupText(groups);
 
                             List<FormEntryPrompt> formEntryPrompts = new ArrayList<>();
                             for (FormEntryPrompt prompt : questionPrompts) {
@@ -248,10 +244,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
             view.addView(divider);
         }
 
-        if (!groupAdded) {
-            addGroupText(groups);
-            groupAdded = true;
-        }
+        addGroupText(groups);
 
         // if question or answer type is not supported, use text widget
         QuestionWidget qw =
@@ -563,13 +556,16 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
     private void addGroupText(FormEntryCaption[] groups) {
         String path = getGroupsPath(groups);
 
-        // build view
-        if (!path.isEmpty()) {
-            TextView tv = new TextView(getContext());
-            tv.setText(path);
-            tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Collect.getQuestionFontsize());
-            tv.setPadding(4, 0, 5, 7);
-            view.addView(tv, 0, layout);
+        if (!groupAdded) {
+            // build view
+            if (!path.isEmpty()) {
+                TextView tv = new TextView(getContext());
+                tv.setText(path);
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Collect.getQuestionFontsize());
+                tv.setPadding(4, 0, 5, 7);
+                view.addView(tv, 0, layout);
+                groupAdded = true;
+            }
         }
     }
 
