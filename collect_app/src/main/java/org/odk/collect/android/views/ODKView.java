@@ -54,7 +54,6 @@ import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryController;
 import org.javarosa.form.api.FormEntryModel;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.exception.ExternalParamsException;
@@ -115,7 +114,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
      *                      form. Used to determine whether to autoplay media.
      */
     public ODKView(Context context, final FormEntryPrompt[] questionPrompts,
-            FormEntryCaption[] groups, boolean advancingPage) {
+                   FormEntryCaption[] groups, boolean advancingPage) {
         super(context);
 
         for (FormEntryPrompt prompt : questionPrompts) {
@@ -940,6 +939,8 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
     }
 
     public void widgetValueChanged(QuestionWidget changedWidget) {
-        widgetValueChangedListener.widgetValueChanged(changedWidget);
+        if (widgetValueChangedListener != null) {
+            widgetValueChangedListener.widgetValueChanged(changedWidget);
+        }
     }
 }
