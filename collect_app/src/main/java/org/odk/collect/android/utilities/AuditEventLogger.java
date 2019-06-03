@@ -62,12 +62,16 @@ public class AuditEventLogger {
      */
     public void logEvent(AuditEvent.AuditEventType eventType, FormIndex formIndex,
                          boolean writeImmediatelyToDisk, String questionAnswer) {
+
+        // Ignore beginning of form and repeat events
+        if (eventType == AuditEvent.AuditEventType.BEGINNING_OF_FORM || eventType == AuditEvent.AuditEventType.REPEAT) {
+            return;
+        }
+
         if (isAuditEnabled() && !isDuplicateOfLastLocationEvent(eventType)) {
             Timber.i("AuditEvent recorded: %s", eventType);
-            // Calculate the time and add the event to the auditEvents array
-            long start = getEventTime();
 
-            AuditEvent newAuditEvent = new AuditEvent(start, eventType,
+            AuditEvent newAuditEvent = new AuditEvent(getEventTime(), eventType, auditConfig.isLocationEnabled(),
                     auditConfig.isTrackingChangesEnabled(), formIndex, questionAnswer);
 
             if (isDuplicatedIntervalEvent(newAuditEvent)) {
@@ -82,23 +86,9 @@ public class AuditEventLogger {
              * Close any existing interval events if the view is being exited
              */
             if (eventType == AuditEvent.AuditEventType.FORM_EXIT) {
-                for (AuditEvent aev : auditEvents) {
-                    if (!aev.isEndTimeSet() && aev.isIntervalAuditEventType()) {
-                        aev.setEnd(start);
-                    }
-                }
+                manageSavedEvents();
             }
 
-            /*
-             * Ignore beginning of form events and repeat events
-             */
-            if (eventType == AuditEvent.AuditEventType.BEGINNING_OF_FORM || eventType == AuditEvent.AuditEventType.REPEAT) {
-                return;
-            }
-
-            /*
-             * Having got to this point we are going to keep the event
-             */
             auditEvents.add(newAuditEvent);
 
             /*
@@ -115,9 +105,7 @@ public class AuditEventLogger {
         String latitude = location != null ? Double.toString(location.getLatitude()) : "";
         String longitude = location != null ? Double.toString(location.getLongitude()) : "";
         String accuracy = location != null ? Double.toString(location.getAccuracy()) : "";
-        if (!auditEvent.hasLocation()) {
-            auditEvent.setLocationCoordinates(latitude, longitude, accuracy);
-        }
+        auditEvent.setLocationCoordinates(latitude, longitude, accuracy);
     }
 
     private void addNewValueToQuestionAuditEvent(AuditEvent aev, FormController formController) {
@@ -155,28 +143,46 @@ public class AuditEventLogger {
      */
     public void exitView() {
         if (isAuditEnabled()) {
-            // Calculate the time and add the event to the auditEvents array
-            long end = getEventTime();
-            ArrayList<AuditEvent> filteredAuditEvents = new ArrayList<>();
-            for (AuditEvent aev : auditEvents) {
-                if (!aev.isEndTimeSet() && aev.isIntervalAuditEventType()) {
-                    if (auditConfig.isLocationEnabled()) {
-                        addLocationCoordinatesToAuditEvent(aev);
-                    }
-                    FormController formController = Collect.getInstance().getFormController();
-                    if (aev.getAuditEventType().equals(AuditEvent.AuditEventType.QUESTION) && formController != null) {
-                        addNewValueToQuestionAuditEvent(aev, formController);
-                    }
-                    aev.setEnd(end);
-                    if (shouldEventBeLogged(aev)) {
-                        filteredAuditEvents.add(aev);
-                    }
-                }
-            }
-
-            auditEvents.clear();
-            auditEvents.addAll(filteredAuditEvents);
+            manageSavedEvents();
             writeEvents();
+        }
+    }
+
+    // Filter all events and set final parameters of interval events
+    private void manageSavedEvents() {
+        // Calculate the time and add the event to the auditEvents array
+        long end = getEventTime();
+        ArrayList<AuditEvent> filteredAuditEvents = new ArrayList<>();
+        for (AuditEvent aev : auditEvents) {
+            if (aev.isIntervalAuditEventType()) {
+                setIntervalEventFinalParameters(aev, end);
+            }
+            if (shouldEventBeLogged(aev)) {
+                filteredAuditEvents.add(aev);
+            }
+        }
+
+        auditEvents.clear();
+        auditEvents.addAll(filteredAuditEvents);
+    }
+
+    private void setIntervalEventFinalParameters(AuditEvent aev, long end) {
+        // Set location parameters.
+        // We try to add them here again (first attempt takes place when an event is being created),
+        // because coordinates might be not available at that time, so now we have another (last) chance.
+        if (auditConfig.isLocationEnabled() && !aev.isLocationAlreadySet()) {
+            addLocationCoordinatesToAuditEvent(aev);
+        }
+
+        // Set answers
+        FormController formController = Collect.getInstance().getFormController();
+        if (aev.getAuditEventType().equals(AuditEvent.AuditEventType.QUESTION) && formController != null) {
+            addNewValueToQuestionAuditEvent(aev, formController);
+        }
+
+        // Set end time
+        if (!aev.isEndTimeSet()) {
+            aev.setEnd(end);
         }
     }
 

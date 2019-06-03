@@ -69,6 +69,7 @@ public class AuditEvent {
     @NonNull private String newValue = "";
     private long end;
     private boolean endTimeSet;
+    private boolean isTrackingLocationsEnabled;
     private boolean isTrackingChangesEnabled;
     private FormIndex formIndex;
 
@@ -76,13 +77,18 @@ public class AuditEvent {
      * Create a new event
      */
     public AuditEvent(long start, AuditEventType auditEventType) {
-        this(start, auditEventType, false, null, null);
+        this(start, auditEventType, false, false, null, null);
     }
 
-    public AuditEvent(long start, AuditEventType auditEventType, boolean isTrackingChangesEnabled,
-                      FormIndex formIndex, String oldValue) {
+    public AuditEvent(long start, AuditEventType auditEventType,  boolean isTrackingLocationsEnabled, boolean isTrackingChangesEnabled) {
+        this(start, auditEventType, isTrackingLocationsEnabled, isTrackingChangesEnabled, null, null);
+    }
+
+    public AuditEvent(long start, AuditEventType auditEventType, boolean isTrackingLocationsEnabled,
+                      boolean isTrackingChangesEnabled, FormIndex formIndex, String oldValue) {
         this.start = start;
         this.auditEventType = auditEventType;
+        this.isTrackingLocationsEnabled = isTrackingLocationsEnabled;
         this.isTrackingChangesEnabled = isTrackingChangesEnabled;
         this.formIndex = formIndex;
         this.oldValue = oldValue == null ? "" : oldValue;
@@ -126,7 +132,7 @@ public class AuditEvent {
         return !oldValue.equals(newValue);
     }
 
-    public boolean hasLocation() {
+    public boolean isLocationAlreadySet() {
         return latitude != null && !latitude.isEmpty()
                 && longitude != null && !longitude.isEmpty()
                 && accuracy != null && !accuracy.isEmpty();
@@ -145,15 +151,15 @@ public class AuditEvent {
         if (this.oldValue.equals(this.newValue)) {
             this.oldValue = "";
             this.newValue = "";
+            return;
         }
 
-        // Wrap values that have commas in quotes
-        if (this.oldValue.contains(",")) {
-            this.oldValue = "\"" + this.oldValue + "\"";
+        if (oldValue.contains(",") || oldValue.contains("\n")) {
+            oldValue = getEscapedValueForCsv(oldValue);
         }
 
-        if (this.newValue.contains(",")) {
-            this.newValue = "\"" + this.newValue + "\"";
+        if (this.newValue.contains(",") || this.newValue.contains("\n")) {
+            this.newValue = getEscapedValueForCsv(this.newValue);
         }
     }
 
@@ -171,9 +177,9 @@ public class AuditEvent {
         }
 
         String event;
-        if (hasLocation() && isTrackingChangesEnabled) {
+        if (isTrackingLocationsEnabled && isTrackingChangesEnabled) {
             event = String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s", auditEventType.getValue(), node, start, end != 0 ? end : "", latitude, longitude, accuracy, oldValue, newValue);
-        } else if (hasLocation()) {
+        } else if (isTrackingLocationsEnabled) {
             event = String.format("%s,%s,%s,%s,%s,%s,%s", auditEventType.getValue(), node, start, end != 0 ? end : "", latitude, longitude, accuracy);
         } else if (isTrackingChangesEnabled) {
             event = String.format("%s,%s,%s,%s,%s,%s", auditEventType.getValue(), node, start, end != 0 ? end : "", oldValue, newValue);
@@ -207,5 +213,16 @@ public class AuditEvent {
                 auditEventType = AuditEventType.UNKNOWN_EVENT_TYPE;
         }
         return auditEventType;
+    }
+
+    /**
+     * Escapes quotes and then wraps in quotes for output to CSV.
+     */
+    private String getEscapedValueForCsv(String value) {
+        if (value.contains("\"")) {
+            value = value.replaceAll("\"", "\"\"");
+        }
+
+        return "\"" + value + "\"";
     }
 }

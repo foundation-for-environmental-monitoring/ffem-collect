@@ -19,6 +19,7 @@ if (secretsFile.exists()) {
     secrets.load(new FileInputStream(secretsFile))
 }
 def googleMapsApiKey = secrets.getProperty('GOOGLE_MAPS_API_KEY', '')
+def mapboxToken = secrets.getProperty('MAPBOX_ACCESS_TOKEN', '')
 
 android {
     compileSdkVersion(28)
@@ -71,6 +72,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "false")
             resValue("string", "GOOGLE_MAPS_API_KEY", googleMapsApiKey)
+            buildConfigField 'String', "MAPBOX_ACCESS_TOKEN", '"' + mapboxToken + '"'
         }
         // Release build for the official ODK Collect app
         odkCollectRelease {
@@ -81,12 +83,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "true")
             resValue("string", "GOOGLE_MAPS_API_KEY", googleMapsApiKey)
+            buildConfigField 'String', "MAPBOX_ACCESS_TOKEN", '"' + mapboxToken + '"'
         }
         debug {
             debuggable(true)
             testCoverageEnabled(true)
             resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "false")
             resValue("string", "GOOGLE_MAPS_API_KEY", googleMapsApiKey)
+            buildConfigField 'String', "MAPBOX_ACCESS_TOKEN", '"' + mapboxToken + '"'
         }
     }
 
@@ -114,6 +118,14 @@ android {
         pickFirst 'META-INF/services/com.fasterxml.jackson.core.ObjectCodec'
         pickFirst 'META-INF/services/javax.ws.rs.ext.MessageBodyReader'
         pickFirst 'META-INF/services/javax.ws.rs.ext.MessageBodyWriter'
+
+        // To ensure that ODK Collect is installable on all devices, we don't use
+        // abiFilters to exclude any ABIs; but to keep the APK slim, we include
+        // the Mapbox native library only for armeabi-v7a (which works on all
+        // ARMv7+ 32-bit and 64-bit devices), and omit it for all the other ABIs.
+        exclude 'lib/arm64-v8a/libmapbox-gl.so'
+        exclude 'lib/x86/libmapbox-gl.so'
+        exclude 'lib/x86_64/libmapbox-gl.so'
     }
 
     compileOptions {
@@ -149,7 +161,12 @@ configurations.all {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: '*.jar')
+    // To make ODK Collect is installable on all devices even though the Mapbox
+    // native library is missing for some ABIs, we include an .aar dependency
+    // named "nbi-stubs", which causes there to be at least one .so library
+    // present for every ABI (armeabi, armeabi-v7a, arm64-v8a, x86, x86_64).
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.browser:browser:1.0.0'
     implementation 'com.google.android.material:material:1.1.0-alpha06'
@@ -165,6 +182,9 @@ dependencies {
     implementation "com.google.android.gms:play-services-location:16.0.0"
 
     implementation "com.google.firebase:firebase-core:16.0.9"
+
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:7.3.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v7:0.6.0'
 
     implementation("com.google.guava:guava:27.1-android")
 
@@ -308,7 +328,7 @@ dependencies {
         exclude group: 'com.android.support'
     }
 
-    androidTestImplementation "androidx.test.ext:junit:1.1.0"
+    androidTestImplementation "androidx.test.ext:junit:1.1.1"
 }
 
 // Must be at bottom to prevent dependency collisions

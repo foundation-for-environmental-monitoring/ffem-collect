@@ -58,68 +58,69 @@ public class AuditEventTest {
 
     @Test
     public void testToString() {
-        AuditEvent auditEvent = new AuditEvent(START_TIME, QUESTION, false, getMockedFormIndex(), "");
+        AuditEvent auditEvent = new AuditEvent(START_TIME, QUESTION, false, false, getMockedFormIndex(), "");
         assertNotNull(auditEvent);
         assertTrue(auditEvent.isIntervalAuditEventType());
         assertEquals("question,/data/text1,1545392727685,", auditEvent.toString());
         assertFalse(auditEvent.isEndTimeSet());
         auditEvent.setEnd(END_TIME);
         assertTrue(auditEvent.isEndTimeSet());
-        assertFalse(auditEvent.hasLocation());
+        assertFalse(auditEvent.isLocationAlreadySet());
         assertEquals("question,/data/text1,1545392727685,1545392728527", auditEvent.toString());
     }
 
     @Test
     public void testToStringWithLocationCoordinates() {
-        AuditEvent auditEvent = new AuditEvent(START_TIME, QUESTION, false, getMockedFormIndex(), "");
+        AuditEvent auditEvent = new AuditEvent(START_TIME, QUESTION, true, false, getMockedFormIndex(), "");
         assertNotNull(auditEvent);
         auditEvent.setLocationCoordinates("54.35202520000001", "18.64663840000003", "10");
         assertTrue(auditEvent.isIntervalAuditEventType());
         assertFalse(auditEvent.isEndTimeSet());
         auditEvent.setEnd(END_TIME);
         assertTrue(auditEvent.isEndTimeSet());
-        assertTrue(auditEvent.hasLocation());
+        assertTrue(auditEvent.isLocationAlreadySet());
         assertEquals("question,/data/text1,1545392727685,1545392728527,54.35202520000001,18.64663840000003,10", auditEvent.toString());
     }
 
     @Test
     public void testToStringWithTrackingChanges() {
-        AuditEvent auditEvent = new AuditEvent(START_TIME, QUESTION, true, getMockedFormIndex(), "First answer");
+        AuditEvent auditEvent = new AuditEvent(START_TIME, QUESTION, false, true, getMockedFormIndex(), "First answer");
         assertNotNull(auditEvent);
         assertTrue(auditEvent.isIntervalAuditEventType());
         assertFalse(auditEvent.isEndTimeSet());
         auditEvent.setEnd(END_TIME);
         assertTrue(auditEvent.isEndTimeSet());
-        assertFalse(auditEvent.hasLocation());
+        assertFalse(auditEvent.isLocationAlreadySet());
         auditEvent.recordValueChange("Second answer");
         assertEquals("question,/data/text1,1545392727685,1545392728527,First answer,Second answer", auditEvent.toString());
     }
 
     @Test
     public void testToStringWithLocationCoordinatesAndTrackingChanges() {
-        AuditEvent auditEvent = new AuditEvent(START_TIME, QUESTION, true, getMockedFormIndex(), "First answer");
+        AuditEvent auditEvent = new AuditEvent(START_TIME, QUESTION, true, true, getMockedFormIndex(), "First answer");
         assertNotNull(auditEvent);
         auditEvent.setLocationCoordinates("54.35202520000001", "18.64663840000003", "10");
         assertTrue(auditEvent.isIntervalAuditEventType());
         assertFalse(auditEvent.isEndTimeSet());
         auditEvent.setEnd(END_TIME);
         assertTrue(auditEvent.isEndTimeSet());
-        assertTrue(auditEvent.hasLocation());
+        assertTrue(auditEvent.isLocationAlreadySet());
         auditEvent.recordValueChange("Second, answer");
         assertEquals("question,/data/text1,1545392727685,1545392728527,54.35202520000001,18.64663840000003,10,First answer,\"Second, answer\"", auditEvent.toString());
     }
 
     @Test
     public void testToStringNullValues() {
-        AuditEvent auditEvent = new AuditEvent(START_TIME, QUESTION);
+        AuditEvent auditEvent = new AuditEvent(START_TIME, QUESTION, true, true, getMockedFormIndex(), "Old value");
         assertNotNull(auditEvent);
-        auditEvent.setLocationCoordinates(null, null, null);
+        auditEvent.setLocationCoordinates("", "", "");
         assertTrue(auditEvent.isIntervalAuditEventType());
         assertFalse(auditEvent.isEndTimeSet());
         auditEvent.setEnd(END_TIME);
         assertTrue(auditEvent.isEndTimeSet());
-        assertFalse(auditEvent.hasLocation());
-        assertEquals("question,,1545392727685,1545392728527", auditEvent.toString());
+        assertFalse(auditEvent.isLocationAlreadySet());
+        auditEvent.recordValueChange("New value");
+        assertEquals("question,/data/text1,1545392727685,1545392728527,,,,Old value,New value", auditEvent.toString());
     }
 
     @Test
