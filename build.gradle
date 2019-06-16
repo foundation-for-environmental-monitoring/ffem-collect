@@ -49,8 +49,6 @@ task checkTests(type: GradleBuild) {
 
 ext {
     leakyCanaryVersion = '1.6.3'
-    daggerVersion = '2.22.1'
-    rxLifecycleVersion = '2.2.2'
-    workManagerVersion = "1.0.0-alpha11"
-    okhttp3Version = '3.11.0'
+    daggerVersion = '2.23.1'
+    okhttp3Version = '3.12.1'
 }
