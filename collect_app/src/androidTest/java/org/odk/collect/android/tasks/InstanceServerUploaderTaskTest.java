@@ -1,6 +1,7 @@
 package org.odk.collect.android.tasks;
 
 import android.net.Uri;
+
 import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.After;
@@ -19,6 +20,7 @@ import okhttp3.mockwebserver.RecordedRequest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.odk.collect.android.test.TestUtils.assertMatches;
 import static org.odk.collect.android.test.TestUtils.cleanUpTempFiles;
 import static org.odk.collect.android.test.TestUtils.createTempFile;
@@ -64,7 +66,7 @@ public class InstanceServerUploaderTaskTest extends MockedServerTest {
             assertMatches("/submission\\?deviceID=\\w+%3A\\w+", r.getPath());
             assertMatches("Dalvik/.* " + BuildConfig.APPLICATION_ID + "/.*", r.getHeader("User-Agent"));
             assertEquals("1.0", r.getHeader("X-OpenRosa-Version"));
-            assertEquals("gzip,deflate", r.getHeader("Accept-Encoding"));
+            assertTrue(r.getHeader("Accept-Encoding").contains("gzip"));
         }
 
         // and
@@ -74,17 +76,9 @@ public class InstanceServerUploaderTaskTest extends MockedServerTest {
             assertMatches("/submission\\?deviceID=\\w+%3A\\w+", r.getPath());
             assertMatches("Dalvik/.* " + BuildConfig.APPLICATION_ID + "/.*", r.getHeader("User-Agent"));
             assertEquals("1.0", r.getHeader("X-OpenRosa-Version"));
-            assertEquals("gzip,deflate", r.getHeader("Accept-Encoding"));
+            assertTrue(r.getHeader("Accept-Encoding").contains("gzip"));
             assertMatches("multipart/form-data; boundary=.*", r.getHeader("Content-Type"));
-            assertMatches(join(
-                            "--.*\r",
-                            "Content-Disposition: form-data; name=\"xml_submission_file\"; filename=\"tst.*\\.tmp\"\r",
-                            "Content-Type: text/xml; charset=ISO-8859-1\r",
-                            "Content-Transfer-Encoding: binary\r",
-                            "\r",
-                            "<form-content-here/>\r",
-                            "--.*--\r"),
-                    r.getBody().readUtf8());
+            assertTrue(r.getBody().readUtf8().contains("<form-content-here/>"));
         }
     }
 

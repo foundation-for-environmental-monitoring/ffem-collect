@@ -41,7 +41,6 @@ import android.widget.EditText;
 import android.widget.ListPopupWindow;
 import android.widget.ListView;
 
-import com.google.android.gms.analytics.HitBuilders;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -466,12 +465,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         String urlHash = FileUtils.getMd5Hash(
                 new ByteArrayInputStream(url.getBytes()));
 
-        Collect.getInstance().getDefaultTracker()
-                .send(new HitBuilders.EventBuilder()
-                        .setCategory("SetServer")
-                        .setAction(scheme + " " + host)
-                        .setLabel(urlHash)
-                        .build());
+        Collect.getInstance().logRemoteAnalytics("SetServer", scheme + " " + host, urlHash);
     }
 
     private void maskPasswordSummary(String password) {

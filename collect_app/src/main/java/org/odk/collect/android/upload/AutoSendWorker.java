@@ -23,9 +23,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
-import androidx.annotation.NonNull;
+import android.webkit.MimeTypeMap;
 
-import com.google.android.gms.analytics.HitBuilders;
+import androidx.annotation.NonNull;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.NotificationActivity;
@@ -35,7 +37,7 @@ import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.dto.Form;
 import org.odk.collect.android.dto.Instance;
 import org.odk.collect.android.http.CollectThenSystemContentTypeMapper;
-import org.odk.collect.android.http.HttpClientConnection;
+import org.odk.collect.android.http.OkHttpConnection;
 import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
@@ -53,8 +55,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
 import timber.log.Timber;
 
 import static org.odk.collect.android.provider.FormsProviderAPI.FormsColumns.AUTO_SEND;
@@ -126,7 +126,7 @@ public class AutoSendWorker extends Worker {
                 return Result.failure();
             }
         } else {
-            uploader = new InstanceServerUploader(new HttpClientConnection(new CollectThenSystemContentTypeMapper()),
+            uploader = new InstanceServerUploader(new OkHttpConnection(null, new CollectThenSystemContentTypeMapper(MimeTypeMap.getSingleton())),
                     new WebCredentialsUtils(), new HashMap<>());
             deviceId = new PropertyManager(Collect.getInstance().getApplicationContext())
                     .getSingularProperty(PropertyManager.withUri(PropertyManager.PROPMGR_DEVICE_ID));
@@ -156,14 +156,10 @@ public class AutoSendWorker extends Worker {
                     Collect.getInstance().getContentResolver().delete(deleteForm, null, null);
                 }
 
-                Collect.getInstance()
-                        .getDefaultTracker()
-                        .send(new HitBuilders.EventBuilder()
-                                .setCategory("Submission")
-                                .setAction(protocol.equals(getApplicationContext().getString(R.string.protocol_google_sheets)) ?
-                                        "HTTP-Sheets auto" : "HTTP auto")
-                                .setLabel(Collect.getFormIdentifierHash(instance.getJrFormId(), instance.getJrVersion()))
-                                .build());
+                String action = protocol.equals(getApplicationContext().getString(R.string.protocol_google_sheets)) ?
+                        "HTTP-Sheets auto" : "HTTP auto";
+                String label = Collect.getFormIdentifierHash(instance.getJrFormId(), instance.getJrVersion());
+                Collect.getInstance().logRemoteAnalytics("Submission", action, label);
             } catch (UploadException e) {
                 Timber.d(e);
                 anyFailure = true;
