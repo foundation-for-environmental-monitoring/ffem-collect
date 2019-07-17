@@ -256,7 +256,7 @@ public class Collect extends Application {
         FormMetadataMigrator.migrate(PreferenceManager.getDefaultSharedPreferences(this));
         AutoSendPreferenceMigrator.migrate();
 
-        initProperties();
+        initializeJavaRosa();
 
         if (BuildConfig.BUILD_TYPE.equals("brandedRelease")) {
             Timber.plant(new CrashReportingTree());
@@ -360,7 +360,7 @@ public class Collect extends Application {
         }
     }
 
-    public void initProperties() {
+    public void initializeJavaRosa() {
         PropertyManager mgr = new PropertyManager(this);
 
         // Use the server username by default if the metadata username is not defined

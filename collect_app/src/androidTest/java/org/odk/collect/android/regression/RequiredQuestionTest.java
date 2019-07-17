@@ -12,7 +12,9 @@ import org.junit.runner.RunWith;
 import org.odk.collect.android.espressoutils.FormEntry;
 import org.odk.collect.android.espressoutils.MainMenu;
 import org.odk.collect.android.support.CopyFormRule;
+import org.odk.collect.android.support.ResetStateRule;
 
+import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.pressBack;
 
 
@@ -26,6 +28,7 @@ public class RequiredQuestionTest extends BaseRegressionTest {
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)
             )
+            .around(new ResetStateRule())
             .around(new CopyFormRule("requiredJR275.xml", "regression/"));
 
     @Test
@@ -34,9 +37,9 @@ public class RequiredQuestionTest extends BaseRegressionTest {
         //TestCase1
         MainMenu.startBlankForm("required");
         FormEntry.checkIsTextDisplayed("* Foo");
+        closeSoftKeyboard();
         pressBack();
-        pressBack();
-        FormEntry.ignoreChanges();
+        FormEntry.clickIgnoreChanges();
     }
 
     @Test
@@ -46,8 +49,8 @@ public class RequiredQuestionTest extends BaseRegressionTest {
         MainMenu.startBlankForm("required");
         FormEntry.swipeToNextQuestion();
         FormEntry.checkIsToastWithMessageDisplayes("Custom required message", main);
+        closeSoftKeyboard();
         pressBack();
-        pressBack();
-        FormEntry.ignoreChanges();
+        FormEntry.clickIgnoreChanges();
     }
 }

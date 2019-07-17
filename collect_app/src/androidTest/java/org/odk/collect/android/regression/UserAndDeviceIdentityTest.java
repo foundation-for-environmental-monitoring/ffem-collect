@@ -14,6 +14,7 @@ import org.odk.collect.android.espressoutils.FormEntry;
 import org.odk.collect.android.espressoutils.MainMenu;
 import org.odk.collect.android.espressoutils.Settings;
 import org.odk.collect.android.support.CopyFormRule;
+import org.odk.collect.android.support.ResetStateRule;
 
 import static androidx.test.espresso.Espresso.pressBack;
 
@@ -28,25 +29,23 @@ public class UserAndDeviceIdentityTest extends BaseRegressionTest {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_PHONE_STATE)
             )
+            .around(new ResetStateRule())
             .around(new CopyFormRule("Test.xml", "regression/"));
 
     @Test
     public void setEmail_ShouldRequireAtSign() {
-
         //TestCase1
         MainMenu.clickOnMenu();
         MainMenu.clickGeneralSettings();
         Settings.clickUserAndDeviceIdentity();
         Settings.clickFormMetadata();
         Settings.clickMetadataEmail();
-        Settings.putText("aabb");
-        pressBack();
-        Settings.clickOnString(R.string.ok);
+        Settings.Dialog.putText("aabb");
+        Settings.Dialog.clickOK();
         Settings.checkIsToastWithStringDisplayes(R.string.invalid_email_address, main);
         Settings.clickMetadataEmail();
-        Settings.putText("aa@bb");
-        pressBack();
-        Settings.clickOnString(R.string.ok);
+        Settings.Dialog.putText("aa@bb");
+        Settings.Dialog.clickOK();
         Settings.checkIsTextDisplayed("aa@bb");
         pressBack();
         pressBack();
@@ -71,8 +70,8 @@ public class UserAndDeviceIdentityTest extends BaseRegressionTest {
         Settings.clickUserAndDeviceIdentity();
         Settings.clickFormMetadata();
         Settings.clickMetadataUsername();
-        Settings.putText("AAA");
-        Settings.clickOnString(R.string.ok);
+        Settings.Dialog.putText("AAA");
+        Settings.Dialog.clickOK();
         pressBack();
         pressBack();
         pressBack();
@@ -90,8 +89,8 @@ public class UserAndDeviceIdentityTest extends BaseRegressionTest {
         Settings.clickUserAndDeviceIdentity();
         Settings.clickFormMetadata();
         Settings.clickMetadataUsername();
-        Settings.putText("");
-        Settings.clickOnString(R.string.ok);
+        Settings.Dialog.putText("");
+        Settings.Dialog.clickOK();
         pressBack();
         pressBack();
         pressBack();
@@ -101,8 +100,8 @@ public class UserAndDeviceIdentityTest extends BaseRegressionTest {
         Settings.clickOnServerType();
         Settings.clickOnString(R.string.server_platform_odk_aggregate);
         Settings.clickAggregateUsername();
-        Settings.putText("BBB");
-        Settings.clickOnString(R.string.ok);
+        Settings.Dialog.putText("BBB");
+        Settings.Dialog.clickOK();
         pressBack();
         pressBack();
         MainMenu.startBlankForm("Test");
@@ -119,8 +118,8 @@ public class UserAndDeviceIdentityTest extends BaseRegressionTest {
         Settings.clickUserAndDeviceIdentity();
         Settings.clickFormMetadata();
         Settings.clickMetadataUsername();
-        Settings.putText("CCC");
-        Settings.clickOnString(R.string.ok);
+        Settings.Dialog.putText("CCC");
+        Settings.Dialog.clickOK();
         pressBack();
         pressBack();
         pressBack();
@@ -130,8 +129,8 @@ public class UserAndDeviceIdentityTest extends BaseRegressionTest {
         Settings.clickOnServerType();
         Settings.clickOnString(R.string.server_platform_odk_aggregate);
         Settings.clickAggregateUsername();
-        Settings.putText("DDD");
-        Settings.clickOnString(R.string.ok);
+        Settings.Dialog.putText("DDD");
+        Settings.Dialog.clickOK();
         pressBack();
         pressBack();
         MainMenu.startBlankForm("Test");

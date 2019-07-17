@@ -121,9 +121,8 @@ android {
 
         // To ensure that ODK Collect is installable on all devices, we don't use
         // abiFilters to exclude any ABIs; but to keep the APK slim, we include
-        // the Mapbox native library only for armeabi-v7a (which works on all
-        // ARMv7+ 32-bit and 64-bit devices), and omit it for all the other ABIs.
-        exclude 'lib/arm64-v8a/libmapbox-gl.so'
+        // the Mapbox native library only for 32-bit and 64-bit ARM devices and
+        // omit it for all X86 devices.
         exclude 'lib/x86/libmapbox-gl.so'
         exclude 'lib/x86_64/libmapbox-gl.so'
     }
@@ -169,9 +168,9 @@ dependencies {
 
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.browser:browser:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0-alpha07'
+    implementation 'com.google.android.material:material:1.1.0-alpha08'
     implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
-    implementation 'com.google.android.material:material:1.1.0-alpha07'
+    implementation 'com.google.android.material:material:1.1.0-alpha08'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.exifinterface:exifinterface:1.1.0-beta01'
     implementation "androidx.multidex:multidex:2.0.1"
@@ -181,7 +180,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-maps:17.0.0"
     implementation "com.google.android.gms:play-services-location:17.0.0"
 
-    implementation "com.google.firebase:firebase-core:17.0.0"
+    implementation "com.google.firebase:firebase-core:17.0.1"
 
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:7.3.0'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v7:0.6.0'
@@ -234,7 +233,7 @@ dependencies {
     implementation "org.slf4j:slf4j-api:1.7.26"
     implementation "com.arcao:slf4j-timber:3.1@aar"
 
-    implementation "com.google.zxing:core:3.3.2"
+    implementation "com.google.zxing:core:3.4.0"
     implementation "com.journeyapps:zxing-android-embedded:3.6.0"
     implementation "net.danlew:android.joda:2.9.9"
 

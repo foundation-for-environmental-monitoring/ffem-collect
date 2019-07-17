@@ -47,7 +47,7 @@ import org.odk.collect.android.tasks.DiskSyncTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.ToastUtils;
-import org.odk.collect.android.utilities.VersionHidingCursorAdapter;
+import org.odk.collect.android.adapters.VersionHidingCursorAdapter;
 
 import io.ffem.collect.android.activities.DeleteFormsActivity;
 import timber.log.Timber;
@@ -181,7 +181,7 @@ public class FormChooserList extends FormListActivity implements
 
     private void setupAdapter() {
         String[] data = new String[]{
-                FormsColumns.DISPLAY_NAME, FormsColumns.JR_VERSION, FormsColumns.DISPLAY_SUBTEXT
+                FormsColumns.DISPLAY_NAME, FormsColumns.JR_VERSION, FormsColumns.MAX_DATE
         };
         int[] view = new int[]{
                 R.id.form_title, R.id.form_subtitle, R.id.form_subtitle2

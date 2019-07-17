@@ -8,11 +8,14 @@ import androidx.test.runner.AndroidJUnit4;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
+import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 import org.odk.collect.android.R;
 import org.odk.collect.android.espressoutils.FormEntry;
 import org.odk.collect.android.espressoutils.MainMenu;
 import org.odk.collect.android.support.CopyFormRule;
+import org.odk.collect.android.support.ResetStateRule;
+import org.odk.collect.android.support.ScreenshotOnFailureTestRule;
 
 import static androidx.test.espresso.Espresso.pressBack;
 
@@ -26,7 +29,11 @@ public class SignatureWidgetTest extends BaseRegressionTest {
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)
             )
+            .around(new ResetStateRule())
             .around(new CopyFormRule("All_widgets.xml", "regression/"));
+
+    @Rule
+    public TestRule screenshotFailRule = new ScreenshotOnFailureTestRule();
 
     @Test
     public void saveIgnoreDialog_ShouldUseBothOptions() {
