@@ -2106,13 +2106,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     protected void onStop() {
         viewModel.activityHidden();
 
-        try {
-            unregisterReceiver(locationProvidersReceiver);
-        } catch (IllegalArgumentException e) {
-            // This is the common case -- the form didn't have location audits enabled so the
-            // receiver was not registered.
-        }
-
         super.onStop();
     }
 
@@ -2269,8 +2262,14 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         releaseOdkView();
         compositeDisposable.dispose();
 
-        super.onDestroy();
+        try {
+            unregisterReceiver(locationProvidersReceiver);
+        } catch (IllegalArgumentException e) {
+            // This is the common case -- the form didn't have location audits enabled so the
+            // receiver was not registered.
+        }
 
+        super.onDestroy();
     }
 
     private int animationCompletionSet;
@@ -2447,6 +2446,13 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     } else {
                         formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.FORM_RESUME, true);
                     }
+                }
+
+                // Register to receive location provider change updates and write them to the audit
+                // log. onStart has already run but the formController was null so try again.
+                if (formController.currentFormAuditsLocation()
+                        && LocationClients.areGooglePlayServicesAvailable(this)) {
+                    registerReceiver(locationProvidersReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
                 }
 
                 // onStart ran before the form was loaded. Let the viewModel know that the activity
@@ -2923,18 +2929,15 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             questionsAfterSaveByIndex.put(question.getIndex(), question);
         }
 
+        // Identify widgets to remove or rebuild (by removing and re-adding). We'd like to do the
+        // identification and removal in the same pass but removal has to be done in a loop that
+        // starts from the end and itemset-based select choices will only be correctly recomputed
+        // if accessed from beginning to end because the call on sameAs is what calls
+        // populateDynamicChoices. See https://github.com/opendatakit/javarosa/issues/436
         List<FormEntryPrompt> questionsThatHaveNotChanged = new ArrayList<>();
-        for (int i = immutableQuestionsBeforeSave.size() - 1; i >= 0; i--) {
-            ImmutableDisplayableQuestion questionBeforeSave = immutableQuestionsBeforeSave.get(i);
-            // We'd like to use questionsAfterSaveByIndex.get but we can't because FormIndex
-            // doesn't implement hashCode and we're not guaranteed the two FormIndexes will be
-            // the same reference
-            FormEntryPrompt questionAtSameFormIndex = null;
-            for (FormIndex index : questionsAfterSaveByIndex.keySet()) {
-                if (questionBeforeSave.getFormIndex().equals(index)) {
-                    questionAtSameFormIndex = questionsAfterSaveByIndex.get(index);
-                }
-            }
+        List<FormIndex> formIndexesToRemove = new ArrayList<>();
+        for (ImmutableDisplayableQuestion questionBeforeSave : immutableQuestionsBeforeSave) {
+            FormEntryPrompt questionAtSameFormIndex = questionsAfterSaveByIndex.get(questionBeforeSave.getFormIndex());
 
             // Always rebuild questions that use database-driven external data features since they
             // bypass SelectChoices stored in ImmutableDisplayableQuestion
@@ -2942,6 +2945,14 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     && !getFormController().usesDatabaseExternalDataFeature(questionBeforeSave.getFormIndex())) {
                 questionsThatHaveNotChanged.add(questionAtSameFormIndex);
             } else if (!lastChangedIndex.equals(questionBeforeSave.getFormIndex())) {
+                formIndexesToRemove.add(questionBeforeSave.getFormIndex());
+            }
+        }
+
+        for (int i = immutableQuestionsBeforeSave.size() - 1; i >= 0; i--) {
+            ImmutableDisplayableQuestion questionBeforeSave = immutableQuestionsBeforeSave.get(i);
+
+            if (formIndexesToRemove.contains(questionBeforeSave.getFormIndex())) {
                 // Some widgets may call widgetValueChanged from a non-main thread but odkView can
                 // only be modified from the main thread
                 final int indexToRemove = i;

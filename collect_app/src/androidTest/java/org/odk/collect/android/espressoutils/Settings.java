@@ -88,4 +88,29 @@ public final class Settings {
             onView(withId(android.R.id.button1)).perform(click());
         }
     }
+
+    public static void clickOnUserInterface() {
+        onData(PreferenceMatchers.withKey("user_interface")).perform(click());
+    }
+
+    public static void clickOnLanguage() {
+        onData(PreferenceMatchers.withKey("app_language")).perform(click());
+    }
+
+    public static void clickOnSelectedLanguage(String text) {
+        onView(withText(text)).perform(click());
+    }
+
+    public static void clickUserInterface() {
+        onView(withText(getInstrumentation().getTargetContext().getString(R.string.client))).perform(click());
+    }
+
+    public static void clickNavigation() {
+        onView(withText(getInstrumentation().getTargetContext().getString(R.string.navigation))).perform(click());
+    }
+
+    public static void clickUseSwipesAndButtons() {
+        onView(withText(getInstrumentation().getTargetContext().getString(R.string.swipe_buttons_navigation))).perform(click());
+    }
+
 }

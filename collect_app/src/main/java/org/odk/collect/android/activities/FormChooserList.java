@@ -181,7 +181,7 @@ public class FormChooserList extends FormListActivity implements
 
     private void setupAdapter() {
         String[] data = new String[]{
-                FormsColumns.DISPLAY_NAME, FormsColumns.JR_VERSION, FormsColumns.MAX_DATE
+                FormsColumns.DISPLAY_NAME, FormsColumns.JR_VERSION, hideOldFormVersions() ? FormsColumns.MAX_DATE : FormsColumns.DATE
         };
         int[] view = new int[]{
                 R.id.form_title, R.id.form_subtitle, R.id.form_subtitle2
@@ -232,8 +232,7 @@ public class FormChooserList extends FormListActivity implements
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         showProgressBar();
 
-        boolean newestByFormId = GeneralSharedPreferences.getInstance().getBoolean(GeneralKeys.KEY_HIDE_OLD_FORM_VERSIONS, false);
-        return new FormsDao().getFormsCursorLoader(getFilterText(), getSortingOrder(), newestByFormId);
+        return new FormsDao().getFormsCursorLoader(getFilterText(), getSortingOrder(), hideOldFormVersions());
     }
 
     @Override
@@ -258,6 +257,10 @@ public class FormChooserList extends FormListActivity implements
     @Override
     public void onLoaderReset(@NonNull Loader loader) {
         listAdapter.swapCursor(null);
+    }
+
+    private boolean hideOldFormVersions() {
+        return GeneralSharedPreferences.getInstance().getBoolean(GeneralKeys.KEY_HIDE_OLD_FORM_VERSIONS, false);
     }
 
     public void onClickGetBlankForm(View view) {

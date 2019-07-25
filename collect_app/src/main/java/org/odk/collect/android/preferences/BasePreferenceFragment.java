@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 
 import org.odk.collect.android.R;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+
 import static org.odk.collect.android.preferences.PreferencesActivity.INTENT_KEY_ADMIN_MODE;
 
 public class BasePreferenceFragment extends PreferenceFragment {
