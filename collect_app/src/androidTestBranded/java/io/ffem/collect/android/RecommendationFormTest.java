@@ -26,9 +26,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
-import androidx.test.uiautomator.By;
-import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiObject2;
+//import androidx.test.uiautomator.By;
+//import androidx.test.uiautomator.UiDevice;
+//import androidx.test.uiautomator.UiObject2;
 
 import net.bytebuddy.utility.RandomString;
 
@@ -103,7 +103,7 @@ public class RecommendationFormTest {
     public static final LocaleTestRule LOCALE_TEST_RULE = new LocaleTestRule();
     private static final String ALL_WIDGETS_FORM = "recommendation-test.xml";
     private static final String FORMS_DIRECTORY = File.separator + APP_FOLDER + "/forms/";
-    private static UiDevice mDevice;
+//    private static UiDevice mDevice;
     private final Random random = new Random();
     private final ActivityResult okResult = new ActivityResult(RESULT_OK, new Intent());
     @Rule
@@ -122,9 +122,9 @@ public class RecommendationFormTest {
 
     @BeforeClass
     public static void initialize() {
-        if (mDevice == null) {
-            mDevice = UiDevice.getInstance(getInstrumentation());
-        }
+//        if (mDevice == null) {
+//            mDevice = UiDevice.getInstance(getInstrumentation());
+//        }
     }
 
     private static Matcher<View> childAtPosition(
@@ -342,9 +342,9 @@ public class RecommendationFormTest {
             e.printStackTrace();
         }
 
-        UiObject2 save = mDevice.findObject(By.text("Save"));
-
-        save.click();
+//        UiObject2 save = mDevice.findObject(By.text("Save"));
+//
+//        save.click();
 
         try {
             Thread.sleep(3000);

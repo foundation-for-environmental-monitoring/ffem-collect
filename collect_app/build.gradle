@@ -168,9 +168,9 @@ dependencies {
 
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.browser:browser:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0-alpha08'
+    implementation 'com.google.android.material:material:1.1.0-alpha09'
     implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
-    implementation 'com.google.android.material:material:1.1.0-alpha08'
+    implementation 'com.google.android.material:material:1.1.0-alpha09'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.exifinterface:exifinterface:1.1.0-beta01'
     implementation "androidx.multidex:multidex:2.0.1"
@@ -246,7 +246,7 @@ dependencies {
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakyCanaryVersion}"
 
     // Android Architecture Components:
-    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0-alpha02"
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0-alpha03"
 
     // Dagger:
     implementation "com.google.dagger:dagger:${rootProject.daggerVersion}"
@@ -259,8 +259,8 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-android-processor:${rootProject.daggerVersion}"
 
     // RxJava 2:
-    implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
-    implementation "io.reactivex.rxjava2:rxjava:2.1.17"
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.0"
 
     // Better "Subjects" for Rx:
     implementation "com.jakewharton.rxrelay2:rxrelay:2.0.0"
@@ -283,8 +283,8 @@ dependencies {
     }
 
     // Makes binding to Views easy:
-    implementation "com.jakewharton:butterknife:10.0.0"
-    annotationProcessor "com.jakewharton:butterknife-compiler:10.0.0"
+    implementation "com.jakewharton:butterknife:10.1.0"
+    annotationProcessor "com.jakewharton:butterknife-compiler:10.1.0"
 
     // Annotations understood by FindBugs
     compileOnly 'com.google.code.findbugs:annotations:3.0.1'
