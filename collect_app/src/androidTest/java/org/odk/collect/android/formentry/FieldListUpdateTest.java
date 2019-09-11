@@ -87,7 +87,7 @@ public class FieldListUpdateTest {
                     Manifest.permission.CAMERA)
             )
             .around(new ResetStateRule())
-            .around(new CopyFormRule(FIELD_LIST_TEST_FORM, "", Collections.singletonList("fruits.csv")));
+            .around(new CopyFormRule(FIELD_LIST_TEST_FORM, Collections.singletonList("fruits.csv")));
 
     @Test
     public void relevanceChangeAtEnd_ShouldToggleLastWidgetVisibility() {
@@ -381,10 +381,9 @@ public class FieldListUpdateTest {
     }
 
     @Test
-    public void search_function_in_field_list() throws InterruptedException {
+    public void searchInFieldList() throws InterruptedException {
         jumpToGroupWithText("Search in field-list");
         onView(withText(startsWith("Source15"))).perform(click());
-        Thread.sleep(1000);
         onView(withText("Select One Answer")).check(matches(isDisplayed())).perform(click());
         onView(withText("Mango")).check(matches(isDisplayed()));
         onView(withText("Oranges")).check(matches(isDisplayed()));

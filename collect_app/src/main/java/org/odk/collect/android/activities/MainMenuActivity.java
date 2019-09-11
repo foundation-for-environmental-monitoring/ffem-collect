@@ -124,12 +124,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
         }
     };
 
-    private void initToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setTitle(getString(R.string.app_name));
-        setSupportActionBar(toolbar);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -351,11 +345,11 @@ public class MainMenuActivity extends CollectAbstractActivity {
         displayExpiryInfo();
     }
 
-//    private void initToolbar() {
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//        setTitle(getString(R.string.main_menu));
-//        setSupportActionBar(toolbar);
-//    }
+    private void initToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setTitle(getString(R.string.app_name));
+        setSupportActionBar(toolbar);
+    }
 
     @Override
     protected void onResume() {

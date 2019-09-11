@@ -1,8 +1,16 @@
 package org.odk.collect.android.espressoutils;
 
+import android.app.Activity;
+
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.matcher.PreferenceMatchers;
 import androidx.test.rule.ActivityTestRule;
+
 import org.odk.collect.android.R;
+import org.odk.collect.android.espressoutils.pages.FormEntryPage;
+import org.odk.collect.android.support.ActivityHelpers;
+
+import timber.log.Timber;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -16,7 +24,6 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
-import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
@@ -25,9 +32,14 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.odk.collect.android.test.CustomMatchers.withIndex;
 
+/**
+ * @deprecated Prefer page objects {@link FormEntryPage} over static helpers
+ */
+@Deprecated
 public final class FormEntry {
 
     private FormEntry() {
+
     }
 
     public static void clickOnText(String text) {
@@ -62,6 +74,10 @@ public final class FormEntry {
         onView(withIndex(withClassName(endsWith("Text")), index)).perform(replaceText(text));
     }
 
+    public static void clickJumpStartButton() {
+        onView(withId(R.id.jumpBeginningButton)).perform(click());
+    }
+
     public static void clickJumpEndButton() {
         onView(withId(R.id.jumpEndButton)).perform(click());
     }
@@ -70,12 +86,16 @@ public final class FormEntry {
         onView(withClassName(endsWith("EditText"))).perform(replaceText(text));
     }
 
-    public static void checkIsToastWithMessageDisplayes(String message, ActivityTestRule main) {
-        onView(withText(message)).inRoot(withDecorView(not(is(main.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+    public static void checkIsToastWithMessageDisplayes(String message, Activity activity) {
+        onView(withText(message)).inRoot(withDecorView(not(is(activity.getWindow().getDecorView())))).check(matches(isDisplayed()));
     }
 
     public static void clickGoToIconInForm() {
         onView(withId(R.id.menu_goto)).perform(click());
+    }
+
+    public static void clickDeleteChildIcon() {
+        onView(withId(R.id.menu_delete_child)).perform(click());
     }
 
     public static void checkIsToastWithStringDisplayes(int value, ActivityTestRule main) {
@@ -88,6 +108,10 @@ public final class FormEntry {
 
     public static void clickSignatureButton() {
         onView(withId(R.id.simple_button)).perform(click());
+    }
+
+    public static void showSpinnerMultipleDialog() {
+        onView(withText(getInstrumentation().getTargetContext().getString(R.string.select_answer))).perform(click());
     }
 
     public static void checkIsDisplayedInTextClassAndSwipe(String message) {
@@ -123,7 +147,7 @@ public final class FormEntry {
     }
 
     public static void clickOptionsIcon() {
-        onView(withContentDescription("More options")).perform(click());
+        Espresso.openActionBarOverflowOrOptionsMenu(ActivityHelpers.getActivity());
     }
 
     public static void clickGeneralSettings() {
@@ -133,5 +157,13 @@ public final class FormEntry {
     public static void checkAreNavigationButtonsDisplayed() {
         onView(withId(R.id.form_forward_button)).check(matches(isDisplayed()));
         onView(withId(R.id.form_back_button)).check(matches(isDisplayed()));
+    }
+
+    public static void waitForRotationToEnd() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            Timber.i(e);
+        }
     }
 }

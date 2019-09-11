@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Location;
@@ -37,6 +38,7 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.location.client.LocationClient;
 import org.odk.collect.android.location.client.LocationClients;
 import org.odk.collect.android.utilities.IconUtils;
+import org.odk.collect.android.utilities.ThemeUtils;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.events.MapListener;
@@ -48,6 +50,7 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -84,7 +87,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
     private LocationClient locationClient;
     private int nextFeatureId = 1;
     private final Map<Integer, MapFeature> features = new HashMap<>();
-    private boolean gpsLocationEnabled;
+    private boolean clientWantsLocationUpdates;
     private IGeoPoint lastMapCenter;
     private WebMapService webMapService;
     private File referenceLayerFile;
@@ -119,15 +122,13 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
     @Override public void onStart() {
         super.onStart();
         MapProvider.onMapFragmentStart(this);
+        enableLocationUpdates(clientWantsLocationUpdates);
     }
 
     @Override public void onStop() {
+        enableLocationUpdates(false);
         MapProvider.onMapFragmentStop(this);
         super.onStop();
-    }
-
-    @Override public Fragment getFragment() {
-        return this;
     }
 
     @Override public void applyConfig(Bundle config) {
@@ -154,7 +155,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
         map.getController().setCenter(toGeoPoint(INITIAL_CENTER));
         map.getController().setZoom((int) INITIAL_ZOOM);
         map.setTilesScaledToDpi(true);
-        map.getOverlays().add(new MapEventsOverlay(this));
+        addAttributionAndMapEventsOverlays();
         loadReferenceOverlay();
         addMapLayoutChangeListener(map);
         myLocationOverlay = new MyLocationNewOverlay(map);
@@ -165,9 +166,15 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
 
         locationClient = LocationClients.clientForContext(getActivity());
         locationClient.setListener(this);
-        if (readyListener != null) {
-            new Handler().postDelayed(() -> readyListener.onReady(this), 100);
-        }
+
+        new Handler().postDelayed(() -> {
+            // If the screen is rotated before the map is ready, this fragment
+            // could already be detached, which makes it unsafe to use.  Only
+            // call the ReadyListener if this fragment is still attached.
+            if (readyListener != null && getActivity() != null) {
+                readyListener.onReady(this);
+            }
+        }, 100);
         return view;
     }
 
@@ -294,7 +301,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
 
     @Override public void clearFeatures() {
         map.getOverlays().clear();
-        map.getOverlays().add(new MapEventsOverlay(this));
+        addAttributionAndMapEventsOverlays();
         map.getOverlays().add(myLocationOverlay);
         map.invalidate();
         features.clear();
@@ -321,28 +328,9 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
     }
 
     @Override public void setGpsLocationEnabled(boolean enable) {
-        if (enable != gpsLocationEnabled) {
-            gpsLocationEnabled = enable;
-            if (locationClient == null) {
-                locationClient = LocationClients.clientForContext(getActivity());
-                locationClient.setListener(this);
-            }
-            if (gpsLocationEnabled) {
-                LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-                if (locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    map.getOverlays().add(myLocationOverlay);
-                    myLocationOverlay.setEnabled(true);
-                    myLocationOverlay.enableMyLocation();
-                    locationClient.start();
-                } else {
-                    showGpsDisabledAlert();
-                }
-            } else {
-                locationClient.stop();
-                myLocationOverlay.setEnabled(false);
-                myLocationOverlay.disableFollowLocation();
-                myLocationOverlay.disableMyLocation();
-            }
+        if (enable != clientWantsLocationUpdates) {
+            clientWantsLocationUpdates = enable;
+            enableLocationUpdates(clientWantsLocationUpdates);
         }
     }
 
@@ -356,6 +344,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
     }
 
     @Override public void onLocationChanged(Location location) {
+        Timber.i("onLocationChanged: location = %s", location);
         if (gpsLocationListener != null) {
             MapPoint point = fromLocation(myLocationOverlay);
             if (point != null) {
@@ -365,6 +354,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
     }
 
     @Override public void onClientStart() {
+        Timber.i("Requesting location updates (to %s)", this);
         locationClient.requestLocationUpdates(this);
     }
 
@@ -373,6 +363,31 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
     }
 
     @Override public void onClientStop() { }
+
+    private void enableLocationUpdates(boolean enable) {
+        if (locationClient == null) {
+            locationClient = LocationClients.clientForContext(getActivity());
+            locationClient.setListener(this);
+        }
+        if (enable) {
+            LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+            if (locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                map.getOverlays().add(myLocationOverlay);
+                myLocationOverlay.setEnabled(true);
+                myLocationOverlay.enableMyLocation();
+                Timber.i("Starting LocationClient %s (for MapFragment %s)", locationClient, this);
+                locationClient.start();
+            } else {
+                showGpsDisabledAlert();
+            }
+        } else {
+            Timber.i("Stopping LocationClient %s (for MapFragment %s)", locationClient, this);
+            locationClient.stop();
+            myLocationOverlay.setEnabled(false);
+            myLocationOverlay.disableFollowLocation();
+            myLocationOverlay.disableMyLocation();
+        }
+    }
 
     private static @Nullable MapPoint fromLocation(@NonNull MyLocationNewOverlay overlay) {
         GeoPoint geoPoint = overlay.getMyLocation();
@@ -518,6 +533,11 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
         }
     }
 
+    private void addAttributionAndMapEventsOverlays() {
+        map.getOverlays().add(new AttributionOverlay(getContext()));
+        map.getOverlays().add(new MapEventsOverlay(this));
+    }
+
     /**
      * A MapFeature is a physical feature on a map, such as a point, a road,
      * a building, a region, etc.  It is presented to the user as one editable
@@ -626,6 +646,43 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
                 map.getOverlays().remove(markers.get(last));
                 markers.remove(last);
                 update();
+            }
+        }
+    }
+
+    /** An overlay that draws an attribution message in the lower-right corner. */
+    private static class AttributionOverlay extends Overlay {
+        public static final int FONT_SIZE_DP = 12;
+        public static final int MARGIN_DP = 10;
+
+        private final Paint paint;
+
+        AttributionOverlay(Context context) {
+            super();
+
+            paint = new Paint();
+            paint.setAntiAlias(true);
+            paint.setColor(new ThemeUtils(context).getPrimaryTextColor());
+            paint.setTextSize(FONT_SIZE_DP *
+                context.getResources().getDisplayMetrics().density);
+            paint.setTextAlign(Paint.Align.RIGHT);
+        }
+
+        @Override public void draw(Canvas canvas, MapView map, boolean shadow) {
+            String attribution = map.getTileProvider().getTileSource().getCopyrightNotice();
+            if (!shadow && !map.isAnimating() && attribution != null && !attribution.isEmpty()) {
+                String[] lines = attribution.split("\n");
+                float lineHeight = paint.getFontSpacing();
+                float x = canvas.getWidth() - MARGIN_DP;
+                float y = canvas.getHeight() - MARGIN_DP - lineHeight * lines.length;
+
+                canvas.save();
+                canvas.concat(map.getProjection().getInvertedScaleRotateCanvasMatrix());
+                for (String line : lines) {
+                    y += lineHeight;
+                    canvas.drawText(line, x, y, paint);
+                }
+                canvas.restore();
             }
         }
     }

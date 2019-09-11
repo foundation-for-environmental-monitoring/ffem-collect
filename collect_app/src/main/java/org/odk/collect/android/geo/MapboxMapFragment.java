@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
 
+import com.google.common.collect.ImmutableSet;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
 import com.mapbox.android.core.location.LocationEngineProvider;
@@ -32,7 +33,6 @@ import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
-import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.RasterLayer;
@@ -45,7 +45,6 @@ import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.geo.MbtilesFile.LayerType;
 import org.odk.collect.android.geo.MbtilesFile.MbtilesException;
 
@@ -55,23 +54,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import timber.log.Timber;
 
-import static android.os.Looper.getMainLooper;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillOpacity;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineColor;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineOpacity;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.rasterOpacity;
 
 public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.MapFragment
     implements MapFragment, OnMapReadyCallback,
@@ -80,7 +75,12 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
 
     private static final String POINT_ICON_ID = "point-icon-id";
     private static final long LOCATION_INTERVAL_MILLIS = 1000;
-    private static final long LOCATION_MAX_WAIT_MILLIS = 5 * LOCATION_INTERVAL_MILLIS;
+    private static final long LOCATION_MAX_WAIT_MILLIS = 5000;
+    private static final LocationEngineRequest LOCATION_REQUEST =
+        new LocationEngineRequest.Builder(LOCATION_INTERVAL_MILLIS)
+            .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
+            .setMaxWaitTime(LOCATION_MAX_WAIT_MILLIS)
+            .build();
 
     // Bundle keys understood by applyConfig().
     static final String KEY_STYLE_URL = "STYLE_URL";
@@ -94,7 +94,7 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
     private FeatureListener dragEndListener;
 
     private LocationComponent locationComponent;
-    private boolean locationEnabled;
+    private boolean clientWantsLocationUpdates;
     private MapPoint lastLocationFix;
 
     private int nextFeatureId = 1;
@@ -106,6 +106,7 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
     private File referenceLayerFile;
     private final List<Layer> overlayLayers = new ArrayList<>();
     private final List<Source> overlaySources = new ArrayList<>();
+    private static String lastLocationProvider;
 
     private TileHttpServer tileServer;
 
@@ -135,6 +136,10 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
             Timber.e(e, "Could not start the TileHttpServer");
         }
 
+        // If the containing activity is being re-created upon screen rotation,
+        // the FragmentManager will have also re-created a copy of the previous
+        // MapboxMapFragment.  We don't want these useless copies of old fragments
+        // to linger, so the following line calls .replace() instead of .add().
         activity.getSupportFragmentManager()
             .beginTransaction().replace(containerId, this).commitNow();
         getMapAsync(map -> {
@@ -154,11 +159,15 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
                 symbolManager = createSymbolManager();
 
                 loadReferenceOverlay();
-                enableLocationComponent();
+                initLocationComponent();
 
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                     toLatLng(INITIAL_CENTER), INITIAL_ZOOM));
-                if (readyListener != null) {
+
+                // If the screen is rotated before the map is ready, this fragment
+                // could already be detached, which makes it unsafe to use.  Only
+                // call the ReadyListener if this fragment is still attached.
+                if (readyListener != null && getActivity() != null) {
                     readyListener.onReady(this);
                 }
             });
@@ -174,9 +183,11 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
     @Override public void onStart() {
         super.onStart();
         MapProvider.onMapFragmentStart(this);
+        enableLocationUpdates(clientWantsLocationUpdates);
     }
 
     @Override public void onStop() {
+        enableLocationUpdates(false);
         MapProvider.onMapFragmentStop(this);
         super.onStop();
     }
@@ -186,10 +197,6 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
             tileServer.destroy();
         }
         super.onDestroy();
-    }
-
-    @Override public Fragment getFragment() {
-        return this;
     }
 
     @Override public void applyConfig(Bundle config) {
@@ -289,7 +296,7 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
     }
 
     @Override public @Nullable String getLocationProvider() {
-        return null;
+        return lastLocationProvider;
     }
 
     @Override public boolean onMapClick(@NonNull LatLng point) {
@@ -363,9 +370,9 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
     }
 
     @Override public void setGpsLocationEnabled(boolean enable) {
-        locationEnabled = enable;
-        if (locationComponent != null) {
-            locationComponent.setLocationComponentEnabled(enable);
+        if (enable != clientWantsLocationUpdates) {
+            clientWantsLocationUpdates = enable;
+            enableLocationUpdates(clientWantsLocationUpdates);
         }
     }
 
@@ -383,6 +390,8 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
 
     @Override public void onSuccess(LocationEngineResult result) {
         lastLocationFix = fromLocation(result.getLastLocation());
+        lastLocationProvider = result.getLastLocation().getProvider();
+        Timber.i("Received LocationEngineResult: %s", lastLocationFix);
         if (locationComponent != null) {
             locationComponent.forceLocationUpdate(result.getLastLocation());
         }
@@ -462,6 +471,13 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
     }
 
     private Style.Builder getDesiredStyleBuilder() {
+        Drawable pointIcon = ContextCompat.getDrawable(getContext(), R.drawable.ic_map_point);
+        return getBasemapStyleBuilder()
+            .withImage(POINT_ICON_ID, pointIcon)
+            .withTransition(new TransitionOptions(0, 0, false));
+    }
+
+    private Style.Builder getBasemapStyleBuilder() {
         if (BuildConfig.MAPBOX_ACCESS_TOKEN.isEmpty()) {
             // When the MAPBOX_ACCESS_TOKEN is missing, any attempt to load
             // map data from Mapbox will cause the Mapbox SDK to abort with an
@@ -473,11 +489,7 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
                 .withSource(new RasterSource("[osm]", tiles, 256))
                 .withLayer(new RasterLayer("[osm]", "[osm]"));
         }
-        Context context = Collect.getInstance().getApplicationContext();
-        Drawable pointIcon = ContextCompat.getDrawable(context, R.drawable.ic_map_point);
-        return new Style.Builder().fromUrl(styleUrl)
-            .withImage(POINT_ICON_ID, pointIcon)
-            .withTransition(new TransitionOptions(0, 0, false));
+        return new Style.Builder().fromUrl(styleUrl);
     }
 
     /**
@@ -510,12 +522,11 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
             List<MbtilesFile.VectorLayer> layers = mbtiles.getVectorLayers();
             for (MbtilesFile.VectorLayer layer : layers) {
                 // Pick a colour that's a function of the filename and layer name.
+                // The colour will appear essentially random; the only purpose here
+                // is to try to assign different colours to different layers, such
+                // that each individual layer appears in its own consistent colour.
                 int hue = (((id + "." + layer.name).hashCode()) & 0x7fffffff) % 360;
-                addOverlayLayer(new FillLayer(id + "/" + layer.name + ".fill", id).withProperties(
-                    fillColor(Color.HSVToColor(new float[] {hue, 0.3f, 1})),
-                    fillOpacity(0.1f)
-                ).withSourceLayer(layer.name));
-                addOverlayLayer(new LineLayer(id + "/" + layer.name + ".line", id).withProperties(
+                addOverlayLayer(new LineLayer(id + "/" + layer.name, id).withProperties(
                     lineColor(Color.HSVToColor(new float[] {hue, 0.7f, 1})),
                     lineWidth(1f),
                     lineOpacity(0.7f)
@@ -524,9 +535,7 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
         }
         if (mbtiles.getLayerType() == LayerType.RASTER) {
             addOverlaySource(new RasterSource(id, tileSet));
-            addOverlayLayer(new RasterLayer(id + ".raster", id).withProperties(
-                rasterOpacity(0.5f)
-            ));
+            addOverlayLayer(new RasterLayer(id + ".raster", id));
         }
         Timber.i("Added %s as a %s layer at /%s", file, mbtiles.getLayerType(), id);
     }
@@ -587,8 +596,35 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
     }
 
     private void addOverlayLayer(Layer layer) {
-        map.getStyle().addLayer(layer);
         overlayLayers.add(layer);
+
+        // If there is a LocationComponent, it will have added some layers to the
+        // style.  The SymbolManager and LineManager also add their own layers
+        // where they place their symbols and lines.  We need to insert the new
+        // overlay just under all these upper layers to keep it from covering up
+        // the crosshairs, the point markers, and the traced lines.
+        Set<String> upperLayerIds = ImmutableSet.of(
+            SymbolManager.ID_GEOJSON_LAYER,
+            LineManager.ID_GEOJSON_LAYER,
+
+            // These are exactly the layer IDs defined in LocationComponentConstants,
+            // but unfortunately we can't refer to them because it's package-private.
+            "mapbox-location-shadow-layer",
+            "mapbox-location-foreground-layer",
+            "mapbox-location-background-layer",
+            "mapbox-location-accuracy-layer",
+            "mapbox-location-bearing-layer"
+        );
+
+        for (Layer l : map.getStyle().getLayers()) {
+            if (upperLayerIds.contains(l.getId())) {
+                // We've found the first (lowest) upper layer; insert just below it.
+                map.getStyle().addLayerBelow(layer, l.getId());
+                return;
+            }
+        }
+        // No upper layers were found, so let's put the overlay on top.
+        map.getStyle().addLayer(layer);
     }
 
     private void addOverlaySource(Source source) {
@@ -611,41 +647,47 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
         return new LineManager(getMapView(), map, map.getStyle());
     }
 
-    @SuppressWarnings({"MissingPermission"})  // Permission checks for location services handled in widgets
-    private void enableLocationComponent() {
-        if (map == null) {  // map is null during Robolectric tests
+    private void initLocationComponent() {
+        if (map == null || map.getStyle() == null) {  // map is null during Robolectric tests
             return;
         }
 
-        LocationEngineRequest request = new LocationEngineRequest.Builder(LOCATION_INTERVAL_MILLIS)
-            .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
-            .setMaxWaitTime(LOCATION_MAX_WAIT_MILLIS)
-            .build();
-
         LocationEngine engine = LocationEngineProvider.getBestLocationEngine(getContext());
-        engine.requestLocationUpdates(request, this, getMainLooper());
-        engine.getLastLocation(this);
-
         locationComponent = map.getLocationComponent();
-        if (map.getStyle() != null) {
-            locationComponent.activateLocationComponent(
-                LocationComponentActivationOptions.builder(getContext(), map.getStyle())
-                    .locationEngine(engine)
-                    .locationComponentOptions(
-                        LocationComponentOptions.builder(getContext())
-                            .foregroundDrawable(R.drawable.ic_crosshairs)
-                            .backgroundDrawable(R.drawable.empty)
-                            .enableStaleState(false)
-                            .elevation(0)  // removes the shadow
-                            .build()
-                    )
-                    .build()
-            );
-        }
+        locationComponent.activateLocationComponent(
+            LocationComponentActivationOptions.builder(getContext(), map.getStyle())
+                .locationEngine(engine)
+                .locationComponentOptions(
+                    LocationComponentOptions.builder(getContext())
+                        .foregroundDrawable(R.drawable.ic_crosshairs)
+                        .backgroundDrawable(R.drawable.empty)
+                        .enableStaleState(false)  // don't switch to other drawables
+                        .elevation(0)  // remove the shadow
+                        .build()
+                )
+                .build()
+        );
 
         locationComponent.setCameraMode(CameraMode.NONE);
         locationComponent.setRenderMode(RenderMode.NORMAL);
-        locationComponent.setLocationComponentEnabled(locationEnabled);
+        enableLocationUpdates(clientWantsLocationUpdates);
+    }
+
+    @SuppressWarnings({"MissingPermission"})  // permission checks for location services are handled in widgets
+    private void enableLocationUpdates(boolean enable) {
+        if (locationComponent != null) {
+            LocationEngine engine = locationComponent.getLocationEngine();
+            if (enable) {
+                Timber.i("Requesting location updates from %s (to %s)", engine, this);
+                engine.requestLocationUpdates(LOCATION_REQUEST, this, null);
+                engine.getLastLocation(this);
+            } else {
+                Timber.i("Stopping location updates from %s (to %s)", engine, this);
+                engine.removeLocationUpdates(this);
+            }
+            Timber.i("setLocationComponentEnabled to %s (for %s)", enable, locationComponent);
+            locationComponent.setLocationComponentEnabled(enable);
+        }
     }
 
     /**

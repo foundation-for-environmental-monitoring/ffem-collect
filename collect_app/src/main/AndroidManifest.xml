@@ -34,6 +34,7 @@ the specific language governing permissions and limitations under the License.
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <!-- Normal permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -279,7 +280,7 @@ the specific language governing permissions and limitations under the License.
         <activity android:name="io.ffem.collect.android.activities.SettingsActivity" />
         <activity
             android:name="io.ffem.collect.android.activities.SignInActivity"
-            android:theme="@style/LightAppTheme.Launcher">
+            android:theme="@style/Theme.Collect.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -3,7 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="org.odk.collect.android">
 
-    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <!-- Allows changing locales -->
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" tools:ignore="ProtectedPermissions" />

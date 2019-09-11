@@ -61,6 +61,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -82,12 +84,14 @@ import org.javarosa.core.model.instance.TreeElement;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryController;
 import org.javarosa.form.api.FormEntryPrompt;
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.LocalDateTime;
 import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.IconMenuListAdapter;
 import org.odk.collect.android.adapters.model.IconMenuItem;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.audio.AudioControllerView;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.helpers.ContentResolverHelper;
 import org.odk.collect.android.dao.helpers.FormsDaoHelper;
@@ -135,6 +139,7 @@ import org.odk.collect.android.upload.AutoSendWorker;
 import org.odk.collect.android.utilities.ActivityAvailability;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.DependencyProvider;
+import org.odk.collect.android.utilities.DestroyableLifecyleOwner;
 import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.ImageConverter;
@@ -142,6 +147,7 @@ import org.odk.collect.android.utilities.MediaManager;
 import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.RegexUtils;
+import org.odk.collect.android.utilities.ScreenContext;
 import org.odk.collect.android.utilities.SnackbarUtils;
 import org.odk.collect.android.utilities.SoftKeyboardUtils;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -187,6 +193,7 @@ import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivit
  * @author Thomas Smyth, Sassafras Tech Collective (tom@sassafrastech.com; constraint behavior
  * option)
  */
+
 public class FormEntryActivity extends CollectAbstractActivity implements AnimationListener,
         FormLoaderListener, FormSavedListener, AdvanceToNextListener,
         OnGestureListener, SavePointListener, NumberPickerDialog.NumberPickerListener,
@@ -194,7 +201,9 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         CustomDatePickerDialog.CustomDatePickerDialogListener,
         RankingWidgetDialog.RankingListener,
         SaveFormIndexTask.SaveFormIndexListener, FormLoadingDialogFragment.FormLoadingDialogFragmentListener,
-        WidgetValueChangedListener {
+        WidgetValueChangedListener,
+        ScreenContext,
+        AudioControllerView.SwipableParent {
 
     // Defines for FormEntryActivity
     private static final boolean EXIT = true;
@@ -272,6 +281,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     private TextView backButton;
 
     private ODKView odkView;
+    private final DestroyableLifecyleOwner odkViewLifecycle = new DestroyableLifecyleOwner();
 
     private boolean doSwipe = true;
     private String instancePath;
@@ -285,6 +295,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
     MediaLoadingFragment mediaLoadingFragment;
 
+    @Override
     public void allowSwiping(boolean doSwipe) {
         this.doSwipe = doSwipe;
     }
@@ -1159,6 +1170,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
      * @return newly created View
      */
     private View createView(int event, boolean advancingPage) {
+        releaseOdkView();
+
         FormController formController = getFormController();
 
         setTitle(formController.getFormTitle());
@@ -1176,7 +1189,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             case FormEntryController.EVENT_QUESTION:
             case FormEntryController.EVENT_GROUP:
             case FormEntryController.EVENT_REPEAT:
-                releaseOdkView();
                 // should only be a group here if the event_group is a field-list
                 try {
                     FormEntryPrompt[] prompts = formController.getQuestionPrompts();
@@ -1187,7 +1199,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     FormEntryCaption[] groups = formController
                             .getGroupsForCurrentIndex();
 
-                    odkView = new ODKView(this, prompts, groups, advancingPage);
+                    odkView = createODKView(advancingPage, prompts, groups);
                     odkView.setWidgetValueChangedListener(this);
                     Timber.i("Created view for group %s %s",
                             groups.length > 0 ? groups[groups.length - 1].getLongText() : "[top]",
@@ -1229,7 +1241,25 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         }
     }
 
+    @NotNull
+    private ODKView createODKView(boolean advancingPage, FormEntryPrompt[] prompts, FormEntryCaption[] groups) {
+        odkViewLifecycle.start();
+        return new ODKView(this, prompts, groups, advancingPage);
+    }
+
+    @Override
+    public FragmentActivity getActivity() {
+        return this;
+    }
+
+    @Override
+    public LifecycleOwner getViewLifecycle() {
+        return odkViewLifecycle;
+    }
+
     private void releaseOdkView() {
+        odkViewLifecycle.destroy();
+
         if (odkView != null) {
             odkView.releaseWidgetResources();
             odkView = null;
@@ -2523,7 +2553,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 String message;
                 formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.SAVE_ERROR, true);
                 if (saveResult.getSaveErrorMessage() != null) {
-                    message = getString(R.string.data_saved_error) + ": "
+                    message = getString(R.string.data_saved_error) + " "
                             + saveResult.getSaveErrorMessage();
                 } else {
                     message = getString(R.string.data_saved_error);

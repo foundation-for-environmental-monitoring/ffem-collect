@@ -9,5 +9,4 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     app:contentInsetEnd="0dp"
     app:contentInsetStart="16dp"
-    app:contentInsetStartWithNavigation="0dp"
-    app:titleTextColor="?attr/textColorPrimary" />
+    app:contentInsetStartWithNavigation="0dp" />

@@ -3,6 +3,7 @@ package org.odk.collect.android.injection.config;
 import android.app.Application;
 import android.telephony.SmsManager;
 
+import org.javarosa.core.reference.ReferenceManager;
 import org.odk.collect.android.activities.FormDownloadList;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.GoogleDriveActivity;
@@ -13,7 +14,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.events.RxEventBus;
 import org.odk.collect.android.fragments.DataManagerList;
 import org.odk.collect.android.http.CollectServerClient;
-import org.odk.collect.android.http.OpenRosaHttpInterface;
+import org.odk.collect.android.http.openrosa.OpenRosaHttpInterface;
 import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.preferences.ServerPreferencesFragment;
 import org.odk.collect.android.tasks.InstanceServerUploaderTask;
@@ -116,6 +117,8 @@ public interface AppDependencyComponent {
     OpenRosaHttpInterface openRosaHttpInterface();
 
     DownloadFormListUtils downloadFormListUtils();
+
+    ReferenceManager referenceManager();
 
     void inject(SignInActivity signInActivity);
 }
