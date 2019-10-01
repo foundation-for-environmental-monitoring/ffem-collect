@@ -33,8 +33,10 @@ the specific language governing permissions and limitations under the License.
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
+<!--    <uses-permission android:name="android.permission.GET_ACCOUNTS" />-->
+    <!-- <uses-permission android:name="android.permission.SEND_SMS" /> -->
 
     <!-- Normal permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -85,14 +87,7 @@ the specific language governing permissions and limitations under the License.
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true">
-        <provider
-            android:name=".provider.FormsProvider"
-            android:authorities="io.ffem.collect.provider.odk.forms"
-            android:exported="true" />
-        <provider
-            android:name=".provider.InstanceProvider"
-            android:authorities="io.ffem.collect.provider.odk.instances"
-            android:exported="true" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -114,17 +109,7 @@ the specific language governing permissions and limitations under the License.
         <activity
             android:name=".activities.FormEntryActivity"
             android:configChanges="orientation"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="vnd.android.cursor.item/vnd.ffem.form" />
-                <data android:mimeType="vnd.android.cursor.item/vnd.ffem.instance" />
-            </intent-filter>
-        </activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.NotificationActivity"
             android:excludeFromRecents="true"
@@ -138,34 +123,9 @@ the specific language governing permissions and limitations under the License.
             android:name=".activities.GoogleDriveActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.InstanceChooserList">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="vnd.android.cursor.dir/vnd.ffem.instance" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".activities.FormChooserList">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.PICK" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="vnd.android.cursor.dir/vnd.ffem.form" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".activities.FormDownloadList">
-            <intent-filter>
-                <action android:name="org.odk.collect.android.FORM_DOWNLOAD" />
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="vnd.android.cursor.dir/vnd.ffem.form" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".activities.InstanceChooserList" />
+        <activity android:name=".activities.FormChooserListActivity" />
+        <activity android:name=".activities.FormDownloadList" />
         <activity
             android:name=".activities.FileManagerTabs"
             android:configChanges="orientation|screenSize" />
@@ -174,26 +134,8 @@ the specific language governing permissions and limitations under the License.
             android:configChanges="orientation|screenSize" />
         <activity
             android:name=".activities.InstanceUploaderListActivity"
-            android:configChanges="orientation|screenSize">
-        </activity>
-        <activity-alias
-            android:name=".activities.InstanceUploaderList"
-            android:targetActivity=".activities.InstanceUploaderListActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity-alias>
-        <activity
-            android:name=".activities.InstanceUploaderActivity">
-            <intent-filter>
-                <action android:name="org.odk.collect.android.INSTANCE_UPLOAD" />
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="vnd.android.cursor.dir/vnd.ffem.instance" />
-            </intent-filter>
-        </activity>
+            android:configChanges="orientation|screenSize" />
+        <activity android:name=".activities.InstanceUploaderActivity" />
         <activity android:name=".activities.AboutActivity" />
         <activity android:name=".preferences.PreferencesActivity" />
         <activity android:name=".preferences.AdminPreferencesActivity" />
@@ -264,6 +206,98 @@ the specific language governing permissions and limitations under the License.
              * the external API needs to be expanded, introduce carefully-named actions.          *
              **************************************************************************************
          -->
+
+        <provider
+            android:name=".provider.FormsProvider"
+            android:authorities="io.ffem.collect.provider.odk.forms"
+            android:exported="true" />
+        <provider
+            android:name=".provider.InstanceProvider"
+            android:authorities="io.ffem.collect.provider.odk.instances"
+            android:exported="true" />
+
+        <activity-alias
+            android:name=".activities.FormEntryActivity"
+            android:targetActivity=".activities.FormEntryActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="vnd.android.cursor.item/vnd.ffem.form" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.ffem.instance" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".activities.InstanceChooserList"
+            android:targetActivity=".activities.InstanceChooserList">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="vnd.android.cursor.dir/vnd.ffem.instance" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".activities.FormChooserList"
+            android:targetActivity=".activities.FormChooserListActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="vnd.android.cursor.dir/vnd.ffem.form" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".activities.FormDownloadList"
+            android:targetActivity=".activities.FormDownloadList">
+            <intent-filter>
+                <action android:name="org.odk.collect.android.FORM_DOWNLOAD" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="vnd.android.cursor.dir/vnd.ffem.form" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".activities.InstanceUploaderList"
+            android:targetActivity=".activities.InstanceUploaderListActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".activities.InstanceUploaderActivity"
+            android:targetActivity=".activities.InstanceUploaderActivity">
+            <intent-filter>
+                <action android:name="org.odk.collect.android.INSTANCE_UPLOAD" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="vnd.android.cursor.dir/vnd.ffem.instance" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".activities.SplashScreenActivity"
+            android:targetActivity=".activities.SplashScreenActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
 
         <!-- Enable Shortcuts for Command Actions -->
         <activity

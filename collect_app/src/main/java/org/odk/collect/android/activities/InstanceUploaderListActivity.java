@@ -63,7 +63,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 import butterknife.BindView;

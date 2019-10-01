@@ -145,7 +145,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
             public void onClick(View v) {
                 if (Collect.allowClick(getClass().getName())) {
                     Intent i = new Intent(getApplicationContext(),
-                            FormChooserList.class);
+                            FormChooserListActivity.class);
                     i.putExtra("allowDelete", true);
                     startActivity(i);
                 }
@@ -674,7 +674,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
         private final WeakReference<MainMenuActivity> target;
 
         IncomingHandler(MainMenuActivity target) {
-            this.target = new WeakReference<MainMenuActivity>(target);
+            this.target = new WeakReference<>(target);
         }
 
         @Override

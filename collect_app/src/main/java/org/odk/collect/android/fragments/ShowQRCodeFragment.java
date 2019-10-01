@@ -167,7 +167,7 @@ public class ShowQRCodeFragment extends Fragment {
                 IntentIntegrator.forFragment(ShowQRCodeFragment.this)
                         .setCaptureActivity(ScannerWithFlashlightActivity.class)
                         .setBeepEnabled(true)
-                        .setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
+                        .setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
                         .setOrientationLocked(false)
                         .setPrompt(getString(R.string.qrcode_scanner_prompt))
                         .initiateScan();
