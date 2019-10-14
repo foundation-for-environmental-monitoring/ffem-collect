@@ -135,9 +135,7 @@ import org.odk.collect.android.tasks.SavePointTask;
 import org.odk.collect.android.tasks.SaveResult;
 import org.odk.collect.android.tasks.SaveToDiskTask;
 import org.odk.collect.android.upload.AutoSendWorker;
-import org.odk.collect.android.utilities.ActivityAvailability;
 import org.odk.collect.android.utilities.ApplicationConstants;
-import org.odk.collect.android.utilities.DependencyProvider;
 import org.odk.collect.android.utilities.DestroyableLifecyleOwner;
 import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.FileUtils;
@@ -197,7 +195,6 @@ import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivit
 public class FormEntryActivity extends CollectAbstractActivity implements AnimationListener,
         FormLoaderListener, FormSavedListener, AdvanceToNextListener,
         OnGestureListener, SavePointListener, NumberPickerDialog.NumberPickerListener,
-        DependencyProvider<ActivityAvailability>,
         CustomDatePickerDialog.CustomDatePickerDialogListener,
         RankingWidgetDialog.RankingListener,
         SaveFormIndexTask.SaveFormIndexListener, FormLoadingDialogFragment.FormLoadingDialogFragmentListener,
@@ -307,9 +304,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     private boolean showNavigationButtons;
 
     private Bundle state;
-
-    @NonNull
-    private ActivityAvailability activityAvailability = new ActivityAvailability(this);
 
     private boolean shouldOverrideAnimations;
 
@@ -2826,15 +2820,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             return (ODKView) currentView;
         }
         return null;
-    }
-
-    @Override
-    public ActivityAvailability provide() {
-        return activityAvailability;
-    }
-
-    public void setActivityAvailability(@NonNull ActivityAvailability activityAvailability) {
-        this.activityAvailability = activityAvailability;
     }
 
     public void setShouldOverrideAnimations(boolean shouldOverrideAnimations) {

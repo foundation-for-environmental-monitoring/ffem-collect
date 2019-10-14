@@ -52,6 +52,7 @@ import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.GeneralKeys;
+import org.odk.collect.android.preferences.PreferenceSaver;
 import org.odk.collect.android.preferences.PreferencesActivity;
 import org.odk.collect.android.preferences.Transport;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
@@ -70,7 +71,6 @@ import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import io.ffem.collect.android.activities.SettingsActivity;
 import io.ffem.collect.android.common.AppConfig;
@@ -633,24 +633,17 @@ public class MainMenuActivity extends CollectAbstractActivity {
         ObjectInputStream input = null;
         try {
             input = new ObjectInputStream(new FileInputStream(src));
-            GeneralSharedPreferences.getInstance().clear();
 
             // first object is preferences
-            Map<String, ?> entries = (Map<String, ?>) input.readObject();
+            Map<String, Object> entries = (Map<String, Object>) input.readObject();
 
             AutoSendPreferenceMigrator.migrate(entries);
-
-            for (Entry<String, ?> entry : entries.entrySet()) {
-                GeneralSharedPreferences.getInstance().save(entry.getKey(), entry.getValue());
-            }
-
-            AdminSharedPreferences.getInstance().clear();
+            PreferenceSaver.saveGeneralPrefs(GeneralSharedPreferences.getInstance(), entries);
 
             // second object is admin options
-            Map<String, ?> adminEntries = (Map<String, ?>) input.readObject();
-            for (Entry<String, ?> entry : adminEntries.entrySet()) {
-                AdminSharedPreferences.getInstance().save(entry.getKey(), entry.getValue());
-            }
+            Map<String, Object> adminEntries = (Map<String, Object>) input.readObject();
+            PreferenceSaver.saveAdminPrefs(AdminSharedPreferences.getInstance(), adminEntries);
+
             Collect.getInstance().initializeJavaRosa();
             res = true;
         } catch (IOException | ClassNotFoundException e) {

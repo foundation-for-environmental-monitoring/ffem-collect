@@ -20,14 +20,8 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
-import android.preference.PreferenceManager;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import android.telephony.PhoneNumberUtils;
 import android.text.InputFilter;
@@ -40,6 +34,11 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListPopupWindow;
 import android.widget.ListView;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -52,6 +51,7 @@ import org.odk.collect.android.listeners.OnBackPressedListener;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.filters.ControlCharacterFilter;
 import org.odk.collect.android.preferences.filters.WhitespaceFilter;
+import org.odk.collect.android.preferences.utilities.ChangingServerUrlUtils;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.PlayServicesUtil;
@@ -171,8 +171,8 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
 //        maskPasswordSummary(passwordPreference.getText());
 //        passwordPreference.getEditText().setFilters(
 //                new InputFilter[]{new ControlCharacterFilter()});
-
-        //setupTransportPreferences();
+//
+//        //setupTransportPreferences();
 //        getPreferenceScreen().removePreference(findPreference(KEY_TRANSPORT_PREFERENCE));
 //        getPreferenceScreen().removePreference(findPreference(KEY_SMS_PREFERENCE));
     }
@@ -317,13 +317,13 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         listPopupWindow.setAnchorView(serverUrlPreference.getEditText());
         listPopupWindow.setModal(true);
         listPopupWindow.setOnItemClickListener((parent, view, position, id) -> {
-            serverUrlPreference.getEditText().setText(urlList.get(position));
+            serverUrlPreference.getEditText().setText(ChangingServerUrlUtils.getUrlList().get(position));
             listPopupWindow.dismiss();
         });
     }
 
     private void setupUrlDropdownAdapter() {
-        ArrayAdapter adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, urlList);
+        ArrayAdapter adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, ChangingServerUrlUtils.getUrlList());
         listPopupWindow.setAdapter(adapter);
     }
 
@@ -357,23 +357,8 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
                         sendAnalyticsEvent(url);
 
                         preference.setSummary(newValue.toString());
-                        SharedPreferences prefs = PreferenceManager
-                                .getDefaultSharedPreferences(getActivity().getApplicationContext());
-                        String urlListString = prefs.getString(KNOWN_URL_LIST, "");
-
-                        urlList =
-                                new Gson().fromJson(urlListString,
-                                        new TypeToken<List<String>>() {
-                                        }.getType());
-
-                        if (!urlList.contains(url)) {
-                            // We store a list with at most 5 elements
-                            if (urlList.size() == 5) {
-                                urlList.remove(4);
-                            }
-                            addUrlToPreferencesList(url, prefs);
-                            setupUrlDropdownAdapter();
-                        }
+                        ChangingServerUrlUtils.addUrlToList(url);
+                        setupUrlDropdownAdapter();
                     } else {
                         ToastUtils.showShortToast(R.string.url_error);
                         return false;
