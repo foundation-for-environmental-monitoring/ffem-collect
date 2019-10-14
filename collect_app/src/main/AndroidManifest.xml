@@ -289,16 +289,16 @@ the specific language governing permissions and limitations under the License.
             </intent-filter>
         </activity-alias>
 
-        <activity-alias
-            android:name=".activities.SplashScreenActivity"
-            android:targetActivity=".activities.SplashScreenActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--        <activity-alias-->
+<!--            android:name=".activities.SplashScreenActivity"-->
+<!--            android:targetActivity=".activities.SplashScreenActivity">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity-alias>
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity-alias>-->
 
         <!-- Enable Shortcuts for Command Actions -->
         <activity

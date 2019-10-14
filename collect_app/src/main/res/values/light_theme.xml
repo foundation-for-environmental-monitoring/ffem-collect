@@ -9,7 +9,7 @@
 
     <style name="Theme.Collect.BaseLight" parent="Theme.AppCompat.Light.NoActionBar">
         <!--Material theme attributes-->
-        <item name="colorPrimary">#FFFFFF</item>
+        <item name="colorPrimary">@color/primary</item>
         <item name="colorSecondary">#2196F3</item>
         <item name="colorError">@color/red_500</item>
 
@@ -54,6 +54,7 @@
         <item name="alertDialogTheme">@style/Theme.Collect.BaseLight.Dialog.Alert</item>
         <item name="searchViewStyle">@style/Widget.Collect.SearchView.Light</item>
         <item name="iconColor">#de000000</item>
+        <item name="toolbarIconColor">#deffffff</item>
         <item name="dividerColor">#1e000000</item>
         <item name="rankItemColor">#EEEEEE</item>
         <item name="android:textDirection" tools:targetApi="17">locale</item>
@@ -61,7 +62,6 @@
         <item name="dividerCompat">@android:drawable/divider_horizontal_bright</item>
         <item name="android:tintMode" tools:targetApi="21">src_in</item>
         <item name="spinnerItemBackgroundColor">#F9F9F9</item>
-        <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="textColorPrimary">@color/white</item>
 

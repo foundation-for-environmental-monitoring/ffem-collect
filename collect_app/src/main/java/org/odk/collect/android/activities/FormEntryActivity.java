@@ -86,7 +86,6 @@ import org.javarosa.form.api.FormEntryController;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.LocalDateTime;
-import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.IconMenuListAdapter;
 import org.odk.collect.android.adapters.model.IconMenuItem;
@@ -764,6 +763,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     Bundle extras = intent.getExtras();
                     if (getCurrentViewIfODKView() != null) {
                         getCurrentViewIfODKView().setDataForFields(extras);
+                        //ffem: to refresh multi result display
+                        refreshCurrentView();
                     }
                 } catch (JavaRosaException e) {
                     Timber.e(e);

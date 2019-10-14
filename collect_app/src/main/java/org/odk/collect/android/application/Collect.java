@@ -460,5 +460,4 @@ public class Collect extends Application {
     public static void resetLastClickTime() {
         lastClickTime = 0;
     }
-
 }
