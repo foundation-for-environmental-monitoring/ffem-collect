@@ -13,11 +13,13 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Random;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
+import static org.odk.collect.android.utilities.WidgetAppearanceUtils.THOUSANDS_SEP;
 
 public class DecimalWidgetTest extends QuestionWidgetTest<DecimalWidget, DecimalData> {
 
@@ -32,7 +34,7 @@ public class DecimalWidgetTest extends QuestionWidgetTest<DecimalWidget, Decimal
     @NonNull
     @Override
     public DecimalWidget createWidget() {
-        return new DecimalWidget(activity, formEntryPrompt, false, false);
+        return new DecimalWidget(activity, formEntryPrompt, false);
     }
 
     @NonNull
@@ -68,13 +70,11 @@ public class DecimalWidgetTest extends QuestionWidgetTest<DecimalWidget, Decimal
         when(formEntryPrompt.getAnswerValue()).thenReturn(answerData);
         when(answerData.getValue()).thenReturn(integerDouble);
 
-        DecimalWidget decimalWidget = new DecimalWidget(activity,
-                formEntryPrompt, false, false);
+        DecimalWidget decimalWidget = new DecimalWidget(activity, formEntryPrompt, false);
 
         assertThat(decimalWidget.getAnswerText(), is(equalTo(integerString)));
 
-        decimalWidget = new DecimalWidget(activity,
-                formEntryPrompt, false, true);
+        decimalWidget = new DecimalWidget(activity, formEntryPrompt, false);
 
         assertThat(decimalWidget.getAnswerText(), is(equalTo(integerString)));
     }
@@ -90,13 +90,11 @@ public class DecimalWidgetTest extends QuestionWidgetTest<DecimalWidget, Decimal
         when(formEntryPrompt.getAnswerValue()).thenReturn(answerData);
         when(answerData.getValue()).thenReturn(twoDecimalDouble);
 
-        DecimalWidget decimalWidget = new DecimalWidget(activity,
-                formEntryPrompt, false, false);
+        DecimalWidget decimalWidget = new DecimalWidget(activity, formEntryPrompt, false);
 
         assertThat(decimalWidget.getAnswerText(), is(equalTo(twoDecimalString)));
 
-        decimalWidget = new DecimalWidget(activity,
-                formEntryPrompt, false, true);
+        decimalWidget = new DecimalWidget(activity, formEntryPrompt, false);
 
         assertThat(decimalWidget.getAnswerText(), is(equalTo(twoDecimalString)));
     }
@@ -109,13 +107,11 @@ public class DecimalWidgetTest extends QuestionWidgetTest<DecimalWidget, Decimal
         when(formEntryPrompt.getAnswerValue()).thenReturn(answerData);
         when(answerData.getValue()).thenReturn(negativeIntegerDouble);
 
-        DecimalWidget decimalWidget = new DecimalWidget(activity,
-                formEntryPrompt, false, false);
+        DecimalWidget decimalWidget = new DecimalWidget(activity, formEntryPrompt, false);
 
         assertThat(decimalWidget.getAnswerText(), is(equalTo(negativeIntegerString)));
 
-        decimalWidget = new DecimalWidget(activity,
-                formEntryPrompt, false, true);
+        decimalWidget = new DecimalWidget(activity, formEntryPrompt, false);
 
         assertThat(decimalWidget.getAnswerText(), is(equalTo(negativeIntegerString)));
     }
@@ -131,13 +127,11 @@ public class DecimalWidgetTest extends QuestionWidgetTest<DecimalWidget, Decimal
         when(formEntryPrompt.getAnswerValue()).thenReturn(answerData);
         when(answerData.getValue()).thenReturn(fifteenDigitDouble);
 
-        DecimalWidget decimalWidget = new DecimalWidget(activity,
-                formEntryPrompt, false, false);
+        DecimalWidget decimalWidget = new DecimalWidget(activity, formEntryPrompt, false);
 
         assertThat(decimalWidget.getAnswerText(), is(equalTo(fifteenDigitString)));
 
-        decimalWidget = new DecimalWidget(activity,
-                formEntryPrompt, false, true);
+        decimalWidget = new DecimalWidget(activity, formEntryPrompt, false);
 
         assertThat(decimalWidget.getAnswerText(), is(equalTo(fifteenDigitString)));
     }
@@ -153,17 +147,13 @@ public class DecimalWidgetTest extends QuestionWidgetTest<DecimalWidget, Decimal
         when(formEntryPrompt.getAnswerValue()).thenReturn(answerData);
         when(answerData.getValue()).thenReturn(fifteenDigitNegativeDouble);
 
-        DecimalWidget decimalWidget = new DecimalWidget(activity,
-                formEntryPrompt, false, false);
+        DecimalWidget decimalWidget = new DecimalWidget(activity, formEntryPrompt, false);
 
-        assertThat(decimalWidget.getAnswerText(),
-                is(equalTo(fifteenDigitNegativeString)));
+        assertThat(decimalWidget.getAnswerText(), is(equalTo(fifteenDigitNegativeString)));
 
-        decimalWidget = new DecimalWidget(activity,
-                formEntryPrompt, false, true);
+        decimalWidget = new DecimalWidget(activity, formEntryPrompt, false);
 
-        assertThat(decimalWidget.getAnswerText(),
-                is(equalTo(fifteenDigitNegativeString)));
+        assertThat(decimalWidget.getAnswerText(), is(equalTo(fifteenDigitNegativeString)));
     }
 
     @Test
@@ -177,22 +167,18 @@ public class DecimalWidgetTest extends QuestionWidgetTest<DecimalWidget, Decimal
         when(formEntryPrompt.getAnswerValue()).thenReturn(answerData);
         when(answerData.getValue()).thenReturn(fifteenDigitDecimalDouble);
 
-        DecimalWidget decimalWidget = new DecimalWidget(activity,
-                formEntryPrompt, false, false);
+        DecimalWidget decimalWidget = new DecimalWidget(activity, formEntryPrompt, false);
 
-        assertThat(decimalWidget.getAnswerText(),
-                is(equalTo(fifteenDigitDecimalString)));
+        assertThat(decimalWidget.getAnswerText(), is(equalTo(fifteenDigitDecimalString)));
 
-        decimalWidget = new DecimalWidget(activity,
-                formEntryPrompt, false, true);
+        decimalWidget = new DecimalWidget(activity, formEntryPrompt, false);
 
-        assertThat(decimalWidget.getAnswerText(),
-                is(equalTo(fifteenDigitDecimalString)));
+        assertThat(decimalWidget.getAnswerText(), is(equalTo(fifteenDigitDecimalString)));
     }
 
     @Test
     // This should never be possible because the EditText has a limit on it
-    public void digitsAboveLimitOfFifteenShouldBeTruncatedFromLeft() {
+    public void digitsAboveLimitOfFifteenShouldBeTruncatedFromRight() {
         Double eighteenDigitDouble = 9999999999999994.;
         String fifteenDigitString = "999999999999994";
         assertSame(15, fifteenDigitString.length());
@@ -200,15 +186,19 @@ public class DecimalWidgetTest extends QuestionWidgetTest<DecimalWidget, Decimal
         when(formEntryPrompt.getAnswerValue()).thenReturn(answerData);
         when(answerData.getValue()).thenReturn(eighteenDigitDouble);
 
-        DecimalWidget decimalWidget = new DecimalWidget(activity,
-                formEntryPrompt, false, false);
+        DecimalWidget decimalWidget = new DecimalWidget(activity, formEntryPrompt, false);
 
         assertThat(decimalWidget.getAnswerText(), is(equalTo(fifteenDigitString)));
 
-        decimalWidget = new DecimalWidget(activity,
-                formEntryPrompt, false, true);
+        decimalWidget = new DecimalWidget(activity, formEntryPrompt, false);
 
         assertThat(decimalWidget.getAnswerText(), is(equalTo(fifteenDigitString)));
     }
 
+    @Test
+    public void separatorsShouldBeAddedWhenEnabled() {
+        when(formEntryPrompt.getAppearanceHint()).thenReturn(THOUSANDS_SEP);
+        getActualWidget().answerText.setText("123456789.54");
+        assertEquals("123,456,789.54", getActualWidget().answerText.getText().toString());
+    }
 }

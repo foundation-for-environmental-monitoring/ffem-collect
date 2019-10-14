@@ -77,7 +77,7 @@ import org.odk.collect.android.utilities.TextUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.ViewIds;
-import org.odk.collect.android.views.helpers.FormAutoplayHelper;
+import org.odk.collect.android.formentry.media.PromptAutoplayer;
 import org.odk.collect.android.widgets.QuestionWidget;
 import org.odk.collect.android.widgets.StringWidget;
 import org.odk.collect.android.widgets.WidgetFactory;
@@ -454,8 +454,9 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                         getContext().getString(R.string.file_missing, playbackFailedException.getURI()),
                         Toast.LENGTH_SHORT
                 ).show();
-            }
 
+                audioHelper.dismissError();
+            }
         });
     }
 
@@ -476,9 +477,9 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
 
     private Boolean autoplayAudio(FormEntryPrompt firstPrompt) {
         AudioHelper audioHelper = getAudioHelper();
-        FormAutoplayHelper formAutoplayHelper = new FormAutoplayHelper(audioHelper, ReferenceManager.instance());
+        PromptAutoplayer promptAutoplayer = new PromptAutoplayer(audioHelper, ReferenceManager.instance());
 
-        return formAutoplayHelper.autoplayIfNeeded(firstPrompt);
+        return promptAutoplayer.autoplayIfNeeded(firstPrompt);
     }
 
     private void autoplayVideo(FormEntryPrompt prompt) {
@@ -487,7 +488,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         if (autoplayOption != null) {
             if (autoplayOption.equalsIgnoreCase("video")) {
                 new Handler().postDelayed(() -> {
-                    widgets.get(0).playVideo();
+                    widgets.get(0).getAudioVideoImageTextLabel().playVideo();
                 }, 150);
             }
         }

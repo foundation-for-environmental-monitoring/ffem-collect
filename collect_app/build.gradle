@@ -169,7 +169,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.browser:browser:1.2.0-alpha08'
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.1.0-alpha10'
+    implementation 'com.google.android.material:material:1.1.0-beta01'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.exifinterface:exifinterface:1.1.0-beta01'
     implementation "androidx.multidex:multidex:2.0.1"
@@ -316,6 +316,8 @@ dependencies {
     androidTestImplementation "android.arch.work:work-testing:1.0.1"
 
     androidTestImplementation "android.arch.work:work-testing:1.0.1"
+
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
 }
 
 // Must be at bottom to prevent dependency collisions
