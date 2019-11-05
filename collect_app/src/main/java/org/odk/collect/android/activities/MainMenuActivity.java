@@ -296,6 +296,122 @@ public class MainMenuActivity extends CollectAbstractActivity {
 //        adminPreferences = this.getSharedPreferences(
 //                AdminPreferencesActivity.ADMIN_PREFERENCES, 0);
 
+        setupGoogleAnalytics();
+
+        displayExpiryInfo();
+    }
+
+    private void initToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setTitle(getString(R.string.app_name));
+        setSupportActionBar(toolbar);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        countSavedForms();
+        updateButtons();
+        getContentResolver().registerContentObserver(InstanceColumns.CONTENT_URI, true,
+                contentObserver);
+
+        setButtonsVisibility();
+
+        ((Collect) getApplication())
+                .getDefaultTracker()
+                .enableAutoActivityTracking(true);
+    }
+
+    private void setButtonsVisibility() {
+        SharedPreferences sharedPreferences = this.getSharedPreferences(
+                AdminPreferencesActivity.ADMIN_PREFERENCES, 0);
+
+        boolean edit = sharedPreferences.getBoolean(AdminKeys.KEY_EDIT_SAVED, true);
+        if (!edit) {
+            if (reviewDataButton != null) {
+                reviewDataButton.setVisibility(View.GONE);
+            }
+        } else {
+            if (reviewDataButton != null) {
+                reviewDataButton.setVisibility(View.VISIBLE);
+            }
+        }
+
+        boolean send = sharedPreferences.getBoolean(AdminKeys.KEY_SEND_FINALIZED, true);
+        if (!send) {
+            if (sendDataButton != null) {
+                sendDataButton.setVisibility(View.GONE);
+            }
+        } else {
+//            if (sendDataButton != null) {
+//                sendDataButton.setVisibility(View.VISIBLE);
+//            }
+        }
+
+        boolean viewSent = sharedPreferences.getBoolean(AdminKeys.KEY_VIEW_SENT, true);
+        if (!viewSent) {
+            if (viewSentFormsButton != null) {
+                viewSentFormsButton.setVisibility(View.GONE);
+            }
+        } else {
+            if (viewSentFormsButton != null) {
+                viewSentFormsButton.setVisibility(View.VISIBLE);
+            }
+        }
+
+        boolean getBlank = sharedPreferences.getBoolean(AdminKeys.KEY_GET_BLANK, true);
+        if (!getBlank) {
+            if (getFormsButton != null) {
+                getFormsButton.setVisibility(View.GONE);
+            }
+        } else {
+            if (getFormsButton != null) {
+                getFormsButton.setVisibility(View.VISIBLE);
+            }
+        }
+
+//        boolean deleteSaved = sharedPreferences.getBoolean(AdminKeys.KEY_DELETE_SAVED, true);
+//        if (!deleteSaved) {
+//            if (manageFilesButton != null) {
+//                manageFilesButton.setVisibility(View.GONE);
+//            }
+//        } else {
+//            if (manageFilesButton != null) {
+//                manageFilesButton.setVisibility(View.VISIBLE);
+//            }
+//        }
+
+        switchLayoutForDiagnosticOrUserMode();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (alertDialog != null && alertDialog.isShowing()) {
+            alertDialog.dismiss();
+        }
+        getContentResolver().unregisterContentObserver(contentObserver);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_settings:
+                final Intent intent = new Intent(this, SettingsActivity.class);
+                startActivityForResult(intent, 100);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void countSavedForms() {
         InstancesDao instancesDao = new InstancesDao();
 
         // count for finalized instances
@@ -310,9 +426,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
             startManagingCursor(finalizedCursor);
         }
         completedCount = finalizedCursor != null ? finalizedCursor.getCount() : 0;
-        getContentResolver().registerContentObserver(InstanceColumns.CONTENT_URI, true,
-                contentObserver);
-        // finalizedCursor.registerContentObserver(contentObserver);
 
         // count for saved instances
         try {
@@ -338,114 +451,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
             startManagingCursor(viewSentCursor);
         }
         viewSentCount = viewSentCursor != null ? viewSentCursor.getCount() : 0;
-
-        updateButtons();
-        setupGoogleAnalytics();
-
-        displayExpiryInfo();
-    }
-
-    private void initToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setTitle(getString(R.string.app_name));
-        setSupportActionBar(toolbar);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        SharedPreferences sharedPreferences = this.getSharedPreferences(
-                AdminPreferencesActivity.ADMIN_PREFERENCES, 0);
-
-        boolean edit = sharedPreferences.getBoolean(
-                AdminKeys.KEY_EDIT_SAVED, true);
-        if (!edit) {
-            if (reviewDataButton != null) {
-                reviewDataButton.setVisibility(View.GONE);
-            }
-        } else {
-            if (reviewDataButton != null) {
-                reviewDataButton.setVisibility(View.VISIBLE);
-            }
-        }
-
-        boolean send = sharedPreferences.getBoolean(
-                AdminKeys.KEY_SEND_FINALIZED, true);
-        if (!send) {
-            if (sendDataButton != null) {
-                sendDataButton.setVisibility(View.GONE);
-            }
-        } else {
-//            if (sendDataButton != null) {
-//                sendDataButton.setVisibility(View.VISIBLE);
-//            }
-        }
-
-        boolean viewSent = sharedPreferences.getBoolean(
-                AdminKeys.KEY_VIEW_SENT, true);
-        if (!viewSent) {
-            if (viewSentFormsButton != null) {
-                viewSentFormsButton.setVisibility(View.GONE);
-            }
-        } else {
-            if (viewSentFormsButton != null) {
-                viewSentFormsButton.setVisibility(View.VISIBLE);
-            }
-        }
-
-        boolean getBlank = sharedPreferences.getBoolean(
-                AdminKeys.KEY_GET_BLANK, true);
-        if (!getBlank) {
-            if (getFormsButton != null) {
-                getFormsButton.setVisibility(View.GONE);
-            }
-        } else {
-            if (getFormsButton != null) {
-                getFormsButton.setVisibility(View.VISIBLE);
-            }
-        }
-
-//        boolean deleteSaved = sharedPreferences.getBoolean(
-//                AdminKeys.KEY_DELETE_SAVED, true);
-//        if (!deleteSaved) {
-//            if (manageFilesButton != null) {
-//                manageFilesButton.setVisibility(View.GONE);
-//            }
-//        } else {
-//            if (manageFilesButton != null) {
-//                manageFilesButton.setVisibility(View.VISIBLE);
-//            }
-//        }
-
-        ((Collect) getApplication())
-                .getDefaultTracker()
-                .enableAutoActivityTracking(true);
-        switchLayoutForDiagnosticOrUserMode();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (alertDialog != null && alertDialog.isShowing()) {
-            alertDialog.dismiss();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_settings:
-                final Intent intent = new Intent(this, SettingsActivity.class);
-                startActivityForResult(intent, 100);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void createErrorDialog(String errorMsg, final boolean shouldExit) {
