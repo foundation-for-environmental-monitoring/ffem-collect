@@ -1256,7 +1256,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         odkViewLifecycle.destroy();
 
         if (odkView != null) {
-            odkView.releaseWidgetResources();
             odkView = null;
         }
     }
@@ -2149,10 +2148,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     && formController.currentPromptIsQuestion()) {
                 saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
             }
-        }
-        if (getCurrentViewIfODKView() != null) {
-            // stop audio if it's playing
-            getCurrentViewIfODKView().stopAudio();
         }
 
         super.onPause();

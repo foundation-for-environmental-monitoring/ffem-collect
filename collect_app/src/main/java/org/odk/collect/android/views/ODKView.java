@@ -449,7 +449,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         questionText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Collect.getQuestionFontsize() + 2);
         questionText.setTypeface(null, Typeface.BOLD);
         questionText.setPadding(5, 5, 5, 0);
-        questionText.setTextColor(themeUtils.getPrimaryTextColor());
+        questionText.setTextColor(themeUtils.getColorOnSurface());
         questionText.setMovementMethod(LinkMovementMethod.getInstance());
 
         // Wrap to the size of the parent view
@@ -913,21 +913,6 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         }
     }
 
-    public void stopAudio() {
-        if (widgets.size() > 0) {
-            widgets.get(0).stopAudio();
-        }
-    }
-
-    /**
-     * Releases widget resources, such as {@link android.media.MediaPlayer}s
-     */
-    public void releaseWidgetResources() {
-        for (QuestionWidget w : widgets) {
-            w.release();
-        }
-    }
-
     /**
      * Highlights the question at the given {@link FormIndex} in red for 2.5 seconds, scrolls the
      * view to display that question at the top and gives it focus.
@@ -994,7 +979,6 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
             view.removeViewAt(indexAccountingForDividers - 1);
         }
 
-        widgets.get(index).release();
         widgets.remove(index);
     }
 

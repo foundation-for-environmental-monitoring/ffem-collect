@@ -80,12 +80,6 @@ public class ServerPreferences extends ServerPreferencesFragment {
         return rootView;
     }
 
-//    @Override
-//    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//        toolbar.setTitle(R.string.server_preferences);
-//    }
-
     @Override
     public void onDetach() {
         super.onDetach();

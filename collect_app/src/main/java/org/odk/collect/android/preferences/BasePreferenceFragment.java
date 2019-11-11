@@ -2,7 +2,6 @@ package org.odk.collect.android.preferences;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,22 +10,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.odk.collect.android.R;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
+
+import org.odk.collect.android.R;
 
 import static org.odk.collect.android.preferences.PreferencesActivity.INTENT_KEY_ADMIN_MODE;
 
 public class BasePreferenceFragment extends PreferenceFragment {
 
     protected Toolbar toolbar;
-//    private LinearLayout root;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
-//        initToolbar(getPreferenceScreen(), view);
+//        ((CollectAbstractActivity) getActivity()).initToolbar(getPreferenceScreen().getTitle());
         removeDisabledPrefs();
 
         super.onViewCreated(view, savedInstanceState);
