@@ -39,7 +39,7 @@ public class UserSettingsTest extends BaseRegressionTest {
                 .clickOnMenu()
                 .clickAdminSettings()
                 .openUserSettings()
-                .uncheckAllUsetSettings()
+                .uncheckAllUserSettings()
                 .pressBack(new AdminSettingsPage(main))
                 .pressBack(new MainMenuPage(main))
                 .clickOnMenu()
@@ -53,11 +53,11 @@ public class UserSettingsTest extends BaseRegressionTest {
                 .clickOnMenu()
                 .clickAdminSettings()
                 .clickGeneralSettings()
-                .checkIfAreaWithKeyIsDisplayed("protocol")
-                .checkIfAreaWithKeyIsDisplayed("user_interface")
-                .checkIfAreaWithKeyIsDisplayed("maps")
-                .checkIfAreaWithKeyIsDisplayed("form_management")
-                .checkIfAreaWithKeyIsDisplayed("user_and_device_identity");
+                .checkIfServerOptionIsDisplayed()
+                .checkIfUserInterfaceOptionIsDisplayed()
+                .checkIfMapsOptionIsDisplayed()
+                .checkIfFormManagementOptionIsDisplayed()
+                .checkIfUserAndDeviceIdentityIsDisplayed();
     }
 
     @Test
@@ -79,7 +79,7 @@ public class UserSettingsTest extends BaseRegressionTest {
                 .clickOnMenu()
                 .clickAdminSettings()
                 .openUserSettings()
-                .uncheckAllUsetSettings()
+                .uncheckAllUserSettings()
                 .pressBack(new AdminSettingsPage(main))
                 .pressBack(new MainMenuPage(main))
                 .clickOnMenu()

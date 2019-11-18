@@ -2,13 +2,14 @@ package org.odk.collect.android.espressoutils.pages;
 
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.NoMatchingViewException;
-import androidx.test.espresso.matcher.PreferenceMatchers;
+
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 
 import timber.log.Timber;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -16,11 +17,14 @@ import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.core.StringContains.containsString;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.odk.collect.android.test.CustomMatchers.withIndex;
 
@@ -142,11 +146,6 @@ abstract class Page<T extends Page<T>> {
         return (T) this;
     }
 
-    public T clickOnAreaWithKey(String key) {
-        onData(PreferenceMatchers.withKey(key)).perform(click());
-        return (T) this;
-    }
-
     public T addText(String existingText, String text) {
         onView(withText(existingText)).perform(typeText(text));
         return (T) this;
@@ -157,8 +156,24 @@ abstract class Page<T extends Page<T>> {
         return (T) this;
     }
 
-    public T checkIfAreaWithKeyIsDisplayed(String key) {
-        onData(PreferenceMatchers.withKey(key)).check(matches(isDisplayed()));
+    public T checkIfElementIsGone(int id) {
+        onView(withId(id)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         return (T) this;
     }
+
+    public T clearTheText(String text) {
+        onView(withText(text)).perform(clearText());
+        return (T) this;
+    }
+
+    public T checkIsTextDisplayedOnDialog(String text) {
+        onView(withId(android.R.id.message)).check(matches(withText(containsString(text))));
+        return (T) this;
+    }
+
+    public T checkIfOptionIsDisabled(int string) {
+        onView(withText(string)).check(matches(not(isEnabled())));
+        return (T) this;
+    }
+
 }

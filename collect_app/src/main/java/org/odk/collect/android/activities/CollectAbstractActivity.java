@@ -127,8 +127,10 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
 
     public void initToolbar(CharSequence title) {
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(title);
-        setSupportActionBar(toolbar);
+        if (toolbar != null) {
+            toolbar.setTitle(title);
+            setSupportActionBar(toolbar);
+        }
     }
 
     /**

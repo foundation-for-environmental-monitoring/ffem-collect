@@ -2189,7 +2189,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 FormController fec = formLoaderTask.getFormController();
                 if (fec != null) {
                     if (!readPhoneStatePermissionRequestNeeded) {
-                        loadingComplete(formLoaderTask, formLoaderTask.getFormDef());
+                        loadingComplete(formLoaderTask, formLoaderTask.getFormDef(), null);
                     }
                 } else {
                     dismissFormLoadingDialogFragment();
@@ -2352,7 +2352,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
      * - Initializes background location capture (only if the instance being loaded is a new one)
      */
     @Override
-    public void loadingComplete(FormLoaderTask task, FormDef formDef) {
+    public void loadingComplete(FormLoaderTask task, FormDef formDef, String warningMsg) {
         dismissFormLoadingDialogFragment();
 
         final FormController formController = task.getFormController();
@@ -2485,6 +2485,11 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 activityDisplayed();
 
                 refreshCurrentView();
+
+                if (warningMsg != null) {
+                    ToastUtils.showLongToast(warningMsg);
+                    Timber.w(warningMsg);
+                }
             }
         } else {
             Timber.e("FormController is null");
