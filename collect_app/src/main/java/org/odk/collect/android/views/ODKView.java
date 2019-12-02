@@ -32,6 +32,8 @@ import android.os.Handler;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
+
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -75,7 +77,7 @@ import org.odk.collect.android.listeners.WidgetValueChangedListener;
 import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.utilities.ScreenContext;
 import org.odk.collect.android.utilities.FormEntryPromptUtils;
-import org.odk.collect.android.utilities.TextUtils;
+import org.odk.collect.android.utilities.StringUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.ViewIds;
@@ -100,6 +102,7 @@ import timber.log.Timber;
 
 import static org.odk.collect.android.injection.DaggerUtils.getComponent;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
+import static org.odk.collect.android.utilities.ViewUtils.pxFromDp;
 
 /**
  * Contains either one {@link QuestionWidget} if the current form element is a question or
@@ -443,7 +446,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
             }
         }
 
-        questionText.setText(TextUtils.textToHtml(FormEntryPromptUtils
+        questionText.setText(StringUtils.textToHtml(FormEntryPromptUtils
                 .markQuestionIfIsRequired(longText, isRequired)));
 
         questionText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Collect.getQuestionFontsize() + 2);
@@ -630,9 +633,9 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
             if (!path.isEmpty()) {
                 TextView tv = new TextView(getContext());
                 tv.setText(path);
-                tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Collect.getQuestionFontsize());
-                tv.setPadding(4, 0, 5, 7);
-                view.addView(tv, 0, layout);
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Collect.getQuestionFontsize() - 4);
+                tv.setPadding(pxFromDp(getContext(), 4f), pxFromDp(getContext(), 8f), pxFromDp(getContext(), 16f), 0);
+                view.addView(tv, layout);
                 groupAdded = true;
             }
         }

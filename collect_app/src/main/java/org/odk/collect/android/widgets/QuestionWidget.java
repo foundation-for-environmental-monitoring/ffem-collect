@@ -62,7 +62,7 @@ import org.odk.collect.android.utilities.AnimateUtils;
 import org.odk.collect.android.utilities.FormEntryPromptUtils;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.SoftKeyboardUtils;
-import org.odk.collect.android.utilities.TextUtils;
+import org.odk.collect.android.utilities.StringUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ViewIds;
 import org.odk.collect.android.widgets.interfaces.ButtonWidget;
@@ -145,7 +145,7 @@ public abstract class QuestionWidget
         helpTextView = setupHelpText(helpTextLayout.findViewById(R.id.help_text_view), formEntryPrompt);
         guidanceTextView = setupGuidanceTextAndLayout(helpTextLayout.findViewById(R.id.guidance_text_view), formEntryPrompt);
 
-        addQuestionMediaLayout(getAudioVideoImageTextLabel());
+        addQuestionLabel(getAudioVideoImageTextLabel());
         addHelpTextLayout(getHelpTextLayout());
 
         if (context instanceof FormEntryActivity && !getFormEntryPrompt().isReadOnly()) {
@@ -220,7 +220,7 @@ public abstract class QuestionWidget
         guidanceTextView.setHorizontallyScrolling(false);
         guidanceTextView.setTypeface(null, Typeface.ITALIC);
 
-        guidanceTextView.setText(TextUtils.textToHtml(guidance));
+        guidanceTextView.setText(StringUtils.textToHtml(guidance));
 
         guidanceTextView.setTextColor(themeUtils.getColorOnSurface());
         guidanceTextView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -243,15 +243,20 @@ public abstract class QuestionWidget
     String promptText = "";
 
     private AudioVideoImageTextLabel createQuestionLabel(FormEntryPrompt prompt) {
-        promptText = prompt.getLongText();
-        // Add the text view. Textview always exists, regardless of whether there's text.
-        TextView questionText = new TextView(getContext());
-        questionText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getQuestionFontSize() + 2);
+        // Create the layout for audio, image, text
+        AudioVideoImageTextLabel label = new AudioVideoImageTextLabel(getContext());
+        label.setId(ViewIds.generateViewId()); // assign random id
+        label.setTag(getClipID(prompt));
+
+        TextView questionText = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.question_long_text, label, false);
+        questionText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getQuestionFontSize());
         questionText.setTypeface(null, Typeface.BOLD);
-        questionText.setPadding(7, 10, 0, 0);
         questionText.setTextColor(themeUtils.getColorOnSurface());
-        questionText.setText(TextUtils.textToHtml(FormEntryPromptUtils.markQuestionIfIsRequired(promptText, prompt.isRequired())));
+
+        promptText = prompt.getLongText();
+        questionText.setText(StringUtils.textToHtml(FormEntryPromptUtils.markQuestionIfIsRequired(promptText, prompt.isRequired())));
         questionText.setMovementMethod(LinkMovementMethod.getInstance());
+        questionText.setPadding(7, 10, 0, 0);
 
         // Wrap to the size of the parent view
         questionText.setHorizontallyScrolling(false);
@@ -260,11 +265,6 @@ public abstract class QuestionWidget
                 && !(prompt.isRequired() && (prompt.getHelpText() == null || prompt.getHelpText().isEmpty()))) {
             questionText.setVisibility(GONE);
         }
-
-        // Create the layout for audio, image, text
-        AudioVideoImageTextLabel label = new AudioVideoImageTextLabel(getContext());
-        label.setId(ViewIds.generateViewId()); // assign random id
-        label.setTag(getClipID(prompt));
 
         String imageURI = this instanceof SelectImageMapWidget ? null : prompt.getImageText();
         String videoURI = prompt.getSpecialFormQuestionText("video");
@@ -276,8 +276,8 @@ public abstract class QuestionWidget
         label.setId(ViewIds.generateViewId()); // assign random id
 
         label.setTag(getClipID(prompt));
-        label.setTextImageVideo(
-                questionText,
+        label.setText(questionText);
+        label.setImageVideo(
                 imageURI,
                 videoURI,
                 bigImageURI,
@@ -366,7 +366,7 @@ public abstract class QuestionWidget
      * Defaults to adding questionlayout to the top of the screen.
      * Overwrite to reposition.
      */
-    protected void addQuestionMediaLayout(View v) {
+    protected void addQuestionLabel(View v) {
         if (v == null) {
             Timber.e("cannot add a null view as questionMediaLayout");
             return;
@@ -429,9 +429,9 @@ public abstract class QuestionWidget
             helpText.setHorizontallyScrolling(false);
             helpText.setTypeface(null, Typeface.ITALIC);
             if (prompt.getLongText() == null || prompt.getLongText().isEmpty()) {
-                helpText.setText(TextUtils.textToHtml(FormEntryPromptUtils.markQuestionIfIsRequired(s, prompt.isRequired())));
+                helpText.setText(StringUtils.textToHtml(FormEntryPromptUtils.markQuestionIfIsRequired(s, prompt.isRequired())));
             } else {
-                helpText.setText(TextUtils.textToHtml(s));
+                helpText.setText(StringUtils.textToHtml(s));
             }
             helpText.setTextColor(themeUtils.getColorOnSurface());
             helpText.setMovementMethod(LinkMovementMethod.getInstance());
@@ -458,7 +458,6 @@ public abstract class QuestionWidget
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
         params.addRule(RelativeLayout.BELOW, getHelpTextLayout().getId());
-
         addView(v, params);
     }
 
@@ -692,7 +691,7 @@ public abstract class QuestionWidget
     }
 
     public int getAnswerFontSize() {
-        return questionFontSize;
+        return questionFontSize + 2;
     }
 
     public TextView getGuidanceTextView() {

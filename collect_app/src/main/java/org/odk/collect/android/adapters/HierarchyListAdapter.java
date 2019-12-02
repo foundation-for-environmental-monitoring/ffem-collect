@@ -29,8 +29,8 @@ import android.widget.TextView;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.logic.HierarchyElement;
+import org.odk.collect.android.utilities.StringUtils;
 import org.odk.collect.android.utilities.FormEntryPromptUtils;
-import org.odk.collect.android.utilities.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,14 +95,14 @@ public class HierarchyListAdapter extends RecyclerView.Adapter<HierarchyListAdap
                 holder.secondaryText.setVisibility(View.GONE);
             } else {
                 addOrRemoveProperty(holder.primaryText, RelativeLayout.CENTER_VERTICAL, false);
-                holder.secondaryText.setText(TextUtils.textToHtml(answer));
+                holder.secondaryText.setText(StringUtils.textToHtml(answer));
             }
         } else {
             addOrRemoveProperty(holder.primaryText, RelativeLayout.CENTER_VERTICAL, true);
             holder.secondaryText.setVisibility(View.GONE);
         }
 
-        holder.primaryText.setText(TextUtils.textToHtml(FormEntryPromptUtils
+        holder.primaryText.setText(StringUtils.textToHtml(FormEntryPromptUtils
                 .markQuestionIfIsRequired(element.getPrimaryText(),
                         element.isRequired())));
     }

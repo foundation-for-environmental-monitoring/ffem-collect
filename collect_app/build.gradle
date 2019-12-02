@@ -167,11 +167,11 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
-    implementation 'androidx.browser:browser:1.2.0-alpha08'
+    implementation 'androidx.browser:browser:1.2.0-beta01'
     implementation 'androidx.appcompat:appcompat:1.1.0-rc01' // Shouldn't be upgraded until https://issuetracker.google.com/issues/141869006 is fixed
-    implementation 'com.google.android.material:material:1.1.0-beta01'
+    implementation 'com.google.android.material:material:1.2.0-alpha02'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.exifinterface:exifinterface:1.1.0-rc01'
+    implementation 'androidx.exifinterface:exifinterface:1.1.0'
     implementation "androidx.multidex:multidex:2.0.1"
 
     implementation "com.google.android.gms:play-services-auth:17.0.0"
@@ -292,8 +292,10 @@ dependencies {
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     }
 
-    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.3.0-alpha02'
-    androidTestImplementation("androidx.test.espresso:espresso-intents:3.3.0-alpha02") {
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.2.0'
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.2.0") {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     }
