@@ -7,26 +7,7 @@
     android:background="?attr/colorSurface"
     android:orientation="vertical">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationContentDescription="@string/close"
-            app:navigationIcon="@drawable/ic_close_black_24dp"
-            tools:title="Form Name" />
-
-        <include
-            android:id="@+id/action_bar_shadow"
-            layout="@layout/toolbar_action_bar_shadow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
-
-    </com.google.android.material.appbar.AppBarLayout>
+    <include layout="@layout/material_full_screen_dialog_toolbar" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -38,7 +19,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="@dimen/margin_extra_large">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -56,14 +37,14 @@
                     style="@style/TextAppearance.Collect.Headline6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/margin_standard"
                     android:text="@string/enter_identity" />
 
                 <TextView
-                    style="@style/TextAppearance.Collect.Body2"
+                    style="@style/TextAppearance.Collect.Body1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="@dimen/margin_small"
                     android:text="@string/enter_identity_description" />
 
             </LinearLayout>
@@ -82,8 +63,8 @@
                     android:hint="@string/identity"
                     android:imeOptions="actionDone"
                     android:inputType="text"
-                    android:saveEnabled="false"
-                    android:lines="1" />
+                    android:lines="1"
+                    android:saveEnabled="false" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

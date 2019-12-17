@@ -23,6 +23,10 @@ import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.MenuItem;
 
+import org.odk.collect.android.R;
+import org.odk.collect.android.utilities.LocaleHelper;
+import org.odk.collect.android.utilities.ThemeUtils;
+
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -30,15 +34,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.Toolbar;
 
-import org.odk.collect.android.R;
-import org.odk.collect.android.utilities.LocaleHelper;
-import org.odk.collect.android.utilities.ThemeUtils;
-
 import io.ffem.collect.android.preferences.AppPreferences;
 
+import static org.odk.collect.android.utilities.PermissionUtils.areStoragePermissionsGranted;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 import static org.odk.collect.android.utilities.PermissionUtils.isEntryPointActivity;
-import static org.odk.collect.android.utilities.PermissionUtils.areStoragePermissionsGranted;
 
 public abstract class CollectAbstractActivity extends AppCompatActivity {
 

@@ -396,6 +396,7 @@
     <string name="discard">Discard</string>
     <string name="geoshape_view_change_location">View or Change GeoShape</string>
     <string name="geotrace_view_change_location">View or Change GeoTrace</string>
+    <string name="geometry_status">Saved forms: %d (%d shown on map)</string>
     <string name="bearing">Bearing: %.3f</string>
     <string name="direction">Direction: %s</string>
     <string name="select_odk_shortcut">Select ODK Shortcut</string>
@@ -719,4 +720,8 @@
     <string name="identity">Identity</string>
     <string name="enter_identity_description">This form requires you to identify yourself</string>
     <string name="close">Close</string>
+    <string name="reason_for_changes">Reason for changes</string>
+    <string name="reason">Reason</string>
+    <string name="save">Save</string>
+    <string name="reason_for_changes_description">You need to explain the reason for changes to this form</string>
 </resources>

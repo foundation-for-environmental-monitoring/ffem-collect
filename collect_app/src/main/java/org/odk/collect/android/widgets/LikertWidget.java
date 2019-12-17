@@ -58,6 +58,8 @@ public class LikertWidget extends ItemsWidget {
         setButtonListener();
         setSavedButton();
         addAnswerView(view);
+
+        analytics.logEvent("Likert", questionDetails.getFormAnalyticsID());
     }
 
     public void setMainViewLayoutParameters() {
@@ -148,6 +150,7 @@ public class LikertWidget extends ItemsWidget {
 
             optionView.addView(choice);
 
+            optionView.setEnabled(!getFormEntryPrompt().isReadOnly());
             optionView.setOnClickListener(new OnClickListener() {
 
                 @Override
