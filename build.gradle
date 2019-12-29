@@ -49,6 +49,6 @@ task checkTests(type: GradleBuild) {
 
 ext {
     leakyCanaryVersion = '1.6.3'
-    daggerVersion = '2.25.2'
+    daggerVersion = '2.25.3'
     okhttp3Version = '3.12.5' //newer versions require minSdkVersion >= 21
 }
