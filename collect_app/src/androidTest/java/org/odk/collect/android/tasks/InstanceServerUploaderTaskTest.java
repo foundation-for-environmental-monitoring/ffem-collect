@@ -65,7 +65,7 @@ public class InstanceServerUploaderTaskTest extends MockedServerTest {
             RecordedRequest r = nextRequest();
             assertEquals("HEAD", r.getMethod());
             assertMatches("/submission\\?deviceID=\\w+%3A\\w+", r.getPath());
-            assertMatches("Dalvik/.* " + BuildConfig.APPLICATION_ID + "/.*", r.getHeader("User-Agent"));
+            assertMatches(BuildConfig.APPLICATION_ID + "/.* Dalvik/.*", r.getHeader("User-Agent"));
             assertEquals("1.0", r.getHeader(OpenRosaConstants.VERSION_HEADER));
             assertTrue(r.getHeader("Accept-Encoding").contains("gzip"));
         }
@@ -75,7 +75,7 @@ public class InstanceServerUploaderTaskTest extends MockedServerTest {
             RecordedRequest r = nextRequest();
             assertEquals("POST", r.getMethod());
             assertMatches("/submission\\?deviceID=\\w+%3A\\w+", r.getPath());
-            assertMatches("Dalvik/.* " + BuildConfig.APPLICATION_ID + "/.*", r.getHeader("User-Agent"));
+            assertMatches(BuildConfig.APPLICATION_ID + "/.* Dalvik/.*", r.getHeader("User-Agent"));
             assertEquals("1.0", r.getHeader(OpenRosaConstants.VERSION_HEADER));
             assertTrue(r.getHeader("Accept-Encoding").contains("gzip"));
             assertMatches("multipart/form-data; boundary=.*", r.getHeader("Content-Type"));

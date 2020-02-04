@@ -6,5 +6,6 @@
         <attr name="windowBackgroundColor" format="color" />
         <attr name="cardBackgroundColor" format="color" />
         <attr name="mainButtonBackground" format="color" />
+        <attr name="warningColor" format="color" />
     </declare-styleable>
 </resources>

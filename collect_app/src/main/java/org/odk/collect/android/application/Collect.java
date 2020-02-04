@@ -61,6 +61,7 @@ import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PrefMigrator;
 import org.odk.collect.android.tasks.sms.SmsNotificationReceiver;
 import org.odk.collect.android.tasks.sms.SmsSentBroadcastReceiver;
+import org.odk.collect.android.utilities.AndroidUserAgent;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.NotificationUtils;
@@ -211,12 +212,6 @@ public class Collect extends Application {
      *
      * This deviates from the recommended format as described in https://github.com/opendatakit/collect/issues/3253.
      */
-    public String getUserAgentString() {
-        return String.format("%s %s/%s",
-                System.getProperty("http.agent"),
-                BuildConfig.APPLICATION_ID,
-                BuildConfig.VERSION_NAME);
-    }
 
     public boolean isNetworkAvailable() {
         ConnectivityManager manager = (ConnectivityManager) getInstance()
@@ -282,6 +277,10 @@ public class Collect extends Application {
         setupRemoteAnalytics();
         setupLeakCanary();
         setupOSMDroid();
+
+        // Force inclusion of scoped storage strings so they can be translated
+        Timber.i("%s %s", getString(R.string.scoped_storage_banner_text),
+                                   getString(R.string.scoped_storage_learn_more));
     }
 
     private void setupRemoteAnalytics() {
@@ -291,7 +290,7 @@ public class Collect extends Application {
     }
 
     protected void setupOSMDroid() {
-        org.osmdroid.config.Configuration.getInstance().setUserAgentValue(getUserAgentString());
+        org.osmdroid.config.Configuration.getInstance().setUserAgentValue(AndroidUserAgent.getUserAgent());
     }
 
     private void setupDagger() {

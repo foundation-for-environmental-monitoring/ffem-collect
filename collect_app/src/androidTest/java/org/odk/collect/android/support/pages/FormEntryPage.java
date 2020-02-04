@@ -22,6 +22,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.odk.collect.android.test.CustomMatchers.withIndex;
 
@@ -172,22 +173,27 @@ public class FormEntryPage extends Page<FormEntryPage> {
     }
 
     public FormEntryPage clickOnDoNotAddGroup() {
-        clickOnString(R.string.add_repeat_no);
+        clickOnString(R.string.dont_add_repeat);
         return this;
     }
 
     public FormEntryPage clickOnAddGroup() {
-        clickOnString(R.string.add_another);
+        clickOnString(R.string.add_repeat);
         return this;
     }
 
-    public FormEntryPage checkIfMarkFinishedIsSelected() {
+    public FormEntryPage assertMarkFinishedIsSelected() {
         onView(withId(R.id.mark_finished)).check(matches(isChecked()));
         return this;
     }
 
-    public FormEntryPage checkIfMarkFinishedIsNotSelected() {
+    public FormEntryPage assertMarkFinishedIsNotSelected() {
         onView(withId(R.id.mark_finished)).check(matches(isNotChecked()));
+        return this;
+    }
+
+    public FormEntryPage clickMarkAsFinalized() {
+        onView(withId(R.id.mark_finished)).perform(click());
         return this;
     }
 
@@ -199,5 +205,26 @@ public class FormEntryPage extends Page<FormEntryPage> {
     public ChangesReasonPromptPage clickSaveWithChangesReasonPrompt() {
         onView(withId(R.id.menu_save)).perform(click());
         return new ChangesReasonPromptPage(formName, rule).assertOnPage();
+    }
+
+    public FormEntryPage checkBackNavigationButtonIsNotsDisplayed() {
+        onView(withId(R.id.form_back_button)).check(matches(not(isDisplayed())));
+        return this;
+    }
+
+    public FormEntryPage checkNextNavigationButtonIsDisplayed() {
+        onView(withId(R.id.form_forward_button)).check(matches(isDisplayed()));
+        return this;
+    }
+
+    public FormEntryPage checkAreNavigationButtonsNotDisplayed() {
+        onView(withId(R.id.form_forward_button)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.form_back_button)).check(matches(not(isDisplayed())));
+        return this;
+    }
+
+    public FormEntryPage checkIsFormEndScreenVisible() {
+        onView(withText(R.string.quit_entry)).check(matches(isDisplayed()));
+        return this;
     }
 }
