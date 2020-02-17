@@ -41,6 +41,7 @@ import org.odk.collect.android.listeners.DiskSyncListener;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.tasks.InstanceSyncTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PermissionUtils;
@@ -108,7 +109,7 @@ public class InstanceChooserList extends InstanceListActivity implements
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent
                 try {
-                    Collect.createODKDirs();
+                    new StorageInitializer().createODKDirs();
                 } catch (RuntimeException e) {
                     createErrorDialog(e.getMessage(), EXIT);
                     return;

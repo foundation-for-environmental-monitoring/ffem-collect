@@ -29,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toolbar;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.FormListAdapter;
@@ -39,6 +40,7 @@ import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
+import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.tasks.DiskSyncTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PermissionUtils;
@@ -75,6 +77,11 @@ public class FormChooserListActivity extends FormListActivity implements
 
         setTitle(getString(R.string.enter_data));
 
+        setSupportActionBar(findViewById(R.id.toolbar));
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.enter_data);
+        }
+
         findViewById(R.id.buttonGetBlankForm).setOnClickListener(view -> onClickGetBlankForm(view));
 
         new PermissionUtils().requestStoragePermissions(this, new PermissionListener() {
@@ -82,7 +89,7 @@ public class FormChooserListActivity extends FormListActivity implements
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent
                 try {
-                    Collect.createODKDirs();
+                    new StorageInitializer().createODKDirs();
                     init();
                 } catch (RuntimeException e) {
                     createErrorDialog(e.getMessage(), EXIT);

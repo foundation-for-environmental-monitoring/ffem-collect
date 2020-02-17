@@ -23,6 +23,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
@@ -57,7 +58,7 @@ public class SignInActivity extends AppCompatActivity {
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent
                 try {
-                    Collect.createODKDirs();
+                    new StorageInitializer().createODKDirs();
                 } catch (RuntimeException e) {
                     createErrorDialog(e.getMessage(), EXIT);
                 }

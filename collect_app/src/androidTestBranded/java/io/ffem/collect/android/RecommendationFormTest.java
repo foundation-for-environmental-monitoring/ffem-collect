@@ -257,7 +257,7 @@ public class RecommendationFormTest {
     public void prepareDependencies() {
         FormEntryActivity activity = activityTestRule.getActivity();
 //        activity.setActivityAvailability(activityAvailability);
-        activity.setShouldOverrideAnimations(true);
+//        activity.setShouldOverrideAnimations(true);
     }
 
     //region Main test block.

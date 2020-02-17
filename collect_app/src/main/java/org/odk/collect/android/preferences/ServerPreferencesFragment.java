@@ -45,7 +45,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.http.CollectServerClient;
+import org.odk.collect.android.openrosa.OpenRosaAPIClient;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.listeners.OnBackPressedListener;
 import org.odk.collect.android.listeners.PermissionListener;
@@ -100,7 +100,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     private boolean allowClickSelectedGoogleAccountPreference = true;
 
     @Inject
-    CollectServerClient collectServerClient;
+    OpenRosaAPIClient openRosaAPIClient;
 
     @Inject
     WebCredentialsUtils webCredentialsUtils;
