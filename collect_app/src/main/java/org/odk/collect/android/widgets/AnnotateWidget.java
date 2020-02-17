@@ -29,6 +29,7 @@ import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.DrawActivity;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
+import org.odk.collect.android.formentry.questions.WidgetViewUtils;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.utilities.FileUtils;
@@ -64,7 +65,7 @@ public class AnnotateWidget extends BaseImageWidget {
         imageCaptureHandler = new ImageCaptureHandler();
         setUpLayout();
         addCurrentImageToLayout();
-        addAnswerView(answerLayout);
+        addAnswerView(answerLayout, WidgetViewUtils.getStandardMargin(context));
     }
 
     @Override
@@ -93,6 +94,11 @@ public class AnnotateWidget extends BaseImageWidget {
     public Intent addExtrasToIntent(Intent intent) {
         intent.putExtra(DrawActivity.SCREEN_ORIENTATION, calculateScreenOrientation());
         return intent;
+    }
+
+    @Override
+    protected boolean doesSupportDefaultValues() {
+        return true;
     }
 
     @Override

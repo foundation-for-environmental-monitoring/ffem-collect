@@ -14,9 +14,4 @@
         android:icon="@drawable/ic_menu_share"
         android:title="@string/share"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/menu_save_preferences"
-        android:icon="@drawable/ic_save_tool"
-        android:title="@string/save_preferences"
-        app:showAsAction="always" />
 </menu>
