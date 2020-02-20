@@ -838,7 +838,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                 widgets.add(qw);
                 if (qw.getAnswer() != null) {
                     RowView answerRow = new RowView(context);
-                    answerRow.setPrimaryText(qw.getQuestionText() + ": ");
+                    answerRow.setPrimaryText(qw.getQuestionDetails().getPrompt().getQuestionText() + ": ");
                     answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
                     linearLayout.addView(answerRow, layout);
                 }

@@ -16,25 +16,19 @@ package org.odk.collect.android.widgets;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
-import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
 
 import org.javarosa.core.model.FormIndex;
@@ -60,9 +54,7 @@ import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.SoftKeyboardUtils;
 import org.odk.collect.android.utilities.StringUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
-import org.odk.collect.android.utilities.ViewIds;
 import org.odk.collect.android.utilities.ViewUtils;
-import org.odk.collect.android.widgets.interfaces.ButtonWidget;
 import org.odk.collect.android.widgets.interfaces.Widget;
 
 import java.util.ArrayList;
@@ -256,8 +248,6 @@ public abstract class QuestionWidget
         final int directionality = Character.getDirectionality(locale.getDisplayName().charAt(0));
         return directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT || directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
     }
-
-    String promptText = "";
 
     public TextView getHelpTextView() {
         return helpTextView;
@@ -520,10 +510,6 @@ public abstract class QuestionWidget
         if (valueChangedListener != null) {
             valueChangedListener.widgetValueChanged(this);
         }
-    }
-
-    public String getQuestionText() {
-        return promptText;
     }
 
     public View getContainer() {

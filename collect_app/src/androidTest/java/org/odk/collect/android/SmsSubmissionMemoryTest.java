@@ -1,9 +1,8 @@
 package org.odk.collect.android;
 
 import android.app.Activity;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
+import androidx.test.rule.ActivityTestRule;
 import android.text.format.Formatter;
 
 import org.junit.Ignore;

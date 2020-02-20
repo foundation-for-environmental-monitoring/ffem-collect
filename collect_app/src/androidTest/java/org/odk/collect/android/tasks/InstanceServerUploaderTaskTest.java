@@ -41,7 +41,7 @@ public class InstanceServerUploaderTaskTest extends MockedServerTest {
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
         cleanUpTempFiles();
         resetInstancesContentProvider();
     }

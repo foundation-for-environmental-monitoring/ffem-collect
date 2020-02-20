@@ -239,7 +239,7 @@ public class Collect extends Application {
         }
 
         setupRemoteAnalytics();
-        setupLeakCanary();
+        // setupLeakCanary();
         setupOSMDroid();
 
         // Force inclusion of scoped storage strings so they can be translated
