@@ -101,7 +101,7 @@ public class RecommendationFormTest {
 
     @ClassRule
     public static final LocaleTestRule LOCALE_TEST_RULE = new LocaleTestRule();
-    private static final String ALL_WIDGETS_FORM = "recommendation-test.xml";
+    private static final String ALL_WIDGETS_FORM = "forms/recommendation-test.xml";
     private static final String FORMS_DIRECTORY = File.separator + APP_FOLDER + "/forms/";
 //    private static UiDevice mDevice;
     private final Random random = new Random();

@@ -27,7 +27,6 @@ import java.util.ArrayList;
  * {@link org.odk.collect.android.activities.FormHierarchyActivity}.
  */
 public class HierarchyElement {
-    private final ArrayList<HierarchyElement> children = new ArrayList<>();
     private final ArrayList<HierarchyElement> intentChildren = new ArrayList<>();
 
     /**
@@ -104,16 +103,8 @@ public class HierarchyElement {
         type = newType;
     }
 
-    public ArrayList<HierarchyElement> getChildren() {
-        return children;
-    }
-
     public ArrayList<HierarchyElement> getIntentChildren() {
         return intentChildren;
-    }
-
-    public void addChild(HierarchyElement h) {
-        children.add(h);
     }
 
     public void addIntentChild(HierarchyElement h) {

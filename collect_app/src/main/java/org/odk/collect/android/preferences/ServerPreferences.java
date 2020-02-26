@@ -54,40 +54,6 @@ public class ServerPreferences extends ServerPreferencesFragment {
         initProtocolPrefs();
     }
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.card_row, container, false);
-
-        Preference serverPreferences = findPreference("server_credentials");
-        if (serverPreferences != null) {
-
-            String username = webCredentialsUtils.getUserNameFromPreferences();
-            String password = webCredentialsUtils.getPasswordFromPreferences();
-
-            if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
-                serverPreferences.setSummary(R.string.sign_in_to_account);
-            } else {
-                serverPreferences.setSummary(username);
-            }
-
-            serverPreferences.setOnPreferenceClickListener(preference -> {
-                final Intent intent = new Intent(getActivity(), SignInActivity.class);
-                intent.putExtra("isSettings", true);
-                getActivity().startActivity(intent);
-                return true;
-            });
-        }
-        return rootView;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        if (toolbar != null) {
-            toolbar.setTitle(R.string.general_preferences);
-        }
-    }
-
     private void initProtocolPrefs() {
         ListPreference protocolPref = (ListPreference) findPreference(KEY_PROTOCOL);
 
@@ -134,5 +100,39 @@ public class ServerPreferences extends ServerPreferencesFragment {
     private void removeTypeSettings() {
         getPreferenceScreen().removeAll();
 //        addPreferencesFromResource(R.xml.server_preferences);
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.card_row, container, false);
+
+        Preference serverPreferences = findPreference("server_credentials");
+        if (serverPreferences != null) {
+
+            String username = webCredentialsUtils.getUserNameFromPreferences();
+            String password = webCredentialsUtils.getPasswordFromPreferences();
+
+            if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+                serverPreferences.setSummary(R.string.sign_in_to_account);
+            } else {
+                serverPreferences.setSummary(username);
+            }
+
+            serverPreferences.setOnPreferenceClickListener(preference -> {
+                final Intent intent = new Intent(getActivity(), SignInActivity.class);
+                intent.putExtra("isSettings", true);
+                getActivity().startActivity(intent);
+                return true;
+            });
+        }
+        return rootView;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (toolbar != null) {
+            toolbar.setTitle(R.string.general_preferences);
+        }
     }
 }

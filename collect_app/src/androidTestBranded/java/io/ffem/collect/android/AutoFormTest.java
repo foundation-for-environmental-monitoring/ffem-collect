@@ -94,7 +94,7 @@ public class AutoFormTest {
 
     @ClassRule
     public static final LocaleTestRule LOCALE_TEST_RULE = new LocaleTestRule();
-    private static final String ALL_WIDGETS_FORM = "auto-test.xml";
+    private static final String ALL_WIDGETS_FORM = "forms/auto-test.xml";
     private static final String FORMS_DIRECTORY = File.separator + APP_FOLDER + "/forms/";
     private final Random random = new Random();
     private final ActivityResult okResult = new ActivityResult(RESULT_OK, new Intent());

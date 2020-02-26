@@ -29,7 +29,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toolbar;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.FormListAdapter;

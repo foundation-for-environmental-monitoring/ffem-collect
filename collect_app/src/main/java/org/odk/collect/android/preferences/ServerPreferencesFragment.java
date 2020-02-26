@@ -327,15 +327,6 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         });
     }
 
-    private void addUrlToPreferencesList(String url, SharedPreferences prefs) {
-        urlList.add(0, url);
-        String urlListString = new Gson().toJson(urlList);
-        prefs
-                .edit()
-                .putString(KNOWN_URL_LIST, urlListString)
-                .apply();
-    }
-
     private void urlDropdownSetup() {
         listPopupWindow = new ListPopupWindow(getActivity());
         setupUrlDropdownAdapter();
@@ -563,6 +554,15 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     @Override
     public void doBack() {
         runGoogleAccountValidation();
+    }
+
+    private void addUrlToPreferencesList(String url, SharedPreferences prefs) {
+        urlList.add(0, url);
+        String urlListString = new Gson().toJson(urlList);
+        prefs
+                .edit()
+                .putString(KNOWN_URL_LIST, urlListString)
+                .apply();
     }
 
     @Override

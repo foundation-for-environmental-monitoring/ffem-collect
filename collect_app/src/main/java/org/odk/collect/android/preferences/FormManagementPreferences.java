@@ -69,28 +69,6 @@ public class FormManagementPreferences extends BasePreferenceFragment {
         initFormDeletePref(KEY_DELETE_FORMS);
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        list = view.findViewById(android.R.id.list);
-    }
-
-    private void initFormDeletePref(String key) {
-        Preference deleteFormsPreference = findPreference(key);
-        if (deleteFormsPreference != null) {
-            deleteFormsPreference.setOnPreferenceClickListener(preference -> {
-                Intent i = new Intent(getActivity(), FileManagerTabs.class);
-                startActivity(i);
-                return true;
-            });
-        }
-    }
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.card_row, container, false);
-    }
-
     private void initListPref(String key) {
         final ListPreference pref = (ListPreference) findPreference(key);
 
@@ -159,6 +137,28 @@ public class FormManagementPreferences extends BasePreferenceFragment {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        list = view.findViewById(android.R.id.list);
+    }
+
+    private void initFormDeletePref(String key) {
+        Preference deleteFormsPreference = findPreference(key);
+        if (deleteFormsPreference != null) {
+            deleteFormsPreference.setOnPreferenceClickListener(preference -> {
+                Intent i = new Intent(getActivity(), FileManagerTabs.class);
+                startActivity(i);
+                return true;
+            });
+        }
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.card_row, container, false);
     }
 
     @Override

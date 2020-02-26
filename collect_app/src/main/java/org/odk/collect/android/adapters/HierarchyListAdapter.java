@@ -18,7 +18,6 @@ package org.odk.collect.android.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -122,10 +121,6 @@ public class HierarchyListAdapter extends RecyclerView.Adapter<HierarchyListAdap
         return hierarchyElements.size();
     }
 
-    public int getItemIndex(HierarchyElement hierarchyElement) {
-        return hierarchyElements.indexOf(hierarchyElement);
-    }
-
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView icon;
         TextView primaryText;
@@ -148,11 +143,14 @@ public class HierarchyListAdapter extends RecyclerView.Adapter<HierarchyListAdap
     }
 }
 
+//    public int getItemIndex(HierarchyElement hierarchyElement) {
+//        return hierarchyElements.indexOf(hierarchyElement);
+//    }
 
-//            holder.primaryText.setText(TextUtils.textToHtml(hierarchyElements.get(position).getPrimaryText()));
-//                    if (hierarchyElements.get(position).getSecondaryText() != null && !hierarchyElements.get(position).getSecondaryText().isEmpty()) {
-//                    holder.secondaryText.setVisibility(View.VISIBLE);
-//                    holder.secondaryText.setText(TextUtils.textToHtml(hierarchyElements.get(position).getSecondaryText()));
-//                    } else {
-//                    holder.secondaryText.setVisibility(View.GONE);
-//                    }
+//        holder.primaryText.setText(TextUtils.textToHtml(hierarchyElements.get(position).getPrimaryText()));
+//                if (hierarchyElements.get(position).getSecondaryText() != null && !hierarchyElements.get(position).getSecondaryText().isEmpty()) {
+//                holder.secondaryText.setVisibility(View.VISIBLE);
+//                holder.secondaryText.setText(TextUtils.textToHtml(hierarchyElements.get(position).getSecondaryText()));
+//                } else {
+//                holder.secondaryText.setVisibility(View.GONE);
+//                }

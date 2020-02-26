@@ -107,7 +107,6 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
      * The index of the question that is being displayed in the hierarchy. On first launch, it is
      * the same as {@link #startIndex}. It can then become the index of a repeat instance.
      */
-
     private FormIndex currentIndex;
 
     /**

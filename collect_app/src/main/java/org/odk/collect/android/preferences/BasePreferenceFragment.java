@@ -2,7 +2,6 @@ package org.odk.collect.android.preferences;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -45,6 +44,12 @@ public class BasePreferenceFragment extends PreferenceFragment {
         }
     }
 
+    private void removeAllDisabledPrefs() {
+        DisabledPreferencesRemover preferencesRemover = new DisabledPreferencesRemover((PreferencesActivity) getActivity(), this);
+        preferencesRemover.remove(AdminKeys.adminToGeneral);
+        preferencesRemover.removeEmptyCategories();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.settings_page, container, false);
@@ -69,33 +74,5 @@ public class BasePreferenceFragment extends PreferenceFragment {
             }
         }
         return layout;
-    }
-
-    // inflates toolbar in the preference fragments
-//    public void initToolbar(PreferenceScreen preferenceScreen, View view) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//            root = (LinearLayout) view.findViewById(android.R.id.list).getParent().getParent();
-//            toolbar = (Toolbar) LayoutInflater.from(getActivity()).inflate(R.layout.toolbar_without_progressbar, root, false);
-//            inflateToolbar(preferenceScreen.getTitle());
-//        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-//            root = (LinearLayout) view.findViewById(android.R.id.list).getParent();
-//            toolbar = (Toolbar) LayoutInflater.from(getActivity()).inflate(R.layout.toolbar_without_progressbar, root, false);
-//
-//            inflateToolbar(preferenceScreen.getTitle());
-//        }
-//    }
-//
-//    private void inflateToolbar(CharSequence title) {
-//        toolbar.setTitle(title);
-//        root.addView(toolbar, 0);
-//
-//        View shadow = LayoutInflater.from(getActivity()).inflate(R.layout.toolbar_action_bar_shadow, root, false);
-//        root.addView(shadow, 1);
-//    }
-
-    private void removeAllDisabledPrefs() {
-        DisabledPreferencesRemover preferencesRemover = new DisabledPreferencesRemover((PreferencesActivity) getActivity(), this);
-        preferencesRemover.remove(AdminKeys.adminToGeneral);
-        preferencesRemover.removeEmptyCategories();
     }
 }

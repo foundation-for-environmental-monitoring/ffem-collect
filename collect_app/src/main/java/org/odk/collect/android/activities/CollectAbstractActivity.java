@@ -73,16 +73,6 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
         }
     }
 
-//    public AppComponent getComponent() {
-//        return Collect.getInstance().getComponent();
-//    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        changeActionBarStyleBasedOnCurrentMode();
-    }
-
     @Override
     protected void onPostResume() {
         super.onPostResume();
@@ -97,6 +87,25 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
 
     public boolean isInstanceStateSaved() {
         return isInstanceStateSaved;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(new LocaleHelper().updateLocale(base));
+    }
+
+    public void initToolbar(CharSequence title) {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            toolbar.setTitle(title);
+            setSupportActionBar(toolbar);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        changeActionBarStyleBasedOnCurrentMode();
     }
 
     @Override
@@ -118,19 +127,6 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(new LocaleHelper().updateLocale(base));
-    }
-
-    public void initToolbar(CharSequence title) {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            toolbar.setTitle(title);
-            setSupportActionBar(toolbar);
-        }
     }
 
     /**

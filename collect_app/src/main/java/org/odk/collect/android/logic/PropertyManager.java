@@ -14,16 +14,12 @@
 
 package org.odk.collect.android.logic;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-
-import androidx.core.app.ActivityCompat;
 
 import org.javarosa.core.services.IPropertyManager;
 import org.javarosa.core.services.properties.IPropertyRules;
@@ -128,11 +124,6 @@ public class PropertyManager implements IPropertyManager {
         final String androidIdName = Settings.Secure.ANDROID_ID;
         String deviceId = null;
         String scheme = null;
-
-//        if (ActivityCompat.checkSelfPermission(context,
-//                Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-//            deviceId = telephonyManager.getDeviceId();
-//        }
 
         if (deviceId != null) {
             if (deviceId.contains("*") || deviceId.contains("000000000000000")) {

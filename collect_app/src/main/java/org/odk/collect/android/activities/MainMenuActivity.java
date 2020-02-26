@@ -90,6 +90,8 @@ import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_TRA
  */
 public class MainMenuActivity extends CollectAbstractActivity {
 
+//    private static final int PASSWORD_DIALOG = 1;
+
     private static final boolean EXIT = true;
     // buttons
 //     private Button manageFilesButton;
@@ -98,6 +100,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
     private Button reviewDataButton;
     private Button getFormsButton;
     private AlertDialog alertDialog;
+//    private SharedPreferences adminPreferences;
     private int completedCount;
     private int savedCount;
     private int viewSentCount;
@@ -537,12 +540,10 @@ public class MainMenuActivity extends CollectAbstractActivity {
             if (completedCount > 0) {
                 sendDataBadge.setText(String.valueOf(completedCount));
                 sendDataBadge.setVisibility(View.VISIBLE);
-//                sendDataButton.setAlpha(1);
                 sendDataButton.setVisibility(View.VISIBLE);
                 sendDataButton.setEnabled(true);
             } else {
                 sendDataBadge.setVisibility(View.GONE);
-//                sendDataButton.setAlpha(0.3f);
                 sendDataButton.setVisibility(View.GONE);
                 sendDataButton.setEnabled(false);
             }
@@ -592,30 +593,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
             viewSentFormsButton.setText(getString(R.string.view_sent_forms));
             Timber.w("Cannot update \"View Sent\" button label since the database is closed. "
                     + "Perhaps the app is running in the background?");
-        }
-    }
-
-    private void getBlankForm() {
-        if (Collect.allowClick(getClass().getName())) {
-            SharedPreferences sharedPreferences = PreferenceManager
-                    .getDefaultSharedPreferences(MainMenuActivity.this);
-            String protocol = sharedPreferences.getString(
-                    GeneralKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default));
-            Intent i;
-            if (protocol.equalsIgnoreCase(getString(R.string.protocol_google_sheets))) {
-                if (PlayServicesUtil.isGooglePlayServicesAvailable(MainMenuActivity.this)) {
-                    i = new Intent(getApplicationContext(),
-                            GoogleDriveActivity.class);
-                } else {
-                    PlayServicesUtil.showGooglePlayServicesAvailabilityErrorDialog(MainMenuActivity.this);
-                    return;
-                }
-            } else {
-                i = new Intent(getApplicationContext(),
-                        FormDownloadList.class);
-//                i.putExtra("isDownloadForms", true);
-            }
-            startActivity(i);
         }
     }
 
@@ -705,6 +682,30 @@ public class MainMenuActivity extends CollectAbstractActivity {
             builder
                     .create()
                     .show();
+        }
+    }
+
+    private void getBlankForm() {
+        if (Collect.allowClick(getClass().getName())) {
+            SharedPreferences sharedPreferences = PreferenceManager
+                    .getDefaultSharedPreferences(MainMenuActivity.this);
+            String protocol = sharedPreferences.getString(
+                    GeneralKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default));
+            Intent i;
+            if (protocol.equalsIgnoreCase(getString(R.string.protocol_google_sheets))) {
+                if (PlayServicesUtil.isGooglePlayServicesAvailable(MainMenuActivity.this)) {
+                    i = new Intent(getApplicationContext(),
+                            GoogleDriveActivity.class);
+                } else {
+                    PlayServicesUtil.showGooglePlayServicesAvailabilityErrorDialog(MainMenuActivity.this);
+                    return;
+                }
+            } else {
+                i = new Intent(getApplicationContext(),
+                        FormDownloadList.class);
+//                i.putExtra("isDownloadForms", true);
+            }
+            startActivity(i);
         }
     }
 
