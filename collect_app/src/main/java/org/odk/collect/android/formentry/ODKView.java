@@ -24,7 +24,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.os.Build;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -75,7 +74,6 @@ import org.odk.collect.android.utilities.FormEntryPromptUtils;
 import org.odk.collect.android.utilities.StringUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ToastUtils;
-import org.odk.collect.android.utilities.ViewIds;
 import org.odk.collect.android.widgets.QuestionWidget;
 import org.odk.collect.android.widgets.StringWidget;
 import org.odk.collect.android.widgets.WidgetFactory;
@@ -341,7 +339,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         QuestionWidget qw = WidgetFactory.createWidgetFromPrompt(question, getContext(), readOnlyOverride);
         qw.setOnLongClickListener(this);
         qw.setValueChangedListener(this);
-        qw.setId(ViewIds.generateViewId());
+        qw.setId(View.generateViewId());
 
         return qw;
     }
@@ -471,7 +469,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
 
         // set button formatting
         Button launchIntentButton = new Button(getContext());
-        launchIntentButton.setId(ViewIds.generateViewId());
+        launchIntentButton.setId(View.generateViewId());
         launchIntentButton.setText(buttonText);
         launchIntentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
                 Collect.getQuestionFontsize() + 2);
@@ -706,19 +704,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                 scrollTo(qw);
 
                 ValueAnimator va = new ValueAnimator();
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-                    va.setIntValues(getResources().getColor(R.color.red_500), getDrawingCacheBackgroundColor());
-                } else {
-                    // Avoid fading to black on certain devices and Android versions that may not support transparency
-                    TypedValue typedValue = new TypedValue();
-                    getContext().getTheme().resolveAttribute(android.R.attr.windowBackground, typedValue, true);
-                    if (typedValue.type >= TypedValue.TYPE_FIRST_COLOR_INT && typedValue.type <= TypedValue.TYPE_LAST_COLOR_INT) {
-                        va.setIntValues(getResources().getColor(R.color.red_500), typedValue.data);
-                    } else {
-                        va.setIntValues(getResources().getColor(R.color.red_500), getDrawingCacheBackgroundColor());
-                    }
-                }
-
+                va.setIntValues(getResources().getColor(R.color.red_500), getDrawingCacheBackgroundColor());
                 va.setEvaluator(new ArgbEvaluator());
                 va.addUpdateListener(valueAnimator -> viewToHighlight.setBackgroundColor((int) valueAnimator.getAnimatedValue()));
                 va.setDuration(3500);
@@ -780,7 +766,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                 WidgetFactory.createWidgetFromPrompt(p, getContext(), false);
         qw.setLongClickable(true);
         qw.setOnLongClickListener(this);
-        qw.setId(ViewIds.generateViewId());
+        qw.setId(View.generateViewId());
         p.getQuestion().setAdditionalAttribute("", "done", "true");
 
         widgets.add(qw);
@@ -868,7 +854,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
 
         // set button formatting
         Button launchIntentButton = new Button(getContext());
-        launchIntentButton.setId(ViewIds.generateViewId());
+        launchIntentButton.setId(View.generateViewId());
         launchIntentButton.setText(buttonText);
         launchIntentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Collect.getQuestionFontsize() + 2);
 //        launchIntentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,

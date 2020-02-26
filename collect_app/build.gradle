@@ -29,7 +29,7 @@ android {
 
     defaultConfig {
         applicationId('io.ffem.collect')
-        minSdkVersion(19)
+        minSdkVersion(21)
         targetSdkVersion(28)
         versionCode 8
         versionName "Beta 1.3"
