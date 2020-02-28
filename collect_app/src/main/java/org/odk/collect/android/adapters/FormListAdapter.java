@@ -58,26 +58,26 @@ public class FormListAdapter extends SimpleCursorAdapter {
                     v.setVisibility(View.VISIBLE);
                 }
             } else if (columnName.equals(versionColumnName)) {
-                String versionIdText = "";
-                String version = cursor.getString(columnIndex);
-                if (version != null) {
-                    versionIdText += getString(R.string.version_number, version);
-                }
-                if (Arrays.asList(columnNames).contains(FormsColumns.JR_FORM_ID)) {
-                    String id = cursor.getString(cursor.getColumnIndex(FormsColumns.JR_FORM_ID));
-                    if (version != null && id != null) {
-                        versionIdText += "\n";
-                    }
-                    if (id != null) {
-                        versionIdText += getString(R.string.id_number, id);
-                    }
-                }
+//                String versionIdText = "";
+//                String version = cursor.getString(columnIndex);
+//                if (version != null) {
+//                    versionIdText += getString(R.string.version_number, version);
+//                }
+//                if (Arrays.asList(columnNames).contains(FormsColumns.JR_FORM_ID)) {
+//                    String id = cursor.getString(cursor.getColumnIndex(FormsColumns.JR_FORM_ID));
+//                    if (version != null && id != null) {
+//                        versionIdText += "\n";
+//                    }
+//                    if (id != null) {
+//                        versionIdText += getString(R.string.id_number, id);
+//                    }
+//                }
                 TextView v = (TextView) view;
                 v.setVisibility(View.GONE);
-                if (!versionIdText.isEmpty()) {
-                    v.setText(versionIdText);
-                    v.setVisibility(View.VISIBLE);
-                }
+//                if (!versionIdText.isEmpty()) {
+//                    v.setText(versionIdText);
+//                    v.setVisibility(View.VISIBLE);
+//                }
             } else if (columnName.equals(FormsColumns.GEOMETRY_XPATH)) {
                 String xpath = cursor.getString(columnIndex);
                 view.setVisibility(xpath != null ? View.VISIBLE : View.GONE);

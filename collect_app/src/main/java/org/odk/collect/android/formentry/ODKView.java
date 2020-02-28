@@ -153,7 +153,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        layout.setMargins(16, 8, 5, 3);
+        layout.setMargins(8, 8, 5, 3);
 
         ThemeUtils themeUtils = new ThemeUtils(context);
 
@@ -850,7 +850,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(7, 5, 7, 5);
+        params.setMargins(20, 0, 20, 5);
 
         // set button formatting
         Button launchIntentButton = new Button(getContext());
@@ -859,7 +859,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         launchIntentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Collect.getQuestionFontsize() + 2);
 //        launchIntentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
 //                Collect.getQuestionFontsize());
-        launchIntentButton.setPadding(20, 20, 20, 20);
+//        launchIntentButton.setPadding(20, 20, 20, 20);
         launchIntentButton.setLayoutParams(params);
 
         launchIntentButton.setOnClickListener(v1 -> {
@@ -953,9 +953,9 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
 
         questionText.setTextSize(questionTextSizeHelper.getHeadline6());
         questionText.setTypeface(Typeface.create("sans-serif-medium",Typeface.NORMAL));
-        questionText.setPadding(24, 24, 5, 8);
+        questionText.setPadding(20, 0, 20, 0);
 //        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-//        params.setMargins(10,10,10,10);
+//        params.setMargins(20,0,20,8);
 //        questionText.setLayoutParams(params);
         questionText.setTextColor(Color.BLACK);
         questionText.setMovementMethod(LinkMovementMethod.getInstance());
