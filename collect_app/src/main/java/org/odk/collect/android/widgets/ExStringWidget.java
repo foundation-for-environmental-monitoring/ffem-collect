@@ -116,8 +116,14 @@ public class ExStringWidget extends StringWidget implements BinaryWidget {
 
         LinearLayout answerLayout = new LinearLayout(getContext());
         answerLayout.setOrientation(LinearLayout.VERTICAL);
-        answerLayout.addView(launchIntentButton);
         answerLayout.addView(answerText);
+        if (answerText.getText().toString().equals("")){
+            answerText.setVisibility(GONE);
+        }else {
+            answerText.setVisibility(VISIBLE);
+        }
+
+        answerLayout.addView(launchIntentButton);
         addAnswerView(answerLayout, WidgetViewUtils.getStandardMargin(context));
 
         Collect.getInstance().logRemoteAnalytics("WidgetType", "ExternalApp", Collect.getCurrentFormIdentifierHash());
