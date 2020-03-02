@@ -130,7 +130,7 @@ public class SettingsActivity extends CollectAbstractActivity
                 final AlertDialog passwordDialog = builder.create();
                 passwordDialog.setTitle(getString(R.string.enter_admin_password));
                 LayoutInflater inflater = this.getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.dialogbox_layout, null);
+                View dialogView = inflater.inflate(R.layout.admin_password_dialog_layout, null);
                 passwordDialog.setView(dialogView, 20, 10, 20, 10);
                 final CheckBox checkBox = dialogView.findViewById(R.id.checkBox);
                 final EditText input = dialogView.findViewById(R.id.editText);

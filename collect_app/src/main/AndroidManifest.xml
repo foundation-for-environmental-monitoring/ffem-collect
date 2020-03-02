@@ -36,7 +36,7 @@ the specific language governing permissions and limitations under the License.
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <!-- <uses-permission android:name="android.permission.GET_ACCOUNTS" />-->
+<!--    <uses-permission android:name="android.permission.GET_ACCOUNTS" />-->
     <!-- <uses-permission android:name="android.permission.SEND_SMS" /> -->
 
     <!-- Normal permissions -->
@@ -284,6 +284,11 @@ the specific language governing permissions and limitations under the License.
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".storage.migration.StorageMigrationService"
+            android:exported="false" />
+
 
         <activity android:name="io.ffem.collect.android.activities.SettingsActivity" />
         <activity

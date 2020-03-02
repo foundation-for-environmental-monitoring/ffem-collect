@@ -28,6 +28,11 @@
         android:layout_below="@id/toolbar"
         android:orientation="vertical">
 
+        <include
+            layout="@layout/storage_migration_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/main_menu_header"
             android:layout_width="match_parent"
