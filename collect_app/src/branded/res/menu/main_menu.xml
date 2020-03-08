@@ -21,4 +21,11 @@ limitations under the License.
         android:title="@string/settings"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/menu_configure_qr_code"
+        android:title="@string/configure_via_qr_code"
+        android:visible="false"
+        android:enabled="false"
+        app:showAsAction="never"/>
+
 </menu>

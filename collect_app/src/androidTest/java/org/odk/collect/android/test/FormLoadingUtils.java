@@ -47,11 +47,12 @@ public class FormLoadingUtils {
     }
 
     /**
-     * Copies a form with the given file name and given associated media from the given assets
-     * folder to the SD Card where it will be loaded by {@link FormLoaderTask}.
+     * Copies a form with the given file name and given associated media to the SD Card where it
+     * will be loaded by {@link FormLoaderTask}.
      */
     public static void copyFormToStorage(String formFilename, List<String> mediaFilePaths, boolean copyToDatabase) throws IOException {
         new StorageInitializer().createOdkDirsOnStorage();
+        ReferenceManager.instance().reset();
 
         String pathname = copyForm(formFilename);
         if (mediaFilePaths != null) {
@@ -65,8 +66,8 @@ public class FormLoadingUtils {
     }
 
     /**
-     * Copies a form with the given file name from the from the given assets folder to the SD Card
-     * where it will be loaded by {@link FormLoaderTask}.
+     * Copies a form with the given file name to the SD Card where it will be loaded by
+     * {@link FormLoaderTask}.
      */
     public static void copyFormToStorage(String formFilename) throws IOException {
             copyFormToStorage(formFilename, null, false);

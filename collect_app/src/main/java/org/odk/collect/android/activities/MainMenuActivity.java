@@ -14,7 +14,6 @@
 
 package org.odk.collect.android.activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -40,25 +39,31 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
+
 import org.odk.collect.android.R;
+import org.odk.collect.android.activities.viewmodels.MainMenuViewModel;
+import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.fragments.dialogs.AdminPasswordDialog;
+import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminPreferencesActivity;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
-import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.GeneralKeys;
+import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferenceSaver;
 import org.odk.collect.android.preferences.PreferencesActivity;
 import org.odk.collect.android.preferences.Transport;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.storage.StorageInitializer;
-import org.odk.collect.android.storage.migration.StorageMigrationRepository;
-import org.odk.collect.android.storage.migration.StorageMigrationDialog;
 import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.storage.StorageStateProvider;
+import org.odk.collect.android.storage.migration.StorageMigrationDialog;
+import org.odk.collect.android.storage.migration.StorageMigrationRepository;
 import org.odk.collect.android.storage.migration.StorageMigrationResult;
 import org.odk.collect.android.utilities.AdminPasswordProvider;
 import org.odk.collect.android.utilities.ApplicationConstants;
@@ -88,6 +93,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
+import static org.odk.collect.android.analytics.AnalyticsEvents.SCAN_QR_CODE;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
 
 /**
@@ -98,7 +104,6 @@ import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_TRA
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
 public class MainMenuActivity extends CollectAbstractActivity implements AdminPasswordDialog.AdminPasswordDialogCallback {
-
     private static final boolean EXIT = true;
     // buttons
 //     private Button manageFilesButton;
@@ -107,6 +112,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
     private Button reviewDataButton;
     private Button getFormsButton;
     private AlertDialog alertDialog;
+    private MenuItem qrcodeScannerMenuItem;
     private int completedCount;
     private int savedCount;
     private int viewSentCount;
@@ -118,6 +124,9 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
     private TextView reviewDataBadge;
     private TextView sendDataBadge;
     private TextView viewSendFormsBadge;
+
+    @Inject
+    public Analytics analytics;
 
     @BindView(R.id.storageMigrationBanner)
     LinearLayout storageMigrationBanner;
@@ -131,6 +140,9 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
     @BindView(R.id.storageMigrationBannerLearnMoreButton)
     Button storageMigrationBannerLearnMoreButton;
 
+    @BindView(R.id.version_sha)
+    TextView versionSHAView;
+
     @Inject
     StorageMigrationRepository storageMigrationRepository;
 
@@ -142,12 +154,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
 
     @Inject
     AdminPasswordProvider adminPasswordProvider;
-
-    public static void startActivityAndCloseAllOthers(Activity activity) {
-        activity.startActivity(new Intent(activity, MainMenuActivity.class));
-        activity.overridePendingTransition(0, 0);
-        activity.finishAffinity();
-    }
+    private MainMenuViewModel viewModel;
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -160,14 +167,17 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Collect.getInstance().getComponent().inject(this);
-
         setContentView(R.layout.main_menu);
         ButterKnife.bind(this);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
 
+        viewModel = ViewModelProviders.of(this, new MainMenuViewModel.Factory()).get(MainMenuViewModel.class);
+
         initToolbar();
+        DaggerUtils.getComponent(this).inject(this);
+
         disableSmsIfNeeded();
 
         storageMigrationRepository.getResult().observe(this, this::onStorageMigrationFinish);
@@ -283,6 +293,13 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
 //            }
 //        });
 
+        String versionSHA = viewModel.getVersionCommitDescription();
+        if (versionSHA != null) {
+            versionSHAView.setText(versionSHA);
+        } else {
+            versionSHAView.setVisibility(View.GONE);
+        }
+
         // must be at the beginning of any activity that can be called from an
         // external intent
         Timber.i("Starting up, creating directories");
@@ -291,13 +308,6 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         } catch (RuntimeException e) {
             createErrorDialog(e.getMessage(), EXIT);
             return;
-        }
-
-        {
-            // dynamically construct the "ODK Collect vA.B" string
-            TextView mainMenuMessageLabel = findViewById(R.id.main_menu_header);
-            mainMenuMessageLabel.setText(Collect.getInstance()
-                    .getVersionedAppName());
         }
 
         File f = new File(storagePathProvider.getStorageRootDirPath() + "/collect.settings");
@@ -331,12 +341,6 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         displayExpiryInfo();
     }
 
-    private void initToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setTitle(getString(R.string.app_name));
-        setSupportActionBar(toolbar);
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -348,6 +352,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         }
 
         setButtonsVisibility();
+        invalidateOptionsMenu();
         setUpStorageMigrationBanner();
     }
 
@@ -431,7 +436,14 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        qrcodeScannerMenuItem = menu.findItem(R.id.menu_configure_qr_code);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        qrcodeScannerMenuItem.setVisible(this.getSharedPreferences(AdminPreferencesActivity.ADMIN_PREFERENCES, 0).getBoolean(AdminKeys.KEY_QR_CODE_SCANNER, true));
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -442,6 +454,12 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
                 startActivityForResult(intent, 100);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void initToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setTitle(getString(R.string.app_name));
+        setSupportActionBar(toolbar);
     }
 
     private void countSavedForms() {
@@ -613,6 +631,9 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
                 DialogUtils
                         .showIfNotShowing(StorageMigrationDialog.create(savedCount), getSupportFragmentManager())
                         .startStorageMigration();
+                break;
+            case SCAN_QR_CODE:
+                startActivity(new Intent(this, ScanQRCodeActivity.class));
                 break;
         }
     }

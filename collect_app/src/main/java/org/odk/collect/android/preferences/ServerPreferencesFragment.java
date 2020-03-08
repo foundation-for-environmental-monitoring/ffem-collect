@@ -43,11 +43,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.openrosa.OpenRosaAPIClient;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.listeners.OnBackPressedListener;
 import org.odk.collect.android.listeners.PermissionListener;
+import org.odk.collect.android.openrosa.OpenRosaAPIClient;
 import org.odk.collect.android.preferences.filters.ControlCharacterFilter;
 import org.odk.collect.android.preferences.filters.WhitespaceFilter;
 import org.odk.collect.android.preferences.utilities.ChangingServerUrlUtils;
@@ -69,6 +70,9 @@ import javax.inject.Inject;
 
 import static android.app.Activity.RESULT_OK;
 import static io.ffem.collect.android.utilities.ListViewUtil.setListViewHeightBasedOnChildren;
+import static org.odk.collect.android.analytics.AnalyticsEvents.SET_CUSTOM_ENDPOINT;
+import static org.odk.collect.android.analytics.AnalyticsEvents.SET_FALLBACK_SHEETS_URL;
+import static org.odk.collect.android.analytics.AnalyticsEvents.SET_SERVER;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_FORMLIST_URL;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_PROTOCOL;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SELECTED_GOOGLE_ACCOUNT;
@@ -113,6 +117,9 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     GoogleAccountsManager accountsManager;
 
     private ListView list;
+
+    @Inject
+    Analytics analytics;
 
     /*
     private ListPreference transportPreference;
@@ -412,6 +419,9 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
 
                     if (Validator.isUrlValid(url)) {
                         preference.setSummary(url + "\n\n" + getString(R.string.google_sheets_url_hint));
+
+                        String urlHash = FileUtils.getMd5Hash(new ByteArrayInputStream(url.getBytes()));
+                        analytics.logEvent(SET_FALLBACK_SHEETS_URL, urlHash);
                     } else if (url.length() == 0) {
                         preference.setSummary(getString(R.string.google_sheets_url_hint));
                     } else {
@@ -433,6 +443,10 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
                 case KEY_FORMLIST_URL:
                 case KEY_SUBMISSION_URL:
                     preference.setSummary(newValue.toString());
+
+                    String customEndpointId = FileUtils.getMd5Hash(new ByteArrayInputStream(newValue.toString().getBytes()));
+                    String action = preference.getKey() + " " + customEndpointId;
+                    analytics.logEvent(SET_CUSTOM_ENDPOINT, action);
                     break;
             }
             return true;
@@ -463,7 +477,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         String urlHash = FileUtils.getMd5Hash(
                 new ByteArrayInputStream(url.getBytes()));
 
-        Collect.getInstance().logRemoteAnalytics("SetServer", scheme + " " + host, urlHash);
+        analytics.logEvent(SET_SERVER, scheme + " " + host, urlHash);
     }
 
     private void maskPasswordSummary(String password) {

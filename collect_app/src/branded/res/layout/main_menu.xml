@@ -46,17 +46,6 @@
             android:textStyle="bold"
             android:visibility="gone" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="1dp"
-            android:paddingBottom="10dp"
-            android:text="@string/main_menu_details"
-            android:textColor="?primaryTextColor"
-            android:textSize="17sp"
-            android:visibility="gone" />
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -259,6 +248,15 @@
             android:textColor="#2a01a2bc"
             android:textSize="46dp"
             tools:ignore="SpUsage" />
+
+        <TextView
+            android:id="@+id/version_sha"
+            style="@style/TextAppearance.Collect.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_standard"
+            tools:text="commit sha" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabDisableDiagnostics"
