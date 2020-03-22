@@ -123,6 +123,7 @@ import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.logic.FormController.FailedConstraint;
 import org.odk.collect.android.logic.FormInfo;
 import org.odk.collect.android.logic.ImmutableDisplayableQuestion;
+import org.odk.collect.android.network.NetworkStateProvider;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.GeneralKeys;
@@ -310,6 +311,9 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
     @Inject
     Analytics analytics;
+
+    @Inject
+    NetworkStateProvider connectivityProvider;
 
     private final LocationProvidersReceiver locationProvidersReceiver = new LocationProvidersReceiver();
 
@@ -862,7 +866,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 progressDialog.setMessage(getString(R.string.please_wait));
                 progressDialog.show(getSupportFragmentManager(), ProgressDialogFragment.COLLECT_PROGRESS_DIALOG_TAG);
 
-                mediaLoadingFragment.beginMediaLoadingTask(intent.getData());
+                mediaLoadingFragment.beginMediaLoadingTask(intent.getData(), connectivityProvider);
                 break;
             case RequestCodes.AUDIO_CAPTURE:
                 /*

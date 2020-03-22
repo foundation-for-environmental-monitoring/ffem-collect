@@ -116,9 +116,9 @@ public class ExStringWidget extends StringWidget implements BinaryWidget {
         LinearLayout answerLayout = new LinearLayout(getContext());
         answerLayout.setOrientation(LinearLayout.VERTICAL);
         answerLayout.addView(answerText);
-        if (answerText.getText().toString().equals("")){
+        if (answerText.getText().toString().isEmpty()){
             answerText.setVisibility(GONE);
-        }else {
+        } else {
             answerText.setVisibility(VISIBLE);
         }
 
@@ -149,6 +149,11 @@ public class ExStringWidget extends StringWidget implements BinaryWidget {
         StringData stringData = ExternalAppsUtils.asStringData(answer);
         answerText.setText(stringData == null ? null : stringData.getValue().toString());
         widgetValueChanged();
+        if (answerText.getText().toString().isEmpty()){
+            answerText.setVisibility(GONE);
+        } else {
+            answerText.setVisibility(VISIBLE);
+        }
     }
 
     @Override

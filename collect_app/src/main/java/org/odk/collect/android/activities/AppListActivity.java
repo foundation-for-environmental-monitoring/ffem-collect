@@ -122,7 +122,7 @@ abstract class AppListActivity extends CollectAbstractActivity {
     public void setContentView(@LayoutRes int layoutResID) {
         super.setContentView(layoutResID);
 
-        Collect.resetLastClickTime();
+//        Collect.resetLastClickTime();
 
         listView = findViewById(android.R.id.list);
         listView.setOnItemClickListener((AdapterView.OnItemClickListener) this);
