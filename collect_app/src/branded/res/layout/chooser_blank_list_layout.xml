@@ -18,7 +18,7 @@ the License.
     android:layout_height="match_parent">
 
     <!-- Toolbar -->
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/app_bar_layout" />
 
     <LinearLayout
         android:id="@+id/llParent"
@@ -67,11 +67,5 @@ the License.
             android:text="@string/get_forms"
             android:textSize="18sp" />
     </FrameLayout>
-
-    <include
-        layout="@layout/toolbar_action_bar_shadow"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar" />
 
 </RelativeLayout>
