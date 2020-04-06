@@ -39,17 +39,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.viewmodels.MainMenuViewModel;
 import org.odk.collect.android.analytics.Analytics;
+import org.odk.collect.android.analytics.AnalyticsEvents;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.InstancesDao;
-import org.odk.collect.android.fragments.dialogs.AdminPasswordDialog;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.preferences.AdminKeys;
+import org.odk.collect.android.preferences.AdminPasswordDialogFragment;
+import org.odk.collect.android.preferences.AdminPasswordDialogFragment.Action;
 import org.odk.collect.android.preferences.AdminPreferencesActivity;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
@@ -94,8 +97,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-import static org.odk.collect.android.analytics.AnalyticsEvents.SCAN_QR_CODE;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
+import static org.odk.collect.android.utilities.DialogUtils.getDialog;
+import static org.odk.collect.android.utilities.DialogUtils.showIfNotShowing;
 
 /**
  * Responsible for displaying buttons to launch the major activities. Launches
@@ -104,7 +108,7 @@ import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_TRA
  * @author Carl Hartung (carlhartung@gmail.com)
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
-public class MainMenuActivity extends CollectAbstractActivity implements AdminPasswordDialog.AdminPasswordDialogCallback {
+public class MainMenuActivity extends CollectAbstractActivity implements AdminPasswordDialogFragment.AdminPasswordDialogCallback {
     private static final boolean EXIT = true;
     // buttons
 //     private Button manageFilesButton;
@@ -625,15 +629,17 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
     }
 
     @Override
-    public void onCorrectAdminPassword(AdminPasswordDialog.Action action) {
+    public void onCorrectAdminPassword(Action action) {
         switch (action) {
             case ADMIN_SETTINGS:
                 startActivity(new Intent(this, AdminPreferencesActivity.class));
                 break;
             case STORAGE_MIGRATION:
-                DialogUtils
-                        .showIfNotShowing(StorageMigrationDialog.create(savedCount), getSupportFragmentManager())
-                        .startStorageMigration();
+                StorageMigrationDialog dialog = showStorageMigrationDialog();
+                if (dialog != null) {
+                    dialog.startStorageMigration();
+                }
+
                 break;
             case SCAN_QR_CODE:
                 startActivity(new Intent(this, ScanQRCodeActivity.class));
@@ -708,7 +714,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
     }
 
     public void onStorageMigrationBannerLearnMoreClick(View view) {
-        DialogUtils.showIfNotShowing(StorageMigrationDialog.create(savedCount), getSupportFragmentManager());
+        showStorageMigrationDialog();
         getContentResolver().unregisterContentObserver(contentObserver);
     }
 
@@ -717,10 +723,21 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
             DialogUtils.dismissDialog(StorageMigrationDialog.class, getSupportFragmentManager());
             displayBannerWithSuccessStorageMigrationResult();
         } else {
-            DialogUtils
-                    .showIfNotShowing(StorageMigrationDialog.create(savedCount), getSupportFragmentManager())
-                    .handleMigrationError(result);
+            StorageMigrationDialog dialog = showStorageMigrationDialog();
+
+            if (dialog != null) {
+                dialog.handleMigrationError(result);
+            }
         }
+    }
+
+    @Nullable
+    private StorageMigrationDialog showStorageMigrationDialog() {
+        Bundle args = new Bundle();
+        args.putInt(StorageMigrationDialog.ARG_UNSENT_INSTANCES, savedCount);
+
+        showIfNotShowing(StorageMigrationDialog.class, args, getSupportFragmentManager());
+        return getDialog(StorageMigrationDialog.class, getSupportFragmentManager());
     }
 
     private void setUpStorageMigrationBanner() {
