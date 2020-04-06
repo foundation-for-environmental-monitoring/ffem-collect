@@ -77,4 +77,9 @@
     <style name="Theme.Collect.Light.Dialog" parent="android:Theme.Material.Light.Dialog">
         <item name="android:colorAccent">?attr/colorSecondary</item>
     </style>
+
+    <style name="toolbar_theme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="colorControlNormal">@color/white</item>
+    </style>
+
 </resources>
