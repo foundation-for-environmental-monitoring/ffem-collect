@@ -55,6 +55,7 @@ public final class GeneralKeys {
     public static final String KEY_IMAGE_SIZE               = "image_size";
     public static final String KEY_GUIDANCE_HINT            = "guidance_hint";
     public static final String KEY_INSTANCE_SYNC            = "instance_sync";
+    public static final String KEY_DELETE_FORMS             = "delete_forms";
 
     // identity_preferences.xml
     public static final String KEY_ANALYTICS                = "analytics";
