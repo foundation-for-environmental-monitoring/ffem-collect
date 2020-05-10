@@ -17,7 +17,7 @@
 package org.odk.collect.android.utilities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.formentry.audit.AuditEvent;
-import org.odk.collect.android.logic.FormController;
+import org.odk.collect.android.javarosawrapper.FormController;
 
 import timber.log.Timber;
 
@@ -149,7 +149,7 @@ public final class DialogUtils {
             }
         };
         alertDialog.setCancelable(false);
-        alertDialog.setButton(activity.getString(R.string.ok), errorListener);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, activity.getString(R.string.ok), errorListener);
 
         return alertDialog;
     }

@@ -20,11 +20,12 @@ import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.events.RxEventBus;
 import org.odk.collect.android.formentry.ODKView;
+import org.odk.collect.android.formentry.saving.SaveFormProgressDialogFragment;
 import org.odk.collect.android.fragments.DataManagerList;
+import org.odk.collect.android.fragments.ShowQRCodeFragment;
 import org.odk.collect.android.geo.GoogleMapFragment;
 import org.odk.collect.android.geo.MapboxMapFragment;
 import org.odk.collect.android.geo.OsmDroidMapFragment;
-import org.odk.collect.android.fragments.ShowQRCodeFragment;
 import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.openrosa.OpenRosaHttpInterface;
 import org.odk.collect.android.preferences.AdminPasswordDialogFragment;
@@ -34,6 +35,7 @@ import org.odk.collect.android.preferences.FormMetadataFragment;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.IdentityPreferences;
 import org.odk.collect.android.preferences.ServerPreferencesFragment;
+import org.odk.collect.android.preferences.UserInterfacePreferencesFragment;
 import org.odk.collect.android.storage.migration.StorageMigrationDialog;
 import org.odk.collect.android.storage.migration.StorageMigrationService;
 import org.odk.collect.android.tasks.InstanceServerUploaderTask;
@@ -166,6 +168,10 @@ public interface AppDependencyComponent {
     void inject(FormManagementPreferences formManagementPreferences);
 
     void inject(IdentityPreferences identityPreferences);
+
+    void inject(UserInterfacePreferencesFragment userInterfacePreferencesFragment);
+
+    void inject(SaveFormProgressDialogFragment saveFormProgressDialogFragment);
 
     SmsManager smsManager();
 

@@ -14,6 +14,12 @@
     <!-- tools:ignore="AlwaysShowAction" due to #1154 on small screen action is more important
     than title-->
     <item
+        android:id="@+id/menu_add_repeat"
+        android:icon="@drawable/ic_add_circle"
+        android:title="@string/add_another_menu"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/menu_save"
         android:icon="@drawable/ic_save_tool"
         android:title="@string/save_all_answers"

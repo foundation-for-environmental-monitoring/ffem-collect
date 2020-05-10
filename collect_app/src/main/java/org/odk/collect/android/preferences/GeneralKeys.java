@@ -2,6 +2,7 @@ package org.odk.collect.android.preferences;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.utilities.QuestionFontSizeUtils;
 
 import java.util.Arrays;
 import java.util.Collection;

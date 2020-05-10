@@ -65,10 +65,12 @@ import org.odk.collect.android.audio.PlaybackFailedException;
 import org.odk.collect.android.exception.ExternalParamsException;
 import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.external.ExternalAppsUtils;
+import org.odk.collect.android.javarosawrapper.FormController;
 import org.odk.collect.android.formentry.media.AudioHelperFactory;
 import org.odk.collect.android.formentry.media.PromptAutoplayer;
+import org.odk.collect.android.formentry.questions.QuestionTextSizeHelper;
 import org.odk.collect.android.listeners.WidgetValueChangedListener;
-import org.odk.collect.android.logic.FormController;
+import org.odk.collect.android.utilities.QuestionFontSizeUtils;
 import org.odk.collect.android.utilities.ScreenContext;
 import org.odk.collect.android.utilities.FormEntryPromptUtils;
 import org.odk.collect.android.utilities.StringUtils;
@@ -243,7 +245,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                         Toast.LENGTH_SHORT
                 ).show();
 
-                audioHelper.dismissError();
+                audioHelper.errorDisplayed();
             }
         });
     }
@@ -471,7 +473,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         launchIntentButton.setId(View.generateViewId());
         launchIntentButton.setText(buttonText);
         launchIntentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
-                Collect.getQuestionFontsize() + 2);
+                QuestionFontSizeUtils.getQuestionFontSize() + 2);
         launchIntentButton.setPadding(20, 20, 20, 20);
         launchIntentButton.setLayoutParams(params);
 

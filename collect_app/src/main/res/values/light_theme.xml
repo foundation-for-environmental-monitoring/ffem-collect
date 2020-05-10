@@ -41,8 +41,6 @@
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.MaterialComponents.LargeComponent</item>
         <!--/Material theme attributes-->
 
-        <item name="primaryTextColor">?attr/colorOnSurface</item>
-        <item name="secondaryTextColor">#99000000</item>
         <item name="android:scrollbarThumbHorizontal">@drawable/thumb</item>
         <item name="android:scrollbarThumbVertical">@drawable/thumb</item>
         <item name="android:scrollbarSize">1.75mm</item>
@@ -56,11 +54,9 @@
         <item name="iconColor">#000000</item>
         <item name="toolbarIconColor">#deffffff</item>
         <item name="dividerColor">#1e000000</item>
-        <item name="rankItemColor">#EEEEEE</item>
         <item name="android:textDirection" tools:targetApi="17">locale</item>
         <item name="dividerCompat">@android:drawable/divider_horizontal_bright</item>
         <item name="android:tintMode" tools:targetApi="21">src_in</item>
-        <item name="spinnerItemBackgroundColor">#F9F9F9</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="textColorPrimary">@color/white</item>
 
