@@ -42,8 +42,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -126,7 +124,6 @@ import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.preferences.PreferencesActivity;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.storage.StorageInitializer;
@@ -141,13 +138,13 @@ import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.DestroyableLifecyleOwner;
 import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.FileUtils;
-import org.odk.collect.android.utilities.QuestionFontSizeUtils;
 import org.odk.collect.android.utilities.FormNameUtils;
 import org.odk.collect.android.utilities.ImageConverter;
 import org.odk.collect.android.utilities.MediaManager;
 import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.PlayServicesUtil;
+import org.odk.collect.android.utilities.QuestionFontSizeUtils;
 import org.odk.collect.android.utilities.ScreenContext;
 import org.odk.collect.android.utilities.SnackbarUtils;
 import org.odk.collect.android.utilities.SoftKeyboardUtils;
@@ -182,6 +179,7 @@ import static android.view.animation.AnimationUtils.loadAnimation;
 import static org.javarosa.form.api.FormEntryController.EVENT_PROMPT_NEW_REPEAT;
 import static org.odk.collect.android.analytics.AnalyticsEvents.LAUNCH_FORM_WITH_BG_LOCATION;
 import static org.odk.collect.android.analytics.AnalyticsEvents.SAVE_INCOMPLETE;
+import static org.odk.collect.android.fragments.BarcodeWidgetScannerFragment.BARCODE_RESULT_KEY;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_MOVING_BACKWARDS;
 import static org.odk.collect.android.utilities.AnimationUtils.areAnimationsEnabled;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
@@ -752,10 +750,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         // If we're coming back from the hierarchy view, the user has either tapped the back
         // button or another question to jump to so we need to rebuild the view.
         if (requestCode == RequestCodes.HIERARCHY_ACTIVITY) {
-            if (resultCode == FormHierarchyActivity.RESULT_ADD_REPEAT) {
-                formEntryViewModel.addRepeat(false);
-            }
-
             refreshCurrentView();
             return;
         }
@@ -786,7 +780,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 // request was canceled...
                 Timber.i("QR code scanning cancelled");
             } else {
-                String sb = intent.getStringExtra("SCAN_RESULT");
+                String sb = intent.getStringExtra(BARCODE_RESULT_KEY);
                 if (getCurrentViewIfODKView() != null) {
                     getCurrentViewIfODKView().setBinaryData(sb);
                 }
@@ -818,8 +812,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     Bundle extras = intent.getExtras();
                     if (getCurrentViewIfODKView() != null) {
                         getCurrentViewIfODKView().setDataForFields(extras);
-                        //ffem: to refresh multi result display
-                        refreshCurrentView();
                     }
                 } catch (JavaRosaException e) {
                     Timber.e(e);
@@ -1055,13 +1047,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 Intent i = new Intent(this, FormHierarchyActivity.class);
                 startActivityForResult(i, RequestCodes.HIERARCHY_ACTIVITY);
                 return true;
-            case R.id.menu_preferences:
-                Intent pref = new Intent(this, PreferencesActivity.class);
-                startActivity(pref);
-                return true;
-            case android.R.id.home:
-                createQuitDialog();
-                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -1200,11 +1185,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         String formTitle = formController.getFormTitle();
         setTitle(formTitle);
 
-        setSupportActionBar(findViewById(R.id.toolbar));
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(formTitle);
-        }
-
         if (event != FormEntryController.EVENT_QUESTION) {
             formController.getAuditEventLogger().logEvent(AuditEvent.getAuditEventTypeFromFecType(event),
                     formController.getFormIndex(), true, null, System.currentTimeMillis(), null);
@@ -1327,12 +1307,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         final CheckBox instanceComplete = endView
                 .findViewById(R.id.mark_finished);
         instanceComplete.setChecked(InstancesDaoHelper.isInstanceComplete(true));
-
-        Button endButton = endView.findViewById(R.id.save_exit_button);
-        setEndButtonText(endButton, instanceComplete);
-        instanceComplete.setOnClickListener(view -> {
-            setEndButtonText(endButton, instanceComplete);
-        });
 
         if (!(boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_MARK_AS_FINALIZED)) {
             instanceComplete.setVisibility(View.GONE);
@@ -2172,7 +2146,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         showNavigationButtons = navigation.contains(GeneralKeys.NAVIGATION_BUTTONS);
 
         findViewById(R.id.buttonholder).setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
-        //findViewById(R.id.shadow_up).setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
+        findViewById(R.id.shadow_up).setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
 
         if (showNavigationButtons) {
             updateNavigationButtonVisibility();
@@ -2906,14 +2880,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     private boolean isQuestionRecalculated(FormEntryPrompt mutableQuestionBeforeSave, ImmutableDisplayableQuestion immutableQuestionBeforeSave) {
         return !(mutableQuestionBeforeSave.getAnswerText() == null && immutableQuestionBeforeSave.getAnswerText() == null
                 || mutableQuestionBeforeSave.getAnswerText().equals(immutableQuestionBeforeSave.getAnswerText()));
-    }
-
-    private void setEndButtonText(Button endButton, CheckBox instanceComplete) {
-        if (instanceComplete.isChecked()) {
-            endButton.setText(R.string.send_form);
-        } else {
-            endButton.setText(R.string.quit_entry);
-        }
     }
 }
 

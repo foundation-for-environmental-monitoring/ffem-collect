@@ -34,15 +34,14 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:visibility="gone"
-            custom:text="blah"
-            custom:secondaryActionColor="true" />
+            custom:secondaryActionColor="true"
+            custom:text="blah" />
 
         <FrameLayout
             android:id="@+id/mapbox_container"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:visibility="invisible">
-        </FrameLayout>
+            android:visibility="invisible" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -58,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/enter_data"
                         style="@style/ListButton"
                         android:layout_width="match_parent"
@@ -67,14 +66,15 @@
                         android:minHeight="80dp"
                         android:padding="20dp"
                         android:textAllCaps="false"
-                        android:textSize="21sp" />
+                        android:textSize="21sp"
+                        app:cornerRadius="0dp" />
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/review_data"
                         style="@style/ListButton"
                         android:layout_width="match_parent"
@@ -83,7 +83,8 @@
                         android:minHeight="80dp"
                         android:padding="20dp"
                         android:textAllCaps="false"
-                        android:textSize="21sp" />
+                        android:textSize="21sp"
+                        app:cornerRadius="0dp" />
 
                     <TextView
                         android:id="@+id/text_review_data"
@@ -107,7 +108,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/view_sent_forms"
                         style="@style/ListButton"
                         android:layout_width="match_parent"
@@ -117,7 +118,8 @@
                         android:padding="20dp"
                         android:text="@string/view_sent_forms"
                         android:textAllCaps="false"
-                        android:textSize="21sp" />
+                        android:textSize="21sp"
+                        app:cornerRadius="0dp" />
 
                     <TextView
                         android:id="@+id/text_view_sent"
@@ -141,7 +143,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/send_data"
                         style="@style/ListButton"
                         android:layout_width="match_parent"
@@ -150,7 +152,8 @@
                         android:minHeight="80dp"
                         android:padding="20dp"
                         android:textAllCaps="false"
-                        android:textSize="21sp" />
+                        android:textSize="21sp"
+                        app:cornerRadius="0dp" />
 
                     <TextView
                         android:id="@+id/text_send_data"

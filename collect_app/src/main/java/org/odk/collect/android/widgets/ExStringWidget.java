@@ -115,14 +115,8 @@ public class ExStringWidget extends StringWidget implements BinaryWidget {
 
         LinearLayout answerLayout = new LinearLayout(getContext());
         answerLayout.setOrientation(LinearLayout.VERTICAL);
-        answerLayout.addView(answerText);
-        if (answerText.getText().toString().isEmpty()){
-            answerText.setVisibility(GONE);
-        } else {
-            answerText.setVisibility(VISIBLE);
-        }
-
         answerLayout.addView(launchIntentButton);
+        answerLayout.addView(answerText);
         addAnswerView(answerLayout, WidgetViewUtils.getStandardMargin(context));
     }
 
@@ -149,11 +143,6 @@ public class ExStringWidget extends StringWidget implements BinaryWidget {
         StringData stringData = ExternalAppsUtils.asStringData(answer);
         answerText.setText(stringData == null ? null : stringData.getValue().toString());
         widgetValueChanged();
-        if (answerText.getText().toString().isEmpty()){
-            answerText.setVisibility(GONE);
-        } else {
-            answerText.setVisibility(VISIBLE);
-        }
     }
 
     @Override
@@ -165,16 +154,16 @@ public class ExStringWidget extends StringWidget implements BinaryWidget {
         } else {
             if (!getFormEntryPrompt().isReadOnly()) {
                 SoftKeyboardUtils.showSoftKeyboard(answerText);
-            /*
-             * If you do a multi-question screen after a "add another group" dialog, this won't
-             * automatically pop up. It's an Android issue.
-             *
-             * That is, if I have an edit text in an activity, and pop a dialog, and in that
-             * dialog's button's OnClick() I call edittext.requestFocus() and
-             * showSoftInput(edittext, 0), showSoftinput() returns false. However, if the
-             * edittext
-             * is focused before the dialog pops up, everything works fine. great.
-             */
+                /*
+                 * If you do a multi-question screen after a "add another group" dialog, this won't
+                 * automatically pop up. It's an Android issue.
+                 *
+                 * That is, if I have an edit text in an activity, and pop a dialog, and in that
+                 * dialog's button's OnClick() I call edittext.requestFocus() and
+                 * showSoftInput(edittext, 0), showSoftinput() returns false. However, if the
+                 * edittext
+                 * is focused before the dialog pops up, everything works fine. great.
+                 */
             } else {
                 SoftKeyboardUtils.hideSoftKeyboard(answerText);
             }
@@ -210,7 +199,7 @@ public class ExStringWidget extends StringWidget implements BinaryWidget {
         if (exParams.containsKey(URI_KEY)) {
             try {
                 String uriValue = (String) ExternalAppsUtils.getValueRepresentedBy(exParams.get(URI_KEY),
-                            getFormEntryPrompt().getIndex().getReference());
+                        getFormEntryPrompt().getIndex().getReference());
                 i.setData(Uri.parse(uriValue));
                 exParams.remove(URI_KEY);
             } catch (XPathSyntaxException e) {

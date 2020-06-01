@@ -751,7 +751,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
     }
 
     private void displayStorageMigrationBanner() {
-        storageMigrationBanner.setVisibility(View.VISIBLE);
+        storageMigrationBanner.setVisibility(View.GONE);
         storageMigrationBanner.setText(getString(R.string.scoped_storage_banner_text));
         storageMigrationBanner.setActionText(getString(R.string.scoped_storage_learn_more));
         storageMigrationBanner.setAction(() -> {
