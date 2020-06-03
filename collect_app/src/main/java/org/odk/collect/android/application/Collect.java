@@ -27,9 +27,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.multidex.MultiDex;
 
-//import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobManagerCreateException;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -47,6 +47,7 @@ import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
 import org.odk.collect.android.preferences.FormMetadataMigrator;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.preferences.MetaSharedPreferencesProvider;
 import org.odk.collect.android.preferences.PrefMigrator;
 import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.tasks.sms.SmsNotificationReceiver;
@@ -67,6 +68,7 @@ import timber.log.Timber;
 import static org.odk.collect.android.logic.PropertyManager.PROPMGR_USERNAME;
 import static org.odk.collect.android.logic.PropertyManager.SCHEME_USERNAME;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_APP_LANGUAGE;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_GOOGLE_BUG_154855417_FIXED;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_FONT_SIZE;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_USERNAME;
 import static org.odk.collect.android.tasks.sms.SmsNotificationReceiver.SMS_NOTIFICATION_ACTION;
@@ -98,6 +100,9 @@ public class Collect extends Application {
 
     @Inject
     public CollectJobCreator collectJobCreator;
+
+    @Inject
+    MetaSharedPreferencesProvider metaSharedPreferencesProvider;
 
     public static Collect getInstance() {
         return singleton;
@@ -172,6 +177,7 @@ public class Collect extends Application {
         singleton = this;
 
         setupDagger();
+        fixGoogleBug154855417();
 
         NotificationUtils.createNotificationChannel(singleton);
 
@@ -267,15 +273,16 @@ public class Collect extends Application {
     private static class CrashReportingTree extends Timber.Tree {
         @Override
         protected void log(int priority, String tag, String message, Throwable t) {
-//            if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
-//                return;
-//            }
+            if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
+                return;
+            }
 
-//            Crashlytics.log(priority, tag, message);
+            FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
+            crashlytics.log((priority == Log.ERROR ? "E/" : "W/") + tag + ": " + message);
 
-//            if (t != null && priority == Log.ERROR) {
-//                Crashlytics.logException(t);
-//            }
+            if (t != null && priority == Log.ERROR) {
+                crashlytics.recordException(t);
+            }
         }
     }
 
@@ -328,5 +335,26 @@ public class Collect extends Application {
     public static String getFormIdentifierHash(String formId, String formVersion) {
         String formIdentifier = new FormsDao().getFormTitleForFormIdAndFormVersion(formId, formVersion) + " " + formId;
         return FileUtils.getMd5Hash(new ByteArrayInputStream(formIdentifier.getBytes()));
+    }
+
+    // https://issuetracker.google.com/issues/154855417
+    private void fixGoogleBug154855417() {
+        try {
+            SharedPreferences metaSharedPreferences = metaSharedPreferencesProvider.getMetaSharedPreferences();
+
+            boolean hasFixedGoogleBug154855417 = metaSharedPreferences.getBoolean(KEY_GOOGLE_BUG_154855417_FIXED, false);
+
+            if (!hasFixedGoogleBug154855417) {
+                File corruptedZoomTables = new File(getFilesDir(), "ZoomTables.data");
+                corruptedZoomTables.delete();
+
+                metaSharedPreferences
+                        .edit()
+                        .putBoolean(KEY_GOOGLE_BUG_154855417_FIXED, true)
+                        .apply();
+            }
+        } catch (Exception ignored) {
+            // ignored
+        }
     }
 }

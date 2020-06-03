@@ -12,7 +12,6 @@
  */
 
 package org.odk.collect.android.fragments;
-
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -22,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
+import timber.log.Timber;
 
 import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.BeepManager;
@@ -37,14 +37,13 @@ import org.jetbrains.annotations.NotNull;
 import org.odk.collect.android.R;
 import org.odk.collect.android.utilities.CameraUtils;
 import org.odk.collect.android.utilities.ToastUtils;
+
 import org.odk.collect.android.utilities.WidgetAppearanceUtils;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.zip.DataFormatException;
-
-import timber.log.Timber;
 
 public abstract class BaseCodeScannerFragment extends Fragment implements DecoratedBarcodeView.TorchListener {
     private CaptureManager capture;
