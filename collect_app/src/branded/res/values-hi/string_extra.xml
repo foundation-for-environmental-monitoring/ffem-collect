@@ -3,30 +3,26 @@
     <string name="copyright_message">कॉपीराइट © ffem</string>
     <string name="legal_information">कानूनी जानकारी</string>
     <string name="settings">सेटिंग्स</string>
-    <string name="general">General</string>
-    <string name="other">Other</string>
+    <string name="general">सामान्य</string>
+    <string name="other">अन्य</string>
     <string name="info">जानकारी</string>
     <string name="sign_in_to_account">अपने KoBoToolbox खाते में साइन इन करें</string>
     <string name="forgot">भूल गया?</string>
     <string name="sign_in">साइन इन करें</string>
     <string name="enter_username">कृपया उपयोगकर्तानाम डालें</string>
     <string name="enter_password">कृपया पासवर्ड दर्ज करें</string>
-    <string name="create_new_account">या खाता बनाएँ</string>
-    <string name="delete_forms">खाली या सहेजे गए फॉर्म को हटाएं</string>
-
-    <string name="server_credentials">सर्वर लॉगिन सेटिंग्स</string>
+    <string name="create_new_account">या एक खाता बनाएँ</string>
+    <string name="delete_forms">रिक्त या सहेजे गए फ़ॉर्म हटाएं</string>
+    <string name="server_credentials">सर्वर क्रेडेंशियल्स</string>
     <string name="outbox">आउटबॉक्स</string>
     <string name="app_not_found">ऐप नहीं मिला</string>
-    <string name="install_app">ffem Water or ffem Soil app is required for this question.\n\nInstall the appropriate app from Play store.</string>
+    <string name="install_app">आवश्यक एप्लिकेशन इंस्टॉल नहीं किया गया है।\n\nप्ले स्टोर से उपयुक्त ऐप इंस्टॉल करें।</string>
     <string name="go_to_play_store">Play store पर जाएं</string>
-    <string name="send_form">फॉर्म भेजें</string>
-    <string name="admin">एडमिन</string>
-
-    <!--Update-->
-    <string name="update">अद्यतन करें</string>
-    <string name="updateTitle">ऐप अपडेट करें</string>
-    <string name="updateAvailable">नया संस्करण उपलब्ध है। अपने कलेक्ट ऐप से अधिक लाभ प्राप्त करने के लिए अपडेट करें</string>
-    <string name="remindLater">बाद में</string>
-    <string name="continue_send">जारी रहना</string>
-
+    <string name="send_form">फॉर्म भजो</string>
+    <string name="admin">व्यवस्थापक</string>
+    <string name="delete_sent_forms">भेजे गए फ़ॉर्म हटाएं</string>
+    <string name="versionExpired">संस्करण समाप्त हो गया</string>
+    <string name="thisVersionHasExpired">ऐप का यह संस्करण समाप्त हो गया है।</string>
+    <string name="uninstallAndInstallFromStore">कृपया अनइंस्टॉल करें और फिर प्ले स्टोर से नवीनतम संस्करण को स्थापित करें।</string>
+    <string name="high_resolution_summary">उच्च-रिज़ॉल्यूशन वीडियो रिकॉर्डिंग सक्षम करें</string>
 </resources>

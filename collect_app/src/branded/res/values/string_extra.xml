@@ -23,13 +23,6 @@
 
     <string name="delete_sent_forms">Delete Sent Forms</string>
 
-    <!--Update-->
-    <string name="update">Update</string>
-    <string name="updateTitle">Update ffem Collect</string>
-    <string name="updateAvailable">New version available. Update to get the most out of your Collect app</string>
-    <string name="remindLater">Remind later</string>
-    <string name="continue_send">Continue</string>
-
     <!--Alerts-->
     <string name="versionExpired">Version expired</string>
     <string name="thisVersionHasExpired">This version of the app has expired.</string>

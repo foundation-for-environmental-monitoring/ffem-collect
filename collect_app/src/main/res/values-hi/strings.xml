@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
   <string name="show_password">पासवर्ड दिखायें </string>
   <string name="activity_not_found">%s:के नियंत्रण के लिए कोई गतिविधि नहीं  मिली</string>
   <string name="view_image">इमेज देखें</string>
@@ -195,6 +195,7 @@
   <string name="found_in_main">मुख्य मेनू से छुपाने के लिए अनचेक करें</string>
   <string name="found_in_settings">सामान्य सेटिंग्स से छुपाने के लिए अनचेक करें</string>
   <string name="form_forward">आगामी</string>
+  <string name="form_backward">वापस</string>
   <string name="navigation">पथ प्रदर्शन</string>
   <string name="swipe_navigation">क्षैतिज स्वाइप प्रयोग करें</string>
   <string name="buttons_navigation">आगे / पीछे बटन का प्रयोग करें</string>

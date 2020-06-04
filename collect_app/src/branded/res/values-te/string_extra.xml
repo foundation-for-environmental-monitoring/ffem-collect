@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="copyright_message">కాపీరైట్ © ffem</string>
+    <string name="legal_information">చట్టపరమైన సమాచారం</string>
+    <string name="settings">సెట్టింగులు</string>
+    <string name="general">జనరల్</string>
+    <string name="other">ఇతర</string>
+    <string name="info">సమాచారం</string>
+    <string name="sign_in_to_account">మీ KoBoToolbox ఖాతాకు సైన్ ఇన్ చేయండి</string>
+    <string name="forgot">మర్చిపోయారా?</string>
+    <string name="sign_in">సైన్ ఇన్ చేయండి</string>
+    <string name="enter_username">దయచేసి వినియోగదారు పేరును నమోదు చేయండి</string>
+    <string name="enter_password">దయచేసి పాస్‌వర్డ్‌ను నమోదు చేయండి</string>
+    <string name="create_new_account">లేదా ఖాతాను సృష్టించండి</string>
+    <string name="delete_forms">ఖాళీ లేదా సేవ్ చేసిన ఫారమ్‌లను తొలగించండి</string>
+    <string name="server_credentials">సర్వర్ ఆధారాలు</string>
+    <string name="outbox">ఔట్ బాక్స్</string>
+    <string name="app_not_found">అనువర్తనం కనుగొనబడలేదు</string>
+    <string name="install_app">అవసరమైన అనువర్తనం వ్యవస్థాపించబడలేదు.\n\nప్లే స్టోర్ నుండి తగిన అనువర్తనాన్ని ఇన్‌స్టాల్ చేయండి.</string>
+    <string name="go_to_play_store">ప్లే స్టోర్‌కు వెళ్లండి</string>
+    <string name="send_form">ఫారం పంపండి</string>
+    <string name="admin">అడ్మిన్</string>
+    <string name="delete_sent_forms">పంపిన ఫారమ్‌లను తొలగించండి</string>
+    <string name="versionExpired">సంస్కరణ గడువు ముగిసింది</string>
+    <string name="thisVersionHasExpired">అనువర్తనం యొక్క ఈ సంస్కరణ గడువు ముగిసింది.</string>
+    <string name="uninstallAndInstallFromStore">దయచేసి అన్‌ఇన్‌స్టాల్ చేసి, ఆపై ప్లే స్టోర్ నుండి తాజా వెర్షన్‌ను ఇన్‌స్టాల్ చేయండి.</string>
+    <string name="high_resolution_summary">అధిక రిజల్యూషన్ ఉన్న వీడియో రికార్డింగ్‌లను ప్రారంభించండి</string>
+</resources>

@@ -37,7 +37,7 @@ android {
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         archivesBaseName = 'collect'
-        resConfigs "en", "hi"
+        resConfigs "en", "hi", "kn", "te"
     }
 
     flavorDimensions "default"
