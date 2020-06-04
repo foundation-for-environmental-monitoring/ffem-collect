@@ -30,6 +30,7 @@
         android:id="@+id/menu_goto"
         android:icon="@drawable/ic_menu_goto"
         android:title="@string/view_hierarchy"
+        android:contentDescription="@string/view_hierarchy"
         app:showAsAction="always" />
 
     <item

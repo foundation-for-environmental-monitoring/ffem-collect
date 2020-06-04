@@ -87,12 +87,12 @@ import org.odk.collect.android.dao.helpers.InstancesDaoHelper;
 import org.odk.collect.android.events.ReadPhoneStatePermissionRxEvent;
 import org.odk.collect.android.events.RxEventBus;
 import org.odk.collect.android.exception.JavaRosaException;
-import org.odk.collect.android.formentry.FormLoadingDialogFragment;
-import org.odk.collect.android.formentry.ODKView;
-import org.odk.collect.android.formentry.QuitFormDialogFragment;
 import org.odk.collect.android.formentry.FormEntryMenuDelegate;
 import org.odk.collect.android.formentry.FormEntryViewModel;
 import org.odk.collect.android.formentry.FormIndexAnimationHandler;
+import org.odk.collect.android.formentry.FormLoadingDialogFragment;
+import org.odk.collect.android.formentry.ODKView;
+import org.odk.collect.android.formentry.QuitFormDialogFragment;
 import org.odk.collect.android.formentry.audit.AuditEvent;
 import org.odk.collect.android.formentry.audit.AuditUtils;
 import org.odk.collect.android.formentry.audit.ChangesReasonPromptDialogFragment;
@@ -136,7 +136,6 @@ import org.odk.collect.android.upload.AutoSendWorker;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.DestroyableLifecyleOwner;
 import org.odk.collect.android.utilities.DialogUtils;
-import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.FormNameUtils;
 import org.odk.collect.android.utilities.ImageConverter;
 import org.odk.collect.android.utilities.MediaUtils;
@@ -159,6 +158,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -2305,7 +2305,13 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     long start = System.currentTimeMillis();
                     Timber.i("calling formController.setLanguage");
                     try {
-                        formController.setLanguage(newLanguage);
+                        if (newLanguage != null) {
+                            formController.setLanguage(newLanguage);
+                        } else {
+                            String systemLanguage = Locale.getDefault().getDisplayLanguage(Locale.US)
+                                    + " (" + Locale.getDefault().getLanguage().substring(0, 2) + ")";
+                            formController.setLanguage(systemLanguage);
+                        }
                     } catch (Exception e) {
                         // if somehow we end up with a bad language, set it to the default
                         Timber.e("Ended up with a bad language. %s", newLanguage);
