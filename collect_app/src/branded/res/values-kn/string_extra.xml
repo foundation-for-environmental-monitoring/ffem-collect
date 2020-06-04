@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="copyright_message">ಕೃತಿಸ್ವಾಮ್ಯ © ffem</string>
+    <string name="legal_information">ಕಾನೂನು ಮಾಹಿತಿ</string>
+    <string name="settings">ಸಂಯೋಜನೆಗಳು</string>
+    <string name="general">ಜನರಲ್</string>
+    <string name="other">ಇತರೆ</string>
+    <string name="info">ಮಾಹಿತಿ</string>
+    <string name="sign_in_to_account">ನಿಮ್ಮ KoBoToolbox ಖಾತೆಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ</string>
+    <string name="forgot">ಮರೆತಿರುವಿರಾ?</string>
+    <string name="sign_in">ಸೈನ್ ಇನ್ ಮಾಡಿ</string>
+    <string name="enter_username">ದಯವಿಟ್ಟು ಬಳಕೆದಾರಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
+    <string name="enter_password">ದಯವಿಟ್ಟು ಪಾಸ್ವರ್ಡ್ ನಮೂದಿಸಿ</string>
+    <string name="create_new_account">ಅಥವಾ ಖಾತೆಯನ್ನು ರಚಿಸಿ</string>
+    <string name="delete_forms">ಖಾಲಿ ಅಥವಾ ಉಳಿಸಿದ ಫಾರ್ಮ್‌ಗಳನ್ನು ಅಳಿಸಿ</string>
+    <string name="server_credentials">ಸರ್ವರ್ ರುಜುವಾತುಗಳು</string>
+    <string name="outbox">ಔಟ್‌ಬಾಕ್ಸ್</string>
+    <string name="app_not_found">ಅಪ್ಲಿಕೇಶನ್ ಕಂಡುಬಂದಿಲ್ಲ</string>
+    <string name="install_app">ಅಗತ್ಯವಿರುವ ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಸ್ಥಾಪಿಸಲಾಗಿಲ್ಲ.\n\nಪ್ಲೇ ಸ್ಟೋರ್‌ನಿಂದ ಸೂಕ್ತವಾದ ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಸ್ಥಾಪಿಸಿ.</string>
+    <string name="go_to_play_store">ಪ್ಲೇ ಸ್ಟೋರ್‌ಗೆ ಹೋಗಿ</string>
+    <string name="send_form">ಫಾರ್ಮ್ ಕಳುಹಿಸಿ</string>
+    <string name="admin">ನಿರ್ವಹಣೆ</string>
+    <string name="delete_sent_forms">ಕಳುಹಿಸಿದ ಫಾರ್ಮ್‌ಗಳನ್ನು ಅಳಿಸಿ</string>
+    <string name="versionExpired">ಆವೃತ್ತಿ ಅವಧಿ ಮೀರಿದೆ</string>
+    <string name="thisVersionHasExpired">ಅಪ್ಲಿಕೇಶನ್‌ನ ಈ ಆವೃತ್ತಿ ಅವಧಿ ಮೀರಿದೆ.</string>
+    <string name="uninstallAndInstallFromStore">ದಯವಿಟ್ಟು ಅಸ್ಥಾಪಿಸಿ ಮತ್ತು ನಂತರ ಪ್ಲೇ ಸ್ಟೋರ್‌ನಿಂದ ಇತ್ತೀಚಿನ ಆವೃತ್ತಿಯನ್ನು ಸ್ಥಾಪಿಸಿ.</string>
+    <string name="high_resolution_summary">ಹೆಚ್ಚಿನ ರೆಸಲ್ಯೂಶನ್ ಹೊಂದಿರುವ ವೀಡಿಯೊ ರೆಕಾರ್ಡಿಂಗ್‌ಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ</string>
+</resources>
