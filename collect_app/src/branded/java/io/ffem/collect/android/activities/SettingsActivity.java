@@ -23,7 +23,7 @@ import org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialog;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminPreferencesActivity;
 import org.odk.collect.android.preferences.FormManagementPreferences;
-import org.odk.collect.android.preferences.ServerPreferences;
+import org.odk.collect.android.preferences.ServerPreferencesFragment;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.Objects;
@@ -70,7 +70,7 @@ public class SettingsActivity extends CollectAbstractActivity
                 .commit();
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.layoutServer, new ServerPreferences())
+                .replace(R.id.layoutServer, new ServerPreferencesFragment())
                 .commit();
 
         getFragmentManager().beginTransaction()
