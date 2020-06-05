@@ -22,6 +22,7 @@
     <string name="do_not_save">ಬದಲಾವಣೆಗಳನ್ನು ನಿರ್ಲಕ್ಷಿಸಿ</string>
     <string name="enter_data">ಖಾಲಿ ಫಾರ್ಮ್ ಅನ್ನು ಭರ್ತಿ ಮಾಡಿ</string>
     <string name="enter_data_button">ಖಾಲಿ ಫಾರ್ಮ್ ಭರ್ತಿ ಮಾಡಿ</string>
+    <string name="fetching_file">%1$s ಪಡೆಯಲಾಗುತ್ತಿದೆ.\n\n(ಫಾರ್ಮ್ %2$s / %3$s).</string>
     <string name="get_forms">ಖಾಲಿ ಫಾರ್ಮ್ ಪಡೆಯಿರಿ</string>
     <string name="get_location">ರೆಕಾರ್ಡ್ ಸ್ಥಳ</string>
     <string name="provider_disabled_error">ಕ್ಷಮಿಸಿ, ಸ್ಥಳ ಒದಗಿಸುವವರನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ!</string>
@@ -34,7 +35,7 @@
     <string name="location_provider_accuracy">ಬಳಸುವುದು %1$s. ನಿಖರತೆ %2$s ಮೀ.</string>
     <string name="location_accuracy">ನಿಖರತೆ %1$s ಮೀ</string>
     <string name="manage_files">ಉಳಿಸಿದ ಫಾರ್ಮ್ ಅನ್ನು ಅಳಿಸಿ</string>
-    <string name="mark_finished">ಫಾರ್ಮ್ ಅನ್ನು ಅಂತಿಮಗೊಳಿಸಿದಂತೆ ಗುರುತಿಸಿ</string>
+    <string name="mark_finished">ಫಾರ್ಮ್ ಅಂತಿಮಗೊಳಿಸಿ</string>
     <string name="noselect_error">ಕ್ಷಮಿಸಿ, ನೀವು ಯಾವುದೇ ಫಾರ್ಮ್‌ಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಿಲ್ಲ!</string>
     <string name="no_connection">ಯಾವುದೇ ನೆಟ್‌ವರ್ಕ್ ಸಂಪರ್ಕ ಲಭ್ಯವಿಲ್ಲ</string>
     <string name="no_items_display">ಪ್ರದರ್ಶಿಸಲು ಏನೂ ಲಭ್ಯವಿಲ್ಲ.</string>
@@ -58,14 +59,15 @@
     <string name="send_selected_data">ಆಯ್ಕೆಮಾಡಿದ ಕಳುಹಿಸಿ</string>
     <string name="view_sent_forms">ಕಳುಹಿಸಿದದನ್ನು ವೀಕ್ಷಿಸಿ</string>
     <string name="view_sent_forms_button">ಕಳುಹಿಸಿದ ಫಾರ್ಮ್ ಅನ್ನು ವೀಕ್ಷಿಸಿ (%s)</string>
-    <string name="server_auth_credentials">ಸರ್ವರ್‌ಗಾಗಿ ಅಮಾನ್ಯ ಬಳಕೆದಾರಹೆಸರು ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್:%s</string>
+    <string name="server_auth_credentials">ಸರ್ವರ್‌ಗಾಗಿ ಅಮಾನ್ಯ ಬಳಕೆದಾರಹೆಸರು ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್: %s</string>
     <string name="server_requires_auth">ಸರ್ವರ್‌ಗೆ ಸೈನ್ ಇನ್ ಅಗತ್ಯವಿದೆ</string>
     <string name="trigger">ಸರಿ. ದಯವಿಟ್ಟು ಮುಂದುವರಿಸಿ.</string>
     <string name="uploading_data">ಫಾರ್ಮ್ ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ</string>
     <string name="username">ಬಳಕೆದಾರ ಹೆಸರು</string>
     <string name="view_hierarchy">ಪ್ರಾಂಪ್ಟ್‌ಗೆ ಹೋಗಿ</string>
     <string name="keep_changes">ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸು</string>
-    <string name="success">Success</string>
+    <string name="form_download_progress">%1$s. ಮಾಧ್ಯಮ ಫೈಲ್‌ಗಳನ್ನು ಪಡೆಯುವುದು\n\n%3$s ರಲ್ಲಿ %2$s</string>
+    <string name="success">ಯಶಸ್ಸು</string>
     <string name="save_form_as">ಈ ಫಾರ್ಮ್ ಅನ್ನು ಹೆಸರಿಸಿ</string>
     <string name="save_as_error">ಉಳಿಸಿದ ಹೆಸರು ಖಾಲಿಯಾಗಿರಬಾರದು!</string>
     <string name="added_on_date_at_time">ಸೇರಿಸಲಾಗಿದೆ: HH:mm, EEE, MMM dd, yyyy</string>
@@ -76,6 +78,7 @@
     <string name="form_forward">ಮುಂದೆ</string>
     <string name="form_backward">ಹಿಂದೆ</string>
     <string name="survey_loading_reading_form_message">ಫಾರ್ಮ್ ವ್ಯಾಖ್ಯಾನವನ್ನು ಓದುವುದು…</string>
+    <string name="survey_loading_reading_data_message">ಸಮೀಕ್ಷೆಯ ಡೇಟಾವನ್ನು ಓದುವುದು…</string>
     <string name="odk_permissions_fail">ಸ್ವಯಂ ಕಳುಹಿಸುವಿಕೆ ಅನುಮತಿ ವಿಫಲವಾಗಿದೆ, ದಯವಿಟ್ಟು ನೀವು ಅಗತ್ಯವಿರುವ ಎಲ್ಲ ಅನುಮತಿಗಳನ್ನು ನೀಡಿದ್ದೀರಿ ಎಂದು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ</string>
     <string name="odk_auto_note">ffem ಸಂಗ್ರಹಿಸಿ - ಸ್ವಯಂ ಕಳುಹಿಸಿ</string>
     <string name="about_preferences">ಬಗ್ಗೆ</string>

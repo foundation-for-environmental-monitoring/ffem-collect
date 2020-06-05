@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
   <string name="show_password">పాస్ వర్డ్ చూపించు </string>
   <string name="activity_not_found">చెయ్యడానికి ఏమి యాక్టివిటీ  లేదు : %s</string>
   <string name="view_image">ఫోటో ని చూడండి </string>
@@ -112,7 +112,7 @@
   <string name="send_selected_data_sms">పంపండి (సంక్షిప్త సమాచారం)</string>
   <string name="view_sent_forms">పంపిన ఫారంను చూడండి</string>
   <string name="view_sent_forms_button">పంపిన ఫారం లను చూడండి (%s)</string>
-  <string name="server_auth_credentials">సర్వర్ కోసం ఉపయోగించిన యూజర్ పేరు , పాస్ వర్డు సరైనవి కావు:%s</string>
+  <string name="server_auth_credentials">సర్వర్ కోసం ఉపయోగించిన యూజర్ పేరు , పాస్ వర్డు సరైనవి కావు: %s</string>
   <string name="server_requires_auth">సర్వర్‌కు ధృవీకరణ తప్పనిసరి</string>
   <string name="server_url">URL</string>
   <string name="server_preferences">సర్వర్ సెట్టింగులు</string>

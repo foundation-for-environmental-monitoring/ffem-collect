@@ -111,7 +111,7 @@
   <string name="uploading_data">फॉर्म भेजा जा रहा हे</string>
   <string name="url_error">क्षमा करें,अमान्य URL!</string>
   <string name="username">प्रयोगकर्ता नाम </string>
-  <string name="view_hierarchy">Prompt पर जायें</string>
+  <string name="view_hierarchy">प्रॉम्प्ट पर जाएं</string>
   <string name="general_preferences">सामान्य सेटिंग्स</string>
   <string name="client">यूजर इंटरफेस</string>
   <string name="show_splash_summary">एप्लिकेशन प्रारंभ होने पर दिखाता है </string>
