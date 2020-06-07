@@ -12,12 +12,12 @@ import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.MainMenuActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.PermissionListener;
@@ -37,7 +37,7 @@ import static android.view.View.GONE;
 /**
  * Sign in screen shown on app first launch
  */
-public class SignInActivity extends AppCompatActivity {
+public class SignInActivity extends CollectAbstractActivity {
     private static final boolean EXIT = true;
     private static final String MASK = "**********";
     @Inject
@@ -243,12 +243,10 @@ public class SignInActivity extends AppCompatActivity {
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setMessage(errorMsg);
         DialogInterface.OnClickListener errorListener = (dialog, i) -> {
-            switch (i) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    if (shouldExit) {
-                        finish();
-                    }
-                    break;
+            if (i == DialogInterface.BUTTON_POSITIVE) {
+                if (shouldExit) {
+                    finish();
+                }
             }
         };
         alertDialog.setCancelable(false);
@@ -258,10 +256,8 @@ public class SignInActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                break;
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }

@@ -55,6 +55,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.network.NetworkStateProvider;
+import org.odk.collect.android.storage.migration.StorageMigrationService;
 import org.odk.collect.material.MaterialBanner;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminPasswordDialogFragment;
@@ -737,7 +738,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
     private void onStorageMigrationFinish(StorageMigrationResult result) {
         if (result == StorageMigrationResult.SUCCESS) {
             DialogUtils.dismissDialog(StorageMigrationDialog.class, getSupportFragmentManager());
-            displayBannerWithSuccessStorageMigrationResult();
+//            displayBannerWithSuccessStorageMigrationResult();
         } else {
             StorageMigrationDialog dialog = showStorageMigrationDialog();
 
@@ -811,6 +812,8 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
 
         // Stop if the app version has expired
         ApkHelper.isAppVersionExpired(this);
+
+        startStorageMigrationService();
     }
 
     private void displayExpiryInfo() {
@@ -860,5 +863,12 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         switchLayoutForDiagnosticOrUserMode();
 
         changeActionBarStyleBasedOnCurrentMode();
+    }
+
+    private void startStorageMigrationService() {
+        if (!storageStateProvider.isScopedStorageUsed()) {
+            Intent intent = new Intent(this, StorageMigrationService.class);
+            this.startService(intent);
+        }
     }
 }

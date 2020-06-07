@@ -1,600 +1,534 @@
-<?xml version="1.0" encoding="utf-8"?>
-<h:html xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa"
-    xmlns="http://www.w3.org/2002/xforms">
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa">
   <h:head>
     <h:title>Automated Testing</h:title>
     <model>
       <itext>
-        <translation lang="Hindi (hi)">
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54/Arsenic_0_500:label">
-            <value>आर्सेनिक (0 - 500)</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54/Arsenic_0_4000:label">
-            <value>आर्सेनिक (0 - 4000)</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ro1iv44:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Boron:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Potassium_001:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/pH:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Fluoride:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57/Total_Iron:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Potassium:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Phosphorous:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/Calcium_and_Magnesium:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67/Carbonate:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Nitrogen:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67/Calcium_and_Magnesium_001:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/Nitrate:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Chromium:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Arsenic_III:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ro1iv44/Fluoride_Lite:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57/Phosphate:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/pH_001:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/Free_Chlorine:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Iron:label">
-            <value>-</value>
-          </text>
-        </translation>
-        <translation lang="Telugu (te)">
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54/Arsenic_0_500:label">
-            <value>ఆర్సెనిక్ (0 - 500)</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54/Arsenic_0_4000:label">
-            <value>ఆర్సెనిక్ (0 - 4000)</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ro1iv44:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Boron:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Potassium_001:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/pH:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Fluoride:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57/Total_Iron:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Potassium:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Phosphorous:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/Calcium_and_Magnesium:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67/Carbonate:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Nitrogen:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67/Calcium_and_Magnesium_001:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/Nitrate:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Chromium:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Arsenic_III:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ro1iv44/Fluoride_Lite:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57/Phosphate:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/pH_001:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/Free_Chlorine:label">
-            <value>-</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Iron:label">
-            <value>-</value>
-          </text>
-        </translation>
         <translation lang="Kannada (kn)">
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54/Arsenic_0_500:label">
-            <value>ಆರ್ಸೆನಿಕ್ (0 - 500)</value>
+          <text id="/data/group_hw5xj60/Available_Potassium_001:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54/Arsenic_0_4000:label">
+          <text id="/data/group_hr02n72:label">
+            <value></value>
+          </text>
+          <text id="/data/group_ro1iv44/Fluoride_Lite:label">
+            <value></value>
+          </text>
+          <text id="/data/group_hr02n72/Available_Boron:label">
+            <value></value>
+          </text>
+          <text id="/data/group_ep33t57/Total_Iron:label">
+            <value></value>
+          </text>
+          <text id="/data/Calcium_and_Magnesium:label">
+            <value></value>
+          </text>
+          <text id="/data/group_hw5xj60/Available_Nitrogen:label">
+            <value></value>
+          </text>
+          <text id="/data/group_hw5xj60/pH:label">
+            <value></value>
+          </text>
+          <text id="/data/group_ro1iv44:label">
+            <value></value>
+          </text>
+          <text id="/data/group_zc3re54/Arsenic_0_4000:label">
             <value>ಆರ್ಸೆನಿಕ್ (0 - 4000)</value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ro1iv44:label">
-            <value>-</value>
+          <text id="/data/group_hw5xj60:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25:label">
-            <value>-</value>
+          <text id="/data/group_et5co41/pH_001:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Boron:label">
-            <value>-</value>
+          <text id="/data/group_pg7xj25/Arsenic_III:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Potassium_001:label">
-            <value>-</value>
+          <text id="/data/group_zc3re54:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54:label">
-            <value>-</value>
+          <text id="/data/group_ep33t57:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/pH:label">
-            <value>-</value>
+          <text id="/data/group_ep33t57/Phosphate:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Fluoride:label">
-            <value>-</value>
+          <text id="/data/group_xx6id67:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57/Total_Iron:label">
-            <value>-</value>
+          <text id="/data/group_pg7xj25:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41:label">
-            <value>-</value>
+          <text id="/data/group_et5co41/Free_Chlorine:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57:label">
-            <value>-</value>
+          <text id="/data/group_et5co41/Nitrate:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Potassium:label">
-            <value>-</value>
+          <text id="/data/group_pg7xj25/Fluoride:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Phosphorous:label">
-            <value>-</value>
+          <text id="/data/group_xx6id67/Carbonate:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/Calcium_and_Magnesium:label">
-            <value>-</value>
+          <text id="/data/group_hr02n72/Available_Potassium:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67/Carbonate:label">
-            <value>-</value>
+          <text id="/data/group_hr02n72/Available_Iron:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Nitrogen:label">
-            <value>-</value>
+          <text id="/data/group_xx6id67/Calcium_and_Magnesium_001:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60:label">
-            <value>-</value>
+          <text id="/data/group_zc3re54/Arsenic_0_500:label">
+            <value>ಆರ್ಸೆನಿಕ್ (0 - 500)</value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72:label">
-            <value>-</value>
+          <text id="/data/group_hw5xj60/Available_Phosphorous:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67/Calcium_and_Magnesium_001:label">
-            <value>-</value>
+          <text id="/data/group_pg7xj25/Chromium:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/Nitrate:label">
-            <value>-</value>
+          <text id="/data/group_et5co41:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Chromium:label">
-            <value>-</value>
+        </translation>
+        <translation lang="Hindi (hi)">
+          <text id="/data/group_hw5xj60/Available_Potassium_001:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Arsenic_III:label">
-            <value>-</value>
+          <text id="/data/group_hr02n72:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ro1iv44/Fluoride_Lite:label">
-            <value>-</value>
+          <text id="/data/group_ro1iv44/Fluoride_Lite:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57/Phosphate:label">
-            <value>-</value>
+          <text id="/data/group_hr02n72/Available_Boron:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/pH_001:label">
-            <value>-</value>
+          <text id="/data/group_ep33t57/Total_Iron:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67:label">
-            <value>-</value>
+          <text id="/data/Calcium_and_Magnesium:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/Free_Chlorine:label">
-            <value>-</value>
+          <text id="/data/group_hw5xj60/Available_Nitrogen:label">
+            <value></value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Iron:label">
-            <value>-</value>
+          <text id="/data/group_hw5xj60/pH:label">
+            <value></value>
+          </text>
+          <text id="/data/group_ro1iv44:label">
+            <value></value>
+          </text>
+          <text id="/data/group_zc3re54/Arsenic_0_4000:label">
+            <value>आर्सेनिक (0 - 4000)</value>
+          </text>
+          <text id="/data/group_hw5xj60:label">
+            <value></value>
+          </text>
+          <text id="/data/group_et5co41/pH_001:label">
+            <value></value>
+          </text>
+          <text id="/data/group_pg7xj25/Arsenic_III:label">
+            <value></value>
+          </text>
+          <text id="/data/group_zc3re54:label">
+            <value></value>
+          </text>
+          <text id="/data/group_ep33t57:label">
+            <value></value>
+          </text>
+          <text id="/data/group_ep33t57/Phosphate:label">
+            <value></value>
+          </text>
+          <text id="/data/group_xx6id67:label">
+            <value></value>
+          </text>
+          <text id="/data/group_pg7xj25:label">
+            <value></value>
+          </text>
+          <text id="/data/group_et5co41/Free_Chlorine:label">
+            <value></value>
+          </text>
+          <text id="/data/group_et5co41/Nitrate:label">
+            <value></value>
+          </text>
+          <text id="/data/group_pg7xj25/Fluoride:label">
+            <value></value>
+          </text>
+          <text id="/data/group_xx6id67/Carbonate:label">
+            <value></value>
+          </text>
+          <text id="/data/group_hr02n72/Available_Potassium:label">
+            <value></value>
+          </text>
+          <text id="/data/group_hr02n72/Available_Iron:label">
+            <value></value>
+          </text>
+          <text id="/data/group_xx6id67/Calcium_and_Magnesium_001:label">
+            <value></value>
+          </text>
+          <text id="/data/group_zc3re54/Arsenic_0_500:label">
+            <value>आर्सेनिक (0 - 500)</value>
+          </text>
+          <text id="/data/group_hw5xj60/Available_Phosphorous:label">
+            <value></value>
+          </text>
+          <text id="/data/group_pg7xj25/Chromium:label">
+            <value></value>
+          </text>
+          <text id="/data/group_et5co41:label">
+            <value></value>
           </text>
         </translation>
         <translation default="true()" lang="English (en)">
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54/Arsenic_0_500:label">
-            <value>Arsenic (0 - 500)</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54/Arsenic_0_4000:label">
-            <value>Arsenic (0 - 4000)</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ro1iv44:label">
-            <value>Lite</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25:label">
-            <value>Water Tests 1</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Boron:label">
-            <value>Available Boron</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Potassium_001:label">
+          <text id="/data/group_hw5xj60/Available_Potassium_001:label">
             <value>Available Potassium</value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54:label">
-            <value>Arsenic</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/pH:label">
-            <value>pH</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Fluoride:label">
-            <value>Fluoride</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57/Total_Iron:label">
-            <value>Total Iron</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41:label">
-            <value>Water Tests 2</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57:label">
-            <value>Water Tests 3</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Potassium:label">
-            <value>Available Potassium</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Phosphorous:label">
-            <value>Available Phosphorous</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/Calcium_and_Magnesium:label">
-            <value>Calcium and Magnesium</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67/Carbonate:label">
-            <value>Carbonate</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Nitrogen:label">
-            <value>Available Nitrogen</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60:label">
-            <value>Soil Tests 1</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72:label">
+          <text id="/data/group_hr02n72:label">
             <value>Soil Tests 2</value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67/Calcium_and_Magnesium_001:label">
-            <value>Calcium and Magnesium</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/Nitrate:label">
-            <value>Nitrate</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Chromium:label">
-            <value>Chromium</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Arsenic_III:label">
-            <value>Arsenic (III)</value>
-          </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ro1iv44/Fluoride_Lite:label">
+          <text id="/data/group_ro1iv44/Fluoride_Lite:label">
             <value>Fluoride Lite</value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57/Phosphate:label">
-            <value>Phosphate</value>
+          <text id="/data/group_hr02n72/Available_Boron:label">
+            <value>Available Boron</value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/pH_001:label">
+          <text id="/data/group_ep33t57/Total_Iron:label">
+            <value>Total Iron</value>
+          </text>
+          <text id="/data/Calcium_and_Magnesium:label">
+            <value>Calcium and Magnesium</value>
+          </text>
+          <text id="/data/group_hw5xj60/Available_Nitrogen:label">
+            <value>Available Nitrogen</value>
+          </text>
+          <text id="/data/group_hw5xj60/pH:label">
             <value>pH</value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67:label">
+          <text id="/data/group_ro1iv44:label">
+            <value>Lite</value>
+          </text>
+          <text id="/data/group_zc3re54/Arsenic_0_4000:label">
+            <value>Arsenic (0 - 4000)</value>
+          </text>
+          <text id="/data/group_hw5xj60:label">
+            <value>Soil Tests 1</value>
+          </text>
+          <text id="/data/group_et5co41/pH_001:label">
+            <value>pH</value>
+          </text>
+          <text id="/data/group_pg7xj25/Arsenic_III:label">
+            <value>Arsenic (III)</value>
+          </text>
+          <text id="/data/group_zc3re54:label">
+            <value>Arsenic</value>
+          </text>
+          <text id="/data/group_ep33t57:label">
+            <value>Water Tests 3</value>
+          </text>
+          <text id="/data/group_ep33t57/Phosphate:label">
+            <value>Phosphate</value>
+          </text>
+          <text id="/data/group_xx6id67:label">
             <value>Water Tests</value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/Free_Chlorine:label">
+          <text id="/data/group_pg7xj25:label">
+            <value>Water Tests 1</value>
+          </text>
+          <text id="/data/group_et5co41/Free_Chlorine:label">
             <value>Free Chlorine</value>
           </text>
-          <text id="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Iron:label">
+          <text id="/data/group_et5co41/Nitrate:label">
+            <value>Nitrate</value>
+          </text>
+          <text id="/data/group_pg7xj25/Fluoride:label">
+            <value>Fluoride</value>
+          </text>
+          <text id="/data/group_xx6id67/Carbonate:label">
+            <value>Carbonate</value>
+          </text>
+          <text id="/data/group_hr02n72/Available_Potassium:label">
+            <value>Available Potassium</value>
+          </text>
+          <text id="/data/group_hr02n72/Available_Iron:label">
             <value>Available Iron</value>
+          </text>
+          <text id="/data/group_xx6id67/Calcium_and_Magnesium_001:label">
+            <value>Calcium and Magnesium</value>
+          </text>
+          <text id="/data/group_zc3re54/Arsenic_0_500:label">
+            <value>Arsenic (0 - 500)</value>
+          </text>
+          <text id="/data/group_hw5xj60/Available_Phosphorous:label">
+            <value>Available Phosphorous</value>
+          </text>
+          <text id="/data/group_pg7xj25/Chromium:label">
+            <value>Chromium</value>
+          </text>
+          <text id="/data/group_et5co41:label">
+            <value>Water Tests 2</value>
+          </text>
+        </translation>
+        <translation lang="Telugu (te)">
+          <text id="/data/group_hw5xj60/Available_Potassium_001:label">
+            <value></value>
+          </text>
+          <text id="/data/group_hr02n72:label">
+            <value></value>
+          </text>
+          <text id="/data/group_ro1iv44/Fluoride_Lite:label">
+            <value></value>
+          </text>
+          <text id="/data/group_hr02n72/Available_Boron:label">
+            <value></value>
+          </text>
+          <text id="/data/group_ep33t57/Total_Iron:label">
+            <value></value>
+          </text>
+          <text id="/data/Calcium_and_Magnesium:label">
+            <value></value>
+          </text>
+          <text id="/data/group_hw5xj60/Available_Nitrogen:label">
+            <value></value>
+          </text>
+          <text id="/data/group_hw5xj60/pH:label">
+            <value></value>
+          </text>
+          <text id="/data/group_ro1iv44:label">
+            <value></value>
+          </text>
+          <text id="/data/group_zc3re54/Arsenic_0_4000:label">
+            <value>ఆర్సెనిక్ (0 - 4000)</value>
+          </text>
+          <text id="/data/group_hw5xj60:label">
+            <value></value>
+          </text>
+          <text id="/data/group_et5co41/pH_001:label">
+            <value></value>
+          </text>
+          <text id="/data/group_pg7xj25/Arsenic_III:label">
+            <value></value>
+          </text>
+          <text id="/data/group_zc3re54:label">
+            <value></value>
+          </text>
+          <text id="/data/group_ep33t57:label">
+            <value></value>
+          </text>
+          <text id="/data/group_ep33t57/Phosphate:label">
+            <value></value>
+          </text>
+          <text id="/data/group_xx6id67:label">
+            <value></value>
+          </text>
+          <text id="/data/group_pg7xj25:label">
+            <value></value>
+          </text>
+          <text id="/data/group_et5co41/Free_Chlorine:label">
+            <value></value>
+          </text>
+          <text id="/data/group_et5co41/Nitrate:label">
+            <value></value>
+          </text>
+          <text id="/data/group_pg7xj25/Fluoride:label">
+            <value></value>
+          </text>
+          <text id="/data/group_xx6id67/Carbonate:label">
+            <value></value>
+          </text>
+          <text id="/data/group_hr02n72/Available_Potassium:label">
+            <value></value>
+          </text>
+          <text id="/data/group_hr02n72/Available_Iron:label">
+            <value></value>
+          </text>
+          <text id="/data/group_xx6id67/Calcium_and_Magnesium_001:label">
+            <value></value>
+          </text>
+          <text id="/data/group_zc3re54/Arsenic_0_500:label">
+            <value>ఆర్సెనిక్ (0 - 500)</value>
+          </text>
+          <text id="/data/group_hw5xj60/Available_Phosphorous:label">
+            <value></value>
+          </text>
+          <text id="/data/group_pg7xj25/Chromium:label">
+            <value></value>
+          </text>
+          <text id="/data/group_et5co41:label">
+            <value></value>
           </text>
         </translation>
       </itext>
       <instance>
-        <akB9s9T6MVzFZPkvWCc5wB id="akB9s9T6MVzFZPkvWCc5wB" version="vPVE57Azn2BrToeG2aVoJr">
-          <formhub>
-            <uuid />
-          </formhub>
-          <start />
-          <end />
-          <today />
-          <username />
-          <deviceid />
+        <data id="snapshot_xml">
+          <start/>
+          <end/>
           <group_ro1iv44>
-            <Fluoride_Lite />
+            <Fluoride_Lite/>
           </group_ro1iv44>
           <group_zc3re54>
-            <Arsenic_0_500 />
-            <Arsenic_0_4000 />
+            <Arsenic_0_500/>
+            <Arsenic_0_4000/>
           </group_zc3re54>
           <group_hw5xj60>
-            <pH />
+            <pH/>
             <Available_Nitrogen>5.5</Available_Nitrogen>
             <Available_Phosphorous>11.2</Available_Phosphorous>
             <Available_Potassium_001>15.78</Available_Potassium_001>
           </group_hw5xj60>
           <group_hr02n72>
-            <Available_Potassium />
-            <Available_Boron />
-            <Available_Iron />
+            <Available_Potassium/>
+            <Available_Boron/>
+            <Available_Iron/>
           </group_hr02n72>
-          <Calcium_and_Magnesium />
+          <Calcium_and_Magnesium/>
           <group_xx6id67>
-            <Calcium_and_Magnesium_001 />
-            <Carbonate />
+            <Calcium_and_Magnesium_001/>
+            <Carbonate/>
           </group_xx6id67>
           <group_pg7xj25>
-            <Arsenic_III />
-            <Chromium />
-            <Fluoride />
+            <Arsenic_III/>
+            <Chromium/>
+            <Fluoride/>
           </group_pg7xj25>
           <group_et5co41>
-            <Free_Chlorine />
-            <Nitrate />
-            <pH_001 />
+            <Free_Chlorine/>
+            <Nitrate/>
+            <pH_001/>
           </group_et5co41>
           <group_ep33t57>
-            <Phosphate />
-            <Total_Iron />
+            <Phosphate/>
+            <Total_Iron/>
           </group_ep33t57>
-          <__version__ />
-          <_version_ />
+          <__version__/>
           <meta>
-            <instanceID />
+            <instanceID/>
           </meta>
-        </akB9s9T6MVzFZPkvWCc5wB>
+        </data>
       </instance>
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/start" type="dateTime" jr:preload="timestamp"
-          jr:preloadParams="start" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/end" type="dateTime" jr:preload="timestamp"
-          jr:preloadParams="end" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/today" type="date" jr:preload="date"
-          jr:preloadParams="today" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/username" type="string" jr:preload="property"
-          jr:preloadParams="username" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/deviceid" type="string" jr:preload="property"
-          jr:preloadParams="deviceid" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_ro1iv44" required="false()" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_ro1iv44/Fluoride_Lite" required="false()"
-          type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54" required="false()" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54/Arsenic_0_500" required="false()"
-          type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54/Arsenic_0_4000" required="false()"
-          type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60" required="false()" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/pH" required="false()" type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Nitrogen" required="false()"
-          type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Phosphorous" required="false()"
-          type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Potassium_001"
-          required="false()" type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72" required="false()" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Potassium" required="false()"
-          type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Boron" required="false()"
-          type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Iron" required="false()"
-          type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/Calcium_and_Magnesium" required="false()"
-          type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67" required="false()" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67/Calcium_and_Magnesium_001"
-          required="false()" type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67/Carbonate" required="false()"
-          type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25" required="false()" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Arsenic_III" required="false()"
-          type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Chromium" required="false()"
-          type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Fluoride" required="false()"
-          type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41" required="false()" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/Free_Chlorine" required="false()"
-          type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/Nitrate" required="false()"
-          type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/pH_001" required="false()"
-          type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57" required="false()" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57/Phosphate" required="false()"
-          type="string" />
-      <bind nodeset="/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57/Total_Iron" required="false()"
-          type="string" />
-      <bind calculate="'vkMFBR8pdkXJJJTo4fLNBT'" nodeset="/akB9s9T6MVzFZPkvWCc5wB/__version__"
-          required="false()" type="string" />
-      <bind calculate="'vPVE57Azn2BrToeG2aVoJr'" nodeset="/akB9s9T6MVzFZPkvWCc5wB/_version_"
-          type="string" />
-      <bind calculate="concat('uuid:', uuid())" nodeset="/akB9s9T6MVzFZPkvWCc5wB/meta/instanceID"
-          readonly="true()" type="string" />
-      <bind calculate="'f8914b8f7d4a48ffa8334e15fe87e37e'"
-          nodeset="/akB9s9T6MVzFZPkvWCc5wB/formhub/uuid" type="string" />
+      <bind jr:preload="timestamp" jr:preloadParams="start" nodeset="/data/start" type="dateTime"/>
+      <bind jr:preload="timestamp" jr:preloadParams="end" nodeset="/data/end" type="dateTime"/>
+      <bind nodeset="/data/group_ro1iv44" required="false()"/>
+      <bind nodeset="/data/group_ro1iv44/Fluoride_Lite" required="false()" type="string"/>
+      <bind nodeset="/data/group_zc3re54" required="false()"/>
+      <bind nodeset="/data/group_zc3re54/Arsenic_0_500" required="false()" type="string"/>
+      <bind nodeset="/data/group_zc3re54/Arsenic_0_4000" required="false()" type="string"/>
+      <bind nodeset="/data/group_hw5xj60" required="false()"/>
+      <bind nodeset="/data/group_hw5xj60/pH" required="false()" type="string"/>
+      <bind nodeset="/data/group_hw5xj60/Available_Nitrogen" required="false()" type="string"/>
+      <bind nodeset="/data/group_hw5xj60/Available_Phosphorous" required="false()" type="string"/>
+      <bind nodeset="/data/group_hw5xj60/Available_Potassium_001" required="false()" type="string"/>
+      <bind nodeset="/data/group_hr02n72" required="false()"/>
+      <bind nodeset="/data/group_hr02n72/Available_Potassium" required="false()" type="string"/>
+      <bind nodeset="/data/group_hr02n72/Available_Boron" required="false()" type="string"/>
+      <bind nodeset="/data/group_hr02n72/Available_Iron" required="false()" type="string"/>
+      <bind nodeset="/data/Calcium_and_Magnesium" required="false()" type="string"/>
+      <bind nodeset="/data/group_xx6id67" required="false()"/>
+      <bind nodeset="/data/group_xx6id67/Calcium_and_Magnesium_001" required="false()" type="string"/>
+      <bind nodeset="/data/group_xx6id67/Carbonate" required="false()" type="string"/>
+      <bind nodeset="/data/group_pg7xj25" required="false()"/>
+      <bind nodeset="/data/group_pg7xj25/Arsenic_III" required="false()" type="string"/>
+      <bind nodeset="/data/group_pg7xj25/Chromium" required="false()" type="string"/>
+      <bind nodeset="/data/group_pg7xj25/Fluoride" required="false()" type="string"/>
+      <bind nodeset="/data/group_et5co41" required="false()"/>
+      <bind nodeset="/data/group_et5co41/Free_Chlorine" required="false()" type="string"/>
+      <bind nodeset="/data/group_et5co41/Nitrate" required="false()" type="string"/>
+      <bind nodeset="/data/group_et5co41/pH_001" required="false()" type="string"/>
+      <bind nodeset="/data/group_ep33t57" required="false()"/>
+      <bind nodeset="/data/group_ep33t57/Phosphate" required="false()" type="string"/>
+      <bind nodeset="/data/group_ep33t57/Total_Iron" required="false()" type="string"/>
+      <bind calculate="'vkMFBR8pdkXJJJTo4fLNBT'" nodeset="/data/__version__" required="false()" type="string"/>
+      <bind calculate="concat('uuid:', uuid())" nodeset="/data/meta/instanceID" readonly="true()" type="string"/>
     </model>
   </h:head>
   <h:body>
-    <group appearance="field-list" ref="/akB9s9T6MVzFZPkvWCc5wB/group_ro1iv44">
-      <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_ro1iv44:label')" />
-      <input appearance="ex:io.ffem.lite(testId='&quot;f0f3c1dd-89af-49f1-83e7-bcc31cb6115&quot;')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_ro1iv44/Fluoride_Lite">
-        <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_ro1iv44/Fluoride_Lite:label')" />
+    <group appearance="field-list" ref="/data/group_ro1iv44">
+      <label ref="jr:itext('/data/group_ro1iv44:label')"/>
+      <input appearance="ex:io.ffem.lite(testId='&quot;f0f3c1dd-89af-49f1-83e7-bcc31cb6115&quot;')" ref="/data/group_ro1iv44/Fluoride_Lite">
+        <label ref="jr:itext('/data/group_ro1iv44/Fluoride_Lite:label')"/>
       </input>
     </group>
-    <group appearance="field-list" ref="/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54">
-      <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54:label')" />
-      <input appearance="ex:io.ffem.water(testId='32b6d11b-c7f3-475f-adf9-32d9b8f4aecf')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54/Arsenic_0_500">
-        <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54/Arsenic_0_500:label')" />
+    <group appearance="field-list" ref="/data/group_zc3re54">
+      <label ref="jr:itext('/data/group_zc3re54:label')"/>
+      <input appearance="ex:io.ffem.water(testId='32b6d11b-c7f3-475f-adf9-32d9b8f4aecf')" ref="/data/group_zc3re54/Arsenic_0_500">
+        <label ref="jr:itext('/data/group_zc3re54/Arsenic_0_500:label')"/>
       </input>
-      <input appearance="ex:io.ffem.water(testId='beca9731-63f4-434f-a3c2-ac33b44f9992')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54/Arsenic_0_4000">
-        <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_zc3re54/Arsenic_0_4000:label')" />
+      <input appearance="ex:io.ffem.water(testId='beca9731-63f4-434f-a3c2-ac33b44f9992')" ref="/data/group_zc3re54/Arsenic_0_4000">
+        <label ref="jr:itext('/data/group_zc3re54/Arsenic_0_4000:label')"/>
       </input>
     </group>
-    <group appearance="field-list" ref="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60">
-      <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60:label')" />
-      <input appearance="ex:io.ffem.soil(testId='485a0c0a-0af5-40bc-baee-f5f0b03ff739')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/pH">
-        <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/pH:label')" />
+    <group appearance="field-list" ref="/data/group_hw5xj60">
+      <label ref="jr:itext('/data/group_hw5xj60:label')"/>
+      <input appearance="ex:io.ffem.soil(testId='485a0c0a-0af5-40bc-baee-f5f0b03ff739')" ref="/data/group_hw5xj60/pH">
+        <label ref="jr:itext('/data/group_hw5xj60/pH:label')"/>
       </input>
-      <input appearance="ex:io.ffem.soil(testId='8e7badf4-3c7e-4c45-9cb2-0810ffaa8c26')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Nitrogen">
-        <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Nitrogen:label')" />
+      <input appearance="ex:io.ffem.soil(testId='8e7badf4-3c7e-4c45-9cb2-0810ffaa8c26')" ref="/data/group_hw5xj60/Available_Nitrogen">
+        <label ref="jr:itext('/data/group_hw5xj60/Available_Nitrogen:label')"/>
       </input>
-      <input appearance="ex:io.ffem.soil(testId='ddd64497-43e0-4289-a84f-6890ff80cf20')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Phosphorous">
-        <label
-            ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Phosphorous:label')" />
+      <input appearance="ex:io.ffem.soil(testId='ddd64497-43e0-4289-a84f-6890ff80cf20')" ref="/data/group_hw5xj60/Available_Phosphorous">
+        <label ref="jr:itext('/data/group_hw5xj60/Available_Phosphorous:label')"/>
       </input>
-      <input appearance="ex:io.ffem.soil(testId='ddd64497-43e0-4289-a84f-6890ff80cf20')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Potassium_001">
-        <label
-            ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_hw5xj60/Available_Potassium_001:label')" />
+      <input appearance="ex:io.ffem.soil(testId='ddd64497-43e0-4289-a84f-6890ff80cf20')" ref="/data/group_hw5xj60/Available_Potassium_001">
+        <label ref="jr:itext('/data/group_hw5xj60/Available_Potassium_001:label')"/>
       </input>
     </group>
-    <group appearance="field-list" ref="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72">
-      <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72:label')" />
-      <input appearance="ex:io.ffem.soil(testId='0035a4fc-6b9b-4b12-975f-3459c7fdcda3')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Potassium">
-        <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Potassium:label')" />
+    <group appearance="field-list" ref="/data/group_hr02n72">
+      <label ref="jr:itext('/data/group_hr02n72:label')"/>
+      <input appearance="ex:io.ffem.soil(testId='0035a4fc-6b9b-4b12-975f-3459c7fdcda3')" ref="/data/group_hr02n72/Available_Potassium">
+        <label ref="jr:itext('/data/group_hr02n72/Available_Potassium:label')"/>
       </input>
-      <input appearance="ex:io.ffem.soil(testId='29e609a0-0f57-4365-a4eb-4eb84c61c9ab')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Boron">
-        <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Boron:label')" />
+      <input appearance="ex:io.ffem.soil(testId='29e609a0-0f57-4365-a4eb-4eb84c61c9ab')" ref="/data/group_hr02n72/Available_Boron">
+        <label ref="jr:itext('/data/group_hr02n72/Available_Boron:label')"/>
       </input>
-      <input appearance="ex:io.ffem.soil(testId='3353f5cf-1cd2-4bf5-b47f-15d3db917add')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Iron">
-        <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_hr02n72/Available_Iron:label')" />
+      <input appearance="ex:io.ffem.soil(testId='3353f5cf-1cd2-4bf5-b47f-15d3db917add')" ref="/data/group_hr02n72/Available_Iron">
+        <label ref="jr:itext('/data/group_hr02n72/Available_Iron:label')"/>
       </input>
     </group>
-    <input appearance="ex:io.ffem.soil(testId='52ec4ca0-d691-4f2b-b17a-232c2966974a')"
-        ref="/akB9s9T6MVzFZPkvWCc5wB/Calcium_and_Magnesium">
-      <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/Calcium_and_Magnesium:label')" />
+    <input appearance="ex:io.ffem.soil(testId='52ec4ca0-d691-4f2b-b17a-232c2966974a')" ref="/data/Calcium_and_Magnesium">
+      <label ref="jr:itext('/data/Calcium_and_Magnesium:label')"/>
     </input>
-    <group appearance="field-list" ref="/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67">
-      <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67:label')" />
-      <input appearance="ex:io.ffem.water(testId='670d2d65-bb76-4d72-ae4f-867d031b7712')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67/Calcium_and_Magnesium_001">
-        <label
-            ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67/Calcium_and_Magnesium_001:label')" />
+    <group appearance="field-list" ref="/data/group_xx6id67">
+      <label ref="jr:itext('/data/group_xx6id67:label')"/>
+      <input appearance="ex:io.ffem.water(testId='670d2d65-bb76-4d72-ae4f-867d031b7712')" ref="/data/group_xx6id67/Calcium_and_Magnesium_001">
+        <label ref="jr:itext('/data/group_xx6id67/Calcium_and_Magnesium_001:label')"/>
       </input>
-      <input appearance="ex:io.ffem.water(testId='783c30ee-57c5-498e-aaaa-ed2904f7972a')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67/Carbonate">
-        <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_xx6id67/Carbonate:label')" />
+      <input appearance="ex:io.ffem.water(testId='783c30ee-57c5-498e-aaaa-ed2904f7972a')" ref="/data/group_xx6id67/Carbonate">
+        <label ref="jr:itext('/data/group_xx6id67/Carbonate:label')"/>
       </input>
     </group>
-    <group appearance="field-list" ref="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25">
-      <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25:label')" />
-      <input appearance="ex:io.ffem.water(testId='93c259c5-f8b5-4317-828b-adfa324a2918')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Arsenic_III">
-        <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Arsenic_III:label')" />
+    <group appearance="field-list" ref="/data/group_pg7xj25">
+      <label ref="jr:itext('/data/group_pg7xj25:label')"/>
+      <input appearance="ex:io.ffem.water(testId='93c259c5-f8b5-4317-828b-adfa324a2918')" ref="/data/group_pg7xj25/Arsenic_III">
+        <label ref="jr:itext('/data/group_pg7xj25/Arsenic_III:label')"/>
       </input>
-      <input appearance="ex:io.ffem.water(testId='d488672f-9a4c-4aa4-82eb-8a95c40d0296')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Chromium">
-        <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Chromium:label')" />
+      <input appearance="ex:io.ffem.water(testId='d488672f-9a4c-4aa4-82eb-8a95c40d0296')" ref="/data/group_pg7xj25/Chromium">
+        <label ref="jr:itext('/data/group_pg7xj25/Chromium:label')"/>
       </input>
-      <input appearance="ex:io.ffem.water(testId='f0f3c1dd-89af-49f1-83e7-bcc31c3006cf')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Fluoride">
-        <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_pg7xj25/Fluoride:label')" />
+      <input appearance="ex:io.ffem.water(testId='f0f3c1dd-89af-49f1-83e7-bcc31c3006cf')" ref="/data/group_pg7xj25/Fluoride">
+        <label ref="jr:itext('/data/group_pg7xj25/Fluoride:label')"/>
       </input>
     </group>
-    <group appearance="field-list" ref="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41">
-      <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_et5co41:label')" />
-      <input appearance="ex:io.ffem.water(testId='a2413119-38eb-4959-92ee-cc169fdbb0fc')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/Free_Chlorine">
-        <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/Free_Chlorine:label')" />
+    <group appearance="field-list" ref="/data/group_et5co41">
+      <label ref="jr:itext('/data/group_et5co41:label')"/>
+      <input appearance="ex:io.ffem.water(testId='a2413119-38eb-4959-92ee-cc169fdbb0fc')" ref="/data/group_et5co41/Free_Chlorine">
+        <label ref="jr:itext('/data/group_et5co41/Free_Chlorine:label')"/>
       </input>
-      <input appearance="ex:io.ffem.water(testId='c08123f7-eaa6-44d0-9113-1c16bf4b183b')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/Nitrate">
-        <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/Nitrate:label')" />
+      <input appearance="ex:io.ffem.water(testId='c08123f7-eaa6-44d0-9113-1c16bf4b183b')" ref="/data/group_et5co41/Nitrate">
+        <label ref="jr:itext('/data/group_et5co41/Nitrate:label')"/>
       </input>
-      <input appearance="ex:io.ffem.water(testId='4d3a7d6d-2f11-49de-9f7f-9e21e840df93')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/pH_001">
-        <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_et5co41/pH_001:label')" />
+      <input appearance="ex:io.ffem.water(testId='4d3a7d6d-2f11-49de-9f7f-9e21e840df93')" ref="/data/group_et5co41/pH_001">
+        <label ref="jr:itext('/data/group_et5co41/pH_001:label')"/>
       </input>
     </group>
-    <group appearance="field-list" ref="/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57">
-      <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57:label')" />
-      <input appearance="ex:io.ffem.water(testId='6fbe9952-7199-4c9d-8664-977236176cc9')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57/Phosphate">
-        <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57/Phosphate:label')" />
+    <group appearance="field-list" ref="/data/group_ep33t57">
+      <label ref="jr:itext('/data/group_ep33t57:label')"/>
+      <input appearance="ex:io.ffem.water(testId='6fbe9952-7199-4c9d-8664-977236176cc9')" ref="/data/group_ep33t57/Phosphate">
+        <label ref="jr:itext('/data/group_ep33t57/Phosphate:label')"/>
       </input>
-      <input appearance="ex:io.ffem.water(testId='5a7cf06e-5e73-4044-9aa5-0206cc627c82')"
-          ref="/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57/Total_Iron">
-        <label ref="jr:itext('/akB9s9T6MVzFZPkvWCc5wB/group_ep33t57/Total_Iron:label')" />
+      <input appearance="ex:io.ffem.water(testId='5a7cf06e-5e73-4044-9aa5-0206cc627c82')" ref="/data/group_ep33t57/Total_Iron">
+        <label ref="jr:itext('/data/group_ep33t57/Total_Iron:label')"/>
       </input>
     </group>
   </h:body>

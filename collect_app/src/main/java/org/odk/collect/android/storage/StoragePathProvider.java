@@ -6,6 +6,8 @@ import org.odk.collect.android.application.Collect;
 
 import java.io.File;
 
+import static org.odk.collect.android.application.Collect.APP_FOLDER;
+
 public class StoragePathProvider {
     private StorageStateProvider storageStateProvider;
 
@@ -52,7 +54,7 @@ public class StoragePathProvider {
     }
 
     public String getUnscopedStorageRootDirPath() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "odk";
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + APP_FOLDER;
     }
 
     public String getUnscopedStorageDirPath(StorageSubdirectory subdirectory) {

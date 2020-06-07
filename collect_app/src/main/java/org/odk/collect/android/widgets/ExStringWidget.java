@@ -115,8 +115,8 @@ public class ExStringWidget extends StringWidget implements BinaryWidget {
 
         LinearLayout answerLayout = new LinearLayout(getContext());
         answerLayout.setOrientation(LinearLayout.VERTICAL);
-        answerLayout.addView(launchIntentButton);
         answerLayout.addView(answerText);
+        answerLayout.addView(launchIntentButton);
         addAnswerView(answerLayout, WidgetViewUtils.getStandardMargin(context));
     }
 

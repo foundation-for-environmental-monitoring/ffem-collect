@@ -125,9 +125,9 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.server_preferences);
-
-        initProtocolPrefs();
+//        addPreferencesFromResource(R.xml.server_preferences);
+        Collect.getInstance().getComponent().inject(this);
+//        initProtocolPrefs();
     }
 
     private void initProtocolPrefs() {

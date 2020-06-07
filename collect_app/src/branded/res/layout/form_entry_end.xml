@@ -9,6 +9,7 @@ the specific language governing permissions and limitations under the License.
 -->
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -17,66 +18,72 @@ the specific language governing permissions and limitations under the License.
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:orientation="vertical">
 
         <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0" />
+            android:layout_marginBottom="16dp"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:lineSpacingMultiplier="1.2"
-            android:paddingTop="10dp"
-            android:paddingBottom="20dp"
-            android:textColor="?colorOnSurface"
-            android:textSize="21sp"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:lineSpacingMultiplier="1.2"
+                android:paddingStart="3dp"
+                android:paddingEnd="3dp"
+                android:textSize="17sp"
+                tools:text="Your are the end of..." />
 
-        <TextView
-            android:id="@+id/save_form_as"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:lineSpacingMultiplier="1.2"
-            android:text="@string/save_form_as"
-            android:textColor="?colorOnSurface"
-            android:textSize="21sp" />
+            <TextView
+                android:id="@+id/save_form_as"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:gravity="start"
+                android:labelFor="@id/save_name"
+                android:lineSpacingMultiplier="1.2"
+                android:text="@string/save_form_as"
+                android:textColor="?colorOnSurface"
+                android:textSize="17sp"
+                android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/save_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:textSize="21sp" />
+            <EditText
+                android:id="@+id/save_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:textSize="21sp" />
 
-        <CheckBox
-            android:id="@+id/mark_finished"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginBottom="10dp"
-            android:text="@string/mark_finished"
-            android:textSize="21sp" />
+            <CheckBox
+                android:id="@+id/mark_finished"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/mark_finished"
+                android:textSize="17sp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/save_exit_button"
-            style="@style/Widget.Collect.Button.FullWidth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/quit_entry" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/save_exit_button"
+                style="@style/Widget.Collect.Button.FullWidth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/quit_entry" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0" />
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

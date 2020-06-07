@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="Collect">
+        <attr name="colorToolbarPrimary" format="color" />
         <attr name="textColorPrimary" format="color" />
         <attr name="toolbarIconColor" format="color" />
         <attr name="windowBackgroundColor" format="color" />

@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Button;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.odk.collect.android.R;
@@ -14,8 +15,6 @@ import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowEnvironment;
 import org.robolectric.shadows.ShadowIntent;
 
-import io.ffem.collect.android.activities.SettingsActivity;
-
 import static android.os.Environment.MEDIA_MOUNTED;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -24,11 +23,13 @@ import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricTestRunner.class)
 public class MainActivityTest {
     private MainMenuActivity mainMenuActivity;
+    private FormChooserListActivity formChooserListActivity;
 
     @Before
     public void setUp() throws Exception {
         ShadowEnvironment.setExternalStorageState(MEDIA_MOUNTED);
         mainMenuActivity = Robolectric.setupActivity(MainMenuActivity.class);
+        formChooserListActivity = Robolectric.setupActivity(FormChooserListActivity.class);
     }
 
     /**
@@ -55,7 +56,7 @@ public class MainActivityTest {
      */
     @Test
     public void getFormButtonTest() throws Exception {
-        Button getFormButton = mainMenuActivity.findViewById(R.id.get_forms);
+        Button getFormButton = formChooserListActivity.findViewById(R.id.get_forms);
         assertNotNull(getFormButton);
         assertEquals(View.VISIBLE, getFormButton.getVisibility());
         assertEquals(mainMenuActivity.getString(R.string.get_forms), getFormButton.getText());
@@ -64,6 +65,7 @@ public class MainActivityTest {
     /**
      * {@link Test} to assert manageFilesButton's functioning.
      */
+    @Ignore("Button removed")
     @Test
     public void manageFilesButtonTest() throws Exception {
         Button manageFilesButton = mainMenuActivity.findViewById(R.id.manage_forms);

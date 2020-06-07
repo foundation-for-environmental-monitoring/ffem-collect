@@ -58,6 +58,7 @@
         <item name="dividerCompat">@android:drawable/divider_horizontal_bright</item>
         <item name="android:tintMode" tools:targetApi="21">src_in</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorToolbarPrimary">@color/toolbar</item>
         <item name="textColorPrimary">@color/white</item>
 
     </style>

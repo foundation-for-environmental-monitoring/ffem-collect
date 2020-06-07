@@ -31,6 +31,7 @@ import org.odk.collect.android.listeners.PermissionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.ffem.collect.android.activities.SignInActivity;
 import timber.log.Timber;
 
 /**
@@ -100,6 +101,7 @@ public class PermissionUtils {
         activities.add(SplashScreenActivity.class);
         activities.add(FormDownloadListActivity.class);
         activities.add(InstanceUploaderActivity.class);
+        activities.add(SignInActivity.class);
 
         for (Class<?> act : activities) {
             if (activity.getClass().equals(act)) {

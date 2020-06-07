@@ -3,6 +3,7 @@ package org.odk.collect.android.activities;
 import android.view.View;
 import android.widget.Button;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.odk.collect.android.R;
@@ -91,6 +92,7 @@ public class MainMenuButtonsVisibilityTest {
         assertThat(getBlankFormButton.getVisibility(), equalTo(View.GONE));
     }
 
+    @Ignore("Button removed")
     @Test
     public void when_deleteSavedFormButtonIsEnabledInSettings_shouldBeVisible() {
         createActivity();
@@ -99,6 +101,7 @@ public class MainMenuButtonsVisibilityTest {
         assertThat(deleteSavedFormButton.getVisibility(), equalTo(View.VISIBLE));
     }
 
+    @Ignore("Button removed")
     @Test
     public void when_deleteSavedFormButtonIsDisabledInSettings_shouldBeGone() {
         AdminSharedPreferences.getInstance().save(KEY_DELETE_SAVED, false);

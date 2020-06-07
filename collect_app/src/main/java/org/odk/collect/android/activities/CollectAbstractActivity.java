@@ -155,7 +155,7 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
         } else {
 
             TypedValue typedValue = new TypedValue();
-            getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+            getTheme().resolveAttribute(R.attr.colorToolbarPrimary, typedValue, true);
             int color = typedValue.data;
 
             if (getSupportActionBar() != null) {

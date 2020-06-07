@@ -42,6 +42,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -62,6 +63,7 @@ import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -1309,6 +1311,12 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         if (!(boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_MARK_AS_FINALIZED)) {
             instanceComplete.setVisibility(View.GONE);
         }
+
+        MaterialButton endButton = endView.findViewById(R.id.save_exit_button);
+        setEndButtonText(endButton, instanceComplete);
+        instanceComplete.setOnClickListener(view -> {
+            setEndButtonText(endButton, instanceComplete);
+        });
 
         // edittext to change the displayed name of the instance
         final EditText saveAs = endView.findViewById(R.id.save_name);
@@ -2834,6 +2842,14 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     private boolean isQuestionRecalculated(FormEntryPrompt mutableQuestionBeforeSave, ImmutableDisplayableQuestion immutableQuestionBeforeSave) {
         return !(mutableQuestionBeforeSave.getAnswerText() == null && immutableQuestionBeforeSave.getAnswerText() == null
                 || mutableQuestionBeforeSave.getAnswerText().equals(immutableQuestionBeforeSave.getAnswerText()));
+    }
+
+    private void setEndButtonText(Button endButton, CheckBox instanceComplete) {
+        if (instanceComplete.isChecked()) {
+            endButton.setText(R.string.send_form);
+        } else {
+            endButton.setText(R.string.quit_entry);
+        }
     }
 }
 
