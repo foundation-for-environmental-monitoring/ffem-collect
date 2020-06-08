@@ -364,6 +364,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
 
     @Override
     protected void onResume() {
+        AppPreferences.checkDiagnosticModeExpiry(this);
         super.onResume();
 
         countSavedForms();

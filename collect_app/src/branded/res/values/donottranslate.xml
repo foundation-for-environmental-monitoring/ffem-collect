@@ -13,5 +13,6 @@
     <!--Diagnostic-->
     <string name="diagnostics">Diagnostics</string>
     <string name="testing">Testing</string>
+    <string name="diagnosticEnableTimeKey">diagnosticEnableTime</string>
 
 </resources>

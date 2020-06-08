@@ -4,6 +4,9 @@ import android.content.Context;
 
 import org.odk.collect.android.R;
 
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
+
 import io.ffem.collect.android.util.PreferencesUtil;
 
 /**
@@ -20,6 +23,10 @@ public final class AppPreferences {
 
     public static void enableDiagnosticMode(Context context) {
         PreferencesUtil.setBoolean(context, R.string.diagnosticModeKey, true);
+        PreferencesUtil.setLong(
+                context, R.string.diagnosticEnableTimeKey,
+                Calendar.getInstance().getTimeInMillis()
+        );
     }
 
     public static void disableDiagnosticMode(Context context) {
@@ -29,5 +36,19 @@ public final class AppPreferences {
     public static boolean launchExperiment(Context context) {
         return isDiagnosticMode(context) && PreferencesUtil.getBoolean(context,
                 R.string.launchExperimentKey, false);
+    }
+
+    public static void checkDiagnosticModeExpiry(Context context) {
+        if (isDiagnosticMode(context)) {
+            long lastCheck = PreferencesUtil.getLong(context, R.string.diagnosticEnableTimeKey);
+            if (TimeUnit.MILLISECONDS.toMinutes(Calendar.getInstance().getTimeInMillis() - lastCheck) > 20) {
+                disableDiagnosticMode(context);
+            } else {
+                PreferencesUtil.setLong(
+                        context, R.string.diagnosticEnableTimeKey,
+                        Calendar.getInstance().getTimeInMillis()
+                );
+            }
+        }
     }
 }

@@ -129,6 +129,10 @@ public final class PreferencesUtil {
         return sharedPreferences.getLong(key, -1L);
     }
 
+    public static long getLong(Context context, @StringRes int keyId) {
+        return getLong(context, getKey(context, keyId));
+    }
+
     public static void setLong(Context context, String code, @StringRes int keyId, long value) {
         String key = String.format(KEY_FORMAT, code, getKey(context, keyId));
         setLong(context, key, value);
