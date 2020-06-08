@@ -36,6 +36,7 @@ import org.odk.collect.android.preferences.FormManagementPreferences;
 import org.odk.collect.android.preferences.FormMetadataFragment;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.IdentityPreferences;
+import org.odk.collect.android.preferences.MetaSharedPreferencesProvider;
 import org.odk.collect.android.preferences.ServerPreferencesFragment;
 import org.odk.collect.android.preferences.UserInterfacePreferencesFragment;
 import org.odk.collect.android.storage.StorageInitializer;
@@ -197,6 +198,8 @@ public interface AppDependencyComponent {
     GeneralSharedPreferences generalSharedPreferences();
 
     AdminSharedPreferences adminSharedPreferences();
+
+    MetaSharedPreferencesProvider metaSharedPreferencesProvider();
 
     void inject(SignInActivity signInActivity);
 }

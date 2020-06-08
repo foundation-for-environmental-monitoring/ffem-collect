@@ -164,6 +164,13 @@ public class AutoFormTest {
 
         onView(withIndex(withText(R.string.launch_app), buttonIndex)).perform(click());
 
+        onView(withId(android.R.id.button2)).perform(click());
+
+        when(activityAvailability.isActivityAvailable(any(Intent.class)))
+                .thenReturn(true);
+
+        onView(withIndex(withText(R.string.launch_app), buttonIndex)).perform(click());
+
         openWidgetList();
         onView(withId(R.id.list)).perform(RecyclerViewActions.actionOnItemAtPosition(testIndex, click()));
 

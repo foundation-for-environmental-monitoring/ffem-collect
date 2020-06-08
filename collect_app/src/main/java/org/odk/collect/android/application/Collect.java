@@ -20,46 +20,29 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.StrictMode;
-import android.preference.PreferenceManager;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.multidex.MultiDex;
-
-import com.evernote.android.job.JobManager;
-import com.evernote.android.job.JobManagerCreateException;
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
-
-import net.danlew.android.joda.JodaTimeAndroid;
 
 import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
+import org.odk.collect.android.application.initialization.ApplicationInitializer;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.external.ExternalDataManager;
-import org.odk.collect.android.geo.MapboxUtils;
 import org.odk.collect.android.injection.config.AppDependencyComponent;
 import org.odk.collect.android.injection.config.DaggerAppDependencyComponent;
 import org.odk.collect.android.javarosawrapper.FormController;
-import org.odk.collect.android.jobs.CollectJobCreator;
 import org.odk.collect.android.logic.PropertyManager;
-import org.odk.collect.android.preferences.AdminSharedPreferences;
-import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
-import org.odk.collect.android.preferences.FormMetadataMigrator;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.MetaSharedPreferencesProvider;
-import org.odk.collect.android.preferences.PrefMigrator;
 import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.tasks.sms.SmsNotificationReceiver;
 import org.odk.collect.android.tasks.sms.SmsSentBroadcastReceiver;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.LocaleHelper;
-import org.odk.collect.android.utilities.NotificationUtils;
-import org.odk.collect.utilities.UserAgentProvider;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -68,9 +51,8 @@ import timber.log.Timber;
 import static org.odk.collect.android.logic.PropertyManager.PROPMGR_USERNAME;
 import static org.odk.collect.android.logic.PropertyManager.SCHEME_USERNAME;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_APP_LANGUAGE;
-import static org.odk.collect.android.preferences.GeneralKeys.KEY_GOOGLE_BUG_154855417_FIXED;
-import static org.odk.collect.android.preferences.GeneralKeys.KEY_FONT_SIZE;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_USERNAME;
+import static org.odk.collect.android.preferences.MetaKeys.KEY_GOOGLE_BUG_154855417_FIXED;
 import static org.odk.collect.android.tasks.sms.SmsNotificationReceiver.SMS_NOTIFICATION_ACTION;
 import static org.odk.collect.android.tasks.sms.SmsSender.SMS_SEND_ACTION;
 
@@ -85,7 +67,6 @@ public class Collect extends Application {
     public static final String APP_FOLDER = "ffem Collect";
 
     public static final String DEFAULT_FONTSIZE = "21";
-    public static final int DEFAULT_FONTSIZE_INT = 21;
 
     public static String defaultSysLanguage;
     private static Collect singleton;
@@ -96,26 +77,13 @@ public class Collect extends Application {
     private AppDependencyComponent applicationComponent;
 
     @Inject
-    UserAgentProvider userAgentProvider;
-
-    @Inject
-    public CollectJobCreator collectJobCreator;
+    ApplicationInitializer applicationInitializer;
 
     @Inject
     MetaSharedPreferencesProvider metaSharedPreferencesProvider;
 
     public static Collect getInstance() {
         return singleton;
-    }
-
-    public static int getQuestionFontsize() {
-        // For testing:
-        Collect instance = Collect.getInstance();
-        if (instance == null) {
-            return Collect.DEFAULT_FONTSIZE_INT;
-        }
-
-        return Integer.parseInt(String.valueOf(GeneralSharedPreferences.getInstance().get(KEY_FONT_SIZE)));
     }
 
     /**
@@ -177,53 +145,20 @@ public class Collect extends Application {
         singleton = this;
 
         setupDagger();
+        applicationInitializer.initializePreferences();
+        applicationInitializer.initializeFrameworks();
+        applicationInitializer.initializeLocale();
         fixGoogleBug154855417();
-
-        NotificationUtils.createNotificationChannel(singleton);
 
         registerReceiver(new SmsSentBroadcastReceiver(), new IntentFilter(SMS_SEND_ACTION));
         registerReceiver(new SmsNotificationReceiver(), new IntentFilter(SMS_NOTIFICATION_ACTION));
 
-        try {
-            JobManager
-                    .create(this)
-                    .addJobCreator(collectJobCreator);
-        } catch (JobManagerCreateException e) {
-            Timber.e(e);
-        }
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        FormMetadataMigrator.migrate(prefs);
-        PrefMigrator.migrateSharedPrefs();
-        AutoSendPreferenceMigrator.migrate();
-
-        reloadSharedPreferences();
-
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-        JodaTimeAndroid.init(this);
-
-        defaultSysLanguage = Locale.getDefault().getLanguage();
-        new LocaleHelper().updateLocale(this);
-
         initializeJavaRosa();
-
-        if (BuildConfig.BUILD_TYPE.equals("brandedRelease")) {
-            Timber.plant(new CrashReportingTree());
-        } else {
-            Timber.plant(new Timber.DebugTree());
-        }
-
-        setupOSMDroid();
         setupStrictMode();
-        initMapProviders();
 
         // Force inclusion of scoped storage strings so they can be translated
         Timber.i("%s %s", getString(R.string.scoped_storage_banner_text),
                                    getString(R.string.scoped_storage_learn_more));
-    }
-
-    protected void setupOSMDroid() {
-        org.osmdroid.config.Configuration.getInstance().setUserAgentValue(userAgentProvider.getUserAgent());
     }
 
     /**
@@ -243,11 +178,6 @@ public class Collect extends Application {
                     .penaltyLog()
                     .build());
         }
-    }
-
-    private void initMapProviders() {
-        new com.google.android.gms.maps.MapView(this).onCreate(null);
-        MapboxUtils.initMapbox();
     }
 
     private void setupDagger() {
@@ -270,22 +200,6 @@ public class Collect extends Application {
         }
     }
 
-    private static class CrashReportingTree extends Timber.Tree {
-        @Override
-        protected void log(int priority, String tag, String message, Throwable t) {
-            if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
-                return;
-            }
-
-            FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
-            crashlytics.log((priority == Log.ERROR ? "E/" : "W/") + tag + ": " + message);
-
-            if (t != null && priority == Log.ERROR) {
-                crashlytics.recordException(t);
-            }
-        }
-    }
-
     public void initializeJavaRosa() {
         PropertyManager mgr = new PropertyManager(this);
 
@@ -295,12 +209,6 @@ public class Collect extends Application {
         }
 
         FormController.initializeJavaRosa(mgr);
-    }
-
-    // This method reloads shared preferences in order to load default values for new preferences
-    private void reloadSharedPreferences() {
-        GeneralSharedPreferences.getInstance().reloadPreferences();
-        AdminSharedPreferences.getInstance().reloadPreferences();
     }
 
     public AppDependencyComponent getComponent() {
