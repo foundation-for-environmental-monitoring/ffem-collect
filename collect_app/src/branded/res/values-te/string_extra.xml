@@ -16,7 +16,7 @@
     <string name="server_credentials">సర్వర్ ఆధారాలు</string>
     <string name="outbox">ఔట్ బాక్స్</string>
     <string name="app_not_found">అనువర్తనం కనుగొనబడలేదు</string>
-    <string name="install_app">అవసరమైన అనువర్తనం వ్యవస్థాపించబడలేదు.\n\nప్లే స్టోర్ నుండి తగిన అనువర్తనాన్ని ఇన్‌స్టాల్ చేయండి.</string>
+    <string name="install_app"><![CDATA[ఈ ప్రశ్నకు <b>%s</b> అనువర్తనం అవసరం.\n\nప్లే స్టోర్ నుండి అనువర్తనాన్ని ఇన్‌స్టాల్ చేయండి.]]></string>
     <string name="go_to_play_store">ప్లే స్టోర్‌కు వెళ్లండి</string>
     <string name="send_form">ఫారం పంపండి</string>
     <string name="admin">అడ్మిన్</string>

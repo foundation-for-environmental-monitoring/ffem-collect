@@ -41,6 +41,7 @@ the License.
     <color name="mapLine">#ffff0000</color>
 
     <color name="primary">#D3D3D3</color>
+    <color name="primary_text">#444</color>
     <color name="toolbar">#585858</color>
     <color name="primary_dark">#4d4d4d</color>
     <color name="white">@android:color/white</color>

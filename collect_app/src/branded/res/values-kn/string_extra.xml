@@ -16,7 +16,7 @@
     <string name="server_credentials">ಸರ್ವರ್ ರುಜುವಾತುಗಳು</string>
     <string name="outbox">ಔಟ್‌ಬಾಕ್ಸ್</string>
     <string name="app_not_found">ಅಪ್ಲಿಕೇಶನ್ ಕಂಡುಬಂದಿಲ್ಲ</string>
-    <string name="install_app">ಅಗತ್ಯವಿರುವ ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಸ್ಥಾಪಿಸಲಾಗಿಲ್ಲ.\n\nಪ್ಲೇ ಸ್ಟೋರ್‌ನಿಂದ ಸೂಕ್ತವಾದ ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಸ್ಥಾಪಿಸಿ.</string>
+    <string name="install_app"><![CDATA[ಈ ಪ್ರಶ್ನೆಗೆ <b>%s</b> ಅಪ್ಲಿಕೇಶನ್ ಅಗತ್ಯವಿದೆ.\n\nಪ್ಲೇ ಸ್ಟೋರ್‌ನಿಂದ ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಸ್ಥಾಪಿಸಿ.]]></string>
     <string name="go_to_play_store">ಪ್ಲೇ ಸ್ಟೋರ್‌ಗೆ ಹೋಗಿ</string>
     <string name="send_form">ಫಾರ್ಮ್ ಕಳುಹಿಸಿ</string>
     <string name="admin">ನಿರ್ವಹಣೆ</string>

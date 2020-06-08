@@ -16,7 +16,7 @@
     <string name="server_credentials">Server credentials</string>
     <string name="outbox">Outbox</string>
     <string name="app_not_found">App not found</string>
-    <string name="install_app">ffem Water or ffem Soil app is required for this question.\n\nInstall the appropriate app from Play store.</string>
+    <string name="install_app"><![CDATA[<b>%s</b> app is required for this question.\n\nInstall the app from Play store.]]></string>
     <string name="go_to_play_store">Go to Play store</string>
     <string name="send_form">Send Form</string>
     <string name="admin">Admin</string>

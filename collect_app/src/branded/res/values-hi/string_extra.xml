@@ -16,7 +16,7 @@
     <string name="server_credentials">सर्वर क्रेडेंशियल्स</string>
     <string name="outbox">आउटबॉक्स</string>
     <string name="app_not_found">ऐप नहीं मिला</string>
-    <string name="install_app">आवश्यक एप्लिकेशन इंस्टॉल नहीं किया गया है।\n\nप्ले स्टोर से उपयुक्त ऐप इंस्टॉल करें।</string>
+    <string name="install_app"><![CDATA[इस प्रश्न के लिए <b>%s</b> एप की आवश्यकता है।\n\nप्ले स्टोर से एप को स्थापित करें।]]></string>
     <string name="go_to_play_store">Play store पर जाएं</string>
     <string name="send_form">फॉर्म भजो</string>
     <string name="admin">व्यवस्थापक</string>

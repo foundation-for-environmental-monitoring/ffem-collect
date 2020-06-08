@@ -16,11 +16,13 @@ package org.odk.collect.android.widgets;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.Editable;
+import android.text.Html;
 import android.text.Selection;
 import android.text.TextWatcher;
 import android.widget.Button;
@@ -45,6 +47,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import io.ffem.collect.android.preferences.AppPreferences;
 import timber.log.Timber;
 
 import static android.content.Intent.ACTION_SENDTO;
@@ -235,35 +238,60 @@ public class ExStringWidget extends StringWidget implements BinaryWidget {
 
     private void onException(String toastText) {
         hasExApp = false;
-        if (!getFormEntryPrompt().isReadOnly()) {
-            answerText.setBackground((new EditText(getContext())).getBackground());
-            answerText.setFocusable(true);
-            answerText.setFocusableInTouchMode(true);
-            answerText.setEnabled(true);
-            answerText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    widgetValueChanged();
-                }
-            });
-        }
-        launchIntentButton.setEnabled(false);
-        launchIntentButton.setFocusable(false);
+//        if (!getFormEntryPrompt().isReadOnly()) {
+//            answerText.setBackground((new EditText(getContext())).getBackground());
+//            answerText.setFocusable(true);
+//            answerText.setFocusableInTouchMode(true);
+//            answerText.setEnabled(true);
+//            answerText.addTextChangedListener(new TextWatcher() {
+//                @Override
+//                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//                }
+//
+//                @Override
+//                public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                }
+//
+//                @Override
+//                public void afterTextChanged(Editable s) {
+//                    widgetValueChanged();
+//                }
+//            });
+//        }
+//        launchIntentButton.setEnabled(false);
+//        launchIntentButton.setFocusable(false);
         cancelWaitingForData();
 
-        Toast.makeText(getContext(),
-                toastText, Toast.LENGTH_SHORT)
-                .show();
-        Timber.d(toastText);
+        String exSpec = getFormEntryPrompt().getAppearanceHint().replaceFirst("^ex[:]", "");
+        if (AppPreferences.launchExperiment(getContext())) {
+            exSpec = exSpec.replace("water", "experiment")
+                    .replace("soil", "experiment");
+        }
+        final String intentName = ExternalAppsUtils.extractIntentName(exSpec);
+        if (intentName.startsWith("io.ffem")) {
+            String appName =  intentName.substring(intentName.indexOf("ffem"));
+            appName = appName.substring(appName.indexOf("ffem"), appName.indexOf(".")) +
+                    " " + Character.toUpperCase(appName.charAt(appName.indexOf(".") + 1)) +
+                    appName.substring(appName.indexOf(".") + 2);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.Theme_AppCompat_Light_Dialog);
+            builder.setTitle(R.string.app_not_found)
+                    .setMessage(Html.fromHtml(getContext().getString(R.string.install_app, appName)))
+                    .setPositiveButton(R.string.go_to_play_store, (dialogInterface, i)
+                            -> getContext().startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("https://play.google.com/store/apps/developer?id=Foundation+for+Environmental+Monitoring"))))
+                    .setNegativeButton(android.R.string.cancel,
+                            (dialogInterface, i) -> dialogInterface.dismiss())
+                    .setCancelable(false)
+                    .show();
+        } else {
+            Toast.makeText(getContext(),
+                    toastText, Toast.LENGTH_SHORT)
+                    .show();
+            Timber.d(toastText);
+        }
+
         focusAnswer();
-        Selection.setSelection(answerText.getText(), answerText.getText().toString().length());
+//        Selection.setSelection(answerText.getText(), answerText.getText().toString().length());
     }
 }
