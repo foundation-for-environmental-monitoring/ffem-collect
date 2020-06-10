@@ -814,6 +814,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     if (getCurrentViewIfODKView() != null) {
                         getCurrentViewIfODKView().setDataForFields(extras);
                     }
+                    refreshCurrentView();
                 } catch (JavaRosaException e) {
                     Timber.e(e);
                     createErrorDialog(e.getCause().getMessage(), DO_NOT_EXIT);

@@ -18,12 +18,16 @@ import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -38,9 +42,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatTextView;
 
 import org.javarosa.core.model.Constants;
 import org.javarosa.core.model.FormIndex;
+import org.javarosa.core.model.GroupDef;
 import org.javarosa.core.model.IFormElement;
 import org.javarosa.core.model.QuestionDef;
 import org.javarosa.core.model.data.IAnswerData;
@@ -80,6 +86,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import io.ffem.collect.android.preferences.AppPreferences;
+import io.ffem.collect.android.widget.RowView;
 import timber.log.Timber;
 
 import static org.odk.collect.android.injection.DaggerUtils.getComponent;
@@ -136,22 +144,99 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         setGroupText(groups);
 
         // when the grouped fields are populated by an external app, this will get true.
-        boolean readOnlyOverride = false;
+        boolean questionAdded = false;
 
         // handle intent groups that are intended to receive multiple values from an external app
         if (groups != null && groups.length > 0) {
             // get the group we are showing -- it will be the last of the groups in the groups list
             final FormEntryCaption c = groups[groups.length - 1];
-            final String intentString = c.getFormElement().getAdditionalAttribute(null, "intent");
+            String intentString = c.getFormElement().getAdditionalAttribute(null, "intent");
             if (intentString != null && intentString.length() != 0) {
-                readOnlyOverride = true;
+
+                for (FormEntryPrompt question : questionPrompts) {
+                    QuestionWidget qw = configureWidgetForQuestion(question, true);
+                    widgets.add(qw);
+                    if (!questionAdded) {
+                        AppCompatTextView textView = new AppCompatTextView(context);
+                        textView.setTextSize(20);
+                        textView.setTextColor(Color.BLACK);
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                        params.setMargins(16,8,16,0);
+                        textView.setLayoutParams(params);
+                        textView.setText(groups[0].getShortText());
+                        widgetsList.addView(textView);
+                        qw.setContainer((View) textView.getParent());
+                    }
+
+                    if (qw.getAnswer() != null) {
+                        RowView answerRow = new RowView(context);
+                        answerRow.setPrimaryText(qw.getQuestionDetails().getPrompt().getQuestionText() + ": ");
+                        answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
+                        widgetsList.addView(answerRow, layout);
+                    }
+                    question.getQuestion().setAdditionalAttribute("", "done", "true");
+                    questionAdded = true;
+                }
 
                 addIntentLaunchButton(context, questionPrompts, c, intentString);
+            } else {
+                IFormElement formElement = c.getFormElement();
+                for (int i = 0; i < formElement.getChildren().size(); i++) {
+                    if (formElement.getChild(i) instanceof GroupDef) {
+                        intentString = getIntentString(formElement.getChild(i));
+                        if (intentString != null) {
+                            setGroupText(groups);
+                            List<FormEntryPrompt> formEntryPrompts = new ArrayList<>();
+                            for (FormEntryPrompt prompt : questionPrompts) {
+                                if (prompt != null && prompt.getIndex().getNextLevel().getLocalIndex() == i) {
+                                    formEntryPrompts.add(prompt);
+                                }
+                            }
+                            for (FormEntryPrompt question : formEntryPrompts) {
+                                QuestionWidget qw = configureWidgetForQuestion(question, true);
+                                widgets.add(qw);
+
+                                if (!questionAdded) {
+                                    AppCompatTextView textView = new AppCompatTextView(context);
+                                    textView.setTextSize(20);
+                                    textView.setTextColor(Color.BLACK);
+                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                                    params.setMargins(16,8,16,0);
+                                    textView.setLayoutParams(params);
+                                    textView.setText(c.getQuestionText(groups[0].getFormElement().getChildren().get(0).getTextID()));
+                                    widgetsList.addView(textView);
+                                    qw.setContainer((View) textView.getParent());
+                                }
+
+                                if (qw.getAnswer() != null) {
+                                    RowView answerRow = new RowView(context);
+                                    answerRow.setPrimaryText(qw.getQuestionDetails().getPrompt().getQuestionText() + ": ");
+                                    answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
+                                    widgetsList.addView(answerRow, layout);
+                                }
+
+                                questionAdded = true;
+                                question.getQuestion().setAdditionalAttribute("", "done", "true");
+                            }
+                            addIntentLaunchButton(context, questionPrompts, c, intentString);
+                        } else {
+                            for (FormEntryPrompt question : questionPrompts) {
+                                if (formElement.getChild(i).getID() == question.getQuestion().getID()) {
+                                    if (question.getQuestion().getAdditionalAttribute("", "done") == null) {
+                                        addWidgetForQuestion(question, false);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
         for (FormEntryPrompt question : questionPrompts) {
-            addWidgetForQuestion(question, readOnlyOverride);
+            if (question.getQuestion().getAdditionalAttribute("", "done") == null) {
+                addWidgetForQuestion(question, false);
+            }
         }
 
         setupAudioErrors();
@@ -271,7 +356,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
     private View getDividerView() {
         View divider = new View(getContext());
         divider.setBackgroundResource(new ThemeUtils(getContext()).getDivider());
-        divider.setMinimumHeight(3);
+        divider.setMinimumHeight(15);
 
         return divider;
     }
@@ -436,12 +521,30 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                 } catch (ActivityNotFoundException e) {
                     Timber.d(e, "ActivityNotFoundExcept");
 
-                    ToastUtils.showShortToast(errorString);
+                    if (intentName.startsWith("io.ffem")) {
+                        String appName =  intentName.substring(intentName.indexOf("ffem"));
+                        appName = appName.substring(appName.indexOf("ffem"), appName.indexOf(".")) +
+                                " " + Character.toUpperCase(appName.charAt(appName.indexOf(".") + 1)) +
+                                appName.substring(appName.indexOf(".") + 2);
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.Theme_AppCompat_Light_Dialog);
+                        builder.setTitle(R.string.app_not_found)
+                                .setMessage(Html.fromHtml(getContext().getString(R.string.install_app, appName)))
+                                .setPositiveButton(R.string.go_to_play_store, (dialogInterface, j)
+                                        -> getContext().startActivity(new Intent(Intent.ACTION_VIEW,
+                                        Uri.parse("https://play.google.com/store/apps/developer?id=Foundation+for+Environmental+Monitoring"))))
+                                .setNegativeButton(android.R.string.cancel,
+                                        (dialogInterface, j) -> dialogInterface.dismiss())
+                                .setCancelable(false)
+                                .show();
+                    } else {
+                        ToastUtils.showShortToast(errorString);
+                    }
                 }
             }
         });
 
-        widgetsList.addView(getDividerView());
+//        widgetsList.addView(getDividerView());
         widgetsList.addView(launchIntentButton, layout);
     }
 
@@ -608,8 +711,13 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
      */
     public void highlightWidget(FormIndex formIndex) {
         QuestionWidget qw = getQuestionWidget(formIndex);
-
+        View viewToHighlight;
         if (qw != null) {
+            if (qw.getContainer() != null) {
+                viewToHighlight = qw.getContainer();
+            } else {
+                viewToHighlight = qw;
+            }
             // postDelayed is needed because otherwise scrolling may not work as expected in case when
             // answers are validated during form finalization.
             new Handler().postDelayed(() -> {
@@ -619,7 +727,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                 ValueAnimator va = new ValueAnimator();
                 va.setIntValues(getResources().getColor(R.color.red_500), getDrawingCacheBackgroundColor());
                 va.setEvaluator(new ArgbEvaluator());
-                va.addUpdateListener(valueAnimator -> qw.setBackgroundColor((int) valueAnimator.getAnimatedValue()));
+                va.addUpdateListener(valueAnimator -> viewToHighlight.setBackgroundColor((int) valueAnimator.getAnimatedValue()));
                 va.setDuration(2500);
                 va.start();
             }, 100);
@@ -662,5 +770,29 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         if (widgetValueChangedListener != null) {
             widgetValueChangedListener.widgetValueChanged(changedWidget);
         }
+    }
+
+    private String getIntentString(IFormElement formElement) {
+        String intentString = formElement.getAdditionalAttribute(null, "intent");
+        if (intentString == null) {
+            intentString = formElement.getAppearanceAttr();
+        }
+
+        if (intentString != null) {
+            if (intentString.startsWith("ex:")) {
+                intentString = intentString.replaceFirst("^ex[:]", "");
+            }
+
+            if (intentString.length() < 36 || !intentString.startsWith("io.ffem")) {
+                return null;
+            }
+
+            if (AppPreferences.launchExperiment(getContext())) {
+                intentString = intentString.replace("water", "experiment")
+                        .replace("soil", "experiment");
+            }
+        }
+
+        return intentString;
     }
 }

@@ -105,6 +105,8 @@ public abstract class QuestionWidget
     @Inject
     public Analytics analytics;
 
+    private View container;
+
     public QuestionWidget(Context context, QuestionDetails questionDetails) {
         this(context, questionDetails, true);
     }
@@ -538,5 +540,13 @@ public abstract class QuestionWidget
         if (valueChangedListener != null) {
             valueChangedListener.widgetValueChanged(this);
         }
+    }
+
+    public View getContainer() {
+        return container;
+    }
+
+    public void setContainer(View value) {
+        container = value;
     }
 }
