@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation" tools:locale="en">
     <string name="cancel">ರದ್ದುಮಾಡಿ</string>
+    <string name="cancel_loading_form">ರದ್ದುಮಾಡಿ</string>
     <string name="change_language">ಭಾಷೆ ಬದಲಾಯಿಸಿ</string>
     <string name="change_password">ಸರ್ವರ್ ಪಾಸ್ವರ್ಡ್</string>
     <string name="change_username">ಸರ್ವರ್ ಬಳಕೆದಾರಹೆಸರು</string>
@@ -17,12 +18,14 @@
     <string name="delete_yes">ಫಾರ್ಮ್‌ಗಳನ್ನು ಅಳಿಸಿ</string>
     <string name="discard_answer">ಪ್ರತಿಕ್ರಿಯೆ ತೆಗೆದುಹಾಕಿ</string>
     <string name="download">ಆಯ್ಕೆಮಾಡಿ</string>
+    <string name="download_forms_result">ಡೌನ್‌ಲೋಡ್ ಮಾಡಲಾಗಿದೆ</string>
     <string name="downloading_data">ಸರ್ವರ್‌ಗೆ ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ</string>
     <string name="do_not_exit">ರದ್ದುಮಾಡಿ</string>
     <string name="do_not_save">ಬದಲಾವಣೆಗಳನ್ನು ನಿರ್ಲಕ್ಷಿಸಿ</string>
     <string name="enter_data">ಖಾಲಿ ಫಾರ್ಮ್ ಅನ್ನು ಭರ್ತಿ ಮಾಡಿ</string>
     <string name="enter_data_button">ಖಾಲಿ ಫಾರ್ಮ್ ಭರ್ತಿ ಮಾಡಿ</string>
     <string name="fetching_file">%1$s ಪಡೆಯಲಾಗುತ್ತಿದೆ.\n\n(ಫಾರ್ಮ್ %2$s / %3$s).</string>
+    <string name="file_deleted_ok">%s ಫಾರ್ಮ್(ಗಳು) ಅಳಿಸಲಾಗಿದೆ!</string>
     <string name="get_forms">ಖಾಲಿ ಫಾರ್ಮ್ ಪಡೆಯಿರಿ</string>
     <string name="get_location">ರೆಕಾರ್ಡ್ ಸ್ಥಳ</string>
     <string name="provider_disabled_error">ಕ್ಷಮಿಸಿ, ಸ್ಥಳ ಒದಗಿಸುವವರನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ!</string>
@@ -77,6 +80,7 @@
     <string name="no_app">ವಿನಂತಿಸಿದ ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಸ್ಥಾಪಿಸಲಾಗಿಲ್ಲ</string>
     <string name="form_forward">ಮುಂದೆ</string>
     <string name="form_backward">ಹಿಂದೆ</string>
+    <string name="launch_printer">ಮುದ್ರಣವನ್ನು ಪ್ರಾರಂಭಿಸಿ</string>
     <string name="survey_loading_reading_form_message">ಫಾರ್ಮ್ ವ್ಯಾಖ್ಯಾನವನ್ನು ಓದುವುದು…</string>
     <string name="survey_loading_reading_data_message">ಸಮೀಕ್ಷೆಯ ಡೇಟಾವನ್ನು ಓದುವುದು…</string>
     <string name="odk_permissions_fail">ಸ್ವಯಂ ಕಳುಹಿಸುವಿಕೆ ಅನುಮತಿ ವಿಫಲವಾಗಿದೆ, ದಯವಿಟ್ಟು ನೀವು ಅಗತ್ಯವಿರುವ ಎಲ್ಲ ಅನುಮತಿಗಳನ್ನು ನೀಡಿದ್ದೀರಿ ಎಂದು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ</string>
@@ -115,6 +119,9 @@
     <string name="reset_settings">ಎಲ್ಲಾ ಸೆಟ್ಟಿಂಗ್‌ಗಳು (ಆಂತರಿಕ ಸೆಟ್ಟಿಂಗ್‌ಗಳು, ಉಳಿಸಿದ ಸೆಟ್ಟಿಂಗ್‌ಗಳು)</string>
     <string name="reset_saved_forms">ಉಳಿಸಿದ ಫಾರ್ಮ್‌ಗಳು (ನಿದರ್ಶನ ಫೋಲ್ಡರ್, ನಿದರ್ಶನಗಳ ಡೇಟಾಬೇಸ್)</string>
     <string name="reset_blank_forms">ಖಾಲಿ ರೂಪಗಳು (ಫಾರ್ಮ್‌ಗಳನ್ನು ರೂಪಿಸುತ್ತದೆ, ಡೇಟಾಬೇಸ್ ರೂಪಿಸುತ್ತದೆ, ಐಟಮ್‌ಸೆಟ್‌ಗಳ ಡೇಟಾಬೇಸ್)</string>
+    <string name="reset_layers">ನಕ್ಷೆ ಪದರಗಳು (layers ಫೋಲ್ಡರ್)</string>
+    <string name="reset_cache">ಫಾರ್ಮ್ ಲೋಡ್ ಸಂಗ್ರಹ (.cache ಫೋಲ್ಡರ್)</string>
+    <string name="reset_osm_tiles">OSM ಟೈಲ್ ಸಂಗ್ರಹ (osmdroid ಫೋಲ್ಡರ್)</string>
     <string name="reset_settings_dialog_title">ಏನು ಮರುಹೊಂದಿಸಬೇಕೆಂದು ಆಯ್ಕೆಮಾಡಿ</string>
     <string name="reset_settings_dialog">ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಮರುಹೊಂದಿಸಿ…</string>
     <string name="reset_settings_button_reset">ಮರುಹೊಂದಿಸಿ</string>
