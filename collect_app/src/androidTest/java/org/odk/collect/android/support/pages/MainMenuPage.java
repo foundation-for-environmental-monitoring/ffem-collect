@@ -1,5 +1,7 @@
 package org.odk.collect.android.support.pages;
 
+import android.os.SystemClock;
+
 import androidx.test.espresso.Espresso;
 import androidx.test.rule.ActivityTestRule;
 
@@ -80,11 +82,13 @@ public class MainMenuPage extends Page<MainMenuPage> {
     }
 
     public EditSavedFormPage clickEditSavedForm() {
+        SystemClock.sleep(1000);
         onView(withId(R.id.review_data)).perform(click());
         return new EditSavedFormPage(rule).assertOnPage();
     }
 
     public AboutPage clickAbout() {
+        SystemClock.sleep(1000);
         clickOnString(R.string.about_preferences);
         return new AboutPage(rule).assertOnPage();
     }

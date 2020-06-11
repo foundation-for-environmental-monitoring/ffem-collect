@@ -54,7 +54,7 @@ public class EncryptedFormTest {
                 .clickSaveAndExit()
                 .checkIsToastWithMessageDisplayed(R.string.data_saved_ok)
                 .clickEditSavedForm()
-                .checkInstanceState("encrypted", InstanceProviderAPI.STATUS_COMPLETE)
+                .checkInstanceState("encrypted", InstanceProviderAPI.STATUS_SUBMISSION_FAILED)
                 .clickOnFormWithDialog("encrypted")
                 .checkMessage(R.string.cannot_edit_completed_form);
     }

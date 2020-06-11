@@ -1,5 +1,8 @@
 package org.odk.collect.android.support.pages;
 
+import android.os.SystemClock;
+
+import androidx.test.espresso.Espresso;
 import androidx.test.rule.ActivityTestRule;
 
 import org.odk.collect.android.R;
@@ -29,7 +32,9 @@ public class FormEndPage extends Page<FormEndPage> {
     }
 
     public MainMenuPage clickSaveAndExit() {
+        SystemClock.sleep(1000);
         onView(withId(R.id.save_exit_button)).perform(click());
+        Espresso.pressBack();
         return new MainMenuPage(rule).assertOnPage();
     }
 

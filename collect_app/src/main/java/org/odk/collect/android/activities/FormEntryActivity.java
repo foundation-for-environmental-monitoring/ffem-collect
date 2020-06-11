@@ -1186,7 +1186,9 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         FormController formController = getFormController();
 
         String formTitle = formController.getFormTitle();
-        setTitle(formTitle);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(formTitle);
+        }
 
         if (event != FormEntryController.EVENT_QUESTION) {
             formController.getAuditEventLogger().logEvent(AuditEvent.getAuditEventTypeFromFecType(event),

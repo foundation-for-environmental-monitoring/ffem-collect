@@ -7,6 +7,7 @@ import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -23,6 +24,7 @@ import org.odk.collect.android.support.pages.StorageMigrationDialogPage;
 
 import java.util.Arrays;
 
+@Ignore("Auto migrated")
 @RunWith(AndroidJUnit4.class)
 public class StorageMigrationTest {
 

@@ -77,7 +77,9 @@ public class InstanceChooserList extends InstanceListActivity implements
         String formMode = getIntent().getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE);
         if (formMode == null || ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)) {
 
-            setTitle(getString(R.string.review_data));
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(getString(R.string.review_data));
+            }
             editMode = true;
             sortingOptions = new int[] {
                     R.string.sort_by_name_asc, R.string.sort_by_name_desc,
@@ -85,7 +87,9 @@ public class InstanceChooserList extends InstanceListActivity implements
                     R.string.sort_by_status_asc, R.string.sort_by_status_desc
             };
         } else {
-            setTitle(getString(R.string.view_sent_forms));
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(getString(R.string.view_sent_forms));
+            }
 
             sortingOptions = new int[] {
                     R.string.sort_by_name_asc, R.string.sort_by_name_desc,

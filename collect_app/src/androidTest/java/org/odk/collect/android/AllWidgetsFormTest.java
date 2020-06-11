@@ -270,7 +270,7 @@ public class AllWidgetsFormTest {
         when(activityAvailability.isActivityAvailable(any(Intent.class)))
                .thenReturn(false);
 
-        onView(withText("Launch")).perform(click());
+        onView(withText(R.string.launch_app)).perform(click());
 //        onVisibleEditText().perform(replaceText(exStringWidgetFirstText));
 
         openWidgetList();
@@ -296,7 +296,7 @@ public class AllWidgetsFormTest {
         when(activityAvailability.isActivityAvailable(any(Intent.class)))
                 .thenReturn(true);
 
-        onView(withText("Launch")).perform(click());
+        onView(withText(R.string.launch_app)).perform(click());
         onView(withText(exStringWidgetSecondText))
                 .check(matches(isDisplayed()));
 
@@ -311,7 +311,7 @@ public class AllWidgetsFormTest {
     }
 
     public void testExPrinterWidget() {
-        onView(withText("Initiate Printing")).perform(click());
+        onView(withText(R.string.launch_printer)).perform(click());
 
         Screengrab.screenshot("ex-printer");
 
@@ -362,7 +362,7 @@ public class AllWidgetsFormTest {
         when(activityAvailability.isActivityAvailable(any(Intent.class)))
                 .thenReturn(false);
 
-        onView(withText("Launch")).perform(click());
+        onView(withText(R.string.launch_app)).perform(click());
 //        onVisibleEditText().perform(replaceText(exIntegerFirstValue));
 
         Screengrab.screenshot("ex-integer");
@@ -388,7 +388,7 @@ public class AllWidgetsFormTest {
         when(activityAvailability.isActivityAvailable(any(Intent.class)))
                 .thenReturn(true);
 
-        onView(withText("Launch")).perform(click());
+        onView(withText(R.string.launch_app)).perform(click());
         onView(withText(exIntegerSecondValue))
                 .check(matches(isDisplayed()));
 
@@ -423,7 +423,7 @@ public class AllWidgetsFormTest {
         when(activityAvailability.isActivityAvailable(any(Intent.class)))
                 .thenReturn(false);
 
-        onView(withText("Launch")).perform(click());
+        onView(withText(R.string.launch_app)).perform(click());
 //        onVisibleEditText().perform(replaceText(exDecimalFirstValue));
 
         Screengrab.screenshot("ex-decimal");
@@ -449,7 +449,7 @@ public class AllWidgetsFormTest {
         when(activityAvailability.isActivityAvailable(any(Intent.class)))
                 .thenReturn(true);
 
-        onView(withText("Launch")).perform(click());
+        onView(withText(R.string.launch_app)).perform(click());
         onView(withText(exDecimalSecondValue))
                 .check(matches(isDisplayed()));
 
@@ -545,19 +545,19 @@ public class AllWidgetsFormTest {
     public void testRangePickerIntegerWidget() {
 
         int randomValue = randomInt() % 8;
-        onView(withText("Select value")).perform(click());
+        onView(withText(R.string.select_value)).perform(click());
 
         onVisibleNumberPickerDialog().perform(setNumberPickerValue(randomValue));
-        onView(withText("OK")).perform(click());
+        onView(withText(R.string.ok)).perform(click());
 
         Screengrab.screenshot("Range-picker-integer-widget");
 
         openWidgetList();
         onView(withText("Range picker integer widget")).perform(click());
 
-        onView(withText("Edit value")).perform(click());
+        onView(withText(R.string.edit_value)).perform(click());
         onVisibleCustomEditText().check(matches(isDisplayed()));
-        onView(withText("OK")).perform(click());
+        onView(withText(R.string.ok)).perform(click());
 
         onView(withText("Range picker integer widget")).perform(swipeLeft());
 
