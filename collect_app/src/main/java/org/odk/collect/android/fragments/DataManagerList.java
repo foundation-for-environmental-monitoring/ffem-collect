@@ -64,8 +64,7 @@ public class DataManagerList extends InstanceListFragment
     private AlertDialog alertDialog;
     private InstanceSyncTask instanceSyncTask;
     private ProgressDialog progressDialog;
-    @Inject
-    SmsSubmissionManagerContract smsSubmissionManager;
+
     private static String formMode = ApplicationConstants.FormModes.EDIT_SAVED;
 
     public static DataManagerList newInstance() {
@@ -209,22 +208,12 @@ public class DataManagerList extends InstanceListFragment
             progressDialog.setCancelable(false);
             progressDialog.show();
 
-            deleteSmsSubmissions(getCheckedIdObjects());
-
             deleteInstancesTask = new DeleteInstancesTask();
             deleteInstancesTask.setContentResolver(getActivity().getContentResolver());
             deleteInstancesTask.setDeleteListener(this);
             deleteInstancesTask.execute(getCheckedIdObjects());
         } else {
             ToastUtils.showLongToast(R.string.file_delete_in_progress);
-        }
-    }
-
-    private void deleteSmsSubmissions(Long[] ids) {
-        List<Long> list = Arrays.asList(ids);
-
-        for (Long id : list) {
-            smsSubmissionManager.forgetSubmission(String.valueOf(id));
         }
     }
 
@@ -260,7 +249,7 @@ public class DataManagerList extends InstanceListFragment
 
         (new Handler()).postDelayed(() -> {
             if (getListView().getCount() == 0) {
-                Objects.requireNonNull(getActivity()).finish();
+                requireActivity().finish();
             }
         }, 300);
     }
