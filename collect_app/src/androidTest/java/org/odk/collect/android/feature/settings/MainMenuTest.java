@@ -6,6 +6,7 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -16,6 +17,7 @@ import org.odk.collect.android.support.ResetStateRule;
 import org.odk.collect.android.support.pages.AdminSettingsPage;
 import org.odk.collect.android.support.pages.MainMenuPage;
 
+@Ignore("Settings interface changed")
 @RunWith(AndroidJUnit4.class)
 public class MainMenuTest {
     @Rule

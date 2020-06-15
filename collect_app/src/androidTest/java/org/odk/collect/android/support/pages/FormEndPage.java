@@ -34,7 +34,6 @@ public class FormEndPage extends Page<FormEndPage> {
     public MainMenuPage clickSaveAndExit() {
         SystemClock.sleep(1000);
         onView(withId(R.id.save_exit_button)).perform(click());
-        Espresso.pressBack();
         return new MainMenuPage(rule).assertOnPage();
     }
 

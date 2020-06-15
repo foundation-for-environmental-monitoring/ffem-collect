@@ -5,6 +5,7 @@ import android.Manifest;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -21,6 +22,7 @@ import static org.odk.collect.android.support.matchers.DrawableMatcher.withImage
 import static org.odk.collect.android.support.matchers.RecyclerViewMatcher.withRecyclerView;
 
 //Issue NODK-234
+@Ignore("About customized")
 @RunWith(AndroidJUnit4.class)
 public class AboutPageTest {
 

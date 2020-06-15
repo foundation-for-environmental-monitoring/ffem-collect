@@ -151,7 +151,7 @@ public class FormChooserListActivity extends FormListActivity implements
                 startActivity(intent);
             }
 
-//            finish();
+            finish();
         }
     }
 

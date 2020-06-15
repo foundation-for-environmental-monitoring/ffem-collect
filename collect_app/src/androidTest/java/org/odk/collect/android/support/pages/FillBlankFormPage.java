@@ -1,6 +1,7 @@
 package org.odk.collect.android.support.pages;
 
 import android.database.Cursor;
+import android.os.SystemClock;
 
 import androidx.test.espresso.matcher.CursorMatchers;
 import androidx.test.rule.ActivityTestRule;
@@ -30,11 +31,13 @@ public class FillBlankFormPage extends Page<FillBlankFormPage> {
 
     @Override
     public FillBlankFormPage assertOnPage() {
+        SystemClock.sleep(2000);
         checkIsStringDisplayed(R.string.enter_data);
         return this;
     }
 
     public IdentifyUserPromptPage clickOnFormWithIdentityPrompt(String formName) {
+        SystemClock.sleep(2000);
         clickOnFormButton(formName);
         return new IdentifyUserPromptPage(formName, rule).assertOnPage();
     }

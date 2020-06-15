@@ -148,7 +148,9 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
 
         startIndex = formController.getFormIndex();
 
-        setTitle(formController.getFormTitle());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(formController.getFormTitle());
+        }
 
         groupPathTextView = findViewById(R.id.pathtext);
 
@@ -172,7 +174,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                 for (HierarchyElement hierarchyElement : elementsToDisplay) {
                     FormIndex indexToCheck = hierarchyElement.getFormIndex();
                     if (startIndex.equals(indexToCheck)
-                            || (formController.indexIsInFieldList(startIndex, false) && indexToCheck.toString().startsWith(startIndex.toString()))) {
+                            || (formController.indexIsInFieldList(startIndex) && indexToCheck.toString().startsWith(startIndex.toString()))) {
                         position = elementsToDisplay.indexOf(hierarchyElement);
                         break;
                     }
@@ -230,11 +232,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
         showAddButton(shouldShowAdd);
 
         boolean shouldShowGoUp = !isAtBeginning;
-        //ffem: disable the up menu button
-        //showGoUpButton(shouldShowGoUp);
-        if (shouldShowGoUp){
-            goUpLevel();
-        }
+        showGoUpButton(shouldShowGoUp);
     }
 
     /**
@@ -560,57 +558,45 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                                         HierarchyElement.Type.QUESTION, fp.getIndex(), fp.isRequired()));
                         break;
                     }
-//                    case FormEntryController.EVENT_GROUP: {
-//                        if (!formController.isGroupRelevant()) {
-//                            break;
-//                        }
-//                        // Nothing but repeat group instances should show up in the picker.
-//                        if (shouldShowRepeatGroupPicker()) {
-//                            break;
-//                        }
-//
-//                        FormIndex index = formController.getFormIndex();
-//
-//                        // Only display groups with a specific appearance attribute.
-//                        if (!formController.isDisplayableGroup(index)) {
-//                            break;
-//                        }
-//
-//                        // Don't render other groups' children.
-//                        if (contextGroupRef != null && !contextGroupRef.isParentOf(currentRef, false)) {
-//                            break;
-//                        }
-//
-//                        visibleGroupRef = currentRef;
-//
-//                        FormEntryCaption caption = formController.getCaptionPrompt();
-//                        HierarchyElement groupElement = new HierarchyElement(
-//                                caption.getShortText(), getString(R.string.group_label),
-//                                ContextCompat.getDrawable(this, R.drawable.ic_folder_open),
-//                                HierarchyElement.Type.VISIBLE_GROUP, caption.getIndex());
-//                        elementsToDisplay.add(groupElement);
-//
-//                        // Skip to the next item outside the group.
-//                        event = formController.stepOverGroup();
-//                        continue;
-//                    }
-                    case FormEntryController.EVENT_GROUP:
-                        // ignore group events
-                        FormEntryCaption fp1 = formController.getCaptionPrompt();
-                        if (ODKView.FIELD_LIST.equalsIgnoreCase(fp1.getFormElement().getAppearanceAttr())) {
-                            String intentString = fp1.getFormElement().getAdditionalAttribute(null, "intent");
-                            if ((intentString != null && !intentString.isEmpty()) && fp1.getFormElement().getChildren().size() > 0) {
-                                elementsToDisplay.add(
-                                        new HierarchyElement(fp1.getQuestionText(), "",
-                                                null, HierarchyElement.Type.PROPERTY, fp1.getIndex(), false));
-                            }
+                    case FormEntryController.EVENT_GROUP: {
+                        if (!formController.isGroupRelevant()) {
+                            break;
+                        }
+                        // Nothing but repeat group instances should show up in the picker.
+                        if (shouldShowRepeatGroupPicker()) {
+                            break;
                         }
 
-                        break;
-                    case FormEntryController.EVENT_PROMPT_NEW_REPEAT:
+                        FormIndex index = formController.getFormIndex();
+
+                        // Only display groups with a specific appearance attribute.
+                        if (!formController.isDisplayableGroup(index)) {
+                            break;
+                        }
+
+                        // Don't render other groups' children.
+                        if (contextGroupRef != null && !contextGroupRef.isParentOf(currentRef, false)) {
+                            break;
+                        }
+
+                        visibleGroupRef = currentRef;
+
+                        FormEntryCaption caption = formController.getCaptionPrompt();
+                        HierarchyElement groupElement = new HierarchyElement(
+                                caption.getShortText(), getString(R.string.group_label),
+                                ContextCompat.getDrawable(this, R.drawable.ic_folder_open),
+                                HierarchyElement.Type.VISIBLE_GROUP, caption.getIndex(), false);
+                        elementsToDisplay.add(groupElement);
+
+                        // Skip to the next item outside the group.
+                        event = formController.stepOverGroup();
+                        continue;
+                    }
+                    case FormEntryController.EVENT_PROMPT_NEW_REPEAT: {
                         // this would display the 'add new repeat' dialog
                         // ignore it.
                         break;
+                    }
                     case FormEntryController.EVENT_REPEAT: {
                         if (!formController.isGroupRelevant()) {
                             break;
@@ -667,41 +653,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                 event = formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
             }
 
-            List<HierarchyElement> newFormList = new ArrayList<>();
-
-            int i = 0;
-            while (i < elementsToDisplay.size()) {
-                boolean isRequired = false;
-                HierarchyElement item = elementsToDisplay.get(i);
-                item.getIntentChildren().clear();
-                newFormList.add(item);
-
-                if (item.getType() == HierarchyElement.Type.PROPERTY) {
-                    item.setType(HierarchyElement.Type.QUESTION);
-                    for (int ii = i + 1; ii < elementsToDisplay.size(); ii++) {
-                        HierarchyElement childItem = elementsToDisplay.get(ii);
-                        if (childItem.getType() != HierarchyElement.Type.COLLAPSED) {
-                            if (childItem.getFormIndex().toString().startsWith(item.getFormIndex().toString())) {
-                                if (!isRequired && childItem.isRequired()) {
-                                    isRequired = true;
-                                    childItem.setRequired(false);
-                                }
-                                item.addIntentChild(childItem);
-                                i++;
-                            } else {
-                                break;
-                            }
-                        } else {
-                            break;
-                        }
-
-                    }
-                    item.setRequired(isRequired);
-                }
-                i++;
-            }
-
-            recyclerView.setAdapter(new HierarchyListAdapter(newFormList, this::onElementClick, false));
+            recyclerView.setAdapter(new HierarchyListAdapter(elementsToDisplay, this::onElementClick, false));
 
             formController.jumpToIndex(currentIndex);
 
@@ -764,7 +716,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
      */
     void onQuestionClicked(FormIndex index) {
         Collect.getInstance().getFormController().jumpToIndex(index);
-        if (Collect.getInstance().getFormController().indexIsInFieldList(true)) {
+        if (Collect.getInstance().getFormController().indexIsInFieldList()) {
             try {
                 Collect.getInstance().getFormController().stepToPreviousScreenEvent();
             } catch (JavaRosaException e) {

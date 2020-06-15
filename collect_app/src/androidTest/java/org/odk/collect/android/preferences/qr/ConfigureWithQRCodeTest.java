@@ -53,7 +53,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertTrue;
 
-
+@Ignore("QR settings import disabled")
 @RunWith(AndroidJUnit4.class)
 public class ConfigureWithQRCodeTest {
 

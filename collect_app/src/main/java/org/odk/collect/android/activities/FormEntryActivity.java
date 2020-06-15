@@ -2390,7 +2390,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
                             identityPromptViewModel.requiresIdentityToContinue().observe(this, requiresIdentity -> {
                                 if (!requiresIdentity) {
-                                    if (!allowMovingBackwards) {
+//                                    if (!allowMovingBackwards) {
                                         // we aren't allowed to jump around the form so attempt to
                                         // go directly to the question we were on last time the
                                         // form was saved.
@@ -2400,13 +2400,16 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                                         if (formIndex != null) {
                                             formController.jumpToIndex(formIndex);
                                             refreshCurrentView();
-                                            return;
+//                                            return;
+                                        } else {
+                                            formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.FORM_RESUME, true, System.currentTimeMillis());
+                                            startFormEntry(formController, warningMsg);
                                         }
-                                    }
+//                                    }
 
-                                    formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.FORM_RESUME, true, System.currentTimeMillis());
-                                    formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.HIERARCHY, true, System.currentTimeMillis());
-                                    startActivityForResult(new Intent(this, FormHierarchyActivity.class), RequestCodes.HIERARCHY_ACTIVITY);
+//                                    formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.FORM_RESUME, true, System.currentTimeMillis());
+//                                    formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.HIERARCHY, true, System.currentTimeMillis());
+//                                    startActivityForResult(new Intent(this, FormHierarchyActivity.class), RequestCodes.HIERARCHY_ACTIVITY);
                                 }
                             });
 

@@ -28,7 +28,7 @@ public class FormFinalizingTest {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_PHONE_STATE
             ))
-            .around(new ResetStateRule())
+            .around(new ResetStateRule(true))
             .around(new CopyFormRule(FORM));
 
     @Rule

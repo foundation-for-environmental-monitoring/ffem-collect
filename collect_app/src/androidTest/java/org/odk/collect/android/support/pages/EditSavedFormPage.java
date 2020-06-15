@@ -16,6 +16,7 @@
 
 package org.odk.collect.android.support.pages;
 
+import android.os.SystemClock;
 import android.widget.RelativeLayout;
 
 import androidx.appcompat.widget.Toolbar;
@@ -49,7 +50,7 @@ public class EditSavedFormPage extends Page<EditSavedFormPage> {
 
     public EditSavedFormPage checkInstanceState(String instanceName, String desiredStatus) {
         int desiredImageId = InstanceListCursorAdapter.getFormStateImageResourceIdForStatus(desiredStatus);
-
+        SystemClock.sleep(3000);
         onView(allOf(instanceOf(RelativeLayout.class),
                     hasDescendant(withText(instanceName)),
                     not(hasDescendant(instanceOf(Toolbar.class)))))
@@ -73,6 +74,7 @@ public class EditSavedFormPage extends Page<EditSavedFormPage> {
     }
 
     private void scrollToAndClickOnForm(String formName) {
+        SystemClock.sleep(2000);
         onView(withText(formName)).perform(scrollTo(), click());
     }
 }

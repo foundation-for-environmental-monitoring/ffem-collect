@@ -59,8 +59,6 @@ public class TestingPreferenceFragment extends PreferenceFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         list = view.findViewById(android.R.id.list);
-        (new Handler()).postDelayed(() -> {
-            ListViewUtil.setListViewHeightBasedOnChildren(list, 40);
-        }, 200);
+        (new Handler()).postDelayed(() -> ListViewUtil.setListViewHeightBasedOnChildren(list, 40), 200);
     }
 }

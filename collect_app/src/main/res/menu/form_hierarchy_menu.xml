@@ -21,7 +21,7 @@
         android:id="@+id/menu_go_up"
         android:icon="@drawable/arrow_up"
         android:title="@string/jump_to_previous"
-        android:visible="false"
+        android:visible="true"
         app:showAsAction="always" />
 
 </menu>

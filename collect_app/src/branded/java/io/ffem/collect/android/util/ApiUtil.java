@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 /**
  * Utility functions for api related actions.
  */
-@SuppressWarnings("deprecation")
 public final class ApiUtil {
 
     private ApiUtil() {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -60,6 +61,7 @@
                 android:id="@+id/layoutUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="@string/username"
                 app:hintTextAppearance="@android:style/TextAppearance.Small">
 
                 <EditText
@@ -68,7 +70,8 @@
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:selectAllOnFocus="true" />
+                    android:selectAllOnFocus="true"
+                    tools:ignore="Autofill,LabelFor" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
@@ -84,6 +87,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".9"
+                    android:hint="@string/password"
                     app:hintTextAppearance="@android:style/TextAppearance.Small">
 
                     <EditText
@@ -92,7 +96,8 @@
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
                         android:maxLines="1"
-                        android:selectAllOnFocus="true" />
+                        android:selectAllOnFocus="true"
+                        tools:ignore="Autofill,LabelFor" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

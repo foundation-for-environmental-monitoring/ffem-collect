@@ -202,7 +202,7 @@ public class AuditEventLogger {
     */
     private boolean shouldEventBeLogged(AuditEvent aev) {
         if (aev.getAuditEventType().equals(AuditEvent.AuditEventType.QUESTION) && formController != null) {
-            return !formController.indexIsInFieldList(aev.getFormIndex(), false)
+            return !formController.indexIsInFieldList(aev.getFormIndex())
                     || (aev.hasNewAnswer() && auditConfig.isTrackingChangesEnabled());
         }
         return true;

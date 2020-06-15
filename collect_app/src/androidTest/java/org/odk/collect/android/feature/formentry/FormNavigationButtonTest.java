@@ -93,9 +93,14 @@ public class FormNavigationButtonTest {
         // rebuild view after preferences reset
         activityTestRule.getActivity().runOnUiThread(() -> activityTestRule.getActivity().recreate());
 
-        for (int i = 0; i < 10; i++) {
-            onView(withId(R.id.form_back_button)).check(matches(not(isDisplayed())));
-            onView(withId(R.id.form_forward_button)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.form_back_button)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.form_forward_button)).check(matches((isDisplayed())));
+
+        onView(withId(R.id.questionholder)).perform(swipeLeft());
+
+        for (int i = 1; i < 10; i++) {
+            onView(withId(R.id.form_back_button)).check(matches((isDisplayed())));
+            onView(withId(R.id.form_forward_button)).check(matches((isDisplayed())));
 
             onView(withId(R.id.questionholder)).perform(swipeLeft());
         }

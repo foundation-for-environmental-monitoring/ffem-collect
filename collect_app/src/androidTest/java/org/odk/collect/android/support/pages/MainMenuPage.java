@@ -13,6 +13,7 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.CursorMatchers.withRowString;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -42,6 +43,7 @@ public class MainMenuPage extends Page<MainMenuPage> {
     }
 
     public FormEntryPage startBlankForm(String formName) {
+        SystemClock.sleep(4000);
         goToBlankForm(formName);
         return new FormEntryPage(formName, rule).assertOnPage();
     }
@@ -72,17 +74,19 @@ public class MainMenuPage extends Page<MainMenuPage> {
     }
 
     public FillBlankFormPage clickFillBlankForm() {
+        SystemClock.sleep(5000);
         onView(withId(R.id.enter_data)).perform(click());
         return new FillBlankFormPage(rule).assertOnPage();
     }
 
     private void goToBlankForm(String formName) {
+        SystemClock.sleep(2000);
         clickFillBlankForm();
         onData(withRowString(FormsColumns.DISPLAY_NAME, formName)).perform(click());
     }
 
     public EditSavedFormPage clickEditSavedForm() {
-        SystemClock.sleep(1000);
+        SystemClock.sleep(2000);
         onView(withId(R.id.review_data)).perform(click());
         return new EditSavedFormPage(rule).assertOnPage();
     }
@@ -95,9 +99,9 @@ public class MainMenuPage extends Page<MainMenuPage> {
 
     public MainMenuPage assertNumberOfFinalizedForms(int number) {
         if (number == 0) {
-            onView(withText(getTranslatedString(R.string.send_data))).check(matches(isDisplayed()));
+            onView(withText(getTranslatedString(R.string.send_data))).check(doesNotExist());
         } else {
-            onView(withText(getTranslatedString(R.string.send_data_button, String.valueOf(number)))).check(matches(isDisplayed()));
+            onView(withText(getTranslatedString(R.string.outbox, String.valueOf(number)))).check(matches(isDisplayed()));
         }
         return this;
     }

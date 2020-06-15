@@ -41,6 +41,7 @@ import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryController;
 import org.javarosa.form.api.FormEntryModel;
 import org.javarosa.form.api.FormEntryPrompt;
+import org.javarosa.model.xform.CompactSerializingVisitor;
 import org.javarosa.model.xform.XFormSerializingVisitor;
 import org.javarosa.model.xform.XFormsModule;
 import org.javarosa.model.xform.XPathReference;
@@ -399,30 +400,18 @@ public class FormController {
      * displayed as a multi-question view. This is useful for returning from the formhierarchy view
      * to a selected index.
      */
-    private boolean groupIsFieldList(FormIndex index, boolean isHierarchy) {
+    private boolean groupIsFieldList(FormIndex index) {
         // if this isn't a group, return right away
         IFormElement element = formEntryController.getModel().getForm().getChild(index);
         if (!(element instanceof GroupDef)) {
             return false;
         }
 
-        //ffem: handle nested multiple result questions
-        if (isHierarchy) {
-            FormEntryCaption[] captions = getCaptionHierarchy(index);
-            if (captions.length == 1) {
-                if (element.getAdditionalAttributes().size() > 0) {
-                    if (element.getAdditionalAttributes().get(0).getValue() != null) {
-                        return false;
-                    }
-                }
-            }
-        }
-
         return ODKView.FIELD_LIST.equalsIgnoreCase(element.getAppearanceAttr());
     }
 
     private boolean repeatIsFieldList(FormIndex index) {
-        return groupIsFieldList(index, false);
+        return groupIsFieldList(index);
     }
 
     /**
@@ -457,7 +446,7 @@ public class FormController {
      *
      * @return true if index is in a "field-list". False otherwise.
      */
-    public boolean indexIsInFieldList(FormIndex index, boolean isHierarchy) {
+    public boolean indexIsInFieldList(FormIndex index) {
         int event = getEvent(index);
         if (event == FormEntryController.EVENT_QUESTION) {
             // caption[0..len-1]
@@ -470,13 +459,13 @@ public class FormController {
             }
             // If at least one of the groups you are inside is a field list, your index is in a field list
             for (FormEntryCaption caption : captions) {
-                if (groupIsFieldList(caption.getIndex(), isHierarchy)) {
+                if (groupIsFieldList(caption.getIndex())) {
                     return true;
                 }
             }
             return false;
         } else if (event == FormEntryController.EVENT_GROUP) {
-            return groupIsFieldList(index, isHierarchy);
+            return groupIsFieldList(index);
         } else if (event == FormEntryController.EVENT_REPEAT) {
             return repeatIsFieldList(index);
         } else {
@@ -493,12 +482,7 @@ public class FormController {
      * @return true if index is in a "field-list". False otherwise.
      */
     public boolean indexIsInFieldList() {
-        return indexIsInFieldList(getFormIndex(), false);
-    }
-
-    //ffem: new isHierarchy parameter
-    public boolean indexIsInFieldList(boolean isHierarchy) {
-        return indexIsInFieldList(getFormIndex(), isHierarchy);
+        return indexIsInFieldList(getFormIndex());
     }
 
     public boolean currentPromptIsQuestion() {
@@ -629,7 +613,7 @@ public class FormController {
                             // jump to outermost containing field-list
                             FormEntryCaption[] fclist = this.getCaptionHierarchy(currentIndex);
                             for (FormEntryCaption caption : fclist) {
-                                if (groupIsFieldList(caption.getIndex(), false)) {
+                                if (groupIsFieldList(caption.getIndex())) {
                                     formEntryController.jumpToIndex(caption.getIndex());
                                     break;
                                 }
@@ -1216,7 +1200,7 @@ public class FormController {
     /**
      * Once a submission is marked as complete, it is saved in the
      * submission format, which might be a fragment of the original
-     * form.
+     * form or might be a SMS text string, etc.
      *
      * @return true if the submission is the entire form.  If it is,
      * then the submission can be re-opened for editing
@@ -1365,4 +1349,18 @@ public class FormController {
     public boolean currentFormCollectsBackgroundLocation() {
         return currentFormAuditsLocation() || getFormDef().hasAction(SetGeopointActionHandler.ELEMENT_NAME);
     }
+
+    /**
+     * Constructs the SMS payload for a filled-in form instance. This payload
+     * does not enable a filled-in form to be re-opened and edited.
+     *
+     * @return ByteArrayPayload this can be converted back to a string when necessary.
+     * @throws IOException for some reason any error took place during serialization.
+     */
+    public ByteArrayPayload getFilledInFormSMS() throws IOException {
+        FormInstance dataModel = getInstance();
+        CompactSerializingVisitor serializer = new CompactSerializingVisitor();
+        return (ByteArrayPayload) serializer.createSerializedPayload(dataModel);
+    }
+
 }

@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.app.Instrumentation;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.SystemClock;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.contrib.RecyclerViewActions;
@@ -87,7 +88,7 @@ public class FieldListUpdateTest {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.CAMERA)
             )
-            .around(new ResetStateRule())
+            .around(new ResetStateRule(true))
             .around(new CopyFormRule(FIELD_LIST_TEST_FORM, Collections.singletonList("fruits.csv"), true));
 
     @Test
@@ -399,6 +400,7 @@ public class FieldListUpdateTest {
     // Scroll down until the desired group name is visible. This is needed to make the tests work
     // on devices with screens of different heights.
     private void jumpToGroupWithText(String text) {
+        SystemClock.sleep(1000);
         onView(withId(R.id.menu_goto)).perform(click());
         onView(withId(R.id.menu_go_up)).perform(click());
         onView(withId(R.id.list)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText(text))));

@@ -2,6 +2,7 @@ package org.odk.collect.android.regression;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -14,6 +15,7 @@ import org.odk.collect.android.support.pages.GeneralSettingsPage;
 import org.odk.collect.android.support.pages.MainMenuPage;
 
 //Issue NODK-241
+@Ignore("Settings customized")
 @RunWith(AndroidJUnit4.class)
 public class UserSettingsTest {
 

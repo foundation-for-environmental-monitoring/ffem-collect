@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Instrumentation.ActivityResult;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.view.View;
 
 import androidx.test.espresso.contrib.RecyclerViewActions;
@@ -113,12 +114,12 @@ public class AutoFormTest {
 
         extras.add("value");
         testExternal("io.ffem.water", "Arsenic (0 - 500)", extras,
-                ++textIndex, 0, false);
+                textIndex++, 0, false);
         extras.clear();
 
         extras.add("value");
         testExternal("io.ffem.water", "Arsenic (0 - 4000)", extras,
-                ++textIndex, 1, true);
+                textIndex, 1, true);
         extras.clear();
 
         test_pH();
@@ -127,14 +128,14 @@ public class AutoFormTest {
 
         extras.add("value");
         testExternal("io.ffem.soil", "Calcium and Magnesium", extras,
-                10, 0, true);
+                4, 0, true);
         extras.clear();
 
         onView(withText(R.string.form_forward)).perform(click());
 
         extras.add("value");
         testExternal("io.ffem.water", "Fluoride", extras,
-                15, 2, true);
+                2, 2, true);
         extras.clear();
 
         testFreeChlorine();
@@ -249,7 +250,9 @@ public class AutoFormTest {
     }
 
     private void openWidgetList() {
+        SystemClock.sleep(1000);
         onView(withId(R.id.menu_goto)).perform(click());
+        SystemClock.sleep(1000);
     }
 
     private String randomString() {

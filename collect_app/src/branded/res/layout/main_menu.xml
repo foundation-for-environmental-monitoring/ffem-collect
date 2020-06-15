@@ -173,32 +173,14 @@
                         tools:text="10" />
                 </RelativeLayout>
 
-                <!--<RelativeLayout-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content">-->
-
-                <!--<Button-->
-                <!--android:id="@+id/get_forms"-->
-                <!--style="@style/ListButton"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:gravity="start|center"-->
-                <!--android:minHeight="80dp"-->
-                <!--android:padding="20dp"-->
-                <!--android:textAllCaps="false"-->
-                <!--android:textSize="21sp" />-->
-                <!--</RelativeLayout>-->
-
-                <!--<Button-->
-                <!--android:id="@+id/manage_forms"-->
-                <!--style="@style/ListButton"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:gravity="start|center"-->
-                <!--android:minHeight="80dp"-->
-                <!--android:padding="20dp"-->
-                <!--android:textAllCaps="false"-->
-                <!--android:textSize="21sp" />-->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/manage_forms"
+                    style="@style/Widget.Collect.Button.FullWidth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_extra_small"
+                    android:visibility="gone"
+                    tools:text="@string/manage_files" />
             </LinearLayout>
 
         </ScrollView>

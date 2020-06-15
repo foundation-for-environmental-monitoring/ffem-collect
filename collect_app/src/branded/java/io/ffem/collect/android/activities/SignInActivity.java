@@ -60,7 +60,7 @@ public class SignInActivity extends CollectAbstractActivity {
                 try {
                     new StorageInitializer().createOdkDirsOnStorage();
                 } catch (RuntimeException e) {
-                    createErrorDialog(e.getMessage(), EXIT);
+                    createErrorDialog(e.getMessage());
                 }
             }
 
@@ -139,28 +139,18 @@ public class SignInActivity extends CollectAbstractActivity {
                             editPassword.getText().toString().trim());
                 }
 
-//                AuthDialogUtility.setWebCredentialsFromPreferences();
-
                 startActivity(new Intent(getBaseContext(), MainMenuActivity.class));
                 finish();
             }
         });
 
         layoutUserName = findViewById(R.id.layoutUsername);
-        layoutUserName.setHintAnimationEnabled(false);
-        layoutUserName.setHint(getString(R.string.username));
-
         layoutPassword = findViewById(R.id.passwordLayout);
-        layoutPassword.setHintAnimationEnabled(false);
-        layoutPassword.setHint(getString(R.string.password));
 
         if (!isUserSignedIn() || isSettings) {
             editText.setText(webCredentialsUtils.getUserNameFromPreferences());
             editPassword.setText(maskPassword(webCredentialsUtils.getPasswordFromPreferences()));
         }
-
-        layoutUserName.setHintAnimationEnabled(true);
-        layoutPassword.setHintAnimationEnabled(true);
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -239,12 +229,12 @@ public class SignInActivity extends CollectAbstractActivity {
                 && storedPassword.trim().length() != 0;
     }
 
-    private void createErrorDialog(String errorMsg, final boolean shouldExit) {
+    private void createErrorDialog(String errorMsg) {
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setMessage(errorMsg);
         DialogInterface.OnClickListener errorListener = (dialog, i) -> {
             if (i == DialogInterface.BUTTON_POSITIVE) {
-                if (shouldExit) {
+                if (SignInActivity.EXIT) {
                     finish();
                 }
             }
