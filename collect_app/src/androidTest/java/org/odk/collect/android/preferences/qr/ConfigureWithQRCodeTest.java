@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 
-import androidx.core.content.FileProvider;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -30,6 +29,7 @@ import org.odk.collect.android.injection.config.AppDependencyModule;
 import org.odk.collect.android.support.ResetStateRule;
 import org.odk.collect.android.support.RunnableRule;
 import org.odk.collect.android.support.pages.MainMenuPage;
+import org.odk.collect.android.utilities.ContentUriProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -132,7 +132,7 @@ public class ConfigureWithQRCodeTest {
     @Ignore("Should be replaced at Robolectric level")
     public void onMainMenu_clickConfigureQRCode_andClickingOnShareQRCode_startsExternalShareIntent() {
         String path = new StubQRCodeGenerator().getQrCodeFilepath();
-        Uri expected = FileProvider.getUriForFile(getApplicationContext(),
+        Uri expected = ContentUriProvider.getUriForFile(getApplicationContext(),
                 BuildConfig.APPLICATION_ID + ".provider",
                 new File(path));
 
