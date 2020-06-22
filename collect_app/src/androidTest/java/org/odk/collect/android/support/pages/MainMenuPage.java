@@ -82,6 +82,7 @@ public class MainMenuPage extends Page<MainMenuPage> {
     private void goToBlankForm(String formName) {
         SystemClock.sleep(2000);
         clickFillBlankForm();
+        SystemClock.sleep(2000);
         onData(withRowString(FormsColumns.DISPLAY_NAME, formName)).perform(click());
     }
 

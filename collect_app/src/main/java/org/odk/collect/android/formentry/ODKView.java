@@ -168,7 +168,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                         qw.setContainer((View) textView.getParent());
                     }
 
-                    if (qw.getAnswer() != null) {
+                    if (qw.getAnswer() != null && !qw.getQuestionDetails().getPrompt().getQuestion().getTextID().contains("meta")) {
                         RowView answerRow = new RowView(context);
                         answerRow.setPrimaryText(qw.getQuestionDetails().getPrompt().getQuestionText() + ": ");
                         answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
@@ -182,6 +182,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
             } else {
                 IFormElement formElement = c.getFormElement();
                 for (int i = 0; i < formElement.getChildren().size(); i++) {
+                    questionAdded = false;
                     if (formElement.getChild(i) instanceof GroupDef) {
                         intentString = getIntentString(formElement.getChild(i));
                         if (intentString != null) {
@@ -203,12 +204,12 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
                                     params.setMargins(16,8,16,0);
                                     textView.setLayoutParams(params);
-                                    textView.setText(c.getQuestionText(groups[0].getFormElement().getChildren().get(0).getTextID()));
+                                    textView.setText(c.getQuestionText(formElement.getChild(i).getTextID()));
                                     widgetsList.addView(textView);
                                     qw.setContainer((View) textView.getParent());
                                 }
 
-                                if (qw.getAnswer() != null) {
+                                if (qw.getAnswer() != null && !qw.getQuestionDetails().getPrompt().getQuestionText().contains("meta")) {
                                     RowView answerRow = new RowView(context);
                                     answerRow.setPrimaryText(qw.getQuestionDetails().getPrompt().getQuestionText() + ": ");
                                     answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
