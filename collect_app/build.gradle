@@ -27,6 +27,10 @@ android {
     compileSdkVersion(28)
     testOptions.unitTests.includeAndroidResources = true
 
+    viewBinding {
+        enabled = true
+    }
+
     defaultConfig {
         applicationId('io.ffem.collect')
         minSdkVersion(21)
