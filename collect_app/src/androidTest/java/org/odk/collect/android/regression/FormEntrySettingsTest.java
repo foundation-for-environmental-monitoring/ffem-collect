@@ -4,6 +4,7 @@ import android.Manifest;
 
 import androidx.test.rule.GrantPermissionRule;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -16,6 +17,7 @@ import org.odk.collect.android.support.pages.ExitFormDialog;
 import org.odk.collect.android.support.pages.GeneralSettingsPage;
 import org.odk.collect.android.support.pages.MainMenuPage;
 
+@Ignore("General settings disabled")
 //Issue NODK-243
 public class FormEntrySettingsTest {
 
