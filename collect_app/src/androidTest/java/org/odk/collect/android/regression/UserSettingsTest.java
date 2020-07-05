@@ -35,7 +35,7 @@ public class UserSettingsTest {
                 .openUserSettings()
                 .checkIfTextDoesNotExist("Type")
                 .checkIfTextDoesNotExist("Submission transport")
-                .checkIsStringDisplayed(R.string.server);
+                .assertText(R.string.server);
     }
 
     @Test
@@ -91,6 +91,6 @@ public class UserSettingsTest {
                 .clickOnMenu()
                 .clickGeneralSettings()
                 .openFormManagement()
-                .checkIsStringDisplayed(R.string.guidance_hint_title);
+                .assertText(R.string.guidance_hint_title);
     }
 }

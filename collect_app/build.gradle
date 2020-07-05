@@ -143,24 +143,14 @@ android {
 
     compileOptions {
         coreLibraryDesugaringEnabled true
-
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    dexOptions {
-        javaMaxHeapSize '2048M'
     }
 
     testOptions {
         unitTests {
             includeAndroidResources = true
             returnDefaultValues = true
-            all {
-                // https://discuss.circleci.com/t/11207/24
-                // it seems any number works, but 1024 - 2048 seem reasonable
-                maxHeapSize = "2048M"
-            }
         }
     }
 }
@@ -182,12 +172,14 @@ dependencies {
     implementation 'androidx.browser:browser:1.2.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation "androidx.work:work-runtime:2.3.4"
-    implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.exifinterface:exifinterface:1.2.0'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.preference:preference:1.1.1'
     implementation "androidx.fragment:fragment:${rootProject.fragmentVersion}"
+
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.google.android:flexbox:2.0.1'
 
     implementation "com.google.android.gms:play-services-auth:18.0.0"
     implementation "com.google.android.gms:play-services-maps:17.0.0"
@@ -265,6 +257,7 @@ dependencies {
 
     implementation project(':nbi-stubs')
     implementation project(':material')
+    implementation project(':async')
 
     // Makes binding to Views easy:
     implementation "com.jakewharton:butterknife:10.2.1"

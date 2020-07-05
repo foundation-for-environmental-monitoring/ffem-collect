@@ -32,7 +32,7 @@ public class FillBlankFormPage extends Page<FillBlankFormPage> {
     @Override
     public FillBlankFormPage assertOnPage() {
         SystemClock.sleep(2000);
-        checkIsStringDisplayed(R.string.enter_data);
+        assertText(R.string.enter_data);
         return this;
     }
 

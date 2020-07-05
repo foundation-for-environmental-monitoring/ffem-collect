@@ -115,6 +115,7 @@
     <string name="replace_barcode">Replace Barcode</string>
     <string name="required_answer_error">Sorry, this response is required!</string>
     <string name="review_data">Edit Saved Form</string>
+    <string name="view_data">View Saved Form</string>
     <string name="review_data_button">Edit Saved Form (%s)‎‎‎‎</string>
     <string name="save_all_answers">Save Form</string>
     <string name="save_enter_data_description">You are at the end of %s.</string>
@@ -499,7 +500,6 @@
     <string name="include_password_dialog">Passwords Included in Code</string>
     <string name="generate">Generate</string>
     <string name="invalid_qrcode">QR code does not contain valid settings</string>
-    <string name="share_qrcode">Share QR code</string>
     <string name="take_picture_instruction">Tap the screen to take a picture</string>
     <string name="error_front_camera_unavailable">Front camera not available on this device</string>
     <string name="camera_error">This device doesn\'t support the Camera2 API.</string>
@@ -683,7 +683,7 @@
     <string name="save_legacy_settings_warning">Will be removed in a future version. Please use the QR code above.</string>
     <string name="reason_for_changes_description">You need to explain the reason for changes to this form</string>
 
-    <string name="scoped_storage_banner_text">You must migrate Collect forms to private storage by August 2020 to comply with Android requirements.</string>
+    <string name="scoped_storage_banner_text">You must migrate Collect forms to private storage to comply with Android requirements. In Collect v1.29, <b>the migration will be forced on install</b>.</string>
     <string name="scoped_storage_learn_more">Learn more and migrate</string>
     <string name="storage_migration_completed">Storage migration completed!</string>
     <string name="scoped_storage_dismiss">Dismiss</string>

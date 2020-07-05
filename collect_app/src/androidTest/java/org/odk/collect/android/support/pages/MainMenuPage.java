@@ -36,7 +36,7 @@ public class MainMenuPage extends Page<MainMenuPage> {
     }
 
     public MainMenuPage clickOnMenu() {
-        assertOnPage(); // Make sure we're on the Main Menu to prevent this being called early
+        assertOnPage(); // Make sure we've waited for the application load correctly
         Espresso.openActionBarOverflowOrOptionsMenu(ActivityHelpers.getActivity());
         onView(withText(getTranslatedString(R.string.general_preferences))).check(matches(isDisplayed()));
         return this;
@@ -70,6 +70,13 @@ public class MainMenuPage extends Page<MainMenuPage> {
 
     public QRCodeTabsActivityPage clickConfigureQR() {
         clickOnString(R.string.configure_via_qr_code);
+        return new QRCodeTabsActivityPage(rule).assertOnPage();
+    }
+
+    public QRCodeTabsActivityPage clickConfigureQRWithAdminPassword(String password) {
+        clickOnString(R.string.configure_via_qr_code);
+        inputText(password);
+        clickOKOnDialog();
         return new QRCodeTabsActivityPage(rule).assertOnPage();
     }
 

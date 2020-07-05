@@ -44,7 +44,7 @@ public class EditSavedFormPage extends Page<EditSavedFormPage> {
 
     @Override
     public EditSavedFormPage assertOnPage() {
-        checkIsStringDisplayed(R.string.review_data);
+        assertText(R.string.review_data);
         return this;
     }
 
