@@ -12,6 +12,7 @@ import com.google.zxing.WriterException;
 
 import org.json.JSONException;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -38,6 +39,7 @@ import java.util.Collection;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
+@Ignore("General settings disabled")
 @RunWith(AndroidJUnit4.class)
 public class ConfigureWithQRCodeTest {
 

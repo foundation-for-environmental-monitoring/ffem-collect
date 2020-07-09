@@ -35,7 +35,6 @@
     <string name="list_failed_with_error">ಫಾರ್ಮ್ ಪಟ್ಟಿ ವಿಫಲವಾಗಿದೆ. % s.</string>
     <string name="loading_form">ಫಾರ್ಮ್ ಅನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ</string>
     <string name="load_remote_form_error">ಫಾರ್ಮ್ ಪಟ್ಟಿಯನ್ನು ಪಡೆಯುವಲ್ಲಿ ದೋಷ</string>
-    <string name="location_provider_accuracy">ಬಳಸುವುದು %1$s. ನಿಖರತೆ %2$s ಮೀ.</string>
     <string name="location_accuracy">ನಿಖರತೆ %1$s ಮೀ</string>
     <string name="manage_files">ಉಳಿಸಿದ ಫಾರ್ಮ್ ಅನ್ನು ಅಳಿಸಿ</string>
     <string name="mark_finished">ಫಾರ್ಮ್ ಅಂತಿಮಗೊಳಿಸಿ</string>
