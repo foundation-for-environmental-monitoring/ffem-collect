@@ -33,7 +33,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,9 +41,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.Style;
-
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.viewmodels.MainMenuViewModel;
 import org.odk.collect.android.analytics.Analytics;
@@ -52,8 +48,6 @@ import org.odk.collect.android.analytics.AnalyticsEvents;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.injection.DaggerUtils;
-import org.odk.collect.android.network.NetworkStateProvider;
-import org.odk.collect.android.preferences.PreferencesProvider;
 import org.odk.collect.android.storage.migration.StorageMigrationService;
 import org.odk.collect.material.MaterialBanner;
 import org.odk.collect.android.preferences.AdminKeys;
@@ -104,7 +98,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-import static org.odk.collect.android.preferences.MetaKeys.KEY_MAPBOX_INITIALIZED;
 import static org.odk.collect.android.utilities.DialogUtils.getDialog;
 import static org.odk.collect.android.utilities.DialogUtils.showIfNotShowing;
 
@@ -162,13 +155,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
     VersionInformation versionInformation;
 
     @Inject
-    NetworkStateProvider connectivityProvider;
-
-    @Inject
     GeneralSharedPreferences generalSharedPreferences;
-
-    @Inject
-    PreferencesProvider preferencesProvider;
 
     private MainMenuViewModel viewModel;
 
@@ -191,7 +178,6 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         viewModel = ViewModelProviders.of(this, new MainMenuViewModel.Factory(versionInformation)).get(MainMenuViewModel.class);
 
         initToolbar();
-        initMapBox();
         DaggerUtils.getComponent(this).inject(this);
 
         storageMigrationRepository.getResult().observe(this, this::onStorageMigrationFinish);
@@ -469,24 +455,6 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
                 startActivityForResult(intent, 100);
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void initMapBox() {
-        SharedPreferences metaSharedPreferences = preferencesProvider.getMetaSharedPreferences();
-        if (!metaSharedPreferences.getBoolean(KEY_MAPBOX_INITIALIZED, false) && connectivityProvider.isDeviceOnline()) {
-            // This "one weird trick" lets us initialize MapBox at app start when the internet is
-            // most likely to be available. This is annoyingly needed for offline tiles to work.
-            try {
-                MapView mapView = new MapView(this);
-                FrameLayout mapboxContainer = findViewById(R.id.mapbox_container);
-                mapboxContainer.addView(mapView);
-                mapView.getMapAsync(mapBoxMap -> mapBoxMap.setStyle(Style.MAPBOX_STREETS, style -> {
-                    metaSharedPreferences.edit().putBoolean(KEY_MAPBOX_INITIALIZED, true).apply();
-                }));
-            } catch (Exception | Error ignored) {
-                // This will crash on devices where the arch for MapBox is not included
-            }
-        }
     }
 
     private void initToolbar() {

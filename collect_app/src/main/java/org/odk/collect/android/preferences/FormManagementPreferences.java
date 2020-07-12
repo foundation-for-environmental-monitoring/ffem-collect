@@ -41,6 +41,7 @@ import static org.odk.collect.android.preferences.GeneralKeys.KEY_AUTOSEND;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_CONSTRAINT_BEHAVIOR;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_DELETE_FORMS;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_GUIDANCE_HINT;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_HIDE_OLD_FORM_VERSIONS;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_IMAGE_SIZE;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_PERIODIC_FORM_UPDATES_CHECK;
 import static org.odk.collect.android.preferences.PreferencesActivity.INTENT_KEY_ADMIN_MODE;
@@ -49,6 +50,9 @@ public class FormManagementPreferences extends BasePreferenceFragment {
 
     @Inject
     Analytics analytics;
+
+    @Inject
+    GeneralSharedPreferences generalSharedPreferences;
 
     private ListView list;
 
@@ -74,6 +78,14 @@ public class FormManagementPreferences extends BasePreferenceFragment {
         initListPref(KEY_AUTOSEND);
         initListPref(KEY_IMAGE_SIZE);
         initGuidancePrefs();
+
+        boolean matchExactlyEnabled = generalSharedPreferences.getSharedPreferences()
+                .getBoolean(GeneralKeys.KEY_MATCH_EXACTLY, false);
+
+        findPreference(KEY_PERIODIC_FORM_UPDATES_CHECK).setEnabled(!matchExactlyEnabled);
+        findPreference(KEY_AUTOMATIC_UPDATE).setEnabled(!matchExactlyEnabled);
+        findPreference(KEY_HIDE_OLD_FORM_VERSIONS).setEnabled(!matchExactlyEnabled);
+
         initFormDeletePref(KEY_DELETE_FORMS);
     }
 

@@ -14,11 +14,11 @@
 
 package org.odk.collect.android.activities;
 
-import androidx.appcompat.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -30,19 +30,36 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
+
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.FormListAdapter;
 import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.formmanagement.BlankFormsListViewModel;
+import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.listeners.DiskSyncListener;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.preferences.PreferencesProvider;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.tasks.DiskSyncTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.utilities.PermissionUtils;
+import org.odk.collect.async.Scheduler;
+
+import javax.inject.Inject;
+
+import timber.log.Timber;
+
+import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
+
 import org.odk.collect.android.utilities.ToastUtils;
 
 import androidx.annotation.NonNull;
@@ -51,9 +68,6 @@ import androidx.loader.content.Loader;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import io.ffem.collect.android.activities.DeleteFormsActivity;
-import timber.log.Timber;
-
-import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 
 /**
  * Responsible for displaying all the valid forms in the forms directory. Stores the path to
@@ -69,10 +83,21 @@ public class FormChooserListActivity extends FormListActivity implements
     private static final boolean EXIT = true;
     private DiskSyncTask diskSyncTask;
 
+    @Inject
+    PreferencesProvider preferencesProvider;
+
+    @Inject
+    Scheduler scheduler;
+
+    @Inject
+    BlankFormsListViewModel.Factory blankFormsListViewModelFactory;
+    private BlankFormsListViewModel blankFormsListViewModel;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.chooser_blank_list_layout);
+        setContentView(R.layout.form_chooser_list);
+        DaggerUtils.getComponent(this).inject(this);
 
         setTitle(getString(R.string.enter_data));
 
@@ -82,6 +107,15 @@ public class FormChooserListActivity extends FormListActivity implements
         }
 
         findViewById(R.id.buttonGetBlankForm).setOnClickListener(view -> onClickGetBlankForm(view));
+
+        blankFormsListViewModel = new ViewModelProvider(this, blankFormsListViewModelFactory).get(BlankFormsListViewModel.class);
+        blankFormsListViewModel.isSyncing().observe(this, syncing -> {
+            if (syncing) {
+                findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+            } else {
+                findViewById(R.id.progressBar).setVisibility(View.GONE);
+            }
+        });
 
         new PermissionUtils().requestStoragePermissions(this, new PermissionListener() {
             @Override
@@ -103,6 +137,32 @@ public class FormChooserListActivity extends FormListActivity implements
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        SharedPreferences generalSharedPreferences = preferencesProvider.getGeneralSharedPreferences();
+        boolean matchExactlyEnabled = generalSharedPreferences.getBoolean(GeneralKeys.KEY_MATCH_EXACTLY, false);
+        menu.findItem(R.id.menu_refresh).setVisible(matchExactlyEnabled);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (super.onOptionsItemSelected(item)) {
+            return true;
+        } else {
+            if (item.getItemId() == R.id.menu_refresh) {
+                blankFormsListViewModel.syncWithServer();
+                return true;
+            } else {
+                return false;
+
+            }
+        }
+    }
+
     private void init() {
 //        setupAdapter();
 
@@ -115,7 +175,7 @@ public class FormChooserListActivity extends FormListActivity implements
             diskSyncTask.setDiskSyncListener(this);
             diskSyncTask.execute((Void[]) null);
         }
-        sortingOptions = new int[] {
+        sortingOptions = new int[]{
                 R.string.sort_by_name_asc, R.string.sort_by_name_desc,
                 R.string.sort_by_date_asc, R.string.sort_by_date_desc,
         };
@@ -159,11 +219,14 @@ public class FormChooserListActivity extends FormListActivity implements
         final Uri formUri = ContentUris.withAppendedId(FormsColumns.CONTENT_URI, id);
         final Intent intent = new Intent(Intent.ACTION_EDIT, formUri, this, FormMapActivity.class);
         new PermissionUtils().requestLocationPermissions(this, new PermissionListener() {
-            @Override public void granted() {
+            @Override
+            public void granted() {
                 startActivity(intent);
             }
 
-            @Override public void denied() { }
+            @Override
+            public void denied() {
+            }
         });
     }
 
@@ -199,21 +262,21 @@ public class FormChooserListActivity extends FormListActivity implements
 
     private void setupAdapter() {
         String[] columnNames = {
-            FormsColumns.DISPLAY_NAME,
-            FormsColumns.JR_VERSION,
-            hideOldFormVersions() ? FormsColumns.MAX_DATE : FormsColumns.DATE,
-            FormsColumns.GEOMETRY_XPATH
+                FormsColumns.DISPLAY_NAME,
+                FormsColumns.JR_VERSION,
+                hideOldFormVersions() ? FormsColumns.MAX_DATE : FormsColumns.DATE,
+                FormsColumns.GEOMETRY_XPATH
         };
         int[] viewIds = {
-            R.id.form_title,
-            R.id.form_subtitle,
-            R.id.form_subtitle2,
-            R.id.map_view
+                R.id.form_title,
+                R.id.form_subtitle,
+                R.id.form_subtitle2,
+                R.id.map_view
         };
 
         listAdapter = new FormListAdapter(
-            listView, FormsColumns.JR_VERSION, this, R.layout.form_chooser_list_item,
-            this::onMapButtonClick, columnNames, viewIds);
+                listView, FormsColumns.JR_VERSION, this, R.layout.form_chooser_list_item,
+                this::onMapButtonClick, columnNames, viewIds);
         listView.setAdapter(listAdapter);
     }
 

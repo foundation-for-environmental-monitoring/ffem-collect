@@ -899,7 +899,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                   Probably this approach should be used in all cases to get a file from an uri.
                   The approach which was used before and which is still used in other places
                   might be faulty because sometimes _data column might be not provided in an uri.
-                  e.g. https://github.com/opendatakit/collect/issues/705
+                  e.g. https://github.com/getodk/collect/issues/705
                   Let's test it here and then we can use the same code in other places if it works well.
                  */
                 Uri mediaUri = intent.getData();
@@ -2768,15 +2768,21 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         }
 
         if (formController.indexIsInFieldList()) {
-            updateFieldListQuestions(changedWidget.getFormEntryPrompt().getIndex());
-
-            odkView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            // Some widgets may call widgetValueChanged from a non-main thread but odkView can only be modified from the main thread
+            runOnUiThread(new Runnable() {
                 @Override
-                public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                    if (!odkView.isDisplayed(changedWidget)) {
-                        odkView.scrollTo(changedWidget);
-                    }
-                    odkView.removeOnLayoutChangeListener(this);
+                public void run() {
+                    updateFieldListQuestions(changedWidget.getFormEntryPrompt().getIndex());
+
+                    odkView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                        @Override
+                        public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                            if (!odkView.isDisplayed(changedWidget)) {
+                                odkView.scrollTo(changedWidget);
+                            }
+                            odkView.removeOnLayoutChangeListener(this);
+                        }
+                    });
                 }
             });
         }
@@ -2812,7 +2818,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         // identification and removal in the same pass but removal has to be done in a loop that
         // starts from the end and itemset-based select choices will only be correctly recomputed
         // if accessed from beginning to end because the call on sameAs is what calls
-        // populateDynamicChoices. See https://github.com/opendatakit/javarosa/issues/436
+        // populateDynamicChoices. See https://github.com/getodk/javarosa/issues/436
         List<FormEntryPrompt> questionsThatHaveNotChanged = new ArrayList<>();
         List<FormIndex> formIndexesToRemove = new ArrayList<>();
         for (ImmutableDisplayableQuestion questionBeforeSave : immutableQuestionsBeforeSave) {
@@ -2832,10 +2838,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             ImmutableDisplayableQuestion questionBeforeSave = immutableQuestionsBeforeSave.get(i);
 
             if (formIndexesToRemove.contains(questionBeforeSave.getFormIndex())) {
-                // Some widgets may call widgetValueChanged from a non-main thread but odkView can
-                // only be modified from the main thread
-                final int indexToRemove = i;
-                runOnUiThread(() -> odkView.removeWidgetAt(indexToRemove));
+                odkView.removeWidgetAt(i);
             }
         }
 
@@ -2844,9 +2847,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     && !questionsAfterSave[i].getIndex().equals(lastChangedIndex)) {
                 // The values of widgets in intent groups are set by the view so widgetValueChanged
                 // is never called. This means readOnlyOverride can always be set to false.
-                final int targetIndex = i;
-                runOnUiThread(() -> odkView.addWidgetForQuestion(questionsAfterSave[targetIndex],
-                        false, targetIndex));
+                odkView.addWidgetForQuestion(questionsAfterSave[i], false, i);
             }
         }
     }

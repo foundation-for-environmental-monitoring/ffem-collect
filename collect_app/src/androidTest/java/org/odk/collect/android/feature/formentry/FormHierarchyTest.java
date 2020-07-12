@@ -40,7 +40,7 @@ public class FormHierarchyTest {
             .around(rule);
 
     @Test
-    //https://github.com/opendatakit/collect/issues/2871
+    //https://github.com/getodk/collect/issues/2871
     public void allRelevantQuestionsShouldBeVisibleInHierarchyView() {
         new MainMenuPage(rule)
                 .startBlankForm("formHierarchy1")
@@ -56,7 +56,7 @@ public class FormHierarchyTest {
     }
 
     @Test
-    //https://github.com/opendatakit/collect/issues/2944
+    //https://github.com/getodk/collect/issues/2944
     public void notRelevantRepeatGroupsShouldNotBeVisibleInHierarchy() {
         final FormHierarchyPage page = new MainMenuPage(rule)
                 .startBlankForm("formHierarchy2")
@@ -102,7 +102,7 @@ public class FormHierarchyTest {
     }
 
     @Test
-    //https://github.com/opendatakit/collect/issues/2936
+    //https://github.com/getodk/collect/issues/2936
     public void repeatGroupsShouldBeVisibleAsAppropriate() {
         FormHierarchyPage page = new MainMenuPage(rule)
                 .startBlankForm("formHierarchy3")
@@ -127,11 +127,11 @@ public class FormHierarchyTest {
 
         onView(withId(R.id.list)).check(matches(RecyclerViewMatcher.withListSize(3)));
 
-        page.checkIfTextDoesNotExist("Repeat Group 1");
+        page.assertTextDoesNotExist("Repeat Group 1");
     }
 
     @Test
-    //https://github.com/opendatakit/collect/issues/2942
+    //https://github.com/getodk/collect/issues/2942
     public void deletingLastGroupShouldNotBreakHierarchy() {
         FormHierarchyPage page = new MainMenuPage(rule)
                 .startBlankForm("formHierarchy3")
