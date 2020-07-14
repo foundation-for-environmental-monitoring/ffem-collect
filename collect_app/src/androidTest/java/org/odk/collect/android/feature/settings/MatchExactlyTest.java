@@ -6,6 +6,7 @@ import android.webkit.MimeTypeMap;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -59,6 +60,7 @@ public class MatchExactlyTest {
             .around(new CopyFormRule("one-question-repeat.xml"))
             .around(rule);
 
+    @Ignore("Check new")
     @Test
     public void whenMatchExactlyEnabled_clickingFillBlankForm_andClickingRefresh_getsLatestFormsFromServer() {
         server.addForm("One Question Updated", "one_question", "one-question-updated.xml");
@@ -76,6 +78,7 @@ public class MatchExactlyTest {
                 .assertTextDoesNotExist("One Question Repeat"); // Check deleted form deleted
     }
 
+    @Ignore("Check new")
     @Test
     public void whenMatchExactlyEnabled_getBlankFormsButtonIsGone() {
         rule.mainMenu()
@@ -83,6 +86,7 @@ public class MatchExactlyTest {
                 .assertTextNotDisplayed(R.string.get_forms);
     }
 
+    @Ignore("Check new")
     @Test
     public void whenMatchExactlyEnabled_formManagementFormUpdateIsDisabled() {
         rule.mainMenu()

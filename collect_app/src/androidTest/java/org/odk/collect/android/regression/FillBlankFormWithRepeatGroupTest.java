@@ -241,6 +241,7 @@ public class FillBlankFormWithRepeatGroupTest {
                 .clickSaveAndExit();
     }
 
+    @Ignore("Check new")
     @Test
     public void when_navigateOnHierarchyView_should_breadcrumbPathBeVisible() {
 

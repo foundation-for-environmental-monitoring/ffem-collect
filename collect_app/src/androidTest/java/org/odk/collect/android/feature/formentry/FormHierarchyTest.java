@@ -4,6 +4,7 @@ import android.Manifest;
 
 import androidx.test.rule.GrantPermissionRule;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -101,6 +102,7 @@ public class FormHierarchyTest {
                 .check(matches(withText("Guest details > 1")));
     }
 
+    @Ignore("Check new")
     @Test
     //https://github.com/getodk/collect/issues/2936
     public void repeatGroupsShouldBeVisibleAsAppropriate() {

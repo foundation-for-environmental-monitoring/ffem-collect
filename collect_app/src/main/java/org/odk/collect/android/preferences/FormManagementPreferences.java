@@ -79,12 +79,12 @@ public class FormManagementPreferences extends BasePreferenceFragment {
         initListPref(KEY_IMAGE_SIZE);
         initGuidancePrefs();
 
-        boolean matchExactlyEnabled = generalSharedPreferences.getSharedPreferences()
-                .getBoolean(GeneralKeys.KEY_MATCH_EXACTLY, false);
+//        boolean matchExactlyEnabled = generalSharedPreferences.getSharedPreferences()
+//                .getBoolean(GeneralKeys.KEY_MATCH_EXACTLY, false);
 
-        findPreference(KEY_PERIODIC_FORM_UPDATES_CHECK).setEnabled(!matchExactlyEnabled);
-        findPreference(KEY_AUTOMATIC_UPDATE).setEnabled(!matchExactlyEnabled);
-        findPreference(KEY_HIDE_OLD_FORM_VERSIONS).setEnabled(!matchExactlyEnabled);
+//        findPreference(KEY_PERIODIC_FORM_UPDATES_CHECK).setEnabled(!matchExactlyEnabled);
+//        findPreference(KEY_AUTOMATIC_UPDATE).setEnabled(!matchExactlyEnabled);
+//        findPreference(KEY_HIDE_OLD_FORM_VERSIONS).setEnabled(!matchExactlyEnabled);
 
         initFormDeletePref(KEY_DELETE_FORMS);
     }

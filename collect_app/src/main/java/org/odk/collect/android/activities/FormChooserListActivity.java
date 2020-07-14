@@ -62,9 +62,6 @@ import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivit
 
 import org.odk.collect.android.utilities.ToastUtils;
 
-import androidx.annotation.NonNull;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import io.ffem.collect.android.activities.DeleteFormsActivity;
@@ -96,7 +93,7 @@ public class FormChooserListActivity extends FormListActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.form_chooser_list);
+        setContentView(R.layout.form_chooser_list_custom);
         DaggerUtils.getComponent(this).inject(this);
 
         setTitle(getString(R.string.enter_data));
@@ -153,6 +150,11 @@ public class FormChooserListActivity extends FormListActivity implements
         if (super.onOptionsItemSelected(item)) {
             return true;
         } else {
+            if (item.getItemId() == R.id.menu_delete) {
+                Intent i = new Intent(this, DeleteFormsActivity.class);
+                startActivity(i);
+                return true;
+            }
             if (item.getItemId() == R.id.menu_refresh) {
                 blankFormsListViewModel.syncWithServer();
                 return true;
@@ -365,17 +367,6 @@ public class FormChooserListActivity extends FormListActivity implements
                 localBroadcastManager.sendBroadcast(localIntent);
             }
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_delete:
-                Intent i = new Intent(this, DeleteFormsActivity.class);
-                startActivity(i);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

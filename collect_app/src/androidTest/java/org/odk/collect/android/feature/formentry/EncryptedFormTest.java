@@ -20,6 +20,7 @@ import android.Manifest;
 
 import androidx.test.rule.GrantPermissionRule;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -45,6 +46,7 @@ public class EncryptedFormTest {
             .around(new CopyFormRule("encrypted.xml"))
             .around(new CopyFormRule("encrypted-no-instanceID.xml"));
 
+    @Ignore("Check new")
     @Test
     public void instanceOfEncryptedForm_cantBeEditedWhenFinalized() {
         rule.mainMenu()

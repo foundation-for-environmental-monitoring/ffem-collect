@@ -288,6 +288,7 @@ public class FillBlankFormTest {
 
     }
 
+    @Ignore("Check new")
     @Test
     public void searchAppearance_ShouldDisplayWhenSearchAppearanceIsSpecified() {
 
@@ -559,6 +560,7 @@ public class FillBlankFormTest {
                 .checkInstanceState("Birds", InstanceProviderAPI.STATUS_INCOMPLETE);
     }
 
+    @Ignore("Check new")
     @Test
     public void typeMismatchErrorMessage_shouldBeDisplayed() {
 

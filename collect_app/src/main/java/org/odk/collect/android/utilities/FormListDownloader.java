@@ -87,11 +87,9 @@ public class FormListDownloader {
 
         if (webCredentialsUtils.getPasswordFromPreferences().isEmpty() ||
                 webCredentialsUtils.getUserNameFromPreferences().isEmpty()) {
-            formList.put(DL_AUTH_REQUIRED, new FormDetails(""));
+            formList.put(DL_AUTH_REQUIRED, new ServerFormDetails(""));
             return formList;
         }
-
-        DocumentFetchResult result = openRosaAPIClient.getXML(downloadListUrl);
 
         clearTemporaryCredentials(url);
 
