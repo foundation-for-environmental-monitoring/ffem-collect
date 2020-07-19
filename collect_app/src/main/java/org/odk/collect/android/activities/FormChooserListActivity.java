@@ -18,7 +18,6 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -39,6 +38,7 @@ import androidx.loader.content.Loader;
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.FormListAdapter;
 import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.formmanagement.BlankFormListMenuDelegate;
 import org.odk.collect.android.formmanagement.BlankFormsListViewModel;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.listeners.DiskSyncListener;
@@ -88,7 +88,8 @@ public class FormChooserListActivity extends FormListActivity implements
 
     @Inject
     BlankFormsListViewModel.Factory blankFormsListViewModelFactory;
-    private BlankFormsListViewModel blankFormsListViewModel;
+
+    BlankFormListMenuDelegate menuDelegate;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,14 +106,18 @@ public class FormChooserListActivity extends FormListActivity implements
 
         findViewById(R.id.buttonGetBlankForm).setOnClickListener(view -> onClickGetBlankForm(view));
 
-        blankFormsListViewModel = new ViewModelProvider(this, blankFormsListViewModelFactory).get(BlankFormsListViewModel.class);
+        BlankFormsListViewModel blankFormsListViewModel = new ViewModelProvider(this, blankFormsListViewModelFactory).get(BlankFormsListViewModel.class);
         blankFormsListViewModel.isSyncing().observe(this, syncing -> {
             if (syncing) {
                 findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
             } else {
                 findViewById(R.id.progressBar).setVisibility(View.GONE);
             }
+
+            invalidateOptionsMenu();
         });
+
+        menuDelegate = new BlankFormListMenuDelegate(blankFormsListViewModel);
 
         new PermissionUtils().requestStoragePermissions(this, new PermissionListener() {
             @Override
@@ -136,13 +141,14 @@ public class FormChooserListActivity extends FormListActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
+        menuDelegate.onCreateOptionsMenu(getMenuInflater(), menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
-        SharedPreferences generalSharedPreferences = preferencesProvider.getGeneralSharedPreferences();
-        boolean matchExactlyEnabled = generalSharedPreferences.getBoolean(GeneralKeys.KEY_MATCH_EXACTLY, false);
-        menu.findItem(R.id.menu_refresh).setVisible(matchExactlyEnabled);
-
-        return true;
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menuDelegate.onPrepareOptionsMenu(menu);
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -155,13 +161,7 @@ public class FormChooserListActivity extends FormListActivity implements
                 startActivity(i);
                 return true;
             }
-            if (item.getItemId() == R.id.menu_refresh) {
-                blankFormsListViewModel.syncWithServer();
-                return true;
-            } else {
-                return false;
-
-            }
+            return menuDelegate.onOptionsItemSelected(item);
         }
     }
 

@@ -76,6 +76,7 @@ import org.odk.collect.android.utilities.PlayServicesChecker;
 import org.odk.collect.android.utilities.SharedPreferencesUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.version.VersionInformation;
+import org.odk.collect.material.MaterialBanner;
 
 import java.io.File;
 import java.io.FileInputStream;
