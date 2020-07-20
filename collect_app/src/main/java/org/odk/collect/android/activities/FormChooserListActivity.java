@@ -148,6 +148,27 @@ public class FormChooserListActivity extends FormListActivity implements
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menuDelegate.onPrepareOptionsMenu(menu);
+        if (findViewById(R.id.buttonGetBlankForm).getVisibility() == View.GONE) {
+            MenuItem deleteItem = (menu.findItem(R.id.menu_delete));
+            deleteItem.setEnabled(false);
+            deleteItem.getIcon().setAlpha(50);
+            MenuItem sortItem = (menu.findItem(R.id.menu_sort));
+            sortItem.setEnabled(false);
+            sortItem.getIcon().setAlpha(60);
+            MenuItem filterItem = (menu.findItem(R.id.menu_filter));
+            filterItem.setEnabled(false);
+            filterItem.getIcon().setAlpha(60);
+        } else {
+            MenuItem deleteItem = (menu.findItem(R.id.menu_delete));
+            deleteItem.setEnabled(true);
+            deleteItem.getIcon().setAlpha(255);
+            MenuItem sortItem = (menu.findItem(R.id.menu_sort));
+            sortItem.setEnabled(true);
+            sortItem.getIcon().setAlpha(255);
+            MenuItem filterItem = (menu.findItem(R.id.menu_filter));
+            filterItem.setEnabled(true);
+            filterItem.getIcon().setAlpha(255);
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -367,31 +388,5 @@ public class FormChooserListActivity extends FormListActivity implements
                 localBroadcastManager.sendBroadcast(localIntent);
             }
         }
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if (findViewById(R.id.buttonGetBlankForm).getVisibility() == View.GONE) {
-            MenuItem deleteItem = (menu.findItem(R.id.menu_delete));
-            deleteItem.setEnabled(false);
-            deleteItem.getIcon().setAlpha(50);
-            MenuItem sortItem = (menu.findItem(R.id.menu_sort));
-            sortItem.setEnabled(false);
-            sortItem.getIcon().setAlpha(60);
-            MenuItem filterItem = (menu.findItem(R.id.menu_filter));
-            filterItem.setEnabled(false);
-            filterItem.getIcon().setAlpha(60);
-        } else {
-            MenuItem deleteItem = (menu.findItem(R.id.menu_delete));
-            deleteItem.setEnabled(true);
-            deleteItem.getIcon().setAlpha(255);
-            MenuItem sortItem = (menu.findItem(R.id.menu_sort));
-            sortItem.setEnabled(true);
-            sortItem.getIcon().setAlpha(255);
-            MenuItem filterItem = (menu.findItem(R.id.menu_filter));
-            filterItem.setEnabled(true);
-            filterItem.getIcon().setAlpha(255);
-        }
-        return super.onPrepareOptionsMenu(menu);
     }
 }

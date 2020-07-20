@@ -654,7 +654,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                 event = formController.stepToNextEvent(FormController.STEP_INTO_GROUP);
             }
 
-            recyclerView.setAdapter(new HierarchyListAdapter(elementsToDisplay, this::onElementClick, false));
+            recyclerView.setAdapter(new HierarchyListAdapter(elementsToDisplay, this::onElementClick));
 
             formController.jumpToIndex(currentIndex);
 

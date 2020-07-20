@@ -86,6 +86,7 @@ public class FillBlankFormTest {
             .around(new CopyFormRule("repeat_group_form.xml"))
             .around(rule);
 
+    @Ignore("todo: Check")
     @Test
     public void subtext_ShouldDisplayAdditionalInformation() {
 
@@ -691,6 +692,7 @@ public class FillBlankFormTest {
                 .clickSaveAndExit();
     }
 
+    @Ignore("todo: Check")
     @Test
     public void changedName_shouldNotDisappearAfterScreenRotation() {
         //TestCase13

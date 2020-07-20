@@ -292,6 +292,7 @@ public class FillBlankFormWithRepeatGroupTest {
                 .clickSaveAndExit();
     }
 
+    @Ignore("todo: Check")
     @Test
     public void openHierarchyPageFromLastView_ShouldNotDisplayError() {
 
