@@ -4,7 +4,6 @@ import org.javarosa.core.reference.ReferenceManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.odk.collect.android.analytics.Analytics;
-import org.odk.collect.android.backgroundwork.BackgroundWorkManager;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.storage.StorageStateProvider;
@@ -18,7 +17,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_REFERENCE_LAYER;
 
 @SuppressWarnings("PMD.DoNotHardCodeSDCard")
@@ -31,34 +29,17 @@ public class StorageMigratorTest {
     private final StorageMigrationRepository storageMigrationRepository = mock(StorageMigrationRepository.class);
     private final GeneralSharedPreferences generalSharedPreferences = mock(GeneralSharedPreferences.class);
     private final ReferenceManager referenceManager = mock(ReferenceManager.class);
-    private final BackgroundWorkManager backgroundWorkManager = mock(BackgroundWorkManager.class);
     private final Analytics analytics = mock(Analytics.class);
 
     @Before
     public void setup() {
-        whenFormDownloaderIsNotRunning();
-        whenFormUploaderIsNotRunning();
-
         doNothing().when(storageEraser).clearOdkDirOnScopedStorage();
         doNothing().when(storageEraser).deleteOdkDirFromUnscopedStorage();
         doReturn("/sdcard/odk/layers/countries/countries-raster.mbtiles").when(generalSharedPreferences).get(KEY_REFERENCE_LAYER);
 
-        storageMigrator = spy(new StorageMigrator(storagePathProvider, storageStateProvider, storageEraser, storageMigrationRepository, generalSharedPreferences, referenceManager, backgroundWorkManager, analytics));
+        storageMigrator = spy(new StorageMigrator(storagePathProvider, storageStateProvider, storageEraser, storageMigrationRepository, generalSharedPreferences, referenceManager, analytics));
 
         doNothing().when(storageMigrator).reopenDatabases();
-    }
-
-    @Test
-    public void when_formUploaderIsRunning_should_appropriateResultBeReturned() {
-        whenFormUploaderIsRunning();
-        assertThat(storageMigrator.migrate(), is(StorageMigrationResult.FORM_UPLOADER_IS_RUNNING));
-    }
-
-    @Test
-    public void when_formDownloaderIsRunning_should_appropriateResultBeReturned() {
-        whenFormDownloaderIsRunning();
-
-        assertThat(storageMigrator.migrate(), is(StorageMigrationResult.FORM_DOWNLOADER_IS_RUNNING));
     }
 
     @Test
@@ -177,21 +158,5 @@ public class StorageMigratorTest {
         storageMigrator.performStorageMigration();
 
         verify(storageEraser).deleteOdkDirFromUnscopedStorage();
-    }
-
-    private void whenFormDownloaderIsNotRunning() {
-        when(backgroundWorkManager.isFormDownloaderRunning()).thenReturn(false);
-    }
-
-    private void whenFormDownloaderIsRunning() {
-        when(backgroundWorkManager.isFormDownloaderRunning()).thenReturn(true);
-    }
-
-    private void whenFormUploaderIsNotRunning() {
-        when(backgroundWorkManager.isFormUploaderRunning()).thenReturn(false);
-    }
-
-    private void whenFormUploaderIsRunning() {
-        when(backgroundWorkManager.isFormUploaderRunning()).thenReturn(true);
     }
 }

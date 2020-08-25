@@ -6,7 +6,6 @@ import android.database.Cursor;
 import org.apache.commons.io.FileUtils;
 import org.javarosa.core.reference.ReferenceManager;
 import org.odk.collect.android.analytics.Analytics;
-import org.odk.collect.android.backgroundwork.BackgroundWorkManager;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
@@ -39,14 +38,13 @@ public class StorageMigrator {
     private final ReferenceManager referenceManager;
 
     private final StorageMigrationRepository storageMigrationRepository;
-    private final BackgroundWorkManager backgroundWorkManager;
 
     private final Analytics analytics;
 
     public StorageMigrator(StoragePathProvider storagePathProvider, StorageStateProvider storageStateProvider,
                            StorageEraser storageEraser, StorageMigrationRepository storageMigrationRepository,
                            GeneralSharedPreferences generalSharedPreferences, ReferenceManager referenceManager,
-                           BackgroundWorkManager workManager, Analytics analytics) {
+                           Analytics analytics) {
 
         this.storagePathProvider = storagePathProvider;
         this.storageStateProvider = storageStateProvider;
@@ -54,7 +52,6 @@ public class StorageMigrator {
         this.storageMigrationRepository = storageMigrationRepository;
         this.generalSharedPreferences = generalSharedPreferences;
         this.referenceManager = referenceManager;
-        this.backgroundWorkManager = workManager;
         this.analytics = analytics;
     }
 
@@ -69,14 +66,6 @@ public class StorageMigrator {
 
     public StorageMigrationResult migrate() {
         storageEraser.clearOdkDirOnScopedStorage();
-
-        if (isFormUploaderRunning()) {
-            return StorageMigrationResult.FORM_UPLOADER_IS_RUNNING;
-        }
-
-        if (isFormDownloaderRunning()) {
-            return StorageMigrationResult.FORM_DOWNLOADER_IS_RUNNING;
-        }
 
         if (!storageStateProvider.isEnoughSpaceToPerformMigration(storagePathProvider)) {
             return StorageMigrationResult.NOT_ENOUGH_SPACE;
@@ -101,14 +90,6 @@ public class StorageMigrator {
         storageEraser.deleteOdkDirFromUnscopedStorage();
 
         return StorageMigrationResult.SUCCESS;
-    }
-
-    private boolean isFormUploaderRunning() {
-        return backgroundWorkManager.isFormUploaderRunning();
-    }
-
-    private boolean isFormDownloaderRunning() {
-        return backgroundWorkManager.isFormDownloaderRunning();
     }
 
     boolean moveAppDataToScopedStorage() {

@@ -1,32 +1,44 @@
 package org.odk.collect.android.formmanagement;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+
+import org.junit.Rule;
 import org.junit.Test;
+import org.odk.collect.android.formmanagement.matchexactly.SyncStatusRepository;
+import org.odk.collect.android.openrosa.api.FormApiException;
+import org.odk.collect.android.openrosa.api.FormApiException.Type;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 public class SyncStatusRepositoryTest {
 
+    @Rule
+    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
+
     @Test
-    public void startSync_returnsTrue() {
+    public void getSyncError_isNullAtFirst() {
         SyncStatusRepository syncStatusRepository = new SyncStatusRepository();
-        assertThat(syncStatusRepository.startSync(), is(true));
+        assertThat(syncStatusRepository.getSyncError().getValue(), is(nullValue()));
     }
 
     @Test
-    public void startSync_whenSyncAlreadyStarted_returnsFalse() {
+    public void getSyncError_whenFinishSyncWithException_isException() {
         SyncStatusRepository syncStatusRepository = new SyncStatusRepository();
         syncStatusRepository.startSync();
+        FormApiException exception = new FormApiException(Type.FETCH_ERROR);
+        syncStatusRepository.finishSync(exception);
 
-        assertThat(syncStatusRepository.startSync(), is(false));
+        assertThat(syncStatusRepository.getSyncError().getValue(), is(exception));
     }
 
     @Test
-    public void startSync_whenSyncFinished_returnsTrue() {
+    public void getSyncError_whenFinishSyncWithNull_isNull() {
         SyncStatusRepository syncStatusRepository = new SyncStatusRepository();
         syncStatusRepository.startSync();
-        syncStatusRepository.finishSync();
+        syncStatusRepository.finishSync(null);
 
-        assertThat(syncStatusRepository.startSync(), is(true));
+        assertThat(syncStatusRepository.getSyncError().getValue(), is(nullValue()));
     }
 }

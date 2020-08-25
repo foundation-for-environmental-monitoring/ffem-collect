@@ -11,18 +11,45 @@ class CoroutineAndWorkManagerScheduler(private val foreground: CoroutineContext,
 
     constructor(workManager: WorkManager) : this(Dispatchers.Main, Dispatchers.IO, workManager) // Needed for Java construction
 
-    override fun <T> runInBackground(task: Supplier<T>, callback: Consumer<T>) {
-        CoroutineScope(foreground).launch {
-            callback.accept(withContext(background) { task.get() })
+    override fun <T> immediate(background: Supplier<T>, foreground: Consumer<T>) {
+        CoroutineScope(this.foreground).launch {
+            foreground.accept(withContext(this@CoroutineAndWorkManagerScheduler.background) { background.get() })
         }
     }
 
-    override fun schedule(task: Runnable, repeatPeriod: Long): Cancellable {
-        val repeatScope = CoroutineScope(foreground)
+    override fun networkDeferred(tag: String, spec: TaskSpec) {
+        val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+
+        val workRequest = OneTimeWorkRequest.Builder(spec.getWorkManagerAdapter())
+                .addTag(tag)
+                .setConstraints(constraints)
+                .build()
+
+        workManager.beginUniqueWork(tag, ExistingWorkPolicy.KEEP, workRequest).enqueue()
+    }
+
+    override fun networkDeferred(tag: String, spec: TaskSpec, repeatPeriod: Long) {
+        val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+
+        val worker = spec.getWorkManagerAdapter()
+        val workRequest = PeriodicWorkRequest.Builder(worker, repeatPeriod, TimeUnit.MILLISECONDS)
+                .addTag(tag)
+                .setConstraints(constraints)
+                .build()
+
+        workManager.enqueueUniquePeriodicWork(tag, ExistingPeriodicWorkPolicy.REPLACE, workRequest)
+    }
+
+    override fun repeat(foreground: Runnable, repeatPeriod: Long): Cancellable {
+        val repeatScope = CoroutineScope(this.foreground)
 
         repeatScope.launch {
             while (isActive) {
-                task.run()
+                foreground.run()
                 delay(repeatPeriod)
             }
         }
@@ -30,20 +57,7 @@ class CoroutineAndWorkManagerScheduler(private val foreground: CoroutineContext,
         return ScopeCancellable(repeatScope)
     }
 
-    override fun scheduleInBackgroundWhenNetworkAvailable(tag: String, spec: TaskSpec, repeatPeriod: Long) {
-        val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build()
-
-        val worker = spec.getWorkManagerAdapter()
-        val workRequest = PeriodicWorkRequest.Builder(worker, repeatPeriod, TimeUnit.MILLISECONDS)
-                .setConstraints(constraints)
-                .build()
-
-        workManager.enqueueUniquePeriodicWork(tag, ExistingPeriodicWorkPolicy.REPLACE, workRequest)
-    }
-
-    override fun cancelInBackground(tag: String) {
+    override fun cancelDeferred(tag: String) {
         workManager.cancelUniqueWork(tag)
     }
 

@@ -1,39 +1,35 @@
 package org.odk.collect.android.formmanagement;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.odk.collect.android.formmanagement.matchexactly.ServerFormsSynchronizer;
 import org.odk.collect.android.forms.Form;
-import org.odk.collect.android.forms.FormRepository;
+import org.odk.collect.android.forms.FormsRepository;
+import org.odk.collect.android.instances.InstancesRepository;
+import org.odk.collect.android.openrosa.api.FormApiException;
+import org.odk.collect.android.support.InMemFormsRepository;
+import org.odk.collect.android.support.InMemInstancesRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("PMD.DoubleBraceInitialization")
 public class ServerFormsSynchronizerTest {
 
-    private ServerFormsSynchronizer synchronizer;
-    private RecordingFormDownloader formDownloader;
-    private FormRepository formRepository;
-    private ServerFormsDetailsFetcher serverFormDetailsFetcher;
-
-    @Before
-    public void setup() {
-        formRepository = new InMemFormRepository();
-        formDownloader = new RecordingFormDownloader();
-        serverFormDetailsFetcher = mock(ServerFormsDetailsFetcher.class);
-
-        synchronizer = new ServerFormsSynchronizer(serverFormDetailsFetcher, formRepository, formDownloader);
-    }
+    private final FormsRepository formsRepository = new InMemFormsRepository();
+    private final InstancesRepository instancesRepository = new InMemInstancesRepository();
+    private final RecordingFormDownloader formDownloader = new RecordingFormDownloader();
+    private final ServerFormsDetailsFetcher serverFormDetailsFetcher = mock(ServerFormsDetailsFetcher.class);
+    private final ServerFormsSynchronizer synchronizer = new ServerFormsSynchronizer(serverFormDetailsFetcher, formsRepository, instancesRepository, formDownloader);
 
     @Test
     public void downloadsNewForms() throws Exception {
@@ -57,7 +53,7 @@ public class ServerFormsSynchronizerTest {
 
     @Test
     public void deletesFormsNotInList() throws Exception {
-        formRepository.save(new Form.Builder()
+        formsRepository.save(new Form.Builder()
                 .id(3L)
                 .jrFormId("form-3")
                 .md5Hash("form-3-hash")
@@ -68,7 +64,7 @@ public class ServerFormsSynchronizerTest {
         ));
 
         synchronizer.synchronize();
-        assertThat(formRepository.contains("form-3"), is(false));
+        assertThat(formsRepository.contains("form-3"), is(false));
     }
 
     @Test
@@ -81,34 +77,37 @@ public class ServerFormsSynchronizerTest {
         assertThat(formDownloader.getDownloadedForms(), is(empty()));
     }
 
-    private static class InMemFormRepository implements FormRepository {
+    @Test
+    public void whenFetchingFormDetailsThrowsAnError_throwsError() throws Exception {
+        FormApiException exception = new FormApiException(FormApiException.Type.AUTH_REQUIRED);
+        when(serverFormDetailsFetcher.fetchFormDetails()).thenThrow(exception);
 
-        private final List<Form> forms = new ArrayList<>();
-
-        @Override
-        public void save(Form form) {
-            forms.add(form);
+        try {
+            synchronizer.synchronize();
+        } catch (FormApiException e) {
+            assertThat(e, is(exception));
         }
+    }
 
-        @Override
-        public boolean contains(String jrFormID) {
-            return forms.stream().anyMatch(form -> form.getJrFormId().equals(jrFormID));
-        }
+    @Test
+    public void whenDownloadingFormThrowsAnError_throwsErrorAndDownloadsOtherForms() throws Exception {
+        List<ServerFormDetails> serverForms = asList(
+                new ServerFormDetails("form-1", "http://example.com/form-1", null, "form-1", "server", "md5:form-1-hash", null, true, false),
+                new ServerFormDetails("form-2", "http://example.com/form-2", null, "form-2", "server", "md5:form-2-hash", null, true, false)
+        );
 
-        @Override
-        public List<Form> getAll() {
-            return new ArrayList<>(forms); // Avoid anything  mutating the list externally
-        }
+        when(serverFormDetailsFetcher.fetchFormDetails()).thenReturn(serverForms);
 
-        @Nullable
-        @Override
-        public Form getByMd5Hash(String hash) {
-            return forms.stream().filter(form -> form.getMD5Hash().equals(hash)).findFirst().orElse(null);
-        }
+        FormDownloader formDownloader = mock(FormDownloader.class);
+        doThrow(new FormDownloadException()).when(formDownloader).downloadForm(serverForms.get(0));
 
-        @Override
-        public void delete(Long id) {
-            forms.removeIf(form -> form.getId().equals(id));
+        ServerFormsSynchronizer synchronizer = new ServerFormsSynchronizer(serverFormDetailsFetcher, formsRepository, instancesRepository, formDownloader);
+
+        try {
+            synchronizer.synchronize();
+        } catch (FormApiException e) {
+            assertThat(e.getType(), is(FormApiException.Type.FETCH_ERROR));
+            verify(formDownloader).downloadForm(serverForms.get(1));
         }
     }
 

@@ -14,10 +14,14 @@
 
 package org.odk.collect.android.preferences;
 
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
+
+import androidx.annotation.NonNull;
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
 
 import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -28,8 +32,8 @@ import android.widget.ListView;
 import org.odk.collect.android.R;
 import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.activities.FileManagerTabs;
-import org.odk.collect.android.tasks.ServerPollingJob;
+import org.odk.collect.android.backgroundwork.FormUpdateManager;
+import org.odk.collect.android.formmanagement.FormUpdateMode;
 
 import javax.inject.Inject;
 
@@ -39,12 +43,11 @@ import static org.odk.collect.android.preferences.AdminKeys.ALLOW_OTHER_WAYS_OF_
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_AUTOMATIC_UPDATE;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_AUTOSEND;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_CONSTRAINT_BEHAVIOR;
-import static org.odk.collect.android.preferences.GeneralKeys.KEY_DELETE_FORMS;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_FORM_UPDATE_MODE;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_GUIDANCE_HINT;
-import static org.odk.collect.android.preferences.GeneralKeys.KEY_HIDE_OLD_FORM_VERSIONS;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_IMAGE_SIZE;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_PERIODIC_FORM_UPDATES_CHECK;
-import static org.odk.collect.android.preferences.PreferencesActivity.INTENT_KEY_ADMIN_MODE;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_PROTOCOL;
 
 public class FormManagementPreferences extends BasePreferenceFragment {
 
@@ -52,25 +55,20 @@ public class FormManagementPreferences extends BasePreferenceFragment {
     Analytics analytics;
 
     @Inject
-    GeneralSharedPreferences generalSharedPreferences;
+    PreferencesProvider preferencesProvider;
 
-    private ListView list;
+    @Inject
+    FormUpdateManager formUpdateManager;
 
-    public static FormManagementPreferences newInstance(boolean adminMode) {
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(INTENT_KEY_ADMIN_MODE, adminMode);
-
-        FormManagementPreferences formManagementPreferences = new FormManagementPreferences();
-        formManagementPreferences.setArguments(bundle);
-
-        return formManagementPreferences;
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Collect.getInstance().getComponent().inject(this);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.form_management_preferences_custom);
-        Collect.getInstance().getComponent().inject(this);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.form_management_preferences, rootKey);
 
         initListPref(KEY_PERIODIC_FORM_UPDATES_CHECK);
         initPref(KEY_AUTOMATIC_UPDATE);
@@ -79,18 +77,62 @@ public class FormManagementPreferences extends BasePreferenceFragment {
         initListPref(KEY_IMAGE_SIZE);
         initGuidancePrefs();
 
-//        boolean matchExactlyEnabled = generalSharedPreferences.getSharedPreferences()
-//                .getBoolean(GeneralKeys.KEY_MATCH_EXACTLY, false);
+        setupFormUpdateMode();
+    }
 
-//        findPreference(KEY_PERIODIC_FORM_UPDATES_CHECK).setEnabled(!matchExactlyEnabled);
-//        findPreference(KEY_AUTOMATIC_UPDATE).setEnabled(!matchExactlyEnabled);
-//        findPreference(KEY_HIDE_OLD_FORM_VERSIONS).setEnabled(!matchExactlyEnabled);
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        super.onSharedPreferenceChanged(sharedPreferences, key);
 
-        initFormDeletePref(KEY_DELETE_FORMS);
+        if (key.equals(KEY_FORM_UPDATE_MODE) || key.equals(KEY_PERIODIC_FORM_UPDATES_CHECK)) {
+            String newValue = sharedPreferences.getString(KEY_FORM_UPDATE_MODE, null);
+            updateDisabledPrefs(newValue, sharedPreferences.getString(KEY_PROTOCOL, null));
+
+            Preference preference = findPreference(KEY_FORM_UPDATE_MODE);
+            preference.setSummary(((ListPreference) preference).getEntry());
+        }
+    }
+
+    private void setupFormUpdateMode() {
+        SharedPreferences sharedPreferences = preferencesProvider.getGeneralSharedPreferences();
+        updateDisabledPrefs(sharedPreferences.getString(KEY_FORM_UPDATE_MODE, null), sharedPreferences.getString(KEY_PROTOCOL, null));
+
+        Preference formUpdateMode = findPreference(KEY_FORM_UPDATE_MODE);
+        formUpdateMode.setSummary(((ListPreference) formUpdateMode).getEntry());
+    }
+
+    private void updateDisabledPrefs(String formUpdateMode, String protocol) {
+        Preference updateFrequency = findPreference(KEY_PERIODIC_FORM_UPDATES_CHECK);
+        CheckBoxPreference automaticDownload = findPreference(KEY_AUTOMATIC_UPDATE);
+
+        if (Protocol.parse(getActivity(), protocol) == Protocol.GOOGLE) {
+            findPreference(KEY_FORM_UPDATE_MODE).setEnabled(false);
+            automaticDownload.setEnabled(false);
+            updateFrequency.setEnabled(false);
+        } else {
+            switch (FormUpdateMode.parse(getActivity(), formUpdateMode)) {
+                case MANUAL:
+                    automaticDownload.setEnabled(false);
+                    automaticDownload.setChecked(false);
+
+                    updateFrequency.setEnabled(false);
+                    break;
+                case PREVIOUSLY_DOWNLOADED_ONLY:
+                    automaticDownload.setEnabled(true);
+                    updateFrequency.setEnabled(true);
+                    break;
+                case MATCH_EXACTLY:
+                    automaticDownload.setEnabled(false);
+                    automaticDownload.setChecked(true);
+
+                    updateFrequency.setEnabled(true);
+                    break;
+            }
+        }
     }
 
     private void initListPref(String key) {
-        final ListPreference pref = (ListPreference) findPreference(key);
+        final ListPreference pref = findPreference(key);
 
         if (pref != null) {
             pref.setSummary(pref.getEntry());
@@ -100,17 +142,7 @@ public class FormManagementPreferences extends BasePreferenceFragment {
                 preference.setSummary(entry);
 
                 if (key.equals(KEY_PERIODIC_FORM_UPDATES_CHECK)) {
-                    ServerPollingJob.schedulePeriodicJob((String) newValue);
-
                     analytics.logEvent(AUTO_FORM_UPDATE_PREF_CHANGE, "Periodic form updates check", (String) newValue);
-
-                    if (newValue.equals(getString(R.string.never_value))) {
-                        Preference automaticUpdatePreference = findPreference(KEY_AUTOMATIC_UPDATE);
-                        if (automaticUpdatePreference != null) {
-                            automaticUpdatePreference.setEnabled(false);
-                        }
-                    }
-                    getActivity().recreate();
                 }
                 return true;
             });
@@ -141,21 +173,18 @@ public class FormManagementPreferences extends BasePreferenceFragment {
     }
 
     private void initGuidancePrefs() {
-        final ListPreference guidance = (ListPreference) findPreference(KEY_GUIDANCE_HINT);
+        final ListPreference guidance = findPreference(KEY_GUIDANCE_HINT);
 
         if (guidance == null) {
             return;
         }
 
         guidance.setSummary(guidance.getEntry());
-        guidance.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                int index = ((ListPreference) preference).findIndexOfValue(newValue.toString());
-                String entry = (String) ((ListPreference) preference).getEntries()[index];
-                preference.setSummary(entry);
-                return true;
-            }
+        guidance.setOnPreferenceChangeListener((preference, newValue) -> {
+            int index = ((ListPreference) preference).findIndexOfValue(newValue.toString());
+            String entry = (String) ((ListPreference) preference).getEntries()[index];
+            preference.setSummary(entry);
+            return true;
         });
     }
 
@@ -186,5 +215,4 @@ public class FormManagementPreferences extends BasePreferenceFragment {
         super.onActivityCreated(savedInstanceState);
         setListViewHeightBasedOnChildren(list, 0);
     }
-
 }

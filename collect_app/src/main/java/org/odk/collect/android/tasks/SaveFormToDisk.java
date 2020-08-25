@@ -43,7 +43,7 @@ import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.exception.EncryptionException;
 import org.odk.collect.android.formentry.saving.FormSaver;
-import org.odk.collect.android.instances.DatabaseInstancesRepository;
+import org.odk.collect.android.database.DatabaseInstancesRepository;
 import org.odk.collect.android.instances.Instance;
 import org.odk.collect.android.instances.InstancesRepository;
 import org.odk.collect.android.javarosawrapper.FormController;
@@ -206,7 +206,7 @@ public class SaveFormToDisk {
             InstancesRepository instances = new DatabaseInstancesRepository();
             Instance instance = instances.getByPath(instancePath);
             if (instance != null) {
-                uri = Uri.withAppendedPath(InstanceColumns.CONTENT_URI, instance.getDatabaseId().toString());
+                uri = Uri.withAppendedPath(InstanceColumns.CONTENT_URI, instance.getId().toString());
 
                 String geometryXpath = getGeometryXpathForInstance(uri);
                 ContentValues geometryContentValues = extractGeometryContentValues(formInstance, geometryXpath);
@@ -482,7 +482,7 @@ public class SaveFormToDisk {
             if (instanceCursor.moveToFirst()) {
                 String jrFormId = instanceCursor.getString(0);
                 String version = instanceCursor.getString(1);
-                try (Cursor formCursor = new FormsDao().getFormsCursor(jrFormId, version)) {
+                try (Cursor formCursor = new FormsDao().getFormsCursorSortedByDateDesc(jrFormId, version)) {
                     if (formCursor.moveToFirst()) {
                         return formCursor.getString(formCursor.getColumnIndex(FormsColumns.GEOMETRY_XPATH));
                     }

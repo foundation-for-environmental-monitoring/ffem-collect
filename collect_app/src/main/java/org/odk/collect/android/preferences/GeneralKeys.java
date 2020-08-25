@@ -1,5 +1,8 @@
 package org.odk.collect.android.preferences;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.mapbox.mapboxsdk.maps.Style;
+
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.QuestionFontSizeUtils;
@@ -54,7 +57,7 @@ public final class GeneralKeys {
     public static final String KEY_IMAGE_SIZE               = "image_size";
     public static final String KEY_GUIDANCE_HINT            = "guidance_hint";
     public static final String KEY_INSTANCE_SYNC            = "instance_sync";
-    public static final String KEY_MATCH_EXACTLY            = "match_exactly";
+    public static final String KEY_FORM_UPDATE_MODE         = "form_update_mode";
     public static final String KEY_DELETE_FORMS             = "delete_forms";
 
     // identity_preferences.xml
@@ -64,6 +67,7 @@ public final class GeneralKeys {
     public static final String KEY_METADATA_USERNAME        = "metadata_username";
     public static final String KEY_METADATA_PHONENUMBER     = "metadata_phonenumber";
     public static final String KEY_METADATA_EMAIL           = "metadata_email";
+    public static final String KEY_MAGENTA_THEME            = "magenta";
 
     static final String KEY_FORM_METADATA                   = "form_metadata";
 
@@ -105,11 +109,11 @@ public final class GeneralKeys {
         hashMap.put(KEY_HIGH_RESOLUTION,            true);
         hashMap.put(KEY_IMAGE_SIZE,                 "original_image_size");
         hashMap.put(KEY_INSTANCE_SYNC,              true);
-        hashMap.put(KEY_MATCH_EXACTLY,              false);
-        hashMap.put(KEY_PERIODIC_FORM_UPDATES_CHECK, "never");
+        hashMap.put(KEY_PERIODIC_FORM_UPDATES_CHECK, "every_fifteen_minutes");
         hashMap.put(KEY_AUTOMATIC_UPDATE,           false);
         hashMap.put(KEY_HIDE_OLD_FORM_VERSIONS,     true);
         hashMap.put(KEY_BACKGROUND_LOCATION,        true);
+        hashMap.put(KEY_FORM_UPDATE_MODE,           "manual");
         // form_metadata_preferences.xml
         hashMap.put(KEY_METADATA_USERNAME,          "");
         hashMap.put(KEY_METADATA_PHONENUMBER,       "");
@@ -131,8 +135,13 @@ public final class GeneralKeys {
         hashMap.put(KEY_NAVIGATION,                 NAVIGATION_SWIPE_BUTTONS);
         hashMap.put(KEY_SHOW_SPLASH,                false);
         hashMap.put(KEY_SPLASH_PATH,                Collect.getInstance().getString(R.string.default_splash_path));
+        hashMap.put(KEY_MAGENTA_THEME,              false);
         // map_preferences.xml
         hashMap.put(KEY_BASEMAP_SOURCE,             BASEMAP_SOURCE_GOOGLE);
+        hashMap.put(KEY_CARTO_MAP_STYLE,            "positron");
+        hashMap.put(KEY_USGS_MAP_STYLE,             "topographic");
+        hashMap.put(KEY_GOOGLE_MAP_STYLE,           String.valueOf(GoogleMap.MAP_TYPE_NORMAL));
+        hashMap.put(KEY_MAPBOX_MAP_STYLE,           Style.MAPBOX_STREETS);
         return hashMap;
     }
 

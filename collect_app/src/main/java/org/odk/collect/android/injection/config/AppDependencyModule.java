@@ -15,8 +15,22 @@ import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.analytics.FirebaseAnalytics;
+import org.odk.collect.android.application.CollectSettingsChangeHandler;
 import org.odk.collect.android.application.initialization.ApplicationInitializer;
-import org.odk.collect.android.backgroundwork.JobManagerAndSchedulerBackgroundWorkManager;
+import org.odk.collect.android.application.initialization.CollectSettingsPreferenceMigrator;
+import org.odk.collect.android.application.initialization.SettingsPreferenceMigrator;
+import org.odk.collect.android.backgroundwork.ChangeLock;
+import org.odk.collect.android.backgroundwork.FormSubmitManager;
+import org.odk.collect.android.backgroundwork.FormUpdateManager;
+import org.odk.collect.android.backgroundwork.ReentrantLockChangeLock;
+import org.odk.collect.android.backgroundwork.SchedulerFormUpdateAndSubmitManager;
+import org.odk.collect.android.configure.SettingsChangeHandler;
+import org.odk.collect.android.configure.SettingsImporter;
+import org.odk.collect.android.configure.StructureAndTypeSettingsValidator;
+import org.odk.collect.android.configure.qr.CachingQRCodeGenerator;
+import org.odk.collect.android.configure.qr.QRCodeDecoder;
+import org.odk.collect.android.configure.qr.QRCodeGenerator;
+import org.odk.collect.android.configure.qr.QRCodeUtils;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.events.RxEventBus;
@@ -24,19 +38,24 @@ import org.odk.collect.android.formentry.media.AudioHelperFactory;
 import org.odk.collect.android.formentry.media.ScreenContextAudioHelperFactory;
 import org.odk.collect.android.formmanagement.DiskFormsSynchronizer;
 import org.odk.collect.android.formmanagement.FormDownloader;
+import org.odk.collect.android.formmanagement.ServerFormDownloader;
 import org.odk.collect.android.formmanagement.ServerFormsDetailsFetcher;
-import org.odk.collect.android.formmanagement.SyncStatusRepository;
-import org.odk.collect.android.formmanagement.ServerFormsSynchronizer;
-import org.odk.collect.android.forms.DatabaseFormRepository;
-import org.odk.collect.android.forms.DatabaseMediaFileRepository;
-import org.odk.collect.android.forms.FormRepository;
+import org.odk.collect.android.formmanagement.matchexactly.ServerFormsSynchronizer;
+import org.odk.collect.android.formmanagement.matchexactly.SyncStatusRepository;
+import org.odk.collect.android.database.DatabaseFormsRepository;
+import org.odk.collect.android.database.DatabaseMediaFileRepository;
+import org.odk.collect.android.forms.FormsRepository;
 import org.odk.collect.android.forms.MediaFileRepository;
 import org.odk.collect.android.geo.MapProvider;
-import org.odk.collect.android.jobs.CollectJobCreator;
+import org.odk.collect.android.database.DatabaseInstancesRepository;
+import org.odk.collect.android.instances.InstancesRepository;
+import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.metadata.InstallIDProvider;
 import org.odk.collect.android.metadata.SharedPreferencesInstallIDProvider;
 import org.odk.collect.android.network.ConnectivityProvider;
 import org.odk.collect.android.network.NetworkStateProvider;
+import org.odk.collect.android.notifications.NotificationManagerNotifier;
+import org.odk.collect.android.notifications.Notifier;
 import org.odk.collect.android.openrosa.CollectThenSystemContentTypeMapper;
 import org.odk.collect.android.openrosa.OpenRosaHttpInterface;
 import org.odk.collect.android.openrosa.OpenRosaXmlFetcher;
@@ -44,12 +63,11 @@ import org.odk.collect.android.openrosa.api.FormListApi;
 import org.odk.collect.android.openrosa.api.OpenRosaFormListApi;
 import org.odk.collect.android.openrosa.okhttp.OkHttpConnection;
 import org.odk.collect.android.openrosa.okhttp.OkHttpOpenRosaServerClientProvider;
+import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferencesProvider;
-import org.odk.collect.android.preferences.qr.CachingQRCodeGenerator;
-import org.odk.collect.android.preferences.qr.QRCodeGenerator;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.storage.StorageStateProvider;
@@ -61,19 +79,21 @@ import org.odk.collect.android.utilities.AdminPasswordProvider;
 import org.odk.collect.android.utilities.AndroidUserAgent;
 import org.odk.collect.android.utilities.DeviceDetailsProvider;
 import org.odk.collect.android.utilities.FileProvider;
-import org.odk.collect.android.utilities.FormListDownloader;
 import org.odk.collect.android.utilities.FormsDirDiskFormsSynchronizer;
 import org.odk.collect.android.utilities.MultiFormDownloader;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 import org.odk.collect.android.version.VersionInformation;
+import org.odk.collect.android.views.BarcodeViewDecoder;
 import org.odk.collect.async.CoroutineAndWorkManagerScheduler;
 import org.odk.collect.async.Scheduler;
-import org.odk.collect.android.backgroundwork.BackgroundWorkManager;
 import org.odk.collect.utilities.UserAgentProvider;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -134,35 +154,18 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public OpenRosaXmlFetcher provideCollectServerClient(OpenRosaHttpInterface httpInterface, WebCredentialsUtils webCredentialsUtils) {
-        return new OpenRosaXmlFetcher(httpInterface, webCredentialsUtils);
-    }
-
-    @Provides
     WebCredentialsUtils provideWebCredentials() {
         return new WebCredentialsUtils();
     }
 
     @Provides
-    FormListDownloader formListDownloader(
-            Application application,
-            OpenRosaXmlFetcher openRosaXMLFetcher,
-            WebCredentialsUtils webCredentialsUtils) {
-        return new FormListDownloader(
-                application,
-                openRosaXMLFetcher,
-                webCredentialsUtils
-        );
-    }
-
-    @Provides
-    MultiFormDownloader providesMultiFormDownloader(FormsDao formsDao, OpenRosaXmlFetcher openRosaXMLFetcher) {
-        return new MultiFormDownloader(formsDao, openRosaXMLFetcher);
+    public MultiFormDownloader providesMultiFormDownloader(FormsDao formsDao, OpenRosaHttpInterface openRosaHttpInterface, WebCredentialsUtils webCredentialsUtils) {
+        return new MultiFormDownloader(new OpenRosaXmlFetcher(openRosaHttpInterface, webCredentialsUtils));
     }
 
     @Provides
     FormDownloader providesFormDownloader(MultiFormDownloader multiFormDownloader) {
-        return multiFormDownloader;
+        return new ServerFormDownloader(multiFormDownloader);
     }
 
     @Provides
@@ -205,14 +208,14 @@ public class AppDependencyModule {
     }
 
     @Provides
-    StorageMigrator providesStorageMigrator(StoragePathProvider storagePathProvider, StorageStateProvider storageStateProvider, StorageMigrationRepository storageMigrationRepository, ReferenceManager referenceManager, BackgroundWorkManager backgroundWorkManager, Analytics analytics) {
+    public StorageMigrator providesStorageMigrator(StoragePathProvider storagePathProvider, StorageStateProvider storageStateProvider, StorageMigrationRepository storageMigrationRepository, ReferenceManager referenceManager, FormUpdateManager formUpdateManager, FormSubmitManager formSubmitManager, Analytics analytics, @Named("FORMS") ChangeLock changeLock) {
         StorageEraser storageEraser = new StorageEraser(storagePathProvider);
 
-        return new StorageMigrator(storagePathProvider, storageStateProvider, storageEraser, storageMigrationRepository, GeneralSharedPreferences.getInstance(), referenceManager, backgroundWorkManager, analytics);
+        return new StorageMigrator(storagePathProvider, storageStateProvider, storageEraser, storageMigrationRepository, GeneralSharedPreferences.getInstance(), referenceManager, analytics);
     }
 
     @Provides
-    PreferencesProvider providesPreferencesProvider(Context context) {
+    public PreferencesProvider providesPreferencesProvider(Context context) {
         return new PreferencesProvider(context);
     }
 
@@ -299,13 +302,13 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public CollectJobCreator providesCollectJobCreator() {
-        return new CollectJobCreator();
+    public FormUpdateManager providesFormUpdateManger(Scheduler scheduler, PreferencesProvider preferencesProvider, Application application, WorkManager workManager) {
+        return new SchedulerFormUpdateAndSubmitManager(scheduler, preferencesProvider.getGeneralSharedPreferences(), application);
     }
 
     @Provides
-    public BackgroundWorkManager providesBackgroundWorkManager(Scheduler scheduler) {
-        return new JobManagerAndSchedulerBackgroundWorkManager(scheduler);
+    public FormSubmitManager providesFormSubmitManager(Scheduler scheduler, PreferencesProvider preferencesProvider, Application application, WorkManager workManager) {
+        return new SchedulerFormUpdateAndSubmitManager(scheduler, preferencesProvider.getGeneralSharedPreferences(), application);
     }
 
     @Provides
@@ -340,13 +343,54 @@ public class AppDependencyModule {
 
     @Singleton
     @Provides
-    public ApplicationInitializer providesApplicationInitializer(Application application, CollectJobCreator collectJobCreator, PreferencesProvider preferencesProvider, UserAgentProvider userAgentProvider) {
-        return new ApplicationInitializer(application, collectJobCreator, preferencesProvider.getMetaSharedPreferences(), userAgentProvider);
+    public ApplicationInitializer providesApplicationInitializer(Application application, UserAgentProvider userAgentProvider, SettingsPreferenceMigrator preferenceMigrator, PropertyManager propertyManager, Analytics analytics) {
+        return new ApplicationInitializer(application, userAgentProvider, preferenceMigrator, propertyManager, analytics);
     }
 
     @Provides
-    public FormRepository providesFormRepository() {
-        return new DatabaseFormRepository();
+    public SettingsPreferenceMigrator providesPreferenceMigrator(PreferencesProvider preferencesProvider) {
+        return new CollectSettingsPreferenceMigrator(preferencesProvider.getMetaSharedPreferences());
+    }
+
+    @Provides
+    @Singleton
+    public PropertyManager providesPropertyManager(Application application, RxEventBus eventBus, PermissionUtils permissionUtils, DeviceDetailsProvider deviceDetailsProvider) {
+        return new PropertyManager(application, eventBus, permissionUtils, deviceDetailsProvider);
+    }
+
+    @Provides
+    public SettingsChangeHandler providesSettingsChangeHandler(PropertyManager propertyManager, FormUpdateManager formUpdateManager) {
+        return new CollectSettingsChangeHandler(propertyManager, formUpdateManager);
+    }
+
+    @Provides
+    public SettingsImporter providesCollectSettingsImporter(PreferencesProvider preferencesProvider, SettingsPreferenceMigrator preferenceMigrator, SettingsChangeHandler settingsChangeHandler) {
+        HashMap<String, Object> generalDefaults = GeneralKeys.DEFAULTS;
+        Map<String, Object> adminDefaults = AdminKeys.getDefaults();
+        return new SettingsImporter(
+                preferencesProvider.getGeneralSharedPreferences(),
+                preferencesProvider.getAdminSharedPreferences(),
+                preferenceMigrator,
+                new StructureAndTypeSettingsValidator(generalDefaults, adminDefaults),
+                generalDefaults,
+                adminDefaults,
+                settingsChangeHandler
+        );
+    }
+
+    @Provides
+    public BarcodeViewDecoder providesBarcodeViewDecoder() {
+        return new BarcodeViewDecoder();
+    }
+
+    @Provides
+    public QRCodeDecoder providesQRCodeDecoder() {
+        return new QRCodeUtils();
+    }
+
+    @Provides
+    public FormsRepository providesFormRepository() {
+        return new DatabaseFormsRepository();
     }
 
     @Provides
@@ -355,12 +399,12 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public FormListApi providesFormAPI(GeneralSharedPreferences generalSharedPreferences, Context context, OpenRosaXmlFetcher openRosaXMLFetcher) {
+    public FormListApi providesFormAPI(GeneralSharedPreferences generalSharedPreferences, Context context, OpenRosaHttpInterface openRosaHttpInterface, WebCredentialsUtils webCredentialsUtils) {
         SharedPreferences generalPrefs = generalSharedPreferences.getSharedPreferences();
         String serverURL = generalPrefs.getString(GeneralKeys.KEY_SERVER_URL, context.getString(R.string.default_server_url));
         String formListPath = generalPrefs.getString(GeneralKeys.KEY_FORMLIST_URL, context.getString(R.string.default_odk_formlist));
 
-        return new OpenRosaFormListApi(openRosaXMLFetcher, serverURL, formListPath);
+        return new OpenRosaFormListApi(serverURL, formListPath, openRosaHttpInterface, webCredentialsUtils);
     }
 
     @Provides
@@ -375,12 +419,36 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public ServerFormsDetailsFetcher providesServerFormDetailsFetcher(FormRepository formRepository, MediaFileRepository mediaFileRepository, FormListApi formListAPI, DiskFormsSynchronizer diskFormsSynchronizer) {
-        return new ServerFormsDetailsFetcher(formRepository, mediaFileRepository, formListAPI, diskFormsSynchronizer);
+    public ServerFormsDetailsFetcher providesServerFormDetailsFetcher(FormsRepository formsRepository, MediaFileRepository mediaFileRepository, FormListApi formListAPI, DiskFormsSynchronizer diskFormsSynchronizer) {
+        return new ServerFormsDetailsFetcher(formsRepository, mediaFileRepository, formListAPI, diskFormsSynchronizer);
     }
 
     @Provides
-    public ServerFormsSynchronizer providesServerFormSynchronizer(ServerFormsDetailsFetcher serverFormsDetailsFetcher, FormRepository formRepository, FormDownloader formDownloader) {
-        return new ServerFormsSynchronizer(serverFormsDetailsFetcher, formRepository, formDownloader);
+    public ServerFormsSynchronizer providesServerFormSynchronizer(ServerFormsDetailsFetcher serverFormsDetailsFetcher, FormsRepository formsRepository, FormDownloader formDownloader, InstancesRepository instancesRepository) {
+        return new ServerFormsSynchronizer(serverFormsDetailsFetcher, formsRepository, instancesRepository, formDownloader);
+    }
+
+    @Provides
+    public Notifier providesNotifier(Application application, PreferencesProvider preferencesProvider) {
+        return new NotificationManagerNotifier(application, preferencesProvider);
+    }
+
+    @Provides
+    @Named("FORMS")
+    @Singleton
+    public ChangeLock providesFormsChangeLock() {
+        return new ReentrantLockChangeLock();
+    }
+
+    @Provides
+    @Named("INSTANCES")
+    @Singleton
+    public ChangeLock providesInstancesChangeLock() {
+        return new ReentrantLockChangeLock();
+    }
+
+    @Provides
+    public InstancesRepository providesInstancesRepository() {
+        return new DatabaseInstancesRepository();
     }
 }
