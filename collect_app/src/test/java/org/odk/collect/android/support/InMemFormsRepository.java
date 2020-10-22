@@ -11,6 +11,8 @@ import java.util.Objects;
 
 import javax.annotation.Nullable;
 
+import static java.util.stream.Collectors.toList;
+
 public class InMemFormsRepository implements FormsRepository {
 
     private final List<Form> forms = new ArrayList<>();
@@ -22,8 +24,8 @@ public class InMemFormsRepository implements FormsRepository {
     }
 
     @Override
-    public boolean contains(String jrFormId) {
-        return forms.stream().anyMatch(f -> f.getJrFormId().equals(jrFormId));
+    public List<Form> getByJrFormIdNotDeleted(String jrFormId) {
+        return forms.stream().filter(f -> f.getJrFormId().equals(jrFormId) && !f.isDeleted()).collect(toList());
     }
 
     @Override
@@ -54,7 +56,7 @@ public class InMemFormsRepository implements FormsRepository {
     @Nullable
     @Override
     public Form getByPath(String path) {
-        throw new UnsupportedOperationException();
+        return forms.stream().filter(f -> f.getFormFilePath().equals(path)).findFirst().orElse(null);
     }
 
     @Override
@@ -75,7 +77,19 @@ public class InMemFormsRepository implements FormsRepository {
     }
 
     @Override
+    public void restore(Long id) {
+        Form form = forms.stream().filter(f -> f.getId().equals(id)).findFirst().orElse(null);
+
+        if (form != null) {
+            forms.remove(form);
+            forms.add(new Form.Builder(form)
+                    .deleted(false)
+                    .build());
+        }
+    }
+
+    @Override
     public void deleteFormsByMd5Hash(String md5Hash) {
-        throw new UnsupportedOperationException();
+        forms.removeIf(f -> f.getMD5Hash().equals(md5Hash));
     }
 }

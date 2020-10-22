@@ -16,6 +16,7 @@
 
 package org.odk.collect.android.widgets;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -40,10 +41,10 @@ import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ContentUriProvider;
 import org.odk.collect.android.utilities.FileUtil;
 import org.odk.collect.android.utilities.FileUtils;
-import org.odk.collect.android.utilities.MediaManager;
 import org.odk.collect.android.utilities.MediaUtil;
+import org.odk.collect.android.utilities.QuestionMediaManager;
 import org.odk.collect.android.utilities.ToastUtils;
-import org.odk.collect.android.widgets.interfaces.BinaryDataReceiver;
+import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
 import org.odk.collect.android.widgets.interfaces.ButtonClickListener;
 import org.odk.collect.android.widgets.interfaces.FileWidget;
 import org.odk.collect.android.widgets.utilities.FileWidgetUtils;
@@ -56,7 +57,8 @@ import timber.log.Timber;
 import static org.odk.collect.android.formentry.questions.WidgetViewUtils.createAnswerTextView;
 import static org.odk.collect.android.formentry.questions.WidgetViewUtils.createSimpleButton;
 
-public class ArbitraryFileWidget extends QuestionWidget implements FileWidget, ButtonClickListener, BinaryDataReceiver {
+@SuppressLint("ViewConstructor")
+public class ArbitraryFileWidget extends QuestionWidget implements FileWidget, ButtonClickListener, WidgetDataReceiver {
 
     @NonNull
     private FileUtil fileUtil;
@@ -64,35 +66,36 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget, B
     @NonNull
     private MediaUtil mediaUtil;
 
-    private String binaryName;
+    private final QuestionMediaManager questionMediaManager;
     private final WaitingForDataRegistry waitingForDataRegistry;
+
+    private String binaryName;
 
     Button chooseFileButton;
     TextView chosenFileNameTextView;
     private LinearLayout answerLayout;
 
-    public ArbitraryFileWidget(Context context, QuestionDetails prompt, WaitingForDataRegistry waitingForDataRegistry) {
-        this(context, prompt, new FileUtil(), new MediaUtil(), waitingForDataRegistry);
+    public ArbitraryFileWidget(Context context, QuestionDetails prompt, QuestionMediaManager questionMediaManager, WaitingForDataRegistry waitingForDataRegistry) {
+        this(context, prompt, new FileUtil(), new MediaUtil(), questionMediaManager, waitingForDataRegistry);
     }
 
-    ArbitraryFileWidget(Context context, QuestionDetails questionDetails, @NonNull FileUtil fileUtil, @NonNull MediaUtil mediaUtil, WaitingForDataRegistry waitingForDataRegistry) {
+    ArbitraryFileWidget(Context context, QuestionDetails questionDetails, @NonNull FileUtil fileUtil, @NonNull MediaUtil mediaUtil,
+                        QuestionMediaManager questionMediaManager, WaitingForDataRegistry waitingForDataRegistry) {
         super(context, questionDetails);
-
         this.fileUtil = fileUtil;
         this.mediaUtil = mediaUtil;
+        this.questionMediaManager = questionMediaManager;
+        this.waitingForDataRegistry = waitingForDataRegistry;
 
         binaryName = questionDetails.getPrompt().getAnswerText();
-        this.waitingForDataRegistry = waitingForDataRegistry;
 
         setUpLayout(context);
     }
 
     @Override
     public void deleteFile() {
-        MediaManager
-                .INSTANCE
-                .markOriginalFileOrDelete(getFormEntryPrompt().getIndex().toString(),
-                        getInstanceFolder() + File.separator + binaryName);
+        questionMediaManager.deleteAnswerFile(getFormEntryPrompt().getIndex().toString(),
+                getInstanceFolder() + File.separator + binaryName);
         binaryName = null;
     }
 
@@ -116,7 +119,7 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget, B
     }
 
     @Override
-    public void setBinaryData(Object object) {
+    public void setData(Object object) {
         File newFile;
         // get the file path and create a copy in the instance folder
         if (object instanceof Uri) {

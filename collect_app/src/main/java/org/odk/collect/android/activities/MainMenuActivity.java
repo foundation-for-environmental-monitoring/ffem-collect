@@ -44,12 +44,12 @@ import androidx.lifecycle.ViewModelProviders;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.viewmodels.MainMenuViewModel;
 import org.odk.collect.android.analytics.Analytics;
-import org.odk.collect.android.analytics.AnalyticsEvents;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.configure.LegacySettingsFileReader;
 import org.odk.collect.android.configure.SettingsImporter;
 import org.odk.collect.android.configure.qr.QRCodeTabsActivity;
 import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.gdrive.GoogleDriveActivity;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.storage.migration.StorageMigrationService;
 import org.odk.collect.material.MaterialBanner;
@@ -69,11 +69,14 @@ import org.odk.collect.android.storage.migration.StorageMigrationResult;
 import org.odk.collect.android.utilities.AdminPasswordProvider;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.DialogUtils;
+import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.utilities.PlayServicesChecker;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.material.MaterialBanner;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -90,6 +93,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
+import static org.odk.collect.android.analytics.AnalyticsEvents.SETTINGS_IMPORT_JSON;
+import static org.odk.collect.android.analytics.AnalyticsEvents.SETTINGS_IMPORT_SERIALIZED;
 import static org.odk.collect.android.utilities.DialogUtils.getDialog;
 import static org.odk.collect.android.utilities.DialogUtils.showIfNotShowing;
 
@@ -410,6 +415,10 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (!MultiClickGuard.allowClick(getClass().getName())) {
+            return true;
+        }
+
         switch (item.getItemId()) {
             case R.id.menu_settings:
                 final Intent intent = new Intent(this, SettingsActivity.class);
@@ -505,8 +514,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
 
         } else {
             sendDataButton.setText(getString(R.string.outbox));
-            Timber.w("Cannot update \"Send Finalized\" button label since the database is closed. "
-                    + "Perhaps the app is running in the background?");
+            Timber.w("Cannot update \"Send Finalized\" button label since the database is closed. Perhaps the app is running in the background?");
         }
 
         if (savedCursor != null && !savedCursor.isClosed()) {
@@ -525,8 +533,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
             reviewDataButton.setText(getString(R.string.review_data));
         } else {
             reviewDataButton.setText(getString(R.string.review_data));
-            Timber.w("Cannot update \"Edit Form\" button label since the database is closed. "
-                    + "Perhaps the app is running in the background?");
+            Timber.w("Cannot update \"Edit Form\" button label since the database is closed. Perhaps the app is running in the background?");
         }
 
         if (viewSentCursor != null && !viewSentCursor.isClosed()) {
@@ -545,8 +552,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
             viewSentFormsButton.setText(getString(R.string.view_sent_forms));
         } else {
             viewSentFormsButton.setText(getString(R.string.view_sent_forms));
-            Timber.w("Cannot update \"View Sent\" button label since the database is closed. "
-                    + "Perhaps the app is running in the background?");
+            Timber.w("Cannot update \"View Sent\" button label since the database is closed. Perhaps the app is running in the background?");
         }
     }
 
@@ -662,15 +668,25 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
             String settings = new LegacySettingsFileReader(storagePathProvider).toJSON();
 
             if (settings != null) {
+                String type = new File(storagePathProvider.getStorageRootDirPath() + "/collect.settings.json").exists()
+                        ? SETTINGS_IMPORT_JSON : SETTINGS_IMPORT_SERIALIZED;
+                String settingsHash = FileUtils.getMd5Hash(new ByteArrayInputStream(settings.getBytes()));
+
                 if (settingsImporter.fromJSON(settings)) {
                     ToastUtils.showLongToast(R.string.settings_successfully_loaded_file_notification);
+                    analytics.logEvent(type, "Success", settingsHash);
                     recreate();
                 } else {
                     ToastUtils.showLongToast(R.string.corrupt_settings_file_notification);
+                    analytics.logEvent(type, "Corrupt", settingsHash);
                 }
             }
         } catch (LegacySettingsFileReader.CorruptSettingsFileException e) {
             ToastUtils.showLongToast(R.string.corrupt_settings_file_notification);
+
+            String type = new File(storagePathProvider.getStorageRootDirPath() + "/collect.settings.json").exists()
+                    ? SETTINGS_IMPORT_JSON : SETTINGS_IMPORT_SERIALIZED;
+            analytics.logEvent(type, "Corrupt exception", "none");
         }
     }
 

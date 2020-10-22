@@ -120,7 +120,7 @@ public class GoogleFusedLocationClient
 
     @SuppressLint("MissingPermission") // Permission checks for location services handled in widgets
     public void requestLocationUpdates(@NonNull LocationListener locationListener) {
-        if (!isMonitoringLocation()) {
+        if (!isMonitoringLocation() && googleApiClient.isConnected()) {
             fusedLocationProviderApi.requestLocationUpdates(googleApiClient, createLocationRequest(), this);
         }
 
@@ -132,7 +132,9 @@ public class GoogleFusedLocationClient
             return;
         }
 
-        fusedLocationProviderApi.removeLocationUpdates(googleApiClient, locationListener);
+        if (googleApiClient.isConnected()) {
+            fusedLocationProviderApi.removeLocationUpdates(googleApiClient, locationListener);
+        }
         locationListener = null;
     }
 
@@ -214,6 +216,9 @@ public class GoogleFusedLocationClient
         Timber.i("Location changed: %s", location.toString());
 
         if (locationListener != null) {
+            if (location.getAccuracy() < 0) {
+                location.setAccuracy(0);
+            }
             locationListener.onLocationChanged(location);
         }
     }

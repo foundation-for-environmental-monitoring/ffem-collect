@@ -43,9 +43,9 @@ import org.odk.collect.android.formmanagement.BlankFormsListViewModel;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.listeners.DiskSyncListener;
 import org.odk.collect.android.listeners.PermissionListener;
+import org.odk.collect.android.network.NetworkStateProvider;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.preferences.PreferencesProvider;
 import org.odk.collect.android.preferences.ServerAuthDialogFragment;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.storage.StorageInitializer;
@@ -54,7 +54,7 @@ import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.utilities.PermissionUtils;
-import org.odk.collect.async.Scheduler;
+import org.odk.collect.android.views.ObviousProgressBar;
 
 import javax.inject.Inject;
 
@@ -84,10 +84,7 @@ public class FillBlankFormActivity extends FormListActivity implements
     private DiskSyncTask diskSyncTask;
 
     @Inject
-    PreferencesProvider preferencesProvider;
-
-    @Inject
-    Scheduler scheduler;
+    NetworkStateProvider networkStateProvider;
 
     @Inject
     BlankFormsListViewModel.Factory blankFormsListViewModelFactory;
@@ -111,10 +108,12 @@ public class FillBlankFormActivity extends FormListActivity implements
 
         BlankFormsListViewModel blankFormsListViewModel = new ViewModelProvider(this, blankFormsListViewModelFactory).get(BlankFormsListViewModel.class);
         blankFormsListViewModel.isSyncing().observe(this, syncing -> {
+            ObviousProgressBar progressBar = findViewById(R.id.progressBar);
+
             if (syncing) {
-                findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+                progressBar.show();
             } else {
-                findViewById(R.id.progressBar).setVisibility(View.GONE);
+                progressBar.hide(View.GONE);
             }
         });
 
@@ -126,7 +125,7 @@ public class FillBlankFormActivity extends FormListActivity implements
             }
         });
 
-        menuDelegate = new BlankFormListMenuDelegate(this, blankFormsListViewModel);
+        menuDelegate = new BlankFormListMenuDelegate(this, blankFormsListViewModel, networkStateProvider);
 
         new PermissionUtils().requestStoragePermissions(this, new PermissionListener() {
             @Override
@@ -150,39 +149,24 @@ public class FillBlankFormActivity extends FormListActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        boolean result = super.onCreateOptionsMenu(menu);
         menuDelegate.onCreateOptionsMenu(getMenuInflater(), menu);
-        return super.onCreateOptionsMenu(menu);
+        return result;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean result = super.onPrepareOptionsMenu(menu);
         menuDelegate.onPrepareOptionsMenu(menu);
-        if (findViewById(R.id.buttonGetBlankForm).getVisibility() == View.GONE) {
-            MenuItem deleteItem = (menu.findItem(R.id.menu_delete));
-            deleteItem.setEnabled(false);
-            deleteItem.getIcon().setAlpha(50);
-            MenuItem sortItem = (menu.findItem(R.id.menu_sort));
-            sortItem.setEnabled(false);
-            sortItem.getIcon().setAlpha(60);
-            MenuItem filterItem = (menu.findItem(R.id.menu_filter));
-            filterItem.setEnabled(false);
-            filterItem.getIcon().setAlpha(60);
-        } else {
-            MenuItem deleteItem = (menu.findItem(R.id.menu_delete));
-            deleteItem.setEnabled(true);
-            deleteItem.getIcon().setAlpha(255);
-            MenuItem sortItem = (menu.findItem(R.id.menu_sort));
-            sortItem.setEnabled(true);
-            sortItem.getIcon().setAlpha(255);
-            MenuItem filterItem = (menu.findItem(R.id.menu_filter));
-            filterItem.setEnabled(true);
-            filterItem.getIcon().setAlpha(255);
-        }
-        return super.onPrepareOptionsMenu(menu);
+        return result;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (!MultiClickGuard.allowClick(getClass().getName())) {
+            return true;
+        }
+
         if (super.onOptionsItemSelected(item)) {
             return true;
         } else {

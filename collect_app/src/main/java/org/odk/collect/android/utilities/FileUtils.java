@@ -279,7 +279,11 @@ public class FileUtils {
 
         fields.put(TITLE, formDef.getTitle());
         fields.put(FORMID, formDef.getMainInstance().getRoot().getAttributeValue(null, "id"));
-        fields.put(VERSION, formDef.getMainInstance().getRoot().getAttributeValue(null, "version"));
+        String version = formDef.getMainInstance().getRoot().getAttributeValue(null, "version");
+        if (version != null && version.trim().isEmpty()) {
+            version = null;
+        }
+        fields.put(VERSION, version);
 
         if (formDef.getSubmissionProfile() != null) {
             fields.put(SUBMISSIONURI, formDef.getSubmissionProfile().getAction());
@@ -450,12 +454,11 @@ public class FileUtils {
      */
     public static void checkMediaPath(File mediaDir) {
         if (mediaDir.exists() && mediaDir.isFile()) {
-            Timber.e("The media folder is already there and it is a FILE!! We will need to delete "
-                    + "it and create a folder instead");
+            Timber.e("The media folder is already there and it is a FILE!! We will need to delete it and create a folder instead");
             boolean deleted = mediaDir.delete();
             if (!deleted) {
                 throw new RuntimeException(
-                        Collect.getInstance().getString(R.string.fs_delete_media_path_if_file_error,
+                        TranslationHandler.getString(Collect.getInstance(), R.string.fs_delete_media_path_if_file_error,
                                 mediaDir.getAbsolutePath()));
             }
         }
@@ -464,7 +467,7 @@ public class FileUtils {
         boolean createdOrExisted = createFolder(mediaDir.getAbsolutePath());
         if (!createdOrExisted) {
             throw new RuntimeException(
-                    Collect.getInstance().getString(R.string.fs_create_media_folder_error,
+                    TranslationHandler.getString(Collect.getInstance(), R.string.fs_create_media_folder_error,
                             mediaDir.getAbsolutePath()));
         }
     }
@@ -472,13 +475,14 @@ public class FileUtils {
     public static void purgeMediaPath(String mediaPath) {
         File tempMediaFolder = new File(mediaPath);
         File[] tempMediaFiles = tempMediaFolder.listFiles();
-        if (tempMediaFiles == null || tempMediaFiles.length == 0) {
-            deleteAndReport(tempMediaFolder);
-        } else {
+
+        if (tempMediaFiles != null) {
             for (File tempMediaFile : tempMediaFiles) {
                 deleteAndReport(tempMediaFile);
             }
         }
+
+        deleteAndReport(tempMediaFolder);
     }
 
     public static void moveMediaFiles(String tempMediaPath, File formMediaPath) throws IOException {

@@ -19,14 +19,14 @@ import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.analytics.AnalyticsEvents;
 import org.odk.collect.android.formmanagement.matchexactly.ServerFormsSynchronizer;
 import org.odk.collect.android.formmanagement.matchexactly.SyncStatusRepository;
+import org.odk.collect.android.forms.FormSourceException;
 import org.odk.collect.android.notifications.Notifier;
-import org.odk.collect.android.openrosa.api.FormApiException;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.PreferencesProvider;
 import org.odk.collect.android.support.BooleanChangeLock;
-import org.odk.collect.android.support.FakeScheduler;
-import org.odk.collect.android.support.LiveDataTester;
 import org.odk.collect.async.Scheduler;
+import org.odk.collect.testshared.FakeScheduler;
+import org.odk.collect.testshared.LiveDataTester;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -81,7 +81,7 @@ public class BlankFormsListViewModelTest {
 
     @Test
     public void isOutOfSync_followsRepositorySyncError() {
-        MutableLiveData<FormApiException> liveData = new MutableLiveData<>(new FormApiException(FormApiException.Type.FETCH_ERROR));
+        MutableLiveData<FormSourceException> liveData = new MutableLiveData<>(new FormSourceException(FormSourceException.Type.FETCH_ERROR));
         when(syncRepository.getSyncError()).thenReturn(liveData);
 
         BlankFormsListViewModel viewModel = new BlankFormsListViewModel(mock(Application.class), mock(Scheduler.class), syncRepository, mock(ServerFormsSynchronizer.class), preferencesProvider, mock(Notifier.class), changeLock, analytics);
@@ -104,7 +104,7 @@ public class BlankFormsListViewModelTest {
     }
 
     @Test
-    public void syncWithServer_whenTaskFinishes_finishesSyncOnRepository() {
+    public void syncWithServer_whenTaskFinishes_finishesSyncOnRepositoryAndNotifies() {
         FakeScheduler fakeScheduler = new FakeScheduler();
         Notifier notifier = mock(Notifier.class);
 
@@ -114,6 +114,17 @@ public class BlankFormsListViewModelTest {
         fakeScheduler.runBackground();
         verify(syncRepository).finishSync(null);
         verify(notifier).onSync(null);
+    }
+
+    @Test
+    public void syncWithServer_whenTaskFinishes_setsResultToTrue() {
+        FakeScheduler fakeScheduler = new FakeScheduler();
+
+        BlankFormsListViewModel viewModel = new BlankFormsListViewModel(mock(Application.class), fakeScheduler, syncRepository, mock(ServerFormsSynchronizer.class), preferencesProvider, mock(Notifier.class), changeLock, analytics);
+        LiveData<Boolean> result = viewModel.syncWithServer();
+        fakeScheduler.runBackground();
+
+        assertThat(result.getValue(), is(true));
     }
 
     @Test
@@ -135,7 +146,7 @@ public class BlankFormsListViewModelTest {
 
         BlankFormsListViewModel viewModel = new BlankFormsListViewModel(mock(Application.class), fakeScheduler, syncRepository, synchronizer, preferencesProvider, notifier, changeLock, analytics);
 
-        FormApiException exception = new FormApiException(FormApiException.Type.FETCH_ERROR);
+        FormSourceException exception = new FormSourceException(FormSourceException.Type.FETCH_ERROR);
         doThrow(exception).when(synchronizer).synchronize();
         viewModel.syncWithServer();
         fakeScheduler.runBackground();
@@ -152,12 +163,28 @@ public class BlankFormsListViewModelTest {
 
         BlankFormsListViewModel viewModel = new BlankFormsListViewModel(mock(Application.class), fakeScheduler, syncRepository, synchronizer, preferencesProvider, notifier, changeLock, analytics);
 
-        FormApiException exception = new FormApiException(FormApiException.Type.FETCH_ERROR);
+        FormSourceException exception = new FormSourceException(FormSourceException.Type.FETCH_ERROR);
         doThrow(exception).when(synchronizer).synchronize();
         viewModel.syncWithServer();
         fakeScheduler.runBackground();
 
         verify(analytics).logEvent(AnalyticsEvents.MATCH_EXACTLY_SYNC_COMPLETED, "FETCH_ERROR");
+    }
+
+    @Test
+    public void syncWithServer_whenThereIsAnError_setsResultToFalse() throws Exception {
+        FakeScheduler fakeScheduler = new FakeScheduler();
+        ServerFormsSynchronizer synchronizer = mock(ServerFormsSynchronizer.class);
+
+        BlankFormsListViewModel viewModel = new BlankFormsListViewModel(mock(Application.class), fakeScheduler, syncRepository, synchronizer, preferencesProvider, mock(Notifier.class), changeLock, analytics);
+
+        FormSourceException exception = new FormSourceException(FormSourceException.Type.FETCH_ERROR);
+        doThrow(exception).when(synchronizer).synchronize();
+
+        LiveData<Boolean> result = viewModel.syncWithServer();
+        fakeScheduler.runBackground();
+
+        assertThat(result.getValue(), is(false));
     }
 
     @Test

@@ -6,15 +6,18 @@ import android.location.LocationManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.location.LocationListener;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.odk.collect.android.location.LocationTestUtils;
+import org.robolectric.RobolectricTestRunner;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doAnswer;
@@ -23,18 +26,20 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class GoogleFusedLocationClientTest {
 
-    @Mock FusedLocationProviderApi fusedLocationProviderApi;
-    @Mock GoogleApiClient googleApiClient;
-    @Mock LocationManager locationManager;
-
+    private GoogleApiClient googleApiClient;
     private GoogleFusedLocationClient client;
+    private FusedLocationProviderApi fusedLocationProviderApi;
 
     @Before
     public void setUp() {
+        fusedLocationProviderApi = mock(FusedLocationProviderApi.class);
+        googleApiClient = mock(GoogleApiClient.class);
+        LocationManager locationManager = mock(LocationManager.class);
         client = new GoogleFusedLocationClient(googleApiClient, fusedLocationProviderApi, locationManager);
     }
 
@@ -90,6 +95,29 @@ public class GoogleFusedLocationClientTest {
         when(googleApiClient.isConnected()).thenReturn(false);
         client.stop();
         verify(listener).onClientStop();
+    }
+
+    @Test
+    public void whenGoogleApiClientNotConnected_shouldNotRemoveLocationUpdatesBeCalled() {
+        when(googleApiClient.isConnected()).thenReturn(false);
+
+        client.start();
+
+        TestLocationListener listener = new TestLocationListener();
+        client.requestLocationUpdates(listener);
+
+        client.stop();
+        verify(fusedLocationProviderApi, never()).removeLocationUpdates(googleApiClient, listener);
+    }
+
+    @Test
+    public void whenGoogleApiClientNotConnected_shouldNotRequestLocationUpdatesBeCalled() {
+        when(googleApiClient.isConnected()).thenReturn(false);
+
+        client.start();
+        client.requestLocationUpdates(new TestLocationListener());
+
+        verify(fusedLocationProviderApi, never()).requestLocationUpdates(any(), any(), (LocationListener) any());
     }
 
     @Test
@@ -154,6 +182,19 @@ public class GoogleFusedLocationClientTest {
     @Test
     public void canSetUpdateIntervalsShouldReturnTrue() {
         assertTrue(client.canSetUpdateIntervals());
+    }
+
+    @Test
+    public void whenAccuracyIsNegative_shouldBeSanitized() {
+        client.start();
+
+        TestLocationListener listener = new TestLocationListener();
+        client.requestLocationUpdates(listener);
+
+        Location location = LocationTestUtils.createLocation("GPS", 7, 2, 3, -1);
+        client.onLocationChanged(location);
+
+        assertThat(listener.getLastLocation().getAccuracy(), is(0.0f));
     }
 
     private static Location newMockLocation() {

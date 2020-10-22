@@ -36,9 +36,9 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.InstanceListCursorAdapter;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.instances.Instance;
 import org.odk.collect.android.listeners.DiskSyncListener;
 import org.odk.collect.android.listeners.PermissionListener;
-import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.tasks.InstanceSyncTask;
@@ -161,7 +161,7 @@ public class InstanceChooserList extends InstanceListActivity implements
                     String strCanEditWhenComplete =
                             c.getString(c.getColumnIndex(InstanceColumns.CAN_EDIT_WHEN_COMPLETE));
 
-                    boolean canEdit = status.equals(InstanceProviderAPI.STATUS_INCOMPLETE)
+                    boolean canEdit = status.equals(Instance.STATUS_INCOMPLETE)
                             || Boolean.parseBoolean(strCanEditWhenComplete);
                     if (!canEdit) {
                         createErrorDialog(getString(R.string.cannot_edit_completed_form),

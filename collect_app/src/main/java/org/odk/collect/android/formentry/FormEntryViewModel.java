@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.GroupDef;
+import org.jetbrains.annotations.NotNull;
 import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.javarosawrapper.FormController;
@@ -34,7 +35,7 @@ public class FormEntryViewModel extends ViewModel implements RequiresFormControl
     }
 
     @Override
-    public void formLoaded(FormController formController) {
+    public void formLoaded(@NotNull FormController formController) {
         this.formController = formController;
     }
 
@@ -79,13 +80,17 @@ public class FormEntryViewModel extends ViewModel implements RequiresFormControl
             analytics.logEvent(ADD_REPEAT, "Hierarchy", formController.getCurrentFormIdentifierHash());
         }
 
-        formController.newRepeat();
+        try {
+            formController.newRepeat();
+        } catch (RuntimeException e) {
+            error.setValue(e.getCause().getMessage());
+        }
         
         if (!formController.indexIsInFieldList()) {
             try {
                 formController.stepToNextScreenEvent();
-            } catch (JavaRosaException exception) {
-                error.setValue(exception.getCause().getMessage());
+            } catch (JavaRosaException e) {
+                error.setValue(e.getCause().getMessage());
             }
         }
     }
@@ -95,9 +100,9 @@ public class FormEntryViewModel extends ViewModel implements RequiresFormControl
             return;
         }
 
-        analytics.logEvent(ADD_REPEAT, "InlineDecline", formController.getCurrentFormIdentifierHash());
-
         if (jumpBackIndex != null) {
+            analytics.logEvent(ADD_REPEAT, "InlineDecline", formController.getCurrentFormIdentifierHash());
+            
             formController.jumpToIndex(jumpBackIndex);
             jumpBackIndex = null;
         } else {

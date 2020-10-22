@@ -49,6 +49,8 @@ import org.jetbrains.annotations.NotNull;
 import org.odk.collect.android.R;
 import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.backgroundwork.FormUpdateManager;
+import org.odk.collect.android.configure.ServerRepository;
+import org.odk.collect.android.gdrive.GoogleAccountsManager;
 import org.odk.collect.android.formmanagement.FormUpdateMode;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.injection.DaggerUtils;
@@ -56,7 +58,6 @@ import org.odk.collect.android.listeners.OnBackPressedListener;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.filters.ControlCharacterFilter;
 import org.odk.collect.android.preferences.filters.WhitespaceFilter;
-import org.odk.collect.android.preferences.utilities.ChangingServerUrlUtils;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.utilities.PermissionUtils;
@@ -82,7 +83,6 @@ import static org.odk.collect.android.analytics.AnalyticsEvents.SET_CUSTOM_ENDPO
 import static org.odk.collect.android.analytics.AnalyticsEvents.SET_FALLBACK_SHEETS_URL;
 import static org.odk.collect.android.analytics.AnalyticsEvents.SET_SERVER;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_FORMLIST_URL;
-import static org.odk.collect.android.preferences.GeneralKeys.KEY_FORM_UPDATE_MODE;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_PROTOCOL;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SELECTED_GOOGLE_ACCOUNT;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_URL;
@@ -109,6 +109,9 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
 
     @Inject
     FormUpdateManager formUpdateManager;
+
+    @Inject
+    ServerRepository serverRepository;
 
     private ListPopupWindow listPopupWindow;
     private Preference selectedGoogleAccountPreference;
@@ -149,12 +152,6 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
                     getPreferenceScreen().removeAll();
                     addPreferencesFromResource(R.xml.server_preferences);
                     initProtocolPrefs();
-                }
-
-                if (Protocol.parse(getActivity(), (String) newValue) == Protocol.GOOGLE) {
-                    preferencesProvider.getGeneralSharedPreferences().edit()
-                            .putString(KEY_FORM_UPDATE_MODE, FormUpdateMode.MANUAL.getValue(getActivity()))
-                            .apply();
                 }
             }
             return true;
@@ -237,13 +234,13 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         listPopupWindow.setAnchorView(editText);
         listPopupWindow.setModal(true);
         listPopupWindow.setOnItemClickListener((parent, view, position, id) -> {
-            editText.setText(ChangingServerUrlUtils.getUrlList().get(position));
+            editText.setText(serverRepository.getServers().get(position));
             listPopupWindow.dismiss();
         });
     }
 
     public void setupUrlDropdownAdapter(ListPopupWindow listPopupWindow) {
-        ArrayAdapter adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, ChangingServerUrlUtils.getUrlList());
+        ArrayAdapter adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, serverRepository.getServers());
         listPopupWindow.setAdapter(adapter);
     }
 
@@ -324,7 +321,6 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
                         sendAnalyticsEvent(url);
 
                         preference.setSummary(newValue.toString());
-                        ChangingServerUrlUtils.addUrlToList(url);
                         setupUrlDropdownAdapter(listPopupWindow);
                     } else {
                         ToastUtils.showShortToast(R.string.url_error);
@@ -379,10 +375,6 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
                 case KEY_FORMLIST_URL:
                 case KEY_SUBMISSION_URL:
                     preference.setSummary(newValue.toString());
-
-                    String customEndpointId = FileUtils.getMd5Hash(new ByteArrayInputStream(newValue.toString().getBytes()));
-                    String action = preference.getKey() + " " + customEndpointId;
-                    analytics.logEvent(SET_CUSTOM_ENDPOINT, action);
                     break;
             }
             return true;

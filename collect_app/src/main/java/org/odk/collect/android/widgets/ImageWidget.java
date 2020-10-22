@@ -14,6 +14,7 @@
 
 package org.odk.collect.android.widgets;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.utilities.CameraUtils;
 import org.odk.collect.android.utilities.ContentUriProvider;
 import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.QuestionMediaManager;
 import org.odk.collect.android.utilities.WidgetAppearanceUtils;
 import org.odk.collect.android.widgets.interfaces.ButtonClickListener;
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry;
@@ -49,6 +51,8 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
  * @author Carl Hartung (carlhartung@gmail.com)
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
+
+@SuppressLint("ViewConstructor")
 public class ImageWidget extends BaseImageWidget implements ButtonClickListener {
 
     Button captureButton;
@@ -56,8 +60,8 @@ public class ImageWidget extends BaseImageWidget implements ButtonClickListener 
 
     private boolean selfie;
 
-    public ImageWidget(Context context, final QuestionDetails prompt, WaitingForDataRegistry waitingForDataRegistry) {
-        super(context, prompt, waitingForDataRegistry);
+    public ImageWidget(Context context, final QuestionDetails prompt, QuestionMediaManager questionMediaManager, WaitingForDataRegistry waitingForDataRegistry) {
+        super(context, prompt, questionMediaManager, waitingForDataRegistry);
         imageClickHandler = new ViewImageClickHandler();
         imageCaptureHandler = new ImageCaptureHandler();
         setUpLayout();
@@ -70,8 +74,7 @@ public class ImageWidget extends BaseImageWidget implements ButtonClickListener 
         super.setUpLayout();
 
         String appearance = getFormEntryPrompt().getAppearanceHint();
-        selfie = appearance != null && (appearance.equalsIgnoreCase(WidgetAppearanceUtils.SELFIE)
-                || appearance.equalsIgnoreCase(WidgetAppearanceUtils.NEW_FRONT));
+        selfie = WidgetAppearanceUtils.isFrontCameraAppearance(getFormEntryPrompt());
 
         captureButton = createSimpleButton(getContext(), R.id.capture_image, getFormEntryPrompt().isReadOnly(), getContext().getString(R.string.capture_image), getAnswerFontSize(), this);
 
@@ -85,7 +88,7 @@ public class ImageWidget extends BaseImageWidget implements ButtonClickListener 
         errorTextView.setVisibility(View.GONE);
 
         if (selfie) {
-            if (!CameraUtils.isFrontCameraAvailable()) {
+            if (!new CameraUtils().isFrontCameraAvailable()) {
                 captureButton.setEnabled(false);
                 errorTextView.setText(R.string.error_front_camera_unavailable);
                 errorTextView.setVisibility(View.VISIBLE);

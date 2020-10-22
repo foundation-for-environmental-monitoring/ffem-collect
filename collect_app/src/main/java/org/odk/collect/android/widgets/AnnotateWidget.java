@@ -33,6 +33,7 @@ import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.utilities.ContentUriProvider;
 import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.QuestionMediaManager;
 import org.odk.collect.android.utilities.WidgetAppearanceUtils;
 import org.odk.collect.android.widgets.interfaces.ButtonClickListener;
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry;
@@ -61,8 +62,8 @@ public class AnnotateWidget extends BaseImageWidget implements ButtonClickListen
     Button chooseButton;
     Button annotateButton;
 
-    public AnnotateWidget(Context context, QuestionDetails prompt, WaitingForDataRegistry waitingForDataRegistry) {
-        super(context, prompt, waitingForDataRegistry);
+    public AnnotateWidget(Context context, QuestionDetails prompt, QuestionMediaManager questionMediaManager, WaitingForDataRegistry waitingForDataRegistry) {
+        super(context, prompt, questionMediaManager, waitingForDataRegistry);
         imageClickHandler = new DrawImageClickHandler(DrawActivity.OPTION_ANNOTATE, RequestCodes.ANNOTATE_IMAGE, R.string.annotate_image);
         imageCaptureHandler = new ImageCaptureHandler();
         setUpLayout();
@@ -109,8 +110,6 @@ public class AnnotateWidget extends BaseImageWidget implements ButtonClickListen
 
         // reset buttons
         captureButton.setText(getContext().getString(R.string.capture_image));
-
-        widgetValueChanged();
     }
 
     @Override
@@ -200,8 +199,8 @@ public class AnnotateWidget extends BaseImageWidget implements ButtonClickListen
     }
 
     @Override
-    public void setBinaryData(Object newImageObj) {
-        super.setBinaryData(newImageObj);
+    public void setData(Object newImageObj) {
+        super.setData(newImageObj);
 
         annotateButton.setEnabled(binaryName != null);
     }

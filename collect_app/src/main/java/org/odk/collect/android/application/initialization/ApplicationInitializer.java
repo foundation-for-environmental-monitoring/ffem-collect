@@ -18,20 +18,19 @@ import org.javarosa.xform.parse.XFormParser;
 import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.formmanagement.FormUpdateMode;
+import org.odk.collect.android.preferences.FormUpdateMode;
 import org.odk.collect.android.geo.MapboxUtils;
 import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.logic.actions.setgeopoint.CollectSetGeopointActionHandler;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
-import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.utilities.LocaleHelper;
-import org.odk.collect.android.utilities.NotificationUtils;
 import org.odk.collect.utilities.UserAgentProvider;
 
 import java.util.Locale;
 
 import timber.log.Timber;
+
+import static org.odk.collect.android.configure.SettingsUtils.getFormUpdateMode;
 
 public class ApplicationInitializer {
 
@@ -66,7 +65,6 @@ public class ApplicationInitializer {
     }
 
     private void initializeFrameworks() {
-        NotificationUtils.createNotificationChannel(context);
         JodaTimeAndroid.init(context);
         initializeLogging();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -76,16 +74,12 @@ public class ApplicationInitializer {
     }
 
     private void initializeAnalytics() {
-        String formUpdateMode = generalSharedPreferences
-                .getSharedPreferences()
-                .getString(GeneralKeys.KEY_FORM_UPDATE_MODE, FormUpdateMode.MANUAL.getValue(context));
-
-        analytics.setUserProperty("FormUpdateMode", formUpdateMode);
+        FormUpdateMode formUpdateMode = getFormUpdateMode(context, generalSharedPreferences.getSharedPreferences());
+        analytics.setUserProperty("FormUpdateMode", formUpdateMode.getValue(context));
     }
 
     private void initializeLocale() {
         Collect.defaultSysLanguage = Locale.getDefault().getLanguage();
-        new LocaleHelper().updateLocale(context);
     }
 
     private void initializeJavaRosa() {

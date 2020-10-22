@@ -117,16 +117,18 @@ public class FormManagementSettingsTest {
 
     @Test
     public void whenGoogleDriveUsingAsServer_disablesPrefsAndOnlyAllowsManualUpdates() {
+        testDependencies.googleAccountPicker.setDeviceAccount("steph@curry.basket");
+
         new MainMenuPage(rule).assertOnPage()
                 .enablePreviouslyDownloadedOnlyUpdates() // Enabled a different mode before setting up Google
-                .setGoogleDriveAccount("steph@curry.basket")
+                .setGoogleAccount("steph@curry.basket")
                 .clickOnMenu()
                 .clickGeneralSettings()
                 .clickFormManagement()
                 .assertDisabled(R.string.form_update_mode_title)
                 .assertDisabled(R.string.form_update_frequency_title)
                 .assertDisabled(R.string.automatic_download)
-                .assertText(R.string.manually);
+                .assertText(R.string.manual);
 
         assertThat(testDependencies.scheduler.getDeferredTasks().size(), is(0));
     }

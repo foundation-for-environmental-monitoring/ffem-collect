@@ -33,7 +33,6 @@ import android.widget.Toast;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.xpath.parser.XPathSyntaxException;
 import org.odk.collect.android.R;
-import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.exception.ExternalParamsException;
 import org.odk.collect.android.external.ExternalAppsUtils;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
@@ -41,7 +40,7 @@ import org.odk.collect.android.formentry.questions.WidgetViewUtils;
 import org.odk.collect.android.utilities.ActivityAvailability;
 import org.odk.collect.android.utilities.SoftKeyboardUtils;
 import org.odk.collect.android.utilities.ToastUtils;
-import org.odk.collect.android.widgets.interfaces.BinaryDataReceiver;
+import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
 import org.odk.collect.android.widgets.interfaces.ButtonClickListener;
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry;
 
@@ -97,7 +96,7 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
  * </pre>
  */
 @SuppressLint("ViewConstructor")
-public class ExStringWidget extends StringWidget implements BinaryDataReceiver, ButtonClickListener {
+public class ExStringWidget extends StringWidget implements WidgetDataReceiver, ButtonClickListener {
     // If an extra with this key is specified, it will be parsed as a URI and used as intent data
     private static final String URI_KEY = "uri_data";
     protected static final String DATA_NAME = "value";
@@ -142,11 +141,8 @@ public class ExStringWidget extends StringWidget implements BinaryDataReceiver, 
         }
     }
 
-    /**
-     * Allows answer to be set externally in {@link FormEntryActivity}.
-     */
     @Override
-    public void setBinaryData(Object answer) {
+    public void setData(Object answer) {
         StringData stringData = ExternalAppsUtils.asStringData(answer);
         answerText.setText(stringData == null ? null : stringData.getValue().toString());
         widgetValueChanged();

@@ -10,7 +10,6 @@ import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.instances.Instance;
 import org.odk.collect.android.openrosa.OpenRosaConstants;
-import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.tasks.InstanceServerUploaderTask;
 import org.odk.collect.android.tasks.InstanceUploaderTask;
@@ -92,7 +91,7 @@ public class InstanceServerUploaderTaskTest extends MockedServerTest {
                 .displayName("Test Form")
                 .instanceFilePath(xml.getAbsolutePath())
                 .jrFormId("test_form")
-                .status(InstanceProviderAPI.STATUS_COMPLETE)
+                .status(Instance.STATUS_COMPLETE)
                 .lastStatusChangeDate(123L)
                 .build();
 

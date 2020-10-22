@@ -31,6 +31,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
@@ -55,7 +56,9 @@ import org.odk.collect.android.utilities.StringUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ViewUtils;
 import org.odk.collect.android.widgets.interfaces.Widget;
+import org.odk.collect.android.widgets.items.SelectImageMapWidget;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -66,7 +69,7 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
-import static org.odk.collect.android.analytics.AnalyticsEvents.AUDIO_QUESTION;
+import static org.odk.collect.android.analytics.AnalyticsEvents.PROMPT;
 import static org.odk.collect.android.formentry.media.FormMediaUtils.getClipID;
 import static org.odk.collect.android.formentry.media.FormMediaUtils.getPlayColor;
 import static org.odk.collect.android.formentry.media.FormMediaUtils.getPlayableAudioURI;
@@ -89,7 +92,7 @@ public abstract class QuestionWidget
     private AtomicBoolean expanded;
     private Bundle state;
     protected final ThemeUtils themeUtils;
-    protected final AudioHelper audioHelper;
+    protected AudioHelper audioHelper;
     private final ViewGroup containerView;
     private final QuestionTextSizeHelper questionTextSizeHelper = new QuestionTextSizeHelper();
 
@@ -177,17 +180,23 @@ public abstract class QuestionWidget
         String imageURI = this instanceof SelectImageMapWidget ? null : prompt.getImageText();
         String videoURI = prompt.getSpecialFormQuestionText("video");
         String bigImageURI = prompt.getSpecialFormQuestionText("big-image");
-        label.setImageVideo(
-                imageURI,
-                videoURI,
-                bigImageURI,
-                getReferenceManager()
-        );
-
         String playableAudioURI = getPlayableAudioURI(prompt, referenceManager);
-        if (playableAudioURI != null) {
-            label.setAudio(playableAudioURI, audioHelper);
-            analytics.logEvent(AUDIO_QUESTION, "AudioLabel", questionDetails.getFormAnalyticsID());
+        try {
+            if (imageURI != null) {
+                audioVideoImageTextLabel.setImage(new File(referenceManager.deriveReference(imageURI).getLocalURI()));
+            }
+            if (bigImageURI != null) {
+                audioVideoImageTextLabel.setBigImage(new File(referenceManager.deriveReference(bigImageURI).getLocalURI()));
+            }
+            if (videoURI != null) {
+                audioVideoImageTextLabel.setVideo(new File(referenceManager.deriveReference(videoURI).getLocalURI()));
+            }
+            if (playableAudioURI != null) {
+                label.setAudio(playableAudioURI, audioHelper);
+                analytics.logEvent(PROMPT, "AudioLabel", questionDetails.getFormAnalyticsID());
+            }
+        } catch (InvalidReferenceException e) {
+            Timber.d(e, "Invalid media reference due to %s ", e.getMessage());
         }
 
         label.setPlayTextColor(getPlayColor(formEntryPrompt, themeUtils));
@@ -440,7 +449,13 @@ public abstract class QuestionWidget
 
     //region Accessors
 
+    /**
+     * @deprecated widgets shouldn't need to know about the instance folder. They can use
+     * {@link org.odk.collect.android.utilities.QuestionMediaManager} to access media attached
+     * to the instance.
+     */
     @Nullable
+    @Deprecated
     public final String getInstanceFolder() {
         Collect collect = Collect.getInstance();
         if (collect == null) {

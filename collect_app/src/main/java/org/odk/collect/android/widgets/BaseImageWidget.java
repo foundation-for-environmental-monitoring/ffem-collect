@@ -45,9 +45,9 @@ import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.utilities.FileUtils;
-import org.odk.collect.android.utilities.MediaManager;
 import org.odk.collect.android.utilities.MediaUtils;
-import org.odk.collect.android.widgets.interfaces.BinaryDataReceiver;
+import org.odk.collect.android.utilities.QuestionMediaManager;
+import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
 import org.odk.collect.android.widgets.interfaces.FileWidget;
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry;
 
@@ -57,7 +57,7 @@ import timber.log.Timber;
 
 import static org.odk.collect.android.formentry.questions.WidgetViewUtils.createAnswerImageView;
 
-public abstract class BaseImageWidget extends QuestionWidget implements FileWidget, BinaryDataReceiver {
+public abstract class BaseImageWidget extends QuestionWidget implements FileWidget, WidgetDataReceiver {
 
     @Nullable
     protected ImageView imageView;
@@ -67,10 +67,13 @@ public abstract class BaseImageWidget extends QuestionWidget implements FileWidg
 
     protected ImageClickHandler imageClickHandler;
     protected ExternalImageCaptureHandler imageCaptureHandler;
-    private final WaitingForDataRegistry waitingForDataRegistry;
 
-    public BaseImageWidget(Context context, QuestionDetails prompt, WaitingForDataRegistry waitingForDataRegistry) {
+    private final WaitingForDataRegistry waitingForDataRegistry;
+    private final QuestionMediaManager questionMediaManager;
+
+    public BaseImageWidget(Context context, QuestionDetails prompt, QuestionMediaManager questionMediaManager, WaitingForDataRegistry waitingForDataRegistry) {
         super(context, prompt);
+        this.questionMediaManager = questionMediaManager;
         this.waitingForDataRegistry = waitingForDataRegistry;
     }
 
@@ -92,15 +95,13 @@ public abstract class BaseImageWidget extends QuestionWidget implements FileWidg
 
     @Override
     public void deleteFile() {
-        MediaManager
-                .INSTANCE
-                .markOriginalFileOrDelete(getFormEntryPrompt().getIndex().toString(),
+        questionMediaManager.deleteAnswerFile(getFormEntryPrompt().getIndex().toString(),
                         getInstanceFolder() + File.separator + binaryName);
         binaryName = null;
     }
 
     @Override
-    public void setBinaryData(Object newImageObj) {
+    public void setData(Object newImageObj) {
         // you are replacing an answer. delete the previous image using the
         // content provider.
         if (binaryName != null) {
@@ -118,9 +119,7 @@ public abstract class BaseImageWidget extends QuestionWidget implements FileWidg
             values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
             values.put(MediaStore.Images.Media.DATA, newImage.getAbsolutePath());
 
-            MediaManager
-                    .INSTANCE
-                    .replaceRecentFileForQuestion(getFormEntryPrompt().getIndex().toString(), newImage.getAbsolutePath());
+            questionMediaManager.replaceAnswerFile(getFormEntryPrompt().getIndex().toString(), newImage.getAbsolutePath());
 
             Uri imageURI = getContext().getContentResolver().insert(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
