@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +69,8 @@ public class SavedFormListFragment extends InstanceListFragment
 
     @Inject
     FormsRepository formsRepository;
+
+    private static String formMode = ApplicationConstants.FormModes.EDIT_SAVED;
 
     @Override
     public void onAttach(@NonNull Context context) {

@@ -75,6 +75,10 @@ import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.material.MaterialBanner;
 
 import java.lang.ref.WeakReference;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import io.ffem.collect.android.activities.SettingsActivity;
 import io.ffem.collect.android.common.AppConfig;

@@ -1,43 +1,33 @@
 package io.ffem.collect.android.preferences;
 
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
 
-import androidx.annotation.NonNull;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.preferences.ResetDialogPreference;
+import org.odk.collect.android.preferences.ResetDialogPreferenceFragmentCompat;
 
-import static io.ffem.collect.android.utilities.ListViewUtil.setListViewHeightBasedOnChildren;
-
-public class AdminPreferenceFragment extends PreferenceFragment {
-
-    private ListView list;
+public class AdminPreferenceFragment extends PreferenceFragmentCompat {
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.admin_preferences_custom);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.admin_preferences_custom, rootKey);
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.card_row, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        list = view.findViewById(android.R.id.list);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setListViewHeightBasedOnChildren(list, 0);
+    public void onDisplayPreferenceDialog(Preference preference) {
+        ResetDialogPreference resetDialogPreference = null;
+        if (preference instanceof ResetDialogPreference) {
+            resetDialogPreference = (ResetDialogPreference) preference;
+        }
+        if (resetDialogPreference != null) {
+            ResetDialogPreferenceFragmentCompat dialogFragment = ResetDialogPreferenceFragmentCompat.newInstance(preference.getKey());
+            dialogFragment.setTargetFragment(this, 0);
+            dialogFragment.show(getParentFragmentManager(), null);
+        } else {
+            super.onDisplayPreferenceDialog(preference);
+        }
     }
 }

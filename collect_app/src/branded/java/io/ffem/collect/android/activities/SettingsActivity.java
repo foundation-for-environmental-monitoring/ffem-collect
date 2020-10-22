@@ -11,8 +11,10 @@ import androidx.appcompat.widget.Toolbar;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialog;
+import org.odk.collect.android.listeners.OnBackPressedListener;
 import org.odk.collect.android.preferences.FormManagementPreferences;
 import org.odk.collect.android.preferences.ServerPreferences;
+import org.odk.collect.android.preferences.ServerPreferencesFragment;
 
 import io.ffem.collect.android.preferences.AdminPreferenceFragment;
 import io.ffem.collect.android.preferences.AppPreferences;
@@ -21,6 +23,8 @@ import io.ffem.collect.android.preferences.TestingPreferenceFragment;
 
 public class SettingsActivity extends CollectAbstractActivity
         implements ResetSettingsResultDialog.ResetSettingsResultDialogListener {
+
+    private OnBackPressedListener onBackPressedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,7 @@ public class SettingsActivity extends CollectAbstractActivity
 
         setContentView(R.layout.activity_settings);
 
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.layoutFormManagement, new FormManagementPreferences())
                 .commit();
 
@@ -48,11 +52,11 @@ public class SettingsActivity extends CollectAbstractActivity
                 .replace(R.id.layoutInfo, new OtherPreferenceFragment())
                 .commit();
 
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.layoutServer, new ServerPreferences())
                 .commit();
 
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.layoutAdmin, new AdminPreferenceFragment())
                 .commit();
 
@@ -118,5 +122,9 @@ public class SettingsActivity extends CollectAbstractActivity
 
     private void removeAllFragments() {
         findViewById(R.id.layoutTesting).setVisibility(View.GONE);
+    }
+
+    public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
+        this.onBackPressedListener = onBackPressedListener;
     }
 }

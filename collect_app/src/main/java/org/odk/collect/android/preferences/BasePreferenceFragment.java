@@ -3,13 +3,7 @@ package org.odk.collect.android.preferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import org.odk.collect.android.R;
 import androidx.annotation.NonNull;
@@ -26,8 +20,6 @@ import org.odk.collect.android.injection.DaggerUtils;
 
 import javax.inject.Inject;
 
-import org.odk.collect.android.R;
-
 import static org.odk.collect.android.preferences.PreferencesActivity.INTENT_KEY_ADMIN_MODE;
 
 public abstract class BasePreferenceFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -40,8 +32,6 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat im
         super.onAttach(context);
         DaggerUtils.getComponent(context).inject(this);
     }
-
-    protected Toolbar toolbar;
 
     @Override
     public void onDisplayPreferenceDialog(Preference preference) {
@@ -93,31 +83,5 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat im
 
     protected boolean isInAdminMode() {
         return getArguments() != null && getArguments().getBoolean(INTENT_KEY_ADMIN_MODE, false);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.settings_page, container, false);
-        if (layout != null) {
-
-            toolbar = layout.findViewById(R.id.toolbar);
-            ActionBar bar;
-            if (getActivity() instanceof AppCompatActivity) {
-                AppCompatActivity activity = (AppCompatActivity) getActivity();
-                activity.setSupportActionBar(toolbar);
-                bar = activity.getSupportActionBar();
-            } else {
-                PreferencesActivity activity = (PreferencesActivity) getActivity();
-                activity.setSupportActionBar(toolbar);
-                bar = activity.getSupportActionBar();
-            }
-
-            if (bar != null) {
-                bar.setHomeButtonEnabled(true);
-                bar.setDisplayHomeAsUpEnabled(true);
-                bar.setDisplayShowTitleEnabled(true);
-            }
-        }
-        return layout;
     }
 }

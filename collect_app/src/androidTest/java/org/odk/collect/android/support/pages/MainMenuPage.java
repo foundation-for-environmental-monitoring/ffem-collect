@@ -4,6 +4,7 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
+import android.os.SystemClock;
 
 import androidx.test.espresso.Espresso;
 import androidx.test.rule.ActivityTestRule;

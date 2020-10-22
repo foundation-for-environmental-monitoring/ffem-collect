@@ -32,7 +32,6 @@ import android.widget.ListPopupWindow;
 import android.widget.ListView;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -44,6 +43,7 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceManager;
 
 import org.jetbrains.annotations.NotNull;
 import org.odk.collect.android.R;
@@ -74,6 +74,8 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import io.ffem.collect.android.activities.SettingsActivity;
+
 import static android.app.Activity.RESULT_OK;
 import static io.ffem.collect.android.utilities.ListViewUtil.setListViewHeightBasedOnChildren;
 import static org.odk.collect.android.analytics.AnalyticsEvents.SET_CUSTOM_ENDPOINT;
@@ -102,8 +104,6 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     @Inject
     WebCredentialsUtils webCredentialsUtils;
 
-    private ListView list;
-
     @Inject
     PreferencesProvider preferencesProvider;
 
@@ -119,7 +119,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         super.onAttach(context);
         DaggerUtils.getComponent(context).inject(this);
 
-        ((PreferencesActivity) context).setOnBackPressedListener(this);
+        ((SettingsActivity) context).setOnBackPressedListener(this);
     }
 
     @Override
@@ -473,23 +473,6 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
                 .edit()
                 .putString(KNOWN_URL_LIST, urlListString)
                 .apply();
-    }
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.card_row, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        list = view.findViewById(android.R.id.list);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setListViewHeightBasedOnChildren(list, 0);
     }
 
 }

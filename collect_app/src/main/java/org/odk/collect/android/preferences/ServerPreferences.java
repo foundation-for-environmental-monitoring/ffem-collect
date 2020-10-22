@@ -18,13 +18,13 @@ package org.odk.collect.android.preferences;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
 
 import org.odk.collect.android.R;
 
@@ -46,9 +46,8 @@ public class ServerPreferences extends ServerPreferencesFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        addPreferencesFromResource(R.xml.server_preferences);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.server_preferences, rootKey);
 
         initProtocolPrefs();
     }
@@ -86,7 +85,7 @@ public class ServerPreferences extends ServerPreferencesFragment {
                 if (!newValue.equals(oldValue)) {
                     removeTypeSettings();
                     initProtocolPrefs();
-                    removeDisabledPrefs();
+//                    removeDisabledPrefs();
                 }
             }
             return true;
@@ -95,7 +94,7 @@ public class ServerPreferences extends ServerPreferencesFragment {
 
     private void removeTypeSettings() {
         getPreferenceScreen().removeAll();
-//        addPreferencesFromResource(R.xml.server_preferences);
+        addPreferencesFromResource(R.xml.server_preferences);
     }
 
     @Override
@@ -122,13 +121,5 @@ public class ServerPreferences extends ServerPreferencesFragment {
             });
         }
         return rootView;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        if (toolbar != null) {
-            toolbar.setTitle(R.string.general_preferences);
-        }
     }
 }

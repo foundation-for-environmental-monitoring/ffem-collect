@@ -23,12 +23,6 @@ import androidx.preference.CheckBoxPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 
-import androidx.annotation.NonNull;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
-
 import org.odk.collect.android.R;
 import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.application.Collect;
@@ -37,7 +31,6 @@ import org.odk.collect.android.formmanagement.FormUpdateMode;
 
 import javax.inject.Inject;
 
-import static io.ffem.collect.android.utilities.ListViewUtil.setListViewHeightBasedOnChildren;
 import static org.odk.collect.android.analytics.AnalyticsEvents.AUTO_FORM_UPDATE_PREF_CHANGE;
 import static org.odk.collect.android.preferences.AdminKeys.ALLOW_OTHER_WAYS_OF_EDITING_FORM;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_AUTOMATIC_UPDATE;
@@ -186,33 +179,5 @@ public class FormManagementPreferences extends BasePreferenceFragment {
             preference.setSummary(entry);
             return true;
         });
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        list = view.findViewById(android.R.id.list);
-    }
-
-    private void initFormDeletePref(String key) {
-        Preference deleteFormsPreference = findPreference(key);
-        if (deleteFormsPreference != null) {
-            deleteFormsPreference.setOnPreferenceClickListener(preference -> {
-                Intent i = new Intent(getActivity(), FileManagerTabs.class);
-                startActivity(i);
-                return true;
-            });
-        }
-    }
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.card_row, container, false);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setListViewHeightBasedOnChildren(list, 0);
     }
 }

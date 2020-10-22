@@ -1,8 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <io.ffem.collect.android.preferences.PreferenceCategoryCustom android:title="@string/server_settings_title">
-        <Preference
-            android:dialogTitle="@string/server_credentials"
-            android:key="server_credentials"
-            android:title="@string/server_credentials" />
-    </io.ffem.collect.android.preferences.PreferenceCategoryCustom>
+    <Preference
+        android:dialogTitle="@string/server_credentials"
+        android:key="server_credentials"
+        android:title="@string/server_credentials" />
 </PreferenceScreen>

@@ -20,14 +20,12 @@ import androidx.appcompat.widget.Toolbar;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
-import org.odk.collect.android.fragments.DataManagerList;
-import org.odk.collect.android.fragments.FormManagerList;
 import org.odk.collect.android.utilities.ApplicationConstants;
 
 public class DeleteFormsActivity extends CollectAbstractActivity {
 
-    private DataManagerList dataManagerList = DataManagerList.newInstance();
-    private FormManagerList formManagerList = FormManagerList.newInstance();
+//    private DataManagerList dataManagerList = DataManagerList.newInstance();
+//    private FormManagerList formManagerList = FormManagerList.newInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,24 +35,24 @@ public class DeleteFormsActivity extends CollectAbstractActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
 
         String formMode = getIntent().getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE);
-        if (ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)) {
-            setTitle(getString(R.string.manage_files));
-            dataManagerList.setFormMode(ApplicationConstants.FormModes.EDIT_SAVED);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, dataManagerList)
-                    .commit();
-        } else if (ApplicationConstants.FormModes.VIEW_SENT.equalsIgnoreCase(formMode)) {
-            setTitle(getString(R.string.delete_sent_forms));
-            dataManagerList.setFormMode(ApplicationConstants.FormModes.VIEW_SENT);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, dataManagerList)
-                    .commit();
-        } else {
-            setTitle(getString(R.string.delete_yes));
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, formManagerList)
-                    .commit();
-        }
+//        if (ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)) {
+//            setTitle(getString(R.string.manage_files));
+//            dataManagerList.setFormMode(ApplicationConstants.FormModes.EDIT_SAVED);
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.container, dataManagerList)
+//                    .commit();
+//        } else if (ApplicationConstants.FormModes.VIEW_SENT.equalsIgnoreCase(formMode)) {
+//            setTitle(getString(R.string.delete_sent_forms));
+//            dataManagerList.setFormMode(ApplicationConstants.FormModes.VIEW_SENT);
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.container, dataManagerList)
+//                    .commit();
+//        } else {
+//            setTitle(getString(R.string.delete_yes));
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.container, formManagerList)
+//                    .commit();
+//        }
         setSupportActionBar(toolbar);
     }
 }

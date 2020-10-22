@@ -169,17 +169,19 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                         qw.setContainer((View) textView.getParent());
                     }
 
-                    if (!qw.getQuestionDetails().getPrompt().getQuestion().getTextID().contains("meta")) {
-                        if (qw.getAnswer() != null) {
-                            RowView answerRow = new RowView(context);
-                            answerRow.setPrimaryText(qw.getQuestionDetails().getPrompt().getQuestionText() + ": ");
-                            answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
-                            widgetsList.addView(answerRow, layout);
-                        } else {
-                            AppCompatTextView textView = new AppCompatTextView(context);
-                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-                            textView.setLayoutParams(params);
-                            widgetsList.addView(textView);
+                    if (qw.getQuestionDetails().getPrompt().getQuestion().getTextID() != null) {
+                        if (!qw.getQuestionDetails().getPrompt().getQuestion().getTextID().contains("meta")) {
+                            if (qw.getAnswer() != null) {
+                                RowView answerRow = new RowView(context);
+                                answerRow.setPrimaryText(qw.getQuestionDetails().getPrompt().getQuestionText() + ": ");
+                                answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
+                                widgetsList.addView(answerRow, layout);
+                            } else {
+                                AppCompatTextView textView = new AppCompatTextView(context);
+                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                                textView.setLayoutParams(params);
+                                widgetsList.addView(textView);
+                            }
                         }
                     }
                     question.getQuestion().setAdditionalAttribute("", "done", "true");
