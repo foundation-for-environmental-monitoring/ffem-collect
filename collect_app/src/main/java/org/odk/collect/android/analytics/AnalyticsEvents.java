@@ -7,12 +7,6 @@ public class AnalyticsEvents {
     }
 
     /**
-     * Used to measure how popular different methods of adding repeats are. The "action" should
-     * describe the way the repeat was added. The label should be the form hash identifier.
-     */
-    public static final String ADD_REPEAT = "AddRepeat";
-
-    /**
      * Track changes to the server URL setting. The action should be the scheme followed by a space
      * followed by one of Appspot, Ona, Kobo or Other. The label should be a hash of the URL.
      */
@@ -76,6 +70,11 @@ public class AnalyticsEvents {
      * Track scoped storage migration attempts. The action should be the result of the attempt.
      */
     public static final String SCOPED_STORAGE_MIGRATION = "ScopedStorageMigration";
+
+    /**
+     * Track attempts to download a form with the same formid/version as one already on the device.
+     */
+    public static final String DOWNLOAD_SAME_FORMID_VERSION = "DownloadSameFormidVersion";
 
     /**
      * Track downloads initiated when there are no downloaded forms on the device. The action should
@@ -143,4 +142,42 @@ public class AnalyticsEvents {
      * should be a hash of the endpoint setting.
      */
     public static final String CUSTOM_ENDPOINT_SUB = "CustomEndpointSub";
+
+    /**
+     * Track usage of legacy Aggregate < 1 form list API code paths.
+     */
+    public static final String LEGACY_FORM_LIST = "LegacyFormList";
+
+    /**
+     * Tracks how often the audio player seek bar is used.
+     */
+    public static final String AUDIO_PLAYER_SEEK = "AudioPlayerSeek";
+
+    /**
+     * Tracks how often pause action is used while recording audio
+     */
+    public static final String AUDIO_RECORDING_PAUSE = "AudioRecordingPause";
+
+    /**
+     * Tracks usage or internal recording vs external recording vs choosing files for
+     * audio question
+     */
+    public static final String AUDIO_RECORDING_INTERNAL = "AudioRecordingInternal";
+    public static final String AUDIO_RECORDING_EXTERNAL = "AudioRecordingExternal";
+    public static final String AUDIO_RECORDING_CHOOSE = "AudioRecordingChoose";
+
+    /**
+     * Tracks how often questions are answered while an audio recording is being made
+     */
+    public static final String ANSWER_WHILE_RECORDING = "AnswerWhileRecording";
+
+    /**
+     * Tracks how many users have opted in to internal recording as their default
+     */
+    public static final String INTERNAL_RECORDING_OPT_IN = "InternalRecordingOptIn";
+
+    /**
+     * Tracks how often people see the URL question
+     */
+    public static final String URL_QUESTION = "UrlQuestion";
 }

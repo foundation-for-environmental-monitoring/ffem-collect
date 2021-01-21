@@ -44,6 +44,7 @@ import org.odk.collect.android.external.ExternalSelectChoice;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.listeners.AdvanceToNextListener;
 import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.SelectOneWidgetUtils;
 import org.odk.collect.android.widgets.interfaces.MultiChoiceWidget;
 
 import java.io.File;
@@ -70,11 +71,14 @@ public class ListWidget extends ItemsWidget implements MultiChoiceWidget, OnChec
     private final boolean autoAdvance;
 
     ArrayList<RadioButton> buttons;
+    private final boolean displayLabel;
 
     public ListWidget(Context context, QuestionDetails questionDetails, boolean displayLabel, boolean autoAdvance) {
         super(context, questionDetails);
 
         this.autoAdvance = autoAdvance;
+        this.displayLabel = displayLabel;
+
         if (context instanceof AdvanceToNextListener) {
             listener = (AdvanceToNextListener) context;
         }
@@ -82,12 +86,10 @@ public class ListWidget extends ItemsWidget implements MultiChoiceWidget, OnChec
         buttons = new ArrayList<>();
 
         // Layout holds the horizontal list of buttons
-        LinearLayout buttonLayout = findViewById(R.id.list_items);
+        LinearLayout buttonLayout = findViewById(R.id.answer_container);
 
-        String s = null;
-        if (questionDetails.getPrompt().getAnswerValue() != null) {
-            s = ((Selection) questionDetails.getPrompt().getAnswerValue().getValue()).getValue();
-        }
+        Selection selectedItem = SelectOneWidgetUtils.getSelectedItem(getQuestionDetails().getPrompt(), items);
+        String s = selectedItem == null ? null : selectedItem.getValue();
 
         if (items != null) {
             for (int i = 0; i < items.size(); i++) {
@@ -307,5 +309,9 @@ public class ListWidget extends ItemsWidget implements MultiChoiceWidget, OnChec
     @Override
     protected int getLayout() {
         return R.layout.label_widget;
+    }
+
+    public boolean shouldDisplayLabel() {
+        return displayLabel;
     }
 }

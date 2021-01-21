@@ -20,15 +20,11 @@ import androidx.annotation.Nullable;
 
 import org.javarosa.core.model.FormIndex;
 
-import java.util.ArrayList;
-
 /**
  * Represents a question or repeat to be shown in
  * {@link org.odk.collect.android.activities.FormHierarchyActivity}.
  */
 public class HierarchyElement {
-    private final ArrayList<HierarchyElement> intentChildren = new ArrayList<>();
-
     /**
      * The type and state of this element. See {@link Type}.
      */
@@ -58,16 +54,14 @@ public class HierarchyElement {
      */
     @Nullable
     private Drawable icon;
-    private boolean isRequired;
 
     public HierarchyElement(@NonNull String primaryText, @Nullable String secondaryText,
-                            @Nullable Drawable icon, @NonNull Type type, @NonNull FormIndex formIndex, boolean isRequired) {
+                            @Nullable Drawable icon, @NonNull Type type, @NonNull FormIndex formIndex) {
         this.primaryText = primaryText;
         this.secondaryText = secondaryText;
         this.icon = icon;
         this.type = type;
         this.formIndex = formIndex;
-        this.isRequired = isRequired;
     }
 
     @NonNull
@@ -103,22 +97,6 @@ public class HierarchyElement {
         type = newType;
     }
 
-    public ArrayList<HierarchyElement> getIntentChildren() {
-        return intentChildren;
-    }
-
-    public void addIntentChild(HierarchyElement h) {
-        intentChildren.add(h);
-    }
-
-    public boolean isRequired() {
-        return isRequired;
-    }
-
-    public void setRequired(boolean required) {
-        isRequired = required;
-    }
-
     /**
      * The type and state of this element.
      */
@@ -126,8 +104,6 @@ public class HierarchyElement {
         QUESTION,
         VISIBLE_GROUP,
         REPEATABLE_GROUP,
-        REPEAT_INSTANCE,
-        COLLAPSED,
-        PROPERTY
+        REPEAT_INSTANCE
     }
 }

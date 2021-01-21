@@ -27,14 +27,14 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import org.odk.collect.android.database.ItemsetDbAdapter;
+import org.odk.collect.android.database.FormDatabaseMigrator;
+import org.odk.collect.android.fastexternalitemset.ItemsetDbAdapter;
 import org.odk.collect.android.database.FormsDatabaseHelper;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.storage.StorageSubdirectory;
 import org.odk.collect.android.utilities.FileUtils;
-import org.odk.collect.android.utilities.MediaUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -66,11 +66,7 @@ public class FormsProvider extends ContentProvider {
             return null;
         }
 
-        boolean databaseNeedsUpgrade = FormsDatabaseHelper.databaseNeedsUpgrade();
-        if (dbHelper == null || (databaseNeedsUpgrade && !FormsDatabaseHelper.isDatabaseBeingMigrated())) {
-            if (databaseNeedsUpgrade) {
-                FormsDatabaseHelper.databaseMigrationStarted();
-            }
+        if (dbHelper == null) {
             recreateDatabaseHelper();
         }
 
@@ -78,7 +74,7 @@ public class FormsProvider extends ContentProvider {
     }
 
     public static void recreateDatabaseHelper() {
-        dbHelper = new FormsDatabaseHelper();
+        dbHelper = new FormsDatabaseHelper(new FormDatabaseMigrator(), new StoragePathProvider());
     }
 
     @SuppressWarnings("PMD.NonThreadSafeSingleton") // PMD thinks the `= null` is setting a singleton here
@@ -261,16 +257,6 @@ public class FormsProvider extends ContentProvider {
         File file = new File(fileName);
         if (file.exists()) {
             if (file.isDirectory()) {
-                // delete any media entries for files in this directory...
-                int images = MediaUtils
-                        .deleteImagesInFolderFromMediaProvider(file);
-                int audio = MediaUtils
-                        .deleteAudioInFolderFromMediaProvider(file);
-                int video = MediaUtils
-                        .deleteVideoInFolderFromMediaProvider(file);
-
-                Timber.i("removed from content providers: %d image files, %d audio files, and %d video files.", images, audio, video);
-
                 // delete all the containing files
                 File[] files = file.listFiles();
                 if (files != null) {

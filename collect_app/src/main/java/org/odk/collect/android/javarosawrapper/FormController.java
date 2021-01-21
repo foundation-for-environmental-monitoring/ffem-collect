@@ -37,7 +37,6 @@ import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryController;
 import org.javarosa.form.api.FormEntryModel;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.javarosa.model.xform.CompactSerializingVisitor;
 import org.javarosa.model.xform.XFormSerializingVisitor;
 import org.javarosa.model.xform.XPathReference;
 import org.javarosa.xform.parse.XFormParser;
@@ -49,6 +48,7 @@ import org.odk.collect.android.formentry.ODKView;
 import org.odk.collect.android.formentry.audit.AsyncTaskAuditEventWriter;
 import org.odk.collect.android.formentry.audit.AuditConfig;
 import org.odk.collect.android.formentry.audit.AuditEventLogger;
+import org.odk.collect.android.forms.FormDesignException;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.FormNameUtils;
 
@@ -183,7 +183,7 @@ public class FormController {
      */
     public String getXPath(FormIndex index) {
         String value;
-        switch (getEvent()) {
+        switch (getEvent(index)) {
             case FormEntryController.EVENT_BEGINNING_OF_FORM:
                 value = "beginningOfForm";
                 break;
@@ -516,6 +516,11 @@ public class FormController {
         try {
             return formEntryController.saveAnswer(index, data, true);
         } catch (Exception e) {
+            String dataType = data != null ? data.getClass().toString() : null;
+            String ref = index != null ? index.getReference().toString() : null;
+            Timber.w("Error saving answer of type %s with ref %s for index %s",
+                    dataType, ref, index);
+
             throw new JavaRosaException(e);
         }
     }
@@ -612,12 +617,15 @@ public class FormController {
                     switch (event) {
                         case FormEntryController.EVENT_QUESTION:
                         case FormEntryController.EVENT_END_OF_FORM:
-                            break group_skip;
                         case FormEntryController.EVENT_PROMPT_NEW_REPEAT:
                             break group_skip;
                         case FormEntryController.EVENT_GROUP:
                         case FormEntryController.EVENT_REPEAT:
-                            if (indexIsInFieldList() && getQuestionPrompts().length != 0) {
+                            try {
+                                if (indexIsInFieldList() && getQuestionPrompts().length != 0) {
+                                    break group_skip;
+                                }
+                            } catch (FormDesignException e) {
                                 break group_skip;
                             }
                             // otherwise it's not a field-list group, so just skip it
@@ -749,8 +757,7 @@ public class FormController {
     /**
      * @return FailedConstraint of first failed constraint or null if all questions were saved.
      */
-    public FailedConstraint saveAllScreenAnswers(HashMap<FormIndex, IAnswerData> answers,
-                                                 boolean evaluateConstraints) throws JavaRosaException {
+    public FailedConstraint saveAllScreenAnswers(HashMap<FormIndex, IAnswerData> answers, boolean evaluateConstraints) throws JavaRosaException {
         if (currentPromptIsQuestion()) {
             for (FormIndex index : answers.keySet()) {
                 FailedConstraint failedConstraint = saveOneScreenAnswer(
@@ -901,10 +908,10 @@ public class FormController {
      * The array has a single element if there is a question at this {@link FormIndex} or multiple
      * elements if there is a group.
      *
-     * @throws RuntimeException if there is a group at this {@link FormIndex} and it contains
+     * @throws FormDesignException if there is a group at this {@link FormIndex} and it contains
      *                          elements that are not questions or regular (non-repeat) groups.
      */
-    public FormEntryPrompt[] getQuestionPrompts() throws RuntimeException {
+    public FormEntryPrompt[] getQuestionPrompts() throws FormDesignException {
         // For questions, there is only one.
         // For groups, there could be many, but we set that below
         FormEntryPrompt[] questions = new FormEntryPrompt[0];
@@ -916,11 +923,9 @@ public class FormController {
             List<FormEntryPrompt> questionList = new ArrayList<>();
             for (FormIndex index : getIndicesForGroup(gd)) {
                 if (getEvent(index) != FormEntryController.EVENT_QUESTION) {
-                    String errorMsg =
-                            "Only questions and regular groups are allowed in 'field-list'.  Bad node is: "
-                                    + index.getReference().toString(false);
-                    RuntimeException e = new RuntimeException(errorMsg);
-                    Timber.w(errorMsg);
+                    FormDesignException e = new FormDesignException("Repeats in 'field-list' groups " +
+                            "are not supported. Please update the form design to remove the " +
+                            "following repeat from a field list: " + index.getReference().toString(false));
                     throw e;
                 }
 
@@ -1167,7 +1172,7 @@ public class FormController {
     /**
      * Once a submission is marked as complete, it is saved in the
      * submission format, which might be a fragment of the original
-     * form or might be a SMS text string, etc.
+     * form.
      *
      * @return true if the submission is the entire form.  If it is,
      * then the submission can be re-opened for editing
@@ -1316,18 +1321,4 @@ public class FormController {
     public boolean currentFormCollectsBackgroundLocation() {
         return currentFormAuditsLocation() || getFormDef().hasAction(SetGeopointActionHandler.ELEMENT_NAME);
     }
-
-    /**
-     * Constructs the SMS payload for a filled-in form instance. This payload
-     * does not enable a filled-in form to be re-opened and edited.
-     *
-     * @return ByteArrayPayload this can be converted back to a string when necessary.
-     * @throws IOException for some reason any error took place during serialization.
-     */
-    public ByteArrayPayload getFilledInFormSMS() throws IOException {
-        FormInstance dataModel = getInstance();
-        CompactSerializingVisitor serializer = new CompactSerializingVisitor();
-        return (ByteArrayPayload) serializer.createSerializedPayload(dataModel);
-    }
-
 }

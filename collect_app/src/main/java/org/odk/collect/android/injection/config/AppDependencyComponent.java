@@ -19,6 +19,8 @@ import org.odk.collect.android.adapters.InstanceUploaderAdapter;
 import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.application.initialization.ApplicationInitializer;
+import org.odk.collect.android.audio.AudioRecordingControllerFragment;
+import org.odk.collect.android.audio.AudioRecordingErrorDialogFragment;
 import org.odk.collect.android.backgroundwork.AutoSendTaskSpec;
 import org.odk.collect.android.backgroundwork.AutoUpdateTaskSpec;
 import org.odk.collect.android.backgroundwork.SyncFormsTaskSpec;
@@ -28,6 +30,7 @@ import org.odk.collect.android.configure.qr.QRCodeTabsActivity;
 import org.odk.collect.android.configure.qr.ShowQRCodeFragment;
 import org.odk.collect.android.formentry.ODKView;
 import org.odk.collect.android.formentry.QuitFormDialogFragment;
+import org.odk.collect.android.formentry.saving.SaveAnswerFileErrorDialogFragment;
 import org.odk.collect.android.formentry.saving.SaveFormProgressDialogFragment;
 import org.odk.collect.android.fragments.BarCodeScannerFragment;
 import org.odk.collect.android.fragments.BlankFormListFragment;
@@ -69,7 +72,6 @@ import javax.inject.Singleton;
 
 import dagger.BindsInstance;
 import dagger.Component;
-import io.ffem.collect.android.activities.SignInActivity;
 
 /**
  * Dagger component for the application. Should include
@@ -215,6 +217,12 @@ public interface AppDependencyComponent {
 
     void inject(SelectMinimalDialog selectMinimalDialog);
 
+    void inject(AudioRecordingControllerFragment audioRecordingControllerFragment);
+
+    void inject(SaveAnswerFileErrorDialogFragment saveAnswerFileErrorDialogFragment);
+
+    void inject(AudioRecordingErrorDialogFragment audioRecordingErrorDialogFragment);
+
     OpenRosaHttpInterface openRosaHttpInterface();
 
     ReferenceManager referenceManager();
@@ -230,6 +238,4 @@ public interface AppDependencyComponent {
     ApplicationInitializer applicationInitializer();
 
     SettingsImporter settingsImporter();
-
-    void inject(SignInActivity signInActivity);
 }

@@ -19,8 +19,6 @@ package org.odk.collect.android.provider;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import org.odk.collect.android.BuildConfig;
-
 /**
  * Contract between the forms provider and applications. Contains definitions for the supported URIs
  * and data columns.
@@ -30,7 +28,7 @@ import org.odk.collect.android.BuildConfig;
  */
 public final class FormsProviderAPI {
 
-    static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider.odk.forms";
+    static final String AUTHORITY = "org.odk.collect.android.provider.odk.forms";
 
     private FormsProviderAPI() {
     }
@@ -54,8 +52,8 @@ public final class FormsProviderAPI {
          */
         public static final Uri CONTENT_NEWEST_FORMS_BY_FORMID_URI = Uri.parse("content://" + AUTHORITY + "/newest_forms_by_form_id");
 
-        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.ffem.form";
-        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.ffem.form";
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.odk.form";
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.odk.form";
 
         // These are the only things needed for an insert
         public static final String DISPLAY_NAME = "displayName";

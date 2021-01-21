@@ -8,6 +8,10 @@ import android.media.MediaPlayer;
 import android.telephony.TelephonyManager;
 import android.webkit.MimeTypeMap;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AbstractSavedStateViewModelFactory;
+import androidx.lifecycle.SavedStateHandle;
+import androidx.lifecycle.ViewModel;
 import androidx.work.WorkManager;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -45,6 +49,8 @@ import org.odk.collect.android.database.DatabaseMediaFileRepository;
 import org.odk.collect.android.events.RxEventBus;
 import org.odk.collect.android.formentry.media.AudioHelperFactory;
 import org.odk.collect.android.formentry.media.ScreenContextAudioHelperFactory;
+import org.odk.collect.android.formentry.saving.DiskFormSaver;
+import org.odk.collect.android.formentry.saving.FormSaveViewModel;
 import org.odk.collect.android.formmanagement.DiskFormsSynchronizer;
 import org.odk.collect.android.formmanagement.FormDownloader;
 import org.odk.collect.android.formmanagement.FormMetadataParser;
@@ -70,12 +76,14 @@ import org.odk.collect.android.notifications.Notifier;
 import org.odk.collect.android.openrosa.CollectThenSystemContentTypeMapper;
 import org.odk.collect.android.openrosa.OpenRosaFormSource;
 import org.odk.collect.android.openrosa.OpenRosaHttpInterface;
+import org.odk.collect.android.openrosa.OpenRosaResponseParserImpl;
 import org.odk.collect.android.openrosa.okhttp.OkHttpConnection;
 import org.odk.collect.android.openrosa.okhttp.OkHttpOpenRosaServerClientProvider;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.preferences.JsonPreferencesGenerator;
 import org.odk.collect.android.preferences.PreferencesProvider;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.storage.StoragePathProvider;
@@ -91,12 +99,17 @@ import org.odk.collect.android.utilities.DeviceDetailsProvider;
 import org.odk.collect.android.utilities.FileProvider;
 import org.odk.collect.android.utilities.FileUtil;
 import org.odk.collect.android.utilities.FormsDirDiskFormsSynchronizer;
+import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.utilities.PermissionUtils;
+import org.odk.collect.android.utilities.ScreenUtils;
+import org.odk.collect.android.utilities.SoftKeyboardController;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 import org.odk.collect.android.version.VersionInformation;
 import org.odk.collect.android.views.BarcodeViewDecoder;
 import org.odk.collect.async.CoroutineAndWorkManagerScheduler;
 import org.odk.collect.async.Scheduler;
+import org.odk.collect.audiorecorder.recording.AudioRecorderViewModelFactory;
+import org.odk.collect.utilities.Clock;
 import org.odk.collect.utilities.UserAgentProvider;
 
 import java.io.File;
@@ -170,8 +183,8 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public FormDownloader providesFormDownloader(FormSource formSource, FormsRepository formsRepository, StoragePathProvider storagePathProvider) {
-        return new ServerFormDownloader(formSource, formsRepository, new File(storagePathProvider.getDirPath(StorageSubdirectory.CACHE)), storagePathProvider.getDirPath(StorageSubdirectory.FORMS), new FormMetadataParser(ReferenceManager.instance()));
+    public FormDownloader providesFormDownloader(FormSource formSource, FormsRepository formsRepository, StoragePathProvider storagePathProvider, Analytics analytics) {
+        return new ServerFormDownloader(formSource, formsRepository, new File(storagePathProvider.getDirPath(StorageSubdirectory.CACHE)), storagePathProvider.getDirPath(StorageSubdirectory.FORMS), new FormMetadataParser(ReferenceManager.instance()), analytics);
     }
 
     @Provides
@@ -183,7 +196,7 @@ public class AppDependencyModule {
 
     @Provides
     public PermissionUtils providesPermissionUtils() {
-        return new PermissionUtils();
+        return new PermissionUtils(R.style.Theme_Collect_Dialog_PermissionAlert);
     }
 
     @Provides
@@ -231,45 +244,20 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public DeviceDetailsProvider providesDeviceDetailsProvider(Context context) {
-        TelephonyManager telMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-
+    public DeviceDetailsProvider providesDeviceDetailsProvider(Context context, InstallIDProvider installIDProvider) {
         return new DeviceDetailsProvider() {
 
             @Override
             @SuppressLint({"MissingPermission", "HardwareIds"})
             public String getDeviceId() {
-                return telMgr.getDeviceId();
+                return installIDProvider.getInstallID();
             }
 
             @Override
             @SuppressLint({"MissingPermission", "HardwareIds"})
             public String getLine1Number() {
-                try {
-                    return telMgr.getLine1Number();
-                } catch (Exception e) {
-                   return "";
-                }
-            }
-
-            @Override
-            @SuppressLint({"MissingPermission", "HardwareIds"})
-            public String getSubscriberId() {
-                try {
-                    return telMgr.getSubscriberId();
-                } catch (Exception e) {
-                    return "";
-                }
-            }
-
-            @Override
-            @SuppressLint({"MissingPermission", "HardwareIds"})
-            public String getSimSerialNumber() {
-                try {
-                    return telMgr.getSimSerialNumber();
-                } catch (Exception e) {
-                    return "";
-                }
+                TelephonyManager telMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+                return telMgr.getLine1Number();
             }
         };
     }
@@ -293,6 +281,7 @@ public class AppDependencyModule {
     }
 
     @Provides
+    @Singleton
     public StorageStateProvider providesStorageStateProvider() {
         return new StorageStateProvider();
     }
@@ -370,8 +359,8 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public SettingsChangeHandler providesSettingsChangeHandler(PropertyManager propertyManager, FormUpdateManager formUpdateManager, ServerRepository serverRepository) {
-        return new CollectSettingsChangeHandler(propertyManager, formUpdateManager, serverRepository);
+    public SettingsChangeHandler providesSettingsChangeHandler(PropertyManager propertyManager, FormUpdateManager formUpdateManager, ServerRepository serverRepository, Analytics analytics, PreferencesProvider preferencesProvider) {
+        return new CollectSettingsChangeHandler(propertyManager, formUpdateManager, serverRepository, analytics, preferencesProvider);
     }
 
     @Provides
@@ -410,12 +399,12 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public FormSource providesFormAPI(GeneralSharedPreferences generalSharedPreferences, Context context, OpenRosaHttpInterface openRosaHttpInterface, WebCredentialsUtils webCredentialsUtils) {
+    public FormSource providesFormSource(GeneralSharedPreferences generalSharedPreferences, Context context, OpenRosaHttpInterface openRosaHttpInterface, WebCredentialsUtils webCredentialsUtils, Analytics analytics) {
         SharedPreferences generalPrefs = generalSharedPreferences.getSharedPreferences();
         String serverURL = generalPrefs.getString(GeneralKeys.KEY_SERVER_URL, context.getString(R.string.default_server_url));
         String formListPath = generalPrefs.getString(GeneralKeys.KEY_FORMLIST_URL, context.getString(R.string.default_odk_formlist));
 
-        return new OpenRosaFormSource(serverURL, formListPath, openRosaHttpInterface, webCredentialsUtils);
+        return new OpenRosaFormSource(serverURL, formListPath, openRosaHttpInterface, webCredentialsUtils, analytics, new OpenRosaResponseParserImpl());
     }
 
     @Provides
@@ -476,4 +465,39 @@ public class AppDependencyModule {
                 .setBackOff(new ExponentialBackOff()));
     }
 
+    @Provides
+    ScreenUtils providesScreenUtils(Context context) {
+        return new ScreenUtils(context);
+    }
+
+    @Provides
+    public AudioRecorderViewModelFactory providesAudioRecorderViewModelFactory(Application application) {
+        return new AudioRecorderViewModelFactory(application);
+    }
+
+    @Provides
+    public FormSaveViewModel.FactoryFactory providesFormSaveViewModelFactoryFactory(Analytics analytics, Scheduler scheduler) {
+        return (owner, defaultArgs) -> new AbstractSavedStateViewModelFactory(owner, defaultArgs) {
+            @NonNull
+            @Override
+            protected <T extends ViewModel> T create(@NonNull String key, @NonNull Class<T> modelClass, @NonNull SavedStateHandle handle) {
+                return (T) new FormSaveViewModel(handle, System::currentTimeMillis, new DiskFormSaver(), new MediaUtils(), analytics, scheduler);
+            }
+        };
+    }
+
+    @Provides
+    public Clock providesClock() {
+        return System::currentTimeMillis;
+    }
+
+    @Provides
+    public SoftKeyboardController provideSoftKeyboardController() {
+        return new SoftKeyboardController();
+    }
+  
+    @Provides
+    public JsonPreferencesGenerator providesJsonPreferencesGenerator() {
+        return new JsonPreferencesGenerator();
+    }
 }

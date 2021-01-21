@@ -15,18 +15,19 @@
 package org.odk.collect.android.widgets;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
-import android.net.Uri;
-import android.provider.MediaStore.Audio;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
+import org.odk.collect.android.R;
+import org.odk.collect.android.analytics.AnalyticsEvents;
 import org.odk.collect.android.audio.AudioControllerView;
 import org.odk.collect.android.databinding.AudioWidgetAnswerBinding;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
@@ -34,14 +35,17 @@ import org.odk.collect.android.utilities.QuestionMediaManager;
 import org.odk.collect.android.utilities.WidgetAppearanceUtils;
 import org.odk.collect.android.widgets.interfaces.FileWidget;
 import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
-import org.odk.collect.android.widgets.utilities.AudioDataRequester;
+import org.odk.collect.android.widgets.utilities.AudioFileRequester;
 import org.odk.collect.android.widgets.utilities.AudioPlayer;
+import org.odk.collect.android.widgets.utilities.RecordingRequester;
 import org.odk.collect.audioclips.Clip;
 
 import java.io.File;
 import java.util.Locale;
 
 import timber.log.Timber;
+
+import static org.odk.collect.strings.format.LengthFormatterKt.formatLength;
 
 /**
  * Widget that allows user to take pictures, sounds or video and add them to the
@@ -53,36 +57,66 @@ import timber.log.Timber;
 
 @SuppressLint("ViewConstructor")
 public class AudioWidget extends QuestionWidget implements FileWidget, WidgetDataReceiver {
+
     AudioWidgetAnswerBinding binding;
 
     private final AudioPlayer audioPlayer;
-    private final AudioDataRequester audioDataRequester;
+    private final RecordingRequester recordingRequester;
     private final QuestionMediaManager questionMediaManager;
+    private final AudioFileRequester audioFileRequester;
 
+    private boolean recordingInProgress;
     private String binaryName;
 
-    public AudioWidget(Context context, QuestionDetails questionDetails, QuestionMediaManager questionMediaManager, AudioPlayer audioPlayer, AudioDataRequester audioDataRequester) {
+    public AudioWidget(Context context, QuestionDetails questionDetails, QuestionMediaManager questionMediaManager, AudioPlayer audioPlayer, RecordingRequester recordingRequester, AudioFileRequester audioFileRequester) {
         super(context, questionDetails);
         this.audioPlayer = audioPlayer;
 
         this.questionMediaManager = questionMediaManager;
-        this.audioDataRequester = audioDataRequester;
+        this.recordingRequester = recordingRequester;
+        this.audioFileRequester = audioFileRequester;
 
         binaryName = questionDetails.getPrompt().getAnswerText();
 
-        hideButtonsIfNeeded();
+        updateVisibilities();
         updatePlayerMedia();
+
+        recordingRequester.onIsRecordingBlocked(isRecordingBlocked -> {
+            binding.captureButton.setEnabled(!isRecordingBlocked);
+            binding.chooseButton.setEnabled(!isRecordingBlocked);
+        });
+
+        recordingRequester.onRecordingInProgress(getFormEntryPrompt(), session -> {
+            recordingInProgress = true;
+            updateVisibilities();
+
+            binding.recordingDuration.setText(formatLength(session.first));
+            binding.waveform.addAmplitude(session.second);
+        });
+
+        recordingRequester.onRecordingFinished(getFormEntryPrompt(), recording -> {
+            recordingInProgress = false;
+
+            if (recording != null) {
+                setData(recording);
+            } else {
+                updateVisibilities();
+            }
+        });
     }
 
     @Override
     protected View onCreateAnswerView(Context context, FormEntryPrompt prompt, int answerFontSize) {
-        binding = AudioWidgetAnswerBinding.inflate(((Activity) context).getLayoutInflater());
+        binding = AudioWidgetAnswerBinding.inflate(LayoutInflater.from(context));
 
         binding.captureButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, answerFontSize);
         binding.chooseButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, answerFontSize);
 
-        binding.captureButton.setOnClickListener(v -> audioDataRequester.requestRecording(getFormEntryPrompt()));
-        binding.chooseButton.setOnClickListener(v -> audioDataRequester.requestFile(getFormEntryPrompt()));
+        binding.captureButton.setOnClickListener(v -> {
+            binding.waveform.clear();
+            recordingRequester.requestRecording(getFormEntryPrompt());
+        });
+        binding.chooseButton.setOnClickListener(v -> audioFileRequester.requestFile(getFormEntryPrompt()));
 
         return binding.getRoot();
     }
@@ -98,7 +132,7 @@ public class AudioWidget extends QuestionWidget implements FileWidget, WidgetDat
     public void clearAnswer() {
         deleteFile();
         widgetValueChanged();
-        hideButtonsIfNeeded();
+        updateVisibilities();
     }
 
     @Override
@@ -125,19 +159,7 @@ public class AudioWidget extends QuestionWidget implements FileWidget, WidgetDat
             File newAudio = questionMediaManager.getAnswerFile(fileName);
 
             if (newAudio != null && newAudio.exists()) {
-                // Add the copy to the content provider
-                ContentValues values = new ContentValues(6);
-                values.put(Audio.Media.TITLE, newAudio.getName());
-                values.put(Audio.Media.DISPLAY_NAME, newAudio.getName());
-                values.put(Audio.Media.DATE_ADDED, System.currentTimeMillis());
-                values.put(Audio.Media.DATA, newAudio.getAbsolutePath());
-
                 questionMediaManager.replaceAnswerFile(getFormEntryPrompt().getIndex().toString(), newAudio.getAbsolutePath());
-                Uri audioURI = getContext().getContentResolver().insert(Audio.Media.EXTERNAL_CONTENT_URI, values);
-
-                if (audioURI != null) {
-                    Timber.i("Inserting AUDIO returned uri = %s", audioURI.toString());
-                }
 
                 // when replacing an answer. remove the current media.
                 if (binaryName != null && !binaryName.equals(newAudio.getName())) {
@@ -147,7 +169,7 @@ public class AudioWidget extends QuestionWidget implements FileWidget, WidgetDat
                 binaryName = newAudio.getName();
                 Timber.i("Setting current answer to %s", newAudio.getName());
 
-                hideButtonsIfNeeded();
+                updateVisibilities();
                 updatePlayerMedia();
                 widgetValueChanged();
             } else {
@@ -159,24 +181,34 @@ public class AudioWidget extends QuestionWidget implements FileWidget, WidgetDat
         }
     }
 
-    private void hideButtonsIfNeeded() {
-        if (getAnswer() == null) {
-            binding.captureButton.setVisibility(View.VISIBLE);
-            binding.chooseButton.setVisibility(View.VISIBLE);
-            binding.audioController.setVisibility(View.GONE);
+    private void updateVisibilities() {
+        if (recordingInProgress) {
+            binding.captureButton.setVisibility(GONE);
+            binding.chooseButton.setVisibility(GONE);
+            binding.recordingDuration.setVisibility(VISIBLE);
+            binding.waveform.setVisibility(VISIBLE);
+            binding.audioController.setVisibility(GONE);
+        } else if (getAnswer() == null) {
+            binding.captureButton.setVisibility(VISIBLE);
+            binding.chooseButton.setVisibility(VISIBLE);
+            binding.recordingDuration.setVisibility(GONE);
+            binding.waveform.setVisibility(GONE);
+            binding.audioController.setVisibility(GONE);
         } else {
-            binding.captureButton.setVisibility(View.GONE);
-            binding.chooseButton.setVisibility(View.GONE);
-            binding.audioController.setVisibility(View.VISIBLE);
+            binding.captureButton.setVisibility(GONE);
+            binding.chooseButton.setVisibility(GONE);
+            binding.recordingDuration.setVisibility(GONE);
+            binding.waveform.setVisibility(GONE);
+            binding.audioController.setVisibility(VISIBLE);
         }
 
-        if (getFormEntryPrompt().isReadOnly()) {
-            binding.captureButton.setVisibility(View.GONE);
-            binding.chooseButton.setVisibility(View.GONE);
+        if (questionDetails.isReadOnly()) {
+            binding.captureButton.setVisibility(GONE);
+            binding.chooseButton.setVisibility(GONE);
         }
 
         if (getFormEntryPrompt().getAppearanceHint() != null && getFormEntryPrompt().getAppearanceHint().toLowerCase(Locale.ENGLISH).contains(WidgetAppearanceUtils.NEW)) {
-            binding.chooseButton.setVisibility(View.GONE);
+            binding.chooseButton.setVisibility(GONE);
         }
     }
 
@@ -200,18 +232,21 @@ public class AudioWidget extends QuestionWidget implements FileWidget, WidgetDat
 
                 @Override
                 public void onPositionChanged(Integer newPosition) {
+                    analytics.logFormEvent(AnalyticsEvents.AUDIO_PLAYER_SEEK, questionDetails.getFormAnalyticsID());
                     audioPlayer.setPosition(clip.getClipID(), newPosition);
                 }
 
                 @Override
                 public void onRemoveClicked() {
-                    clearAnswer();
+                    new MaterialAlertDialogBuilder(getContext())
+                            .setTitle(R.string.delete_answer_file_question)
+                            .setMessage(R.string.answer_file_delete_warning)
+                            .setPositiveButton(R.string.delete_answer_file, (dialog, which) -> clearAnswer())
+                            .setNegativeButton(R.string.cancel, null)
+                            .show();
                 }
             });
 
-            binding.audioController.setVisibility(View.VISIBLE);
-        } else {
-            binding.audioController.setVisibility(GONE);
         }
     }
 

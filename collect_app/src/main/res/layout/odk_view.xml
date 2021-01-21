@@ -29,13 +29,21 @@ limitations under the License.
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_standard"
-            android:layout_marginTop="@dimen/margin_small"
-            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_standard"
             android:layout_marginRight="@dimen/margin_standard"
             android:visibility="gone"
             style="@style/TextAppearance.Collect.Subtitle1.MediumEmphasis"
             tools:text="Group text"
             tools:visibility="visible" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/launchIntentButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:gravity="center"
+            android:layout_margin="@dimen/margin_standard"
+            android:padding="@dimen/margin_small"/>
 
         <LinearLayout
             android:id="@+id/widgets"

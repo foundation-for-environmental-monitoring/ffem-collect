@@ -31,7 +31,7 @@ import java.util.Set;
 
 public class InstanceUploaderUtils {
 
-    public static final String DEFAULT_SUCCESSFUL_TEXT = "Successful submission.";
+    public static final String DEFAULT_SUCCESSFUL_TEXT = "full submission upload was successful!";
     public static final String SPREADSHEET_UPLOADED_TO_GOOGLE_DRIVE = "Failed. Records can only be submitted to spreadsheets created in Google Sheets. The submission spreadsheet specified was uploaded to Google Drive.";
 
     private InstanceUploaderUtils() {
@@ -98,7 +98,7 @@ public class InstanceUploaderUtils {
      * If the form explicitly sets the auto-delete property, then it overrides the preference.
      */
     public static boolean shouldFormBeDeleted(FormsRepository formsRepository, String jrFormId, String jrFormVersion, boolean isAutoDeleteAppSettingEnabled) {
-        Form form = formsRepository.get(jrFormId, jrFormVersion);
+        Form form = formsRepository.getOneByFormIdAndVersion(jrFormId, jrFormVersion);
         if (form == null) {
             return false;
         }

@@ -9,7 +9,7 @@
 
     <style name="Theme.Collect.BaseLight" parent="Theme.AppCompat.Light.NoActionBar">
         <!--Material theme attributes-->
-        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimary">#E0E0E0</item>
         <item name="colorSecondary">#2196F3</item>
         <item name="colorError">@color/red_500</item>
 
@@ -17,11 +17,12 @@
         <item name="colorSecondaryVariant">?colorSecondary</item>
         <item name="colorSurface">#FFFFFF</item>
         <item name="colorOnPrimary">#000000</item>
-        <item name="colorOnSecondary">#000000</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
         <item name="colorOnBackground">#000000</item>
         <item name="colorOnError">#000000</item>
         <item name="colorOnSurface">#000000</item>
         <item name="scrimBackground">@color/mtrl_scrim_color</item>
+
         <item name="textAppearanceHeadline1">@style/TextAppearance.MaterialComponents.Headline1</item>
         <item name="textAppearanceHeadline2">@style/TextAppearance.MaterialComponents.Headline2</item>
         <item name="textAppearanceHeadline3">@style/TextAppearance.MaterialComponents.Headline3</item>
@@ -55,10 +56,6 @@
         <item name="dividerColor">#1e000000</item>
         <item name="android:textDirection" tools:targetApi="17">locale</item>
         <item name="android:tintMode" tools:targetApi="21">src_in</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorToolbarPrimary">@color/toolbar</item>
-        <item name="textColorPrimary">@color/white</item>
-
     </style>
 
     <style name="Theme.Collect.BaseLight.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -72,9 +69,4 @@
     <style name="Theme.Collect.Light.Dialog" parent="android:Theme.Material.Light.Dialog">
         <item name="android:colorAccent">?attr/colorSecondary</item>
     </style>
-
-    <style name="toolbar_theme" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="colorControlNormal">@color/white</item>
-    </style>
-
 </resources>

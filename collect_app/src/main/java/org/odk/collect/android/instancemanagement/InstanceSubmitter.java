@@ -92,7 +92,7 @@ public class InstanceSubmitter {
             uploader = new InstanceServerUploader(httpInterface,
                     new WebCredentialsUtils(), new HashMap<>());
             deviceId = new PropertyManager(Collect.getInstance().getApplicationContext())
-                    .getSingularProperty(PropertyManager.withUri(PropertyManager.PROPMGR_DEVICE_ID));
+                    .getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID);
         }
 
         for (Instance instance : toUpload) {
@@ -167,7 +167,7 @@ public class InstanceSubmitter {
      */
     @Deprecated
     public static boolean shouldFormBeSent(FormsRepository formsRepository, String jrFormId, String jrFormVersion, boolean isAutoSendAppSettingEnabled) {
-        Form form = formsRepository.get(jrFormId, jrFormVersion);
+        Form form = formsRepository.getOneByFormIdAndVersion(jrFormId, jrFormVersion);
         if (form == null) {
             return false;
         }
