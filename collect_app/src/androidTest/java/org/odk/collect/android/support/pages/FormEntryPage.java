@@ -95,6 +95,13 @@ public class FormEntryPage extends Page<FormEntryPage> {
         return new ErrorDialog(rule).assertOnPage();
     }
 
+    public FormEntryPage swipeToNextQuestionWithConstraintViolation(String constraintText) {
+        flingLeft();
+        checkIsToastWithMessageDisplayed(constraintText);
+
+        return this;
+    }
+
     public FormEntryPage clickOptionsIcon() {
         Espresso.openActionBarOverflowOrOptionsMenu(ActivityHelpers.getActivity());
         return this;
@@ -122,6 +129,18 @@ public class FormEntryPage extends Page<FormEntryPage> {
     public FormEntryPage swipeToPreviousQuestion(String questionText) {
         onView(withId(R.id.questionholder)).perform(swipeRight());
         assertText(questionText);
+        return this;
+    }
+
+    public FormEntryPage swipeToPreviousQuestion(String questionText, boolean isRequired) {
+        onView(withId(R.id.questionholder)).perform(swipeRight());
+
+        if (isRequired) {
+            assertText("* " + questionText);
+        } else {
+            assertText(questionText);
+        }
+
         return this;
     }
 
@@ -279,5 +298,26 @@ public class FormEntryPage extends Page<FormEntryPage> {
     public FormEntryPage assertSelectMinimalDialogAnswer(String answer) {
         onView(withId(R.id.answer)).check(matches(withText(answer)));
         return this;
+    }
+
+    public OkDialog swipeToEndScreenWhileRecording() {
+        flingLeft();
+        OkDialog okDialog = new OkDialog(rule).assertOnPage();
+        assertText(R.string.recording_warning);
+        return okDialog;
+    }
+
+    public OkDialog clickGoToArrowWhileRecording() {
+        onView(withId(R.id.menu_goto)).perform(click());
+        OkDialog okDialog = new OkDialog(rule).assertOnPage();
+        assertText(R.string.recording_warning);
+        return okDialog;
+    }
+
+    public OkDialog clickGeneralSettingsWhileRecording() {
+        onView(withText(getTranslatedString(R.string.general_preferences))).perform(click());
+        OkDialog okDialog = new OkDialog(rule).assertOnPage();
+        assertText(R.string.recording_warning);
+        return okDialog;
     }
 }

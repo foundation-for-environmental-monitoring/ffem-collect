@@ -547,10 +547,6 @@ public class AllWidgetsFormTest {
         Screengrab.screenshot("grid-select2");
 
         onView(withText("Grid select one widget")).perform(swipeLeft());
-
-//        openWidgetList();
-//
-//        onView(withText("Multi select widget")).perform(click());
     }
 
     public void testImageSelectOne() {
@@ -593,10 +589,6 @@ public class AllWidgetsFormTest {
         Screengrab.screenshot("spinner-select");
 
         onView(withText("Spinner widget: select multiple")).perform(swipeLeft());
-//
-//        openWidgetList();
-//
-//        onView(withText("Label widget")).perform(click());
     }
 
     public void testImageSelectMultiple() {

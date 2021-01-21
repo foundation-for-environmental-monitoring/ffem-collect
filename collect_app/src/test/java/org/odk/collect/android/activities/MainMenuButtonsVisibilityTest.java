@@ -3,16 +3,21 @@ package org.odk.collect.android.activities;
 import android.view.View;
 import android.widget.Button;
 
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.odk.collect.android.R;
+import org.odk.collect.android.injection.config.AppDependencyModule;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
+import org.odk.collect.android.storage.StorageStateProvider;
+import org.odk.collect.android.support.RobolectricHelpers;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_DELETE_SAVED;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_EDIT_SAVED;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_GET_BLANK;
@@ -23,6 +28,18 @@ import static org.odk.collect.android.preferences.AdminKeys.KEY_VIEW_SENT;
 public class MainMenuButtonsVisibilityTest {
 
     private MainMenuActivity mainMenuActivity;
+
+    @Before
+    public void setup() {
+        RobolectricHelpers.overrideAppDependencyModule(new AppDependencyModule() {
+            @Override
+            public StorageStateProvider providesStorageStateProvider() {
+                StorageStateProvider storageStateProvider = spy(new StorageStateProvider());
+                when(storageStateProvider.shouldPerformAutomaticMigration()).thenReturn(false);
+                return storageStateProvider;
+            }
+        });
+    }
 
     @Test
     public void when_editSavedFormButtonIsEnabledInSettings_shouldBeVisible() {
@@ -92,7 +109,6 @@ public class MainMenuButtonsVisibilityTest {
         assertThat(getBlankFormButton.getVisibility(), equalTo(View.GONE));
     }
 
-    @Ignore("Button removed")
     @Test
     public void when_deleteSavedFormButtonIsEnabledInSettings_shouldBeVisible() {
         createActivity();
@@ -101,7 +117,6 @@ public class MainMenuButtonsVisibilityTest {
         assertThat(deleteSavedFormButton.getVisibility(), equalTo(View.VISIBLE));
     }
 
-    @Ignore("Button removed")
     @Test
     public void when_deleteSavedFormButtonIsDisabledInSettings_shouldBeGone() {
         AdminSharedPreferences.getInstance().save(KEY_DELETE_SAVED, false);

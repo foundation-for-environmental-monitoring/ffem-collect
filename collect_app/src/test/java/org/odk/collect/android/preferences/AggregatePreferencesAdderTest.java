@@ -13,7 +13,6 @@ import org.robolectric.shadows.ShadowToast;
 
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -41,10 +40,10 @@ public class AggregatePreferencesAdderTest {
 
         AggregatePreferencesAdder loader = new AggregatePreferencesAdder(fragment);
         boolean result = loader.add();
-        assertTrue(result);
+        assertFalse(result);
 
         String toastText = ShadowToast.getTextOfLatestToast();
-        assertNull(toastText); //, getString(R.string.corrupt_imported_preferences_error));
+        assertEquals(toastText, getString(R.string.corrupt_imported_preferences_error));
     }
 
     private String getString(int id) {

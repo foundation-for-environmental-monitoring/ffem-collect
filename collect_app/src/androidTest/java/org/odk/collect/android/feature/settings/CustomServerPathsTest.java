@@ -6,7 +6,6 @@ import android.webkit.MimeTypeMap;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -22,7 +21,6 @@ import org.odk.collect.android.support.pages.MainMenuPage;
 import org.odk.collect.android.support.pages.ServerSettingsPage;
 import org.odk.collect.utilities.UserAgentProvider;
 
-@Ignore("Settings interface changed")
 @RunWith(AndroidJUnit4.class)
 public class CustomServerPathsTest {
 
@@ -49,7 +47,7 @@ public class CustomServerPathsTest {
     @Test // Issue number NODK-235 TestCase1
     public void changingFormListPathInSettings_changesFormListDownloadPath() {
         server.setFormListPath("/customPath");
-        server.addForm("Custom path form", "one-question", "one-question.xml");
+        server.addForm("Custom path form", "one-question", "1", "one-question.xml");
 
         new MainMenuPage(rule)
                 .clickOnMenu()

@@ -5,7 +5,6 @@ import android.Manifest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -18,7 +17,6 @@ import org.odk.collect.android.support.pages.GeneralSettingsPage;
 import org.odk.collect.android.support.pages.MainMenuPage;
 import org.odk.collect.android.support.pages.ResetApplicationDialog;
 
-@Ignore("General settings disabled")
 //Issue NODK-240
 public class ResetApplicationTest {
 

@@ -3,7 +3,6 @@ package org.odk.collect.android.feature.settings;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -19,7 +18,6 @@ import org.odk.collect.android.support.pages.MainMenuPage;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-@Ignore("Settings disabled")
 @RunWith(AndroidJUnit4.class)
 public class ServerSettingsTest {
 
@@ -34,7 +32,7 @@ public class ServerSettingsTest {
     @Test
     public void whenUsingODKServer_canAddCredentialsForServer() {
         testDependencies.server.setCredentials("Joe", "netsky");
-        testDependencies.server.addForm("One Question", "one-question", "one-question.xml");
+        testDependencies.server.addForm("One Question", "one-question", "1", "one-question.xml");
 
         new MainMenuPage(rule).assertOnPage()
                 .clickOnMenu()

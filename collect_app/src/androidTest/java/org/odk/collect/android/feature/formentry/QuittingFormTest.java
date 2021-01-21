@@ -42,7 +42,6 @@ public class QuittingFormTest {
                 .clickSaveChanges()
                 .clickEditSavedForm()
                 .clickOnForm("Two Question")
-                .clickGoToArrow()
                 .assertText("Reuben") // Previous answers are saved
                 .assertText("10"); // Current screen answers are saved
     }

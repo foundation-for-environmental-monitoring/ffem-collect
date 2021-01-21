@@ -84,8 +84,7 @@ public class ResetAppStateTest {
     @Test
     public void resetSettingsTest() throws IOException {
         WebCredentialsUtils webCredentialsUtils = new WebCredentialsUtils();
-        String url = webCredentialsUtils.getServerUrlFromPreferences();
-        webCredentialsUtils.saveCredentials(url, "admin", "admin");
+        webCredentialsUtils.saveCredentials("https://opendatakit.appspot.com/", "admin", "admin");
 
         setupTestSettings();
         resetAppState(Collections.singletonList(ApplicationResetter.ResetAction.RESET_PREFERENCES));
@@ -97,8 +96,8 @@ public class ResetAppStateTest {
 
         assertEquals(0, getFormsCount());
         assertEquals(0, getInstancesCount());
-        assertEquals("", webCredentialsUtils.getCredentials(URI.create(url)).getUsername());
-        assertEquals("", webCredentialsUtils.getCredentials(URI.create(url)).getPassword());
+        assertEquals("", webCredentialsUtils.getCredentials(URI.create("https://opendatakit.appspot.com/")).getUsername());
+        assertEquals("", webCredentialsUtils.getCredentials(URI.create("https://opendatakit.appspot.com/")).getPassword());
     }
 
     @Test

@@ -5,7 +5,6 @@ import android.Manifest;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -33,7 +32,6 @@ public class RequiredQuestionTest {
             .around(new CopyFormRule("requiredJR275.xml"))
             .around(rule);
 
-    @Ignore("todo: Check")
     @Test
     public void requiredQuestions_ShouldDisplayAsterisk() {
 
@@ -46,7 +44,6 @@ public class RequiredQuestionTest {
                 .clickIgnoreChanges();
     }
 
-    @Ignore("todo: Check")
     @Test
     public void requiredQuestions_ShouldDisplayCustomMessage() {
 

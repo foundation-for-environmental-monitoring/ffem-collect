@@ -26,10 +26,10 @@ public class UserInterfacePage extends Page<UserInterfacePage> {
         return this;
     }
 
-    public UserInterfacePage clickOnSelectedLanguage(String language) {
+    public MainMenuPage clickOnSelectedLanguage(String language) {
         onView(withText(language)).perform(ViewActions.scrollTo());
         onView(withText(language)).perform(click());
-        return this;
+        return new MainMenuPage(rule).assertOnPage();
     }
 
     public UserInterfacePage clickNavigation() {
@@ -49,6 +49,11 @@ public class UserInterfacePage extends Page<UserInterfacePage> {
 
     public UserInterfacePage clickUseNavigationButtons() {
         clickOnString(R.string.buttons_navigation);
+        return this;
+    }
+
+    public UserInterfacePage clickSwipes() {
+        clickOnString(R.string.swipe_navigation);
         return this;
     }
 }

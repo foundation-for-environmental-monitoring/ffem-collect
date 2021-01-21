@@ -4,7 +4,6 @@ import android.Manifest;
 
 import androidx.test.rule.GrantPermissionRule;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -41,7 +40,6 @@ public class FormHierarchyTest {
             .around(new CopyFormRule("repeat_group_new.xml", null))
             .around(rule);
 
-    @Ignore("todo: Check")
     @Test
     //https://github.com/getodk/collect/issues/2871
     public void allRelevantQuestionsShouldBeVisibleInHierarchyView() {
@@ -104,7 +102,6 @@ public class FormHierarchyTest {
                 .check(matches(withText("Guest details > 1")));
     }
 
-    @Ignore("Check new")
     @Test
     //https://github.com/getodk/collect/issues/2936
     public void repeatGroupsShouldBeVisibleAsAppropriate() {

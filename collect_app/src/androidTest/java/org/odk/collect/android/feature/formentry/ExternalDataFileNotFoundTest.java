@@ -10,12 +10,12 @@ import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.storage.StoragePathProvider;
+import org.odk.collect.android.storage.StorageSubdirectory;
 import org.odk.collect.android.support.pages.FormEntryPage;
 import org.odk.collect.android.support.CopyFormRule;
 import org.odk.collect.android.support.ResetStateRule;
 import org.odk.collect.android.support.FormLoadingUtils;
-
-import static org.odk.collect.android.application.Collect.APP_FOLDER;
 
 public class ExternalDataFileNotFoundTest {
     private static final String EXTERNAL_DATA_QUESTIONS = "external_data_questions.xml";
@@ -34,9 +34,11 @@ public class ExternalDataFileNotFoundTest {
 
     @Test
     public void questionsThatUseExternalFiles_ShouldDisplayFriendlyMessageWhenFilesAreMissing() {
+        String formsDirPath = new StoragePathProvider().getDirPath(StorageSubdirectory.FORMS);
+
         new FormEntryPage("externalDataQuestions", activityTestRule)
-                .assertText(activityTestRule.getActivity().getString(R.string.file_missing, "/storage/emulated/0/" + APP_FOLDER + "/forms/external_data_questions-media/fruits.csv"))
+                .assertText(activityTestRule.getActivity().getString(R.string.file_missing, formsDirPath + "/external_data_questions-media/fruits.csv"))
                 .swipeToNextQuestion()
-                .assertText(activityTestRule.getActivity().getString(R.string.file_missing, "/storage/emulated/0/" + APP_FOLDER + "/forms/external_data_questions-media/itemsets.csv"));
+                .assertText(activityTestRule.getActivity().getString(R.string.file_missing, formsDirPath + "/external_data_questions-media/itemsets.csv"));
     }
 }

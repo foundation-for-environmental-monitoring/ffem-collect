@@ -26,7 +26,7 @@ public class GetBlankFormsTest {
     @Test
     public void whenThereIsAnAuthenticationErrorFetchingFormList_allowsUserToReenterCredentials() {
         testDependencies.server.setCredentials("Draymond", "Green");
-        testDependencies.server.addForm("One Question", "one-question", "one-question.xml");
+        testDependencies.server.addForm("One Question", "one-question", "1", "one-question.xml");
 
         rule.mainMenu()
                 .setServer(testDependencies.server.getURL())
@@ -45,13 +45,12 @@ public class GetBlankFormsTest {
                 .setServer(testDependencies.server.getURL())
                 .clickGetBlankFormWithError()
                 .assertText(R.string.load_remote_form_error)
-                .assertText(R.string.report_to_project_lead)
                 .clickOK(new GetBlankFormPage(rule));
     }
 
     @Test
     public void whenThereIsAnErrorFetchingForms_showsError() {
-        testDependencies.server.addForm("One Question", "one-question", "one-question.xml");
+        testDependencies.server.addForm("One Question", "one-question", "1", "one-question.xml");
         testDependencies.server.errorOnFetchingForms();
 
         rule.mainMenu()

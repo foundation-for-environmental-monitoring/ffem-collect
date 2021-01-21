@@ -21,14 +21,18 @@ import android.app.Activity;
 import android.app.Instrumentation;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.SystemClock;
+import android.view.View;
+import android.widget.RatingBar;
 
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.GrantPermissionRule;
 
+import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -89,7 +93,7 @@ public class FieldListUpdateTest {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.CAMERA)
             )
-            .around(new ResetStateRule(true))
+            .around(new ResetStateRule())
             .around(new CopyFormRule(FIELD_LIST_TEST_FORM, Collections.singletonList("fruits.csv"), true));
 
     @Test
@@ -312,7 +316,7 @@ public class FieldListUpdateTest {
 
         // FormEntryActivity expects an image at a fixed path so copy the app logo there
         Bitmap icon = BitmapFactory.decodeResource(ApplicationProvider.getApplicationContext().getResources(), R.drawable.notes);
-        File tmpJpg = new File(new StoragePathProvider().getTmpFilePath());
+        File tmpJpg = new File(new StoragePathProvider().getTmpImageFilePath());
         tmpJpg.createNewFile();
         FileOutputStream fos = new FileOutputStream(tmpJpg);
         icon.compress(Bitmap.CompressFormat.JPEG, 90, fos);
@@ -355,15 +359,14 @@ public class FieldListUpdateTest {
         jumpToGroupWithText("Rating");
         onView(withText(startsWith("Source13"))).perform(click());
 
-        for (int i = 0; i < 10; i++) {
-            onView(withText("Target13")).check(doesNotExist());
-            onView(allOf(withClassName(endsWith("ImageButton")), withId(i))).perform(click());
-            onView(withText("Target13")).check(matches(isDisplayed()));
+        onView(withText("Target13")).check(doesNotExist());
+        onView(allOf(withId(R.id.rating_bar1), isDisplayed())).perform(setRating(3.0f));
+        onView(withText("Target13")).check(matches(isDisplayed()));
 
-            onView(withText("Source13")).perform(longClick());
-            onView(withText(R.string.clear_answer)).perform(click());
-            onView(withText(R.string.discard_answer)).perform(click());
-        }
+        onView(withText("Source13")).perform(longClick());
+        onView(withText(R.string.clear_answer)).perform(click());
+        onView(withText(R.string.discard_answer)).perform(click());
+        onView(withText("Target13")).check(doesNotExist());
     }
 
     @Test
@@ -395,11 +398,30 @@ public class FieldListUpdateTest {
     // Scroll down until the desired group name is visible. This is needed to make the tests work
     // on devices with screens of different heights.
     private void jumpToGroupWithText(String text) {
-        SystemClock.sleep(1000);
         onView(withId(R.id.menu_goto)).perform(click());
         onView(withId(R.id.menu_go_up)).perform(click());
         onView(withId(R.id.list)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText(text))));
 
         onView(allOf(isDisplayed(), withText(text))).perform(click());
+    }
+
+    public static ViewAction setRating(final float rating) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(RatingBar.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "Custom view action to set rating on RatingBar";
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                RatingBar ratingBar = (RatingBar) view;
+                ratingBar.setRating(rating);
+            }
+        };
     }
 }

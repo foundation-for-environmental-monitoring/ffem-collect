@@ -11,7 +11,6 @@ import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -26,7 +25,6 @@ import org.odk.collect.android.utilities.GeoUtils;
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 
-@Ignore("Map disabled")
 public class FormMapTest {
     private static final String SINGLE_GEOPOINT_FORM = "single-geopoint.xml";
     private static final String NO_GEOPOINT_FORM = "basic.xml";

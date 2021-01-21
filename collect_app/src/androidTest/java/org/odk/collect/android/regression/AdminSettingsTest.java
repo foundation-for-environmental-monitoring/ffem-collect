@@ -5,7 +5,6 @@ import android.Manifest;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -15,7 +14,6 @@ import org.odk.collect.android.support.ResetStateRule;
 import org.odk.collect.android.support.pages.AdminSettingsPage;
 
 //Issue NODK-239
-@Ignore("Settings customized")
 @RunWith(AndroidJUnit4.class)
 public class AdminSettingsTest {
 

@@ -5,7 +5,6 @@ import android.Manifest;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -16,7 +15,6 @@ import org.odk.collect.android.support.CopyFormRule;
 import org.odk.collect.android.support.ResetStateRule;
 import org.odk.collect.android.support.pages.MainMenuPage;
 
-@Ignore("General settings disabled")
 // Issue number NODK-238
 @RunWith(AndroidJUnit4.class)
 public class UserAndDeviceIdentityTest {

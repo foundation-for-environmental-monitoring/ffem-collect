@@ -6,7 +6,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -22,7 +21,6 @@ import javax.inject.Singleton;
 
 import dagger.Provides;
 
-@Ignore("Auto migrated")
 @RunWith(AndroidJUnit4.class)
 public class StorageMigrationCompletedBannerTest {
 
@@ -34,7 +32,7 @@ public class StorageMigrationCompletedBannerTest {
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
             ))
-            .around(new ResetStateRule(true, new AppDependencyModule() {
+            .around(new ResetStateRule(new AppDependencyModule() {
                 @Provides
                 @Singleton
                 public StorageMigrationRepository providesStorageMigrationRepository() {
