@@ -990,4 +990,11 @@
     <string name="not_a_directory">%s exists, but is not a directory</string>
 
     <string name="select_odk_shortcut">Select ODK Shortcut</string>
+
+    <string name="redo_test">Redo Test</string>
+    <string name="submit_form">Submit Form</string>
+    <string name="test">Test</string>
+    <string name="delete_and_redo">Delete result and redo?</string>
+    <string name="confirm_redo">Are you sure you want to redo \"%s\" test?</string>
+    <string name="result_will_be_erased">The current result will be erased</string>
 </resources>

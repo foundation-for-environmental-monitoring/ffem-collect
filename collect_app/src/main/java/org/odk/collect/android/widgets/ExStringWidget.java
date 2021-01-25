@@ -19,38 +19,39 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.text.Editable;
 import android.text.Html;
 import android.text.Selection;
-import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.xpath.parser.XPathSyntaxException;
 import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.exception.ExternalParamsException;
 import org.odk.collect.android.external.ExternalAppsUtils;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.formentry.questions.WidgetViewUtils;
 import org.odk.collect.android.utilities.ActivityAvailability;
-import org.odk.collect.android.utilities.SoftKeyboardUtils;
 import org.odk.collect.android.utilities.ToastUtils;
-import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
 import org.odk.collect.android.widgets.interfaces.ButtonClickListener;
+import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry;
 
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import io.ffem.collect.android.preferences.AppPreferences;
 import timber.log.Timber;
 
+import static android.content.DialogInterface.BUTTON_NEGATIVE;
+import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static android.content.Intent.ACTION_SENDTO;
 import static org.odk.collect.android.formentry.questions.WidgetViewUtils.createSimpleButton;
 import static org.odk.collect.android.injection.DaggerUtils.getComponent;
@@ -104,12 +105,13 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
 
     private boolean hasExApp = true;
     public Button launchIntentButton;
+    public TextView unitText;
 
     @Inject
     public ActivityAvailability activityAvailability;
 
     public ExStringWidget(Context context, QuestionDetails questionDetails, WaitingForDataRegistry waitingForDataRegistry) {
-        super(context, questionDetails, true);
+        super(context, questionDetails);
         this.waitingForDataRegistry = waitingForDataRegistry;
         getComponent(context).inject(this);
     }
@@ -121,14 +123,58 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
 
         LinearLayout answerLayout = new LinearLayout(getContext());
         answerLayout.setOrientation(LinearLayout.VERTICAL);
-        answerLayout.addView(answerText);
+        // Brand change - Display answer above the button
+        LinearLayout resultLayout = new LinearLayout(getContext());
+        resultLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        resultLayout.addView(answerText);
+
+        unitText = new TextView(context);
+        unitText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize());
+        resultLayout.addView(unitText);
+
+        if (getFormEntryPrompt().getAnswerText() != null) {
+            setUnitText();
+        }
+
+        answerLayout.addView(resultLayout);
         answerLayout.addView(launchIntentButton);
         addAnswerView(answerLayout, WidgetViewUtils.getStandardMargin(context));
     }
 
+    private void setUnitText() {
+        // todo: remove unit hard coding
+        try {
+            String testId = getFormEntryPrompt().getQuestion().getAppearanceAttr();
+            String unit = "mg/l";
+            if (testId.startsWith("s-")) {
+                unit = "mg/kg";
+            }
+            if (testId.endsWith("-pH")) {
+                unit = "";
+            } else if (testId.contains("-hydrogen-peroxide")) {
+                unit = "M";
+            } else if (testId.equals("s-organic-carbon")) {
+                unit = "%";
+            }
+
+            unitText.setText(String.format(" %s", unit));
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+    }
+
     private String getButtonText() {
         String v = getFormEntryPrompt().getSpecialFormQuestionText("buttonText");
-        return v != null ? v : getContext().getString(R.string.launch_app);
+        // Brand change
+        String question = getFormEntryPrompt().getLongText();
+        if (question == null) {
+            question = "";
+        }
+        if (question.length() > 20) {
+            question = question.substring(0, 20) + "...";
+        }
+        return v != null ? v : question + " " + getContext().getString(R.string.test);
     }
 
     protected void fireActivity(Intent i) throws ActivityNotFoundException {
@@ -145,30 +191,35 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
     public void setData(Object answer) {
         StringData stringData = ExternalAppsUtils.asStringData(answer);
         answerText.setText(stringData == null ? null : stringData.getValue().toString());
+        // Brand change
+        if (stringData != null) {
+            setUnitText();
+        }
         widgetValueChanged();
     }
 
     @Override
     public void setFocus(Context context) {
         if (hasExApp) {
-            SoftKeyboardUtils.hideSoftKeyboard(answerText);
+            softKeyboardController.hideSoftKeyboard(answerText);
             // focus on launch button
             launchIntentButton.requestFocus();
         } else {
             if (!getFormEntryPrompt().isReadOnly()) {
-                SoftKeyboardUtils.showSoftKeyboard(answerText);
-            /*
-             * If you do a multi-question screen after a "add another group" dialog, this won't
-             * automatically pop up. It's an Android issue.
-             *
-             * That is, if I have an edit text in an activity, and pop a dialog, and in that
-             * dialog's button's OnClick() I call edittext.requestFocus() and
-             * showSoftInput(edittext, 0), showSoftinput() returns false. However, if the
-             * edittext
-             * is focused before the dialog pops up, everything works fine. great.
-             */
+                // Brand change ------
+//                softKeyboardController.showSoftKeyboard(answerText);
+                /*
+                 * If you do a multi-question screen after a "add another group" dialog, this won't
+                 * automatically pop up. It's an Android issue.
+                 *
+                 * That is, if I have an edit text in an activity, and pop a dialog, and in that
+                 * dialog's button's OnClick() I call edittext.requestFocus() and
+                 * showSoftInput(edittext, 0), showSoftinput() returns false. However, if the
+                 * edittext
+                 * is focused before the dialog pops up, everything works fine. great.
+                 */
             } else {
-                SoftKeyboardUtils.hideSoftKeyboard(answerText);
+                softKeyboardController.hideSoftKeyboard(answerText);
             }
         }
     }
@@ -195,6 +246,39 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
         String v = getFormEntryPrompt().getSpecialFormQuestionText("noAppErrorString");
         errorString = (v != null) ? v : getContext().getString(R.string.no_app);
 
+        // Brand change
+        if (answerText.getText().toString().isEmpty()){
+            launchQuestionIntent(intentName, exParams, errorString);
+        }else {
+            AlertDialog alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme).create();
+            alertDialog.setTitle(getContext().getString(R.string.delete_and_redo));
+
+            String question = getFormEntryPrompt().getLongText();
+            if (question == null) {
+                question = "";
+            }
+            if (question.length() > 50) {
+                question = question.substring(0, 50) + "...";
+            }
+
+            alertDialog.setMessage(getContext().getString(R.string.confirm_redo,
+                    question) + "\n\n" + getContext().getString(R.string.result_will_be_erased));
+
+            DialogInterface.OnClickListener quitListener = (dialog, button) -> {
+                if (button == BUTTON_POSITIVE) { // yes
+                    launchQuestionIntent(intentName, exParams, errorString);
+                }
+            };
+            alertDialog.setCancelable(true);
+            alertDialog
+                    .setButton(BUTTON_POSITIVE, getContext().getString(R.string.redo_test), quitListener);
+            alertDialog.setButton(BUTTON_NEGATIVE, getContext().getString(R.string.clear_answer_no),
+                    quitListener);
+            alertDialog.show();
+        }
+    }
+
+    private void launchQuestionIntent(String intentName, Map<String, String> exParams, String errorString) {
         Intent i = new Intent(intentName);
 
         // Use special "uri_data" key to set intent data. This must be done before checking if an
@@ -202,12 +286,22 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
         if (exParams.containsKey(URI_KEY)) {
             try {
                 String uriValue = (String) ExternalAppsUtils.getValueRepresentedBy(exParams.get(URI_KEY),
-                            getFormEntryPrompt().getIndex().getReference());
+                        getFormEntryPrompt().getIndex().getReference());
                 i.setData(Uri.parse(uriValue));
                 exParams.remove(URI_KEY);
             } catch (XPathSyntaxException e) {
                 Timber.d(e);
                 onException(e.getMessage());
+            }
+        }
+
+        if (!activityAvailability.isActivityAvailable(i)) {
+            Intent launchIntent = Collect.getInstance().getPackageManager().getLaunchIntentForPackage(intentName);
+
+            if (launchIntent != null) {
+                // Make sure FLAG_ACTIVITY_NEW_TASK is not set because it doesn't work with startActivityForResult
+                launchIntent.setFlags(0);
+                i = launchIntent;
             }
         }
 
@@ -233,11 +327,13 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
     }
 
     private void focusAnswer() {
-        SoftKeyboardUtils.showSoftKeyboard(answerText);
+        // Brand change ------
+//        softKeyboardController.showSoftKeyboard(answerText);
     }
 
-    private void onException(String toastText) {
-        hasExApp = false;
+// Brand change -----------
+//    private void onException(String toastText) {
+//        hasExApp = false;
 //        if (!getFormEntryPrompt().isReadOnly()) {
 //            answerText.setBackground((new EditText(getContext())).getBackground());
 //            answerText.setFocusable(true);
@@ -260,20 +356,24 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
 //        }
 //        launchIntentButton.setEnabled(false);
 //        launchIntentButton.setFocusable(false);
-        waitingForDataRegistry.cancelWaitingForData();
+//        waitingForDataRegistry.cancelWaitingForData();
+//
+//        Toast.makeText(getContext(),
+//                toastText, Toast.LENGTH_SHORT)
+//                .show();
+//        Timber.d(toastText);
+//        focusAnswer();
+//        Selection.setSelection(answerText.getText(), answerText.getText().toString().length());
+//    }
 
+    // Brand change -----------
+    private void onException(String toastText) {
+        hasExApp = false;
+        // Brand change
         String exSpec = getFormEntryPrompt().getAppearanceHint().replaceFirst("^ex[:]", "");
-        if (AppPreferences.launchExperiment(getContext())) {
-            exSpec = exSpec.replace("water", "experiment")
-                    .replace("soil", "experiment");
-        }
         final String intentName = ExternalAppsUtils.extractIntentName(exSpec);
-        if (intentName.startsWith("io.ffem")) {
-            String appName =  intentName.substring(intentName.indexOf("ffem"));
-            appName = appName.substring(appName.indexOf("ffem"), appName.indexOf(".")) +
-                    " " + Character.toUpperCase(appName.charAt(appName.indexOf(".") + 1)) +
-                    appName.substring(appName.indexOf(".") + 2);
-
+        if (intentName.startsWith("io.") || intentName.startsWith("hd.sensor")) {
+            String appName =  intentName.substring(intentName.indexOf(".")).replace(".", " ");
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.Theme_AppCompat_Light_Dialog);
             builder.setTitle(R.string.app_not_found)
                     .setMessage(Html.fromHtml(getContext().getString(R.string.install_app, appName)))
@@ -285,13 +385,10 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
                     .setCancelable(false)
                     .show();
         } else {
-            Toast.makeText(getContext(),
-                    toastText, Toast.LENGTH_SHORT)
-                    .show();
+            Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT).show();
             Timber.d(toastText);
         }
-
         focusAnswer();
-//        Selection.setSelection(answerText.getText(), answerText.getText().toString().length());
+        Selection.setSelection(answerText.getText(), answerText.getText().toString().length());
     }
 }

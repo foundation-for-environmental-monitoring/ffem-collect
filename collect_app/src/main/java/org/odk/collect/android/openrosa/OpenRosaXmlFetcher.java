@@ -16,22 +16,20 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.UnknownHostException;
+
+import javax.net.ssl.SSLException;
 
 import timber.log.Timber;
 
-/**
- * This is only used inside {@link OpenRosaFormSource} and could potentially be absorbed there. Some
- * of the parsing logic here might be better broken out somewhere else however if it can be used
- * in other scenarios.
- */
-class OpenRosaXmlFetcher {
+public class OpenRosaXmlFetcher {
 
     private static final String HTTP_CONTENT_TYPE_TEXT_XML = "text/xml";
 
     private final OpenRosaHttpInterface httpInterface;
     private WebCredentialsUtils webCredentialsUtils;
 
-    OpenRosaXmlFetcher(OpenRosaHttpInterface httpInterface, WebCredentialsUtils webCredentialsUtils) {
+    public OpenRosaXmlFetcher(OpenRosaHttpInterface httpInterface, WebCredentialsUtils webCredentialsUtils) {
         this.httpInterface = httpInterface;
         this.webCredentialsUtils = webCredentialsUtils;
     }
@@ -44,7 +42,7 @@ class OpenRosaXmlFetcher {
      */
 
     @SuppressWarnings("PMD.AvoidRethrowingException")
-    public DocumentFetchResult getXML(String urlString) throws Exception {
+    public DocumentFetchResult getXML(String urlString) throws UnknownHostException, SSLException {
 
         // parse response
         Document doc;
@@ -69,11 +67,20 @@ class OpenRosaXmlFetcher {
                 parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, true);
                 doc.parse(parser);
             }
-        } catch (Exception e) {
+        } catch (UnknownHostException | SSLException e) {
             throw e;
+        } catch (Exception e) {
+            String error = "Parsing failed with " + e.getMessage() + " while accessing " + urlString;
+            Timber.e(error);
+            return new DocumentFetchResult(error, 0);
         }
 
         return new DocumentFetchResult(doc, inputStreamResult.isOpenRosaResponse(), inputStreamResult.getHash());
+    }
+
+    @Nullable
+    public InputStream getFile(@NonNull String downloadUrl, @Nullable final String contentType) throws Exception {
+        return fetch(downloadUrl, contentType).getInputStream();
     }
 
     /**
@@ -86,7 +93,7 @@ class OpenRosaXmlFetcher {
      */
 
     @NonNull
-    public HttpGetResult fetch(@NonNull String downloadUrl, @Nullable final String contentType) throws Exception {
+    private HttpGetResult fetch(@NonNull String downloadUrl, @Nullable final String contentType) throws Exception {
         URI uri;
         try {
             // assume the downloadUrl is escaped properly

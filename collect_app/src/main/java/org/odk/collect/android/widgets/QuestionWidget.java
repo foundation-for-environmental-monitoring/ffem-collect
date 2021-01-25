@@ -450,4 +450,15 @@ public abstract class QuestionWidget extends FrameLayout implements Widget {
             valueChangedListener.widgetValueChanged(this);
         }
     }
+
+    // Brand change --------
+    private View container;
+
+    public View getContainer() {
+        return container;
+    }
+
+    public void setContainer(View value) {
+        container = value;
+    }
 }

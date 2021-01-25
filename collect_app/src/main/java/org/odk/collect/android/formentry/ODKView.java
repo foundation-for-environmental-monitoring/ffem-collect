@@ -96,11 +96,21 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import io.ffem.collect.android.widget.RowView;
 import timber.log.Timber;
 
 import static org.odk.collect.android.injection.DaggerUtils.getComponent;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_EXTERNAL_APP_RECORDING;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
+
+import android.app.AlertDialog;
+import android.text.Html;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.widget.TextViewCompat;
+
+import org.javarosa.core.model.GroupDef;
 
 /**
  * Contains either one {@link QuestionWidget} if the current form element is a question or
@@ -118,6 +128,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
     public static final String FIELD_LIST = "field-list";
 
     private WidgetValueChangedListener widgetValueChangedListener;
+    private final QuestionTextSizeHelper questionTextSizeHelper = new QuestionTextSizeHelper();
 
     @Inject
     public AudioHelperFactory audioHelperFactory;
@@ -156,17 +167,6 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         // when the grouped fields are populated by an external app, this will get true.
         boolean readOnlyOverride = false;
 
-        // handle intent groups that are intended to receive multiple values from an external app
-        if (groups != null && groups.length > 0) {
-            // get the group we are showing -- it will be the last of the groups in the groups list
-            final FormEntryCaption c = groups[groups.length - 1];
-            final String intentString = c.getFormElement().getAdditionalAttribute(null, "intent");
-            if (intentString != null && intentString.length() != 0) {
-                readOnlyOverride = true;
-                addIntentLaunchButton(context, questionPrompts, c, intentString);
-            }
-        }
-
         PermissionUtils permissionUtils = new PermissionUtils(R.style.Theme_Collect_Dialog_PermissionAlert);
 
         this.widgetFactory = new WidgetFactory(
@@ -188,8 +188,113 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         // display which group you are in as well as the question
         setGroupText(groups);
 
+        // when the grouped fields are populated by an external app, this will get true.
+        boolean questionAdded = false;
+
+        // handle intent groups that are intended to receive multiple values from an external app
+        if (groups != null && groups.length > 0) {
+            // get the group we are showing -- it will be the last of the groups in the groups list
+            final FormEntryCaption c = groups[groups.length - 1];
+            String intentString = c.getFormElement().getAdditionalAttribute(null, "intent");
+            if (intentString != null && intentString.length() != 0) {
+
+                for (FormEntryPrompt question : questionPrompts) {
+                    QuestionWidget qw = configureWidgetForQuestion(question);
+                    widgets.add(qw);
+                    if (!questionAdded) {
+                        AppCompatTextView textView = new AppCompatTextView(context);
+                        TextViewCompat.setTextAppearance(textView, R.style.TextAppearance_Collect_Headline6);
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                        params.setMargins(32,8,16,0);
+                        textView.setLayoutParams(params);
+                        textView.setText(groups[0].getShortText());
+                        widgetsList.addView(textView);
+                        qw.setContainer((View) textView.getParent());
+                    }
+
+                    if (!qw.getQuestionDetails().getPrompt().getQuestion().getTextID().contains("meta")) {
+                        if (qw.getAnswer() != null) {
+                            RowView answerRow = new RowView(context);
+                            answerRow.setPrimaryText(qw.getQuestionDetails().getPrompt().getQuestionText() + ": ");
+                            answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
+                            widgetsList.addView(answerRow);
+                        } else {
+                            AppCompatTextView textView = new AppCompatTextView(context);
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                            textView.setLayoutParams(params);
+                            widgetsList.addView(textView);
+                        }
+                    }
+                    question.getQuestion().setAdditionalAttribute("", "done", "true");
+                    questionAdded = true;
+                }
+
+                addIntentLaunchButton(context, questionPrompts, c, intentString, c.getFormElement().getTextID());
+            } else {
+                IFormElement formElement = c.getFormElement();
+                for (int i = 0; i < formElement.getChildren().size(); i++) {
+                    questionAdded = false;
+                    if (formElement.getChild(i) instanceof GroupDef) {
+                        intentString = getIntentString(formElement.getChild(i));
+                        if (intentString != null) {
+                            setGroupText(groups);
+                            List<FormEntryPrompt> formEntryPrompts = new ArrayList<>();
+                            for (FormEntryPrompt prompt : questionPrompts) {
+                                if (prompt != null && prompt.getIndex().getNextLevel().getLocalIndex() == i) {
+                                    formEntryPrompts.add(prompt);
+                                }
+                            }
+                            for (FormEntryPrompt question : formEntryPrompts) {
+                                QuestionWidget qw = configureWidgetForQuestion(question);
+                                widgets.add(qw);
+
+                                if (!questionAdded) {
+                                    AppCompatTextView textView = new AppCompatTextView(context);
+                                    TextViewCompat.setTextAppearance(textView, R.style.TextAppearance_Collect_Headline6);
+                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                                    params.setMargins(32,8,16,0);
+                                    textView.setLayoutParams(params);
+                                    textView.setText(c.getQuestionText(formElement.getChild(i).getTextID()));
+                                    widgetsList.addView(textView);
+                                    qw.setContainer((View) textView.getParent());
+                                }
+
+                                if (!qw.getQuestionDetails().getPrompt().getQuestionText().contains("meta")) {
+                                    if (qw.getAnswer() != null) {
+                                        RowView answerRow = new RowView(context);
+                                        answerRow.setPrimaryText(qw.getQuestionDetails().getPrompt().getQuestionText() + ": ");
+                                        answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
+                                        widgetsList.addView(answerRow, layout);
+                                    } else {
+                                        AppCompatTextView textView = new AppCompatTextView(context);
+                                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                                        textView.setLayoutParams(params);
+                                        widgetsList.addView(textView);
+                                    }
+                                }
+
+                                questionAdded = true;
+                                question.getQuestion().setAdditionalAttribute("", "done", "true");
+                            }
+                            addIntentLaunchButton(context, questionPrompts, c, intentString, formElement.getChild(i).getTextID());
+                        } else {
+                            for (FormEntryPrompt question : questionPrompts) {
+                                if (formElement.getChild(i).getID() == question.getQuestion().getID()) {
+                                    if (question.getQuestion().getAdditionalAttribute("", "done") == null) {
+                                        addWidgetForQuestion(question);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         for (FormEntryPrompt question : questionPrompts) {
-            addWidgetForQuestion(question);
+            if (question.getQuestion().getAdditionalAttribute("", "done") == null) {
+                addWidgetForQuestion(question);
+            }
         }
 
         setupAudioErrors();
@@ -392,7 +497,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
      * An intent group launches an intent and receives multiple values from the launched app.
      */
     private void addIntentLaunchButton(Context context, FormEntryPrompt[] questionPrompts,
-                                       FormEntryCaption c, String intentString) {
+                                       FormEntryCaption c, String intentString, String textID) {
         final String buttonText;
         final String errorString;
         String v = c.getSpecialFormQuestionText("buttonText");
@@ -400,31 +505,34 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         v = c.getSpecialFormQuestionText("noAppErrorString");
         errorString = (v != null) ? v : context.getString(R.string.no_app);
 
+        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(24, 8, 24, 8);
+
         // set button formatting
-        MaterialButton launchIntentButton = findViewById(R.id.launchIntentButton);
+        final MaterialButton launchIntentButton = (MaterialButton) LayoutInflater
+                .from(context)
+                .inflate(R.layout.widget_answer_button, null, false);
+        launchIntentButton.setId(View.generateViewId());
         launchIntentButton.setText(buttonText);
-        launchIntentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, QuestionFontSizeUtils.getQuestionFontSize() + 2);
-        launchIntentButton.setVisibility(VISIBLE);
+        launchIntentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, questionTextSizeHelper.getHeadline6());
+        launchIntentButton.setLayoutParams(params);
+        launchIntentButton.setTag(textID);
+
         launchIntentButton.setOnClickListener(view -> {
             String intentName = ExternalAppsUtils.extractIntentName(intentString);
             Map<String, String> parameters = ExternalAppsUtils.extractParameters(intentString);
 
             Intent i = new Intent(intentName);
-            if (i.resolveActivity(Collect.getInstance().getPackageManager()) == null) {
-                Intent launchIntent = Collect.getInstance().getPackageManager().getLaunchIntentForPackage(intentName);
-
-                if (launchIntent != null) {
-                    // Make sure FLAG_ACTIVITY_NEW_TASK is not set because it doesn't work with startActivityForResult
-                    launchIntent.setFlags(0);
-                    i = launchIntent;
-                }
-            }
-
             try {
                 ExternalAppsUtils.populateParameters(i, parameters,
                         c.getIndex().getReference());
 
                 for (FormEntryPrompt p : questionPrompts) {
+                    String group = p.getQuestion().getTextID().substring(0, p.getQuestion().getTextID().lastIndexOf("/"));
+                    if (!view.getTag().equals(group + ":label")){
+                        continue;
+                    }
                     IFormElement formElement = p.getFormElement();
                     if (formElement instanceof QuestionDef) {
                         TreeReference reference =
@@ -452,9 +560,24 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
             } catch (ActivityNotFoundException e) {
                 Timber.d(e, "ActivityNotFoundExcept");
 
-                ToastUtils.showShortToast(errorString);
+                if (intentName.startsWith("io.") || intentName.startsWith("hd.sensor")) {
+                    String appName =  intentName.substring(intentName.indexOf(".")).replace(".", " ");
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.Theme_AppCompat_Light_Dialog);
+                    builder.setTitle(R.string.app_not_found)
+                            .setMessage(Html.fromHtml(getContext().getString(R.string.install_app, appName)))
+                            .setPositiveButton(R.string.go_to_play_store, (dialogInterface, j)
+                                    -> getContext().startActivity(new Intent(Intent.ACTION_VIEW,
+                                    Uri.parse("https://play.google.com/store/apps/developer?id=Foundation+for+Environmental+Monitoring"))))
+                            .setNegativeButton(android.R.string.cancel,
+                                    (dialogInterface, j) -> dialogInterface.dismiss())
+                            .setCancelable(false)
+                            .show();
+                } else {
+                    ToastUtils.showShortToast(errorString);
+                }
             }
         });
+        widgetsList.addView(launchIntentButton);
     }
 
     public void setFocus(Context context) {
@@ -529,7 +652,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                                     } else {
                                         throw new RuntimeException("The value for " + key + " must be a URI but it is " + answer);
                                     }
-                                    
+
                                     if (uri != null) {
                                         File destFile = FileUtils.createDestinationMediaFile(formController.getInstanceFile().getParent(), ContentResolverHelper.getFileExtensionFromUri(getContext(), uri));
                                         //TODO might be better to use QuestionMediaManager in the future
@@ -608,8 +731,13 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
      */
     public void highlightWidget(FormIndex formIndex) {
         QuestionWidget qw = getQuestionWidget(formIndex);
-
+        View viewToHighlight;
         if (qw != null) {
+            if (qw.getContainer() != null) {
+                viewToHighlight = qw.getContainer();
+            } else {
+                viewToHighlight = qw;
+            }
             // postDelayed is needed because otherwise scrolling may not work as expected in case when
             // answers are validated during form finalization.
             new Handler().postDelayed(() -> {
@@ -619,7 +747,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                 ValueAnimator va = new ValueAnimator();
                 va.setIntValues(getResources().getColor(R.color.red_500), getDrawingCacheBackgroundColor());
                 va.setEvaluator(new ArgbEvaluator());
-                va.addUpdateListener(valueAnimator -> qw.setBackgroundColor((int) valueAnimator.getAnimatedValue()));
+                va.addUpdateListener(valueAnimator -> viewToHighlight.setBackgroundColor((int) valueAnimator.getAnimatedValue()));
                 va.setDuration(2500);
                 va.start();
             }, 100);
@@ -675,5 +803,24 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                 formEntryViewModel.logFormEvent(AnalyticsEvents.URL_QUESTION);
             }
         }
+    }
+
+    private String getIntentString(IFormElement formElement) {
+        String intentString = formElement.getAdditionalAttribute(null, "intent");
+        if (intentString == null) {
+            intentString = formElement.getAppearanceAttr();
+        }
+
+        if (intentString != null) {
+            if (intentString.startsWith("ex:")) {
+                intentString = intentString.replaceFirst("^ex[:]", "");
+            }
+
+            if (intentString.length() < 12 || (!intentString.startsWith("io.") && !intentString.startsWith("hd.sensor"))) {
+                return null;
+            }
+        }
+
+        return intentString;
     }
 }

@@ -120,7 +120,7 @@ public class Collect extends Application implements LocalizedApplication {
 
         setupDagger();
         applicationInitializer.initialize();
-        
+
         fixGoogleBug154855417();
 
         setupStrictMode();

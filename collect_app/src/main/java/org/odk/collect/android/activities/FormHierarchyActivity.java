@@ -40,7 +40,6 @@ import org.javarosa.form.api.FormEntryModel;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.HierarchyListAdapter;
-import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.formentry.FormEntryViewModel;
@@ -117,7 +116,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity implements De
     protected RecyclerView recyclerView;
 
     @Inject
-    Analytics analytics;
+    FormEntryViewModel.Factory formEntryViewModelFactory;
 
     private FormEntryViewModel formEntryViewModel;
 
@@ -144,14 +143,12 @@ public class FormHierarchyActivity extends CollectAbstractActivity implements De
             return;
         }
 
-        formEntryViewModel = new ViewModelProvider(this, new FormEntryViewModel.Factory(analytics)).get(FormEntryViewModel.class);
+        formEntryViewModel = new ViewModelProvider(this, formEntryViewModelFactory).get(FormEntryViewModel.class);
         formEntryViewModel.formLoaded(Collect.getInstance().getFormController());
 
         startIndex = formController.getFormIndex();
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(formController.getFormTitle());
-        }
+        setTitle(formController.getFormTitle());
 
         groupPathTextView = findViewById(R.id.pathtext);
 
@@ -275,7 +272,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity implements De
             case R.id.menu_add_repeat:
                 Collect.getInstance().getFormController().jumpToIndex(repeatGroupPickerIndex);
                 formEntryViewModel.jumpToNewRepeat();
-                formEntryViewModel.addRepeat(false);
+                formEntryViewModel.addRepeat();
 
                 finish();
                 return true;
@@ -556,7 +553,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity implements De
                         String answerDisplay = FormEntryPromptUtils.getAnswerText(fp, this, formController);
                         elementsToDisplay.add(
                                 new HierarchyElement(FormEntryPromptUtils.markQuestionIfIsRequired(label, fp.isRequired()), answerDisplay, null,
-                                        HierarchyElement.Type.QUESTION, fp.getIndex(), fp.isRequired()));
+                                        HierarchyElement.Type.QUESTION, fp.getIndex()));
                         break;
                     }
                     case FormEntryController.EVENT_GROUP: {
@@ -586,7 +583,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity implements De
                         HierarchyElement groupElement = new HierarchyElement(
                                 caption.getShortText(), getString(R.string.group_label),
                                 ContextCompat.getDrawable(this, R.drawable.ic_folder_open),
-                                HierarchyElement.Type.VISIBLE_GROUP, caption.getIndex(), false);
+                                HierarchyElement.Type.VISIBLE_GROUP, caption.getIndex());
                         elementsToDisplay.add(groupElement);
 
                         // Skip to the next item outside the group.
@@ -636,14 +633,14 @@ public class FormHierarchyActivity extends CollectAbstractActivity implements De
 
                             HierarchyElement instance = new HierarchyElement(
                                     repeatLabel, null,
-                                    null, HierarchyElement.Type.REPEAT_INSTANCE, fc.getIndex(), false);
+                                    null, HierarchyElement.Type.REPEAT_INSTANCE, fc.getIndex());
                             elementsToDisplay.add(instance);
                         } else if (fc.getMultiplicity() == 0) {
                             // Display the repeat header for the group.
                             HierarchyElement group = new HierarchyElement(
                                     fc.getShortText(), getString(R.string.repeatable_group_label),
                                     ContextCompat.getDrawable(this, R.drawable.ic_repeat),
-                                    HierarchyElement.Type.REPEATABLE_GROUP, fc.getIndex(), false);
+                                    HierarchyElement.Type.REPEATABLE_GROUP, fc.getIndex());
                             elementsToDisplay.add(group);
                         }
 

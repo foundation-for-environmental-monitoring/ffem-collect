@@ -2,68 +2,38 @@ package org.odk.collect.android.forms;
 
 public class FormSourceException extends Exception {
 
-    public static class Unreachable extends FormSourceException {
-
-        private final String serverUrl;
-
-        public Unreachable(String serverUrl) {
-            this.serverUrl = serverUrl;
-        }
-
-        public String getServerUrl() {
-            return serverUrl;
-        }
+    public enum Type {
+        UNREACHABLE,
+        AUTH_REQUIRED,
+        FETCH_ERROR,
+        SECURITY_ERROR
     }
 
-    public static class AuthRequired extends FormSourceException {
+    private final Type type;
+    private final String serverUrl;
+
+    public FormSourceException(Type type) {
+        this.type = type;
+        this.serverUrl = null;
     }
 
-    public static class FetchError extends FormSourceException {
-
+    public FormSourceException(Type type, String serverUrl) {
+        this.type = type;
+        this.serverUrl = serverUrl;
     }
 
-    public static class SecurityError extends FormSourceException {
-
-        private final String serverUrl;
-
-        public SecurityError(String serverURL) {
-            this.serverUrl = serverURL;
-        }
-
-        public String getServerUrl() {
-            return serverUrl;
-        }
+    public Type getType() {
+        return type;
     }
 
-    public static class ServerError extends FormSourceException {
-
-        private final int statusCode;
-        private final String serverUrl;
-
-        public ServerError(int statusCode, String serverUrl) {
-            this.statusCode = statusCode;
-            this.serverUrl = serverUrl;
-        }
-
-        public int getStatusCode() {
-            return statusCode;
-        }
-
-        public String getServerUrl() {
-            return serverUrl;
-        }
+    public String getServerUrl() {
+        return serverUrl;
     }
 
-    public static class ParseError extends FormSourceException {
-
-        private final String serverUrl;
-
-        public ParseError(String serverUrl) {
-            this.serverUrl = serverUrl;
-        }
-
-        public String getServerUrl() {
-            return serverUrl;
-        }
+    @Override
+    public String toString() {
+        return "FormAPIException{" +
+                "type=" + type +
+                '}';
     }
 }
