@@ -56,7 +56,7 @@ public class StoragePathProvider {
     }
 
     public String getUnscopedStorageRootDirPath() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + APP_FOLDER;
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "odk";
     }
 
     public String getUnscopedStorageDirPath(StorageSubdirectory subdirectory) {
@@ -79,12 +79,12 @@ public class StoragePathProvider {
                 : getUnscopedStorageRootDirPath();
     }
 
-    public String getTmpFilePath() {
+    public String getTmpImageFilePath() {
         return getDirPath(StorageSubdirectory.CACHE) + File.separator + "tmp.jpg";
     }
 
-    public String getTmpDrawFilePath() {
-        return getDirPath(StorageSubdirectory.CACHE) + File.separator + "tmpDraw.jpg";
+    public String getTmpVideoFilePath() {
+        return getDirPath(StorageSubdirectory.CACHE) + File.separator + "tmp.mp4";
     }
 
     public String getInstanceDbPath(String filePath) {
@@ -93,6 +93,10 @@ public class StoragePathProvider {
 
     public String getAbsoluteInstanceFilePath(String filePath) {
         return getAbsoluteFilePath(getDirPath(StorageSubdirectory.INSTANCES), filePath);
+    }
+
+    public String getAbsoluteFormFilePath(String filePath) {
+        return getAbsoluteFilePath(getDirPath(StorageSubdirectory.FORMS), filePath);
     }
 
     public String getFormDbPath(String filePath) {

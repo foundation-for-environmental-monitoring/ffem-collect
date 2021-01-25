@@ -240,10 +240,6 @@ public class BlankFormListFragment extends FormListFragment implements DiskSyncL
         deleteButton.setEnabled(false);
 
         DialogUtils.dismissDialog(ProgressDialogFragment.class, getActivity().getSupportFragmentManager());
-
-        if (getListView().getCount() == 0) {
-            getActivity().finish();
-        }
     }
 
     @Override

@@ -61,7 +61,7 @@ public class ResetSettingsResultDialog extends DialogFragment {
 
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.reset_app_state_result)
-//                .setIcon(R.drawable.ic_dialog_info)
+                .setIcon(android.R.drawable.ic_dialog_info)
                 .setMessage(message)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override

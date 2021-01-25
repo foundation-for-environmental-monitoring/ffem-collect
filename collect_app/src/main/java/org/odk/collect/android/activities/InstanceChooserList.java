@@ -25,8 +25,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
-import android.preference.PreferenceManager;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -34,7 +32,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.InstanceListCursorAdapter;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.instances.Instance;
 import org.odk.collect.android.listeners.DiskSyncListener;
@@ -46,7 +43,6 @@ import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.utilities.PermissionUtils;
 
-import io.ffem.collect.android.activities.DeleteFormsActivity;
 import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
@@ -77,9 +73,7 @@ public class InstanceChooserList extends InstanceListActivity implements
         String formMode = getIntent().getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE);
         if (formMode == null || ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)) {
 
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setTitle(getString(R.string.review_data));
-            }
+            setTitle(getString(R.string.review_data));
             editMode = true;
             sortingOptions = new int[] {
                     R.string.sort_by_name_asc, R.string.sort_by_name_desc,
@@ -87,28 +81,16 @@ public class InstanceChooserList extends InstanceListActivity implements
                     R.string.sort_by_status_asc, R.string.sort_by_status_desc
             };
         } else {
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setTitle(getString(R.string.view_sent_forms));
-            }
+            setTitle(getString(R.string.view_sent_forms));
 
             sortingOptions = new int[] {
                     R.string.sort_by_name_asc, R.string.sort_by_name_desc,
                     R.string.sort_by_date_asc, R.string.sort_by_date_desc
             };
             ((TextView) findViewById(android.R.id.empty)).setText(R.string.no_items_display_sent_forms);
-
-            if(!PreferenceManager
-                    .getDefaultSharedPreferences(Collect.getInstance())
-                    .contains(getSortingOrderKey())){
-                PreferenceManager.getDefaultSharedPreferences(Collect.getInstance())
-                        .edit()
-                        .putInt(getSortingOrderKey(), 2)
-                        .apply();
-
-            }
         }
 
-        new PermissionUtils().requestStoragePermissions(this, new PermissionListener() {
+        new PermissionUtils(R.style.Theme_Collect_Dialog_PermissionAlert).requestStoragePermissions(this, new PermissionListener() {
             @Override
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent
@@ -248,9 +230,6 @@ public class InstanceChooserList extends InstanceListActivity implements
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         hideProgressBarIfAllowed();
         listAdapter.swapCursor(cursor);
-        if (!isSearching() && listAdapter.getCount() == 0){
-            finish();
-        }
     }
 
     @Override
@@ -260,7 +239,7 @@ public class InstanceChooserList extends InstanceListActivity implements
 
     private void createErrorDialog(String errorMsg, final boolean shouldExit) {
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-//        alertDialog.setIcon(R.drawable.ic_dialog_info);
+        alertDialog.setIcon(android.R.drawable.ic_dialog_info);
         alertDialog.setMessage(errorMsg);
         DialogInterface.OnClickListener errorListener = new DialogInterface.OnClickListener() {
             @Override
@@ -277,18 +256,5 @@ public class InstanceChooserList extends InstanceListActivity implements
         alertDialog.setCancelable(false);
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), errorListener);
         alertDialog.show();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_delete:
-                Intent i = new Intent(this, DeleteFormsActivity.class);
-                String formMode = getIntent().getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE);
-                i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, formMode);
-                startActivity(i);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

@@ -19,7 +19,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +40,6 @@ import org.odk.collect.android.listeners.DiskSyncListener;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.tasks.DeleteInstancesTask;
 import org.odk.collect.android.tasks.InstanceSyncTask;
-import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import javax.inject.Inject;
@@ -69,8 +67,6 @@ public class SavedFormListFragment extends InstanceListFragment
 
     @Inject
     FormsRepository formsRepository;
-
-    private static String formMode = ApplicationConstants.FormModes.EDIT_SAVED;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -153,11 +149,7 @@ public class SavedFormListFragment extends InstanceListFragment
 
     @Override
     protected CursorLoader getCursorLoader() {
-        if (formMode == null || ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)) {
-            return new InstancesDao().getSavedInstancesCursorLoader(getFilterText(), getSortingOrder());
-        } else {
-            return new InstancesDao().getSentInstancesCursorLoader(getFilterText(), getSortingOrder());
-        }
+        return new InstancesDao().getSavedInstancesCursorLoader(getFilterText(), getSortingOrder());
     }
 
     /**
@@ -240,12 +232,6 @@ public class SavedFormListFragment extends InstanceListFragment
         deleteButton.setEnabled(false);
 
         progressDialog.dismiss();
-
-        (new Handler()).postDelayed(() -> {
-            if (getListView().getCount() == 0) {
-                requireActivity().finish();
-            }
-        }, 300);
     }
 
     @Override
@@ -276,7 +262,4 @@ public class SavedFormListFragment extends InstanceListFragment
         }
     }
 
-    public void setFormMode(String formModeValue) {
-        formMode = formModeValue;
-    }
 }

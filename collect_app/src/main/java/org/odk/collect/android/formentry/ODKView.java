@@ -18,7 +18,6 @@ import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -26,27 +25,25 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Html;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnLongClickListener;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatTextView;
-import androidx.core.widget.TextViewCompat;
+import androidx.lifecycle.LifecycleOwner;
+
+import com.google.android.material.button.MaterialButton;
 
 import org.javarosa.core.model.Constants;
 import org.javarosa.core.model.FormIndex;
-import org.javarosa.core.model.GroupDef;
 import org.javarosa.core.model.IFormElement;
 import org.javarosa.core.model.QuestionDef;
 import org.javarosa.core.model.data.IAnswerData;
@@ -56,9 +53,10 @@ import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
 import org.odk.collect.android.analytics.Analytics;
+import org.odk.collect.android.analytics.AnalyticsEvents;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.audio.AudioHelper;
-import org.odk.collect.android.widgets.utilities.AudioPlayer;
+import org.odk.collect.android.dao.helpers.ContentResolverHelper;
 import org.odk.collect.android.exception.ExternalParamsException;
 import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.external.ExternalAppsUtils;
@@ -67,6 +65,10 @@ import org.odk.collect.android.formentry.media.PromptAutoplayer;
 import org.odk.collect.android.formentry.questions.QuestionTextSizeHelper;
 import org.odk.collect.android.javarosawrapper.FormController;
 import org.odk.collect.android.listeners.WidgetValueChangedListener;
+import org.odk.collect.android.preferences.PreferencesProvider;
+import org.odk.collect.android.utilities.ActivityAvailability;
+import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.QuestionFontSizeUtils;
 import org.odk.collect.android.utilities.QuestionMediaManager;
 import org.odk.collect.android.utilities.ScreenContext;
@@ -74,10 +76,16 @@ import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.QuestionWidget;
 import org.odk.collect.android.widgets.StringWidget;
+import org.odk.collect.android.widgets.UrlWidget;
 import org.odk.collect.android.widgets.WidgetFactory;
+import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
+import org.odk.collect.android.widgets.utilities.AudioPlayer;
+import org.odk.collect.android.widgets.utilities.RecordingRequesterFactory;
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry;
 import org.odk.collect.audioclips.PlaybackFailedException;
+import org.odk.collect.audiorecorder.recording.AudioRecorderViewModel;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,11 +96,10 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import io.ffem.collect.android.preferences.AppPreferences;
-import io.ffem.collect.android.widget.RowView;
 import timber.log.Timber;
 
 import static org.odk.collect.android.injection.DaggerUtils.getComponent;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_EXTERNAL_APP_RECORDING;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
 
 /**
@@ -107,14 +114,10 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
     private final LinearLayout.LayoutParams layout;
     private final ArrayList<QuestionWidget> widgets;
     private final AudioHelper audioHelper;
-    private final QuestionMediaManager questionMediaManager;
 
     public static final String FIELD_LIST = "field-list";
-    private final WaitingForDataRegistry waitingForDataRegistry;
-    private final AudioPlayer audioPlayer;
 
     private WidgetValueChangedListener widgetValueChangedListener;
-    private final QuestionTextSizeHelper questionTextSizeHelper = new QuestionTextSizeHelper();
 
     @Inject
     public AudioHelperFactory audioHelperFactory;
@@ -122,150 +125,81 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
     @Inject
     public Analytics analytics;
 
+    @Inject
+    PreferencesProvider preferencesProvider;
+
+    @Inject
+    ActivityAvailability activityAvailability;
+
+    private final WidgetFactory widgetFactory;
+    private final LifecycleOwner viewLifecycle;
+    private final AudioRecorderViewModel audioRecorderViewModel;
+    private final FormEntryViewModel formEntryViewModel;
+
     /**
      * Builds the view for a specified question or field-list of questions.
-     * @param context         the activity creating this view
+     *  @param context         the activity creating this view
      * @param questionPrompts the questions to be included in this view
      * @param groups          the group hierarchy that this question or field list is in
      * @param advancingPage   whether this view is being created after a forward swipe through the
      */
-    public ODKView(Context context, final FormEntryPrompt[] questionPrompts, FormEntryCaption[] groups,
-                   boolean advancingPage, QuestionMediaManager questionMediaManager, WaitingForDataRegistry waitingForDataRegistry, AudioPlayer audioPlayer) {
+    public ODKView(ComponentActivity context, final FormEntryPrompt[] questionPrompts, FormEntryCaption[] groups, boolean advancingPage, QuestionMediaManager questionMediaManager, WaitingForDataRegistry waitingForDataRegistry, AudioPlayer audioPlayer, AudioRecorderViewModel audioRecorderViewModel, FormEntryViewModel formEntryViewModel) {
         super(context);
-        this.questionMediaManager = questionMediaManager;
-        this.waitingForDataRegistry = waitingForDataRegistry;
-        this.audioPlayer = audioPlayer;
+        viewLifecycle = ((ScreenContext) context).getViewLifecycle();
+        this.audioRecorderViewModel = audioRecorderViewModel;
+        this.formEntryViewModel = formEntryViewModel;
 
         getComponent(context).inject(this);
         this.audioHelper = audioHelperFactory.create(context);
-
         inflate(getContext(), R.layout.odk_view, this); // keep in an xml file to enable the vertical scrollbar
 
-        widgets = new ArrayList<>();
-        widgetsList = findViewById(R.id.widgets);
-
-        layout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-        // display which group you are in as well as the question
-        setGroupText(groups);
-
         // when the grouped fields are populated by an external app, this will get true.
-        boolean questionAdded = false;
+        boolean readOnlyOverride = false;
 
         // handle intent groups that are intended to receive multiple values from an external app
         if (groups != null && groups.length > 0) {
             // get the group we are showing -- it will be the last of the groups in the groups list
             final FormEntryCaption c = groups[groups.length - 1];
-            String intentString = c.getFormElement().getAdditionalAttribute(null, "intent");
+            final String intentString = c.getFormElement().getAdditionalAttribute(null, "intent");
             if (intentString != null && intentString.length() != 0) {
-
-                for (FormEntryPrompt question : questionPrompts) {
-                    QuestionWidget qw = configureWidgetForQuestion(question, true);
-                    widgets.add(qw);
-                    if (!questionAdded) {
-                        AppCompatTextView textView = new AppCompatTextView(context);
-                        TextViewCompat.setTextAppearance(textView, R.style.TextAppearance_Collect_Headline6);
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-                        params.setMargins(16,8,16,0);
-                        textView.setLayoutParams(params);
-                        textView.setText(groups[0].getShortText());
-                        widgetsList.addView(textView);
-                        qw.setContainer((View) textView.getParent());
-                    }
-
-                    if (qw.getQuestionDetails().getPrompt().getQuestion().getTextID() != null) {
-                        if (!qw.getQuestionDetails().getPrompt().getQuestion().getTextID().contains("meta")) {
-                            if (qw.getAnswer() != null) {
-                                RowView answerRow = new RowView(context);
-                                answerRow.setPrimaryText(qw.getQuestionDetails().getPrompt().getQuestionText() + ": ");
-                                answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
-                                widgetsList.addView(answerRow, layout);
-                            } else {
-                                AppCompatTextView textView = new AppCompatTextView(context);
-                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-                                textView.setLayoutParams(params);
-                                widgetsList.addView(textView);
-                            }
-                        }
-                    }
-                    question.getQuestion().setAdditionalAttribute("", "done", "true");
-                    questionAdded = true;
-                }
-
-                addIntentLaunchButton(context, questionPrompts, c, intentString, c.getFormElement().getTextID());
-            } else {
-                IFormElement formElement = c.getFormElement();
-                for (int i = 0; i < formElement.getChildren().size(); i++) {
-                    questionAdded = false;
-                    if (formElement.getChild(i) instanceof GroupDef) {
-                        intentString = getIntentString(formElement.getChild(i));
-                        if (intentString != null) {
-                            setGroupText(groups);
-                            List<FormEntryPrompt> formEntryPrompts = new ArrayList<>();
-                            for (FormEntryPrompt prompt : questionPrompts) {
-                                if (prompt != null && prompt.getIndex().getNextLevel().getLocalIndex() == i) {
-                                    formEntryPrompts.add(prompt);
-                                }
-                            }
-                            for (FormEntryPrompt question : formEntryPrompts) {
-                                QuestionWidget qw = configureWidgetForQuestion(question, true);
-                                widgets.add(qw);
-
-                                if (!questionAdded) {
-                                    AppCompatTextView textView = new AppCompatTextView(context);
-                                    TextViewCompat.setTextAppearance(textView, R.style.TextAppearance_Collect_Headline6);
-                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-                                    params.setMargins(16,8,16,0);
-                                    textView.setLayoutParams(params);
-                                    textView.setText(c.getQuestionText(formElement.getChild(i).getTextID()));
-                                    widgetsList.addView(textView);
-                                    qw.setContainer((View) textView.getParent());
-                                }
-
-                                if (!qw.getQuestionDetails().getPrompt().getQuestionText().contains("meta")) {
-                                    if (qw.getAnswer() != null) {
-                                        RowView answerRow = new RowView(context);
-                                        answerRow.setPrimaryText(qw.getQuestionDetails().getPrompt().getQuestionText() + ": ");
-                                        answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
-                                        widgetsList.addView(answerRow, layout);
-                                    } else {
-                                        AppCompatTextView textView = new AppCompatTextView(context);
-                                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-                                        textView.setLayoutParams(params);
-                                        widgetsList.addView(textView);
-                                    }
-                                }
-
-                                questionAdded = true;
-                                question.getQuestion().setAdditionalAttribute("", "done", "true");
-                            }
-                            addIntentLaunchButton(context, questionPrompts, c, intentString, formElement.getChild(i).getTextID());
-                        } else {
-                            for (FormEntryPrompt question : questionPrompts) {
-                                if (formElement.getChild(i).getID() == question.getQuestion().getID()) {
-                                    if (question.getQuestion().getAdditionalAttribute("", "done") == null) {
-                                        addWidgetForQuestion(question, false);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                readOnlyOverride = true;
+                addIntentLaunchButton(context, questionPrompts, c, intentString);
             }
         }
 
+        PermissionUtils permissionUtils = new PermissionUtils(R.style.Theme_Collect_Dialog_PermissionAlert);
+
+        this.widgetFactory = new WidgetFactory(
+                context,
+                readOnlyOverride,
+                preferencesProvider.getGeneralSharedPreferences().getBoolean(KEY_EXTERNAL_APP_RECORDING, true),
+                waitingForDataRegistry,
+                questionMediaManager,
+                audioPlayer,
+                activityAvailability,
+                new RecordingRequesterFactory(waitingForDataRegistry, questionMediaManager, activityAvailability, audioRecorderViewModel, permissionUtils, context, viewLifecycle, formEntryViewModel),
+                formEntryViewModel);
+
+        widgets = new ArrayList<>();
+        widgetsList = findViewById(R.id.widgets);
+
+        layout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        // display which group you are in as well as the question
+        setGroupText(groups);
+
         for (FormEntryPrompt question : questionPrompts) {
-            if (question.getQuestion().getAdditionalAttribute("", "done") == null) {
-                addWidgetForQuestion(question, false);
-            }
+            addWidgetForQuestion(question);
         }
 
         setupAudioErrors();
         autoplayIfNeeded(advancingPage);
+
+        logAnalyticsForWidgets();
     }
 
     private void setupAudioErrors() {
-        audioHelper.getError().observe(getScreenContext().getViewLifecycle(), e -> {
+        audioHelper.getError().observe(viewLifecycle, e -> {
             if (e instanceof PlaybackFailedException) {
                 final PlaybackFailedException playbackFailedException = (PlaybackFailedException) e;
                 Toast.makeText(
@@ -317,17 +251,13 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         }
     }
 
-    private ScreenContext getScreenContext() {
-        return (ScreenContext) getContext();
-    }
-
     /**
      * Creates a {@link QuestionWidget} for the given {@link FormEntryPrompt}, sets its listeners,
      * and adds it to the end of the view. If this widget is not the first one, add a divider above
      * it.
      */
-    private void addWidgetForQuestion(FormEntryPrompt question, boolean readOnlyOverride) {
-        QuestionWidget qw = configureWidgetForQuestion(question, readOnlyOverride);
+    private void addWidgetForQuestion(FormEntryPrompt question) {
+        QuestionWidget qw = configureWidgetForQuestion(question);
 
         widgets.add(qw);
 
@@ -343,13 +273,13 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
      * add a divider above it. If the specified {@code index} is beyond the end of the widget list,
      * add it to the end.
      */
-    public void addWidgetForQuestion(FormEntryPrompt question, boolean readOnlyOverride, int index) {
+    public void addWidgetForQuestion(FormEntryPrompt question, int index) {
         if (index > widgets.size() - 1) {
-            addWidgetForQuestion(question, readOnlyOverride);
+            addWidgetForQuestion(question);
             return;
         }
 
-        QuestionWidget qw = configureWidgetForQuestion(question, readOnlyOverride);
+        QuestionWidget qw = configureWidgetForQuestion(question);
 
         widgets.add(index, qw);
 
@@ -366,9 +296,8 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
      * <p>
      * Note: if the given question is of an unsupported type, a text widget will be created.
      */
-    private QuestionWidget configureWidgetForQuestion(FormEntryPrompt question, boolean readOnlyOverride) {
-        QuestionWidget qw = WidgetFactory.createWidgetFromPrompt(question, getContext(), readOnlyOverride,
-                waitingForDataRegistry, questionMediaManager, analytics, audioPlayer);
+    private QuestionWidget configureWidgetForQuestion(FormEntryPrompt question) {
+        QuestionWidget qw = widgetFactory.createWidgetFromPrompt(question);
         qw.setOnLongClickListener(this);
         qw.setValueChangedListener(this);
 
@@ -381,27 +310,6 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         divider.setMinimumHeight(3);
 
         return divider;
-    }
-
-    public Bundle getState() {
-        Bundle state = new Bundle();
-        for (QuestionWidget qw : getWidgets()) {
-            state.putAll(qw.getCurrentState());
-        }
-
-        return state;
-    }
-
-    /**
-     * Addresses 'bitmap size exceeds VM budget' crash.
-     * http://code.google.com/p/android/issues/detail?id=8488
-     */
-    public void recycleDrawables() {
-        this.destroyDrawingCache();
-        widgetsList.destroyDrawingCache();
-        for (QuestionWidget q : widgets) {
-            q.recycleDrawables();
-        }
     }
 
     /**
@@ -484,7 +392,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
      * An intent group launches an intent and receives multiple values from the launched app.
      */
     private void addIntentLaunchButton(Context context, FormEntryPrompt[] questionPrompts,
-                                       FormEntryCaption c, String intentString, String textID) {
+                                       FormEntryCaption c, String intentString) {
         final String buttonText;
         final String errorString;
         String v = c.getSpecialFormQuestionText("buttonText");
@@ -492,86 +400,61 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         v = c.getSpecialFormQuestionText("noAppErrorString");
         errorString = (v != null) ? v : context.getString(R.string.no_app);
 
-        TableLayout.LayoutParams params = new TableLayout.LayoutParams();
-        params.setMargins(7, 5, 7, 5);
-
         // set button formatting
-        Button launchIntentButton = new Button(getContext());
-        launchIntentButton.setId(View.generateViewId());
+        MaterialButton launchIntentButton = findViewById(R.id.launchIntentButton);
         launchIntentButton.setText(buttonText);
-        launchIntentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, questionTextSizeHelper.getHeadline6());
-        launchIntentButton.setPadding(20, 20, 20, 20);
-        launchIntentButton.setLayoutParams(params);
-        launchIntentButton.setTag(textID);
+        launchIntentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, QuestionFontSizeUtils.getQuestionFontSize() + 2);
+        launchIntentButton.setVisibility(VISIBLE);
+        launchIntentButton.setOnClickListener(view -> {
+            String intentName = ExternalAppsUtils.extractIntentName(intentString);
+            Map<String, String> parameters = ExternalAppsUtils.extractParameters(intentString);
 
-        launchIntentButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String intentName = ExternalAppsUtils.extractIntentName(intentString);
-                Map<String, String> parameters = ExternalAppsUtils.extractParameters(
-                        intentString);
+            Intent i = new Intent(intentName);
+            if (i.resolveActivity(Collect.getInstance().getPackageManager()) == null) {
+                Intent launchIntent = Collect.getInstance().getPackageManager().getLaunchIntentForPackage(intentName);
 
-                Intent i = new Intent(intentName);
-                try {
-                    ExternalAppsUtils.populateParameters(i, parameters,
-                            c.getIndex().getReference());
-
-                    for (FormEntryPrompt p : questionPrompts) {
-                        String group = p.getQuestion().getTextID().substring(0, p.getQuestion().getTextID().lastIndexOf("/"));
-                        if (!v.getTag().equals(group + ":label")){
-                            continue;
-                        }
-                        IFormElement formElement = p.getFormElement();
-                        if (formElement instanceof QuestionDef) {
-                            TreeReference reference =
-                                    (TreeReference) formElement.getBind().getReference();
-                            IAnswerData answerValue = p.getAnswerValue();
-                            Object value =
-                                    answerValue == null ? null : answerValue.getValue();
-                            switch (p.getDataType()) {
-                                case Constants.DATATYPE_TEXT:
-                                case Constants.DATATYPE_INTEGER:
-                                case Constants.DATATYPE_DECIMAL:
-                                    i.putExtra(reference.getNameLast(),
-                                            (Serializable) value);
-                                    break;
-                            }
-                        }
-                    }
-
-                    ((Activity) getContext()).startActivityForResult(i, RequestCodes.EX_GROUP_CAPTURE);
-                } catch (ExternalParamsException e) {
-                    Timber.e(e, "ExternalParamsException");
-
-                    ToastUtils.showShortToast(e.getMessage());
-                } catch (ActivityNotFoundException e) {
-                    Timber.d(e, "ActivityNotFoundExcept");
-
-                    if (intentName.startsWith("io.ffem")) {
-                        String appName =  intentName.substring(intentName.indexOf("ffem"));
-                        appName = appName.substring(appName.indexOf("ffem"), appName.indexOf(".")) +
-                                " " + Character.toUpperCase(appName.charAt(appName.indexOf(".") + 1)) +
-                                appName.substring(appName.indexOf(".") + 2);
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.Theme_AppCompat_Light_Dialog);
-                        builder.setTitle(R.string.app_not_found)
-                                .setMessage(Html.fromHtml(getContext().getString(R.string.install_app, appName)))
-                                .setPositiveButton(R.string.go_to_play_store, (dialogInterface, j)
-                                        -> getContext().startActivity(new Intent(Intent.ACTION_VIEW,
-                                        Uri.parse("https://play.google.com/store/apps/developer?id=Foundation+for+Environmental+Monitoring"))))
-                                .setNegativeButton(android.R.string.cancel,
-                                        (dialogInterface, j) -> dialogInterface.dismiss())
-                                .setCancelable(false)
-                                .show();
-                    } else {
-                        ToastUtils.showShortToast(errorString);
-                    }
+                if (launchIntent != null) {
+                    // Make sure FLAG_ACTIVITY_NEW_TASK is not set because it doesn't work with startActivityForResult
+                    launchIntent.setFlags(0);
+                    i = launchIntent;
                 }
             }
-        });
 
-//        widgetsList.addView(getDividerView());
-        widgetsList.addView(launchIntentButton, layout);
+            try {
+                ExternalAppsUtils.populateParameters(i, parameters,
+                        c.getIndex().getReference());
+
+                for (FormEntryPrompt p : questionPrompts) {
+                    IFormElement formElement = p.getFormElement();
+                    if (formElement instanceof QuestionDef) {
+                        TreeReference reference =
+                                (TreeReference) formElement.getBind().getReference();
+                        IAnswerData answerValue = p.getAnswerValue();
+                        Object value =
+                                answerValue == null ? null : answerValue.getValue();
+                        switch (p.getDataType()) {
+                            case Constants.DATATYPE_TEXT:
+                            case Constants.DATATYPE_INTEGER:
+                            case Constants.DATATYPE_DECIMAL:
+                            case Constants.DATATYPE_BINARY:
+                                i.putExtra(reference.getNameLast(),
+                                        (Serializable) value);
+                                break;
+                        }
+                    }
+                }
+
+                ((Activity) getContext()).startActivityForResult(i, RequestCodes.EX_GROUP_CAPTURE);
+            } catch (ExternalParamsException e) {
+                Timber.e(e, "ExternalParamsException");
+
+                ToastUtils.showShortToast(e.getMessage());
+            } catch (ActivityNotFoundException e) {
+                Timber.d(e, "ActivityNotFoundExcept");
+
+                ToastUtils.showShortToast(errorString);
+            }
+        });
     }
 
     public void setFocus(Context context) {
@@ -599,39 +482,72 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
      * Saves answers for the widgets in this view. Called when the widgets are in an intent group.
      */
     public void setDataForFields(Bundle bundle) throws JavaRosaException {
-        if (bundle == null) {
+        FormController formController = Collect.getInstance().getFormController();
+        if (formController == null) {
             return;
         }
-        FormController formController = Collect.getInstance().getFormController();
-        Set<String> keys = bundle.keySet();
-        for (String key : keys) {
-            for (QuestionWidget questionWidget : widgets) {
-                FormEntryPrompt prompt = questionWidget.getFormEntryPrompt();
-                TreeReference treeReference =
-                        (TreeReference) prompt.getFormElement().getBind().getReference();
 
-                if (treeReference.getNameLast().equals(key)) {
-                    switch (prompt.getDataType()) {
-                        case Constants.DATATYPE_TEXT:
-                            formController.saveAnswer(prompt.getIndex(),
-                                    ExternalAppsUtils.asStringData(bundle.get(key)));
-                            break;
-                        case Constants.DATATYPE_INTEGER:
-                            formController.saveAnswer(prompt.getIndex(),
-                                    ExternalAppsUtils.asIntegerData(bundle.get(key)));
-                            break;
-                        case Constants.DATATYPE_DECIMAL:
-                            formController.saveAnswer(prompt.getIndex(),
-                                    ExternalAppsUtils.asDecimalData(bundle.get(key)));
-                            break;
-                        default:
-                            throw new RuntimeException(
-                                    getContext().getString(R.string.ext_assign_value_error,
-                                            treeReference.toString(false)));
+        if (bundle != null) {
+            Set<String> keys = bundle.keySet();
+            for (String key : keys) {
+                Object answer = bundle.get(key);
+                if (answer == null) {
+                    continue;
+                }
+                for (QuestionWidget questionWidget : widgets) {
+                    FormEntryPrompt prompt = questionWidget.getFormEntryPrompt();
+                    TreeReference treeReference =
+                            (TreeReference) prompt.getFormElement().getBind().getReference();
+
+                    if (treeReference.getNameLast().equals(key)) {
+                        switch (prompt.getDataType()) {
+                            case Constants.DATATYPE_TEXT:
+                                formController.saveAnswer(prompt.getIndex(),
+                                        ExternalAppsUtils.asStringData(answer));
+                                ((StringWidget) questionWidget).setDisplayValueFromModel();
+                                questionWidget.showAnswerContainer();
+                                break;
+                            case Constants.DATATYPE_INTEGER:
+                                formController.saveAnswer(prompt.getIndex(),
+                                        ExternalAppsUtils.asIntegerData(answer));
+                                ((StringWidget) questionWidget).setDisplayValueFromModel();
+                                questionWidget.showAnswerContainer();
+                                break;
+                            case Constants.DATATYPE_DECIMAL:
+                                formController.saveAnswer(prompt.getIndex(),
+                                        ExternalAppsUtils.asDecimalData(answer));
+                                ((StringWidget) questionWidget).setDisplayValueFromModel();
+                                questionWidget.showAnswerContainer();
+                                break;
+                            case Constants.DATATYPE_BINARY:
+                                try {
+                                    Uri uri;
+                                    if (answer instanceof Uri) {
+                                        uri = (Uri) answer;
+                                    } else if (answer instanceof String) {
+                                        uri = Uri.parse(bundle.getString(key));
+                                    } else {
+                                        throw new RuntimeException("The value for " + key + " must be a URI but it is " + answer);
+                                    }
+                                    
+                                    if (uri != null) {
+                                        File destFile = FileUtils.createDestinationMediaFile(formController.getInstanceFile().getParent(), ContentResolverHelper.getFileExtensionFromUri(getContext(), uri));
+                                        //TODO might be better to use QuestionMediaManager in the future
+                                        FileUtils.saveAnswerFileFromUri(uri, destFile, getContext());
+                                        ((WidgetDataReceiver) questionWidget).setData(destFile);
+                                    }
+                                    questionWidget.showAnswerContainer();
+                                } catch (Exception | Error e) {
+                                    Timber.w(e);
+                                }
+                                break;
+                            default:
+                                throw new RuntimeException(
+                                        getContext().getString(R.string.ext_assign_value_error,
+                                                treeReference.toString(false)));
+                        }
+                        break;
                     }
-
-                    ((StringWidget) questionWidget).setDisplayValueFromModel();
-                    break;
                 }
             }
         }
@@ -692,13 +608,8 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
      */
     public void highlightWidget(FormIndex formIndex) {
         QuestionWidget qw = getQuestionWidget(formIndex);
-        View viewToHighlight;
+
         if (qw != null) {
-            if (qw.getContainer() != null) {
-                viewToHighlight = qw.getContainer();
-            } else {
-                viewToHighlight = qw;
-            }
             // postDelayed is needed because otherwise scrolling may not work as expected in case when
             // answers are validated during form finalization.
             new Handler().postDelayed(() -> {
@@ -708,7 +619,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                 ValueAnimator va = new ValueAnimator();
                 va.setIntValues(getResources().getColor(R.color.red_500), getDrawingCacheBackgroundColor());
                 va.setEvaluator(new ArgbEvaluator());
-                va.addUpdateListener(valueAnimator -> viewToHighlight.setBackgroundColor((int) valueAnimator.getAnimatedValue()));
+                va.addUpdateListener(valueAnimator -> qw.setBackgroundColor((int) valueAnimator.getAnimatedValue()));
                 va.setDuration(2500);
                 va.start();
             }, 100);
@@ -748,32 +659,21 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
     }
 
     public void widgetValueChanged(QuestionWidget changedWidget) {
+        if (audioRecorderViewModel.isRecording()) {
+            formEntryViewModel.logFormEvent(AnalyticsEvents.ANSWER_WHILE_RECORDING);
+        }
+
         if (widgetValueChangedListener != null) {
             widgetValueChangedListener.widgetValueChanged(changedWidget);
         }
+
     }
 
-    private String getIntentString(IFormElement formElement) {
-        String intentString = formElement.getAdditionalAttribute(null, "intent");
-        if (intentString == null) {
-            intentString = formElement.getAppearanceAttr();
-        }
-
-        if (intentString != null) {
-            if (intentString.startsWith("ex:")) {
-                intentString = intentString.replaceFirst("^ex[:]", "");
-            }
-
-            if (intentString.length() < 36 || !intentString.startsWith("io.ffem")) {
-                return null;
-            }
-
-            if (AppPreferences.launchExperiment(getContext())) {
-                intentString = intentString.replace("water", "experiment")
-                        .replace("soil", "experiment");
+    private void logAnalyticsForWidgets() {
+        for (QuestionWidget widget : widgets) {
+            if (widget instanceof UrlWidget) {
+                formEntryViewModel.logFormEvent(AnalyticsEvents.URL_QUESTION);
             }
         }
-
-        return intentString;
     }
 }

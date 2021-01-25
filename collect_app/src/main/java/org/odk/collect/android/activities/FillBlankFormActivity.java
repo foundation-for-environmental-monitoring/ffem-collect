@@ -15,12 +15,9 @@
 package org.odk.collect.android.activities;
 
 import android.content.ContentUris;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -62,12 +59,6 @@ import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 
-import org.odk.collect.android.utilities.ToastUtils;
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
-import io.ffem.collect.android.activities.DeleteFormsActivity;
-
 /**
  * Responsible for displaying all the valid forms in the forms directory. Stores the path to
  * selected form for use by {@link MainMenuActivity}.
@@ -94,17 +85,10 @@ public class FillBlankFormActivity extends FormListActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.form_chooser_list_custom);
+        setContentView(R.layout.form_chooser_list);
         DaggerUtils.getComponent(this).inject(this);
 
         setTitle(getString(R.string.enter_data));
-
-        setSupportActionBar(findViewById(R.id.toolbar));
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(R.string.enter_data);
-        }
-
-        findViewById(R.id.buttonGetBlankForm).setOnClickListener(view -> onClickGetBlankForm(view));
 
         BlankFormsListViewModel blankFormsListViewModel = new ViewModelProvider(this, blankFormsListViewModelFactory).get(BlankFormsListViewModel.class);
         blankFormsListViewModel.isSyncing().observe(this, syncing -> {
@@ -127,7 +111,7 @@ public class FillBlankFormActivity extends FormListActivity implements
 
         menuDelegate = new BlankFormListMenuDelegate(this, blankFormsListViewModel, networkStateProvider);
 
-        new PermissionUtils().requestStoragePermissions(this, new PermissionListener() {
+        new PermissionUtils(R.style.Theme_Collect_Dialog_PermissionAlert).requestStoragePermissions(this, new PermissionListener() {
             @Override
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent
@@ -136,6 +120,7 @@ public class FillBlankFormActivity extends FormListActivity implements
                     init();
                 } catch (RuntimeException e) {
                     createErrorDialog(e.getMessage(), EXIT);
+                    return;
                 }
             }
 
@@ -170,17 +155,12 @@ public class FillBlankFormActivity extends FormListActivity implements
         if (super.onOptionsItemSelected(item)) {
             return true;
         } else {
-            if (item.getItemId() == R.id.menu_delete) {
-                Intent i = new Intent(this, DeleteFormsActivity.class);
-                startActivity(i);
-                return true;
-            }
             return menuDelegate.onOptionsItemSelected(item);
         }
     }
 
     private void init() {
-//        setupAdapter();
+        setupAdapter();
 
         // DiskSyncTask checks the disk for any forms not already in the content provider
         // that is, put here by dragging and dropping onto the SDCard
@@ -234,7 +214,7 @@ public class FillBlankFormActivity extends FormListActivity implements
     public void onMapButtonClick(AdapterView<?> parent, View view, int position, long id) {
         final Uri formUri = ContentUris.withAppendedId(FormsColumns.CONTENT_URI, id);
         final Intent intent = new Intent(Intent.ACTION_EDIT, formUri, this, FormMapActivity.class);
-        new PermissionUtils().requestLocationPermissions(this, new PermissionListener() {
+        new PermissionUtils(R.style.Theme_Collect_Dialog_PermissionAlert).requestLocationPermissions(this, new PermissionListener() {
             @Override
             public void granted() {
                 startActivity(intent);
@@ -313,7 +293,7 @@ public class FillBlankFormActivity extends FormListActivity implements
     private void createErrorDialog(String errorMsg, final boolean shouldExit) {
 
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-//        alertDialog.setIcon(R.drawable.ic_dialog_info);
+        alertDialog.setIcon(android.R.drawable.ic_dialog_info);
         alertDialog.setMessage(errorMsg);
         DialogInterface.OnClickListener errorListener = new DialogInterface.OnClickListener() {
             @Override
@@ -344,19 +324,6 @@ public class FillBlankFormActivity extends FormListActivity implements
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         hideProgressBarIfAllowed();
         listAdapter.swapCursor(cursor);
-        if (isSearching()) {
-            findViewById(R.id.buttonGetBlankForm).setVisibility(View.GONE);
-        } else {
-            if (cursor != null) {
-                cursor.requery();
-            }
-            if (listAdapter.getCount() == 0) {
-                findViewById(R.id.buttonGetBlankForm).setVisibility(View.GONE);
-            } else {
-                findViewById(R.id.buttonGetBlankForm).setVisibility(View.VISIBLE);
-            }
-            invalidateOptionsMenu();
-        }
     }
 
     @Override
@@ -366,20 +333,5 @@ public class FillBlankFormActivity extends FormListActivity implements
 
     private boolean hideOldFormVersions() {
         return GeneralSharedPreferences.getInstance().getBoolean(GeneralKeys.KEY_HIDE_OLD_FORM_VERSIONS, false);
-    }
-
-    public void onClickGetBlankForm(View view) {
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager != null) {
-            NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
-            if (ni == null || !ni.isConnected()) {
-                ToastUtils.showShortToast(R.string.no_connection);
-            } else {
-                LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
-                Intent localIntent = new Intent("DOWNLOAD_FORMS_ACTION");
-                localBroadcastManager.sendBroadcast(localIntent);
-            }
-        }
     }
 }

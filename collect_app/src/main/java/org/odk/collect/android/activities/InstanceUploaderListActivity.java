@@ -269,28 +269,14 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
             // otherwise, do the normal aggregate/other thing.
             Intent i = new Intent(this, InstanceUploaderActivity.class);
             i.putExtra(FormEntryActivity.KEY_INSTANCES, instanceIds);
-            // Not required but without this permission a Device ID attached to a request will be empty.
-            permissionUtils.requestReadPhoneStatePermission(this, false, new PermissionListener() {
-                @Override
-                public void granted() {
-                    startActivityForResult(i, INSTANCE_UPLOADER);
-                }
-
-                @Override
-                public void denied() {
-                    startActivityForResult(i, INSTANCE_UPLOADER);
-                }
-            });
+            startActivityForResult(i, INSTANCE_UPLOADER);
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-        final MenuItem deleteItem = menu.findItem(R.id.menu_delete);
-        deleteItem.setVisible(false);
-        return true;
+        getMenuInflater().inflate(R.menu.instance_uploader_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -408,7 +394,7 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
                 getString(R.string.show_sent_and_unsent_forms)};
 
         AlertDialog alertDialog = new AlertDialog.Builder(this)
-//                .setIcon(R.drawable.ic_dialog_info)
+                .setIcon(android.R.drawable.ic_dialog_info)
                 .setTitle(getString(R.string.change_view))
                 .setNeutralButton(getString(R.string.cancel), (dialog, id) -> {
                     dialog.cancel();

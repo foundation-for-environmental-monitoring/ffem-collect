@@ -13,8 +13,7 @@
             style="@style/Widget.Collect.Toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/toolbar_theme"
-            app:titleTextColor="@color/white" />
+            app:navigationIcon="@drawable/notes" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
