@@ -23,9 +23,8 @@
 
     <string name="delete_sent_forms">Delete Sent Forms</string>
 
-    <!--Alerts-->
-    <string name="versionExpired">Version expired</string>
-    <string name="thisVersionHasExpired">This version of the app has expired.</string>
-    <string name="uninstallAndInstallFromStore">Please uninstall and then install the latest version from Play Store.</string>
-
+    <!-- App Expiry -->
+    <string name="version_expired">Version expired</string>
+    <string name="version_has_expired">This version of the app has expired.</string>
+    <string name="uninstall_install_from_store">Please uninstall and then install the latest version from Play Store.</string>
 </resources>

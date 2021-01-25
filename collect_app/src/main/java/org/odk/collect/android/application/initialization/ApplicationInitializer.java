@@ -122,7 +122,8 @@ public class ApplicationInitializer {
                 new com.google.android.gms.maps.MapView(context).onCreate(null);
             });
             org.osmdroid.config.Configuration.getInstance().setUserAgentValue(userAgentProvider.getUserAgent());
-            MapboxUtils.initMapbox();
+            // Brand change ----
+//            MapboxUtils.initMapbox();
         } catch (Exception | Error ignore) {
             // ignored
         }

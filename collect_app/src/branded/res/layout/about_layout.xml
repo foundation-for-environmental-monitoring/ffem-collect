@@ -35,7 +35,7 @@
                 tools:ignore="SpUsage" />
 
             <TextView
-                android:id="@+id/textVersion"
+                android:id="@+id/version_txt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"

@@ -72,6 +72,8 @@ import javax.inject.Singleton;
 
 import dagger.BindsInstance;
 import dagger.Component;
+import io.ffem.collect.android.activities.MainMenuActivityBranded;
+import io.ffem.collect.android.activities.SignInActivity;
 
 /**
  * Dagger component for the application. Should include
@@ -155,6 +157,8 @@ public interface AppDependencyComponent {
 
     void inject(MainMenuActivity mainMenuActivity);
 
+    void inject(MainMenuActivityBranded mainMenuActivity);
+
     void inject(QRCodeTabsActivity qrCodeTabsActivity);
 
     void inject(ShowQRCodeFragment showQRCodeFragment);
@@ -222,6 +226,8 @@ public interface AppDependencyComponent {
     void inject(SaveAnswerFileErrorDialogFragment saveAnswerFileErrorDialogFragment);
 
     void inject(AudioRecordingErrorDialogFragment audioRecordingErrorDialogFragment);
+
+    void inject(SignInActivity signInActivity);
 
     OpenRosaHttpInterface openRosaHttpInterface();
 

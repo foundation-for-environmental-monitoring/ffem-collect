@@ -40,9 +40,8 @@ public class PermissionUtils {
     }
 
     public static boolean areStoragePermissionsGranted(Context context) {
-        return isPermissionGranted(context,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        // Brand change
+        return true;
     }
 
     public static boolean isCameraPermissionGranted(Context context) {
@@ -104,7 +103,7 @@ public class PermissionUtils {
                 showAdditionalExplanation(activity, R.string.storage_runtime_permission_denied_title,
                         R.string.storage_runtime_permission_denied_desc, R.drawable.sd, action);
             }
-        }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }, Manifest.permission.INTERNET); // Brand change
     }
 
     public void requestCameraPermission(Activity activity, @NonNull PermissionListener action) {

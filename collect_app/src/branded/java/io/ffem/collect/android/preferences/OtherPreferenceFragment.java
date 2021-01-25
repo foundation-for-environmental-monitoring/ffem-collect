@@ -16,6 +16,7 @@ import org.odk.collect.android.application.Collect;
 
 import io.ffem.collect.android.activities.AboutActivity;
 
+import static io.ffem.collect.android.helper.AppHelper.getVersionedAppName;
 import static io.ffem.collect.android.utilities.ListViewUtil.setListViewHeightBasedOnChildren;
 
 public class OtherPreferenceFragment extends PreferenceFragment {
@@ -34,7 +35,7 @@ public class OtherPreferenceFragment extends PreferenceFragment {
 
         Preference aboutPreference = findPreference("about");
         if (aboutPreference != null) {
-            aboutPreference.setSummary(Collect.getInstance().getVersionedAppName());
+            aboutPreference.setSummary(getVersionedAppName(getActivity()));
             aboutPreference.setOnPreferenceClickListener(preference -> {
                 final Intent intent = new Intent(getActivity(), AboutActivity.class);
                 getActivity().startActivity(intent);
