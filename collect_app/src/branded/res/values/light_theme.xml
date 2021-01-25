@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Collect.BaseLight.Branded" parent="Theme.Collect.BaseLight">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/app_bar</item>
+        <item name="colorPrimaryVariant">@color/status_bar</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/secondary_variant</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorPrimaryDark">?attr/colorPrimaryVariant</item>
+
+        <item name="colorPrimaryIntroDark">@color/intro</item>
+        <item name="colorDrawerStart">@color/drawer_start</item>
+        <item name="colorDrawerCenter">@color/drawer_center</item>
+        <item name="colorDrawerEnd">@color/drawer_end</item>
+    </style>
+</resources>

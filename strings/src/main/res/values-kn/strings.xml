@@ -32,7 +32,6 @@
     <string name="jump_to_beginning">ಪ್ರಾರಂಭಿಸಲು ಹೋಗಿ</string>
     <string name="jump_to_end">ಅಂತ್ಯಕ್ಕೆ ಹೋಗಿ</string>
     <string name="jump_to_previous">ಮೇಲೆ ಹೋಗು</string>
-    <string name="list_failed_with_error">ಫಾರ್ಮ್ ಪಟ್ಟಿ ವಿಫಲವಾಗಿದೆ. % s.</string>
     <string name="loading_form">ಫಾರ್ಮ್ ಅನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ</string>
     <string name="load_remote_form_error">ಫಾರ್ಮ್ ಪಟ್ಟಿಯನ್ನು ಪಡೆಯುವಲ್ಲಿ ದೋಷ</string>
     <string name="location_accuracy">ನಿಖರತೆ %1$s ಮೀ</string>
@@ -58,6 +57,7 @@
     <string name="sending_items">%2$s ಫಾರ್ಮ್ (ಗಳ) %1$s ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ</string>
     <string name="send_data">ಅಂತಿಮ ಫಾರ್ಮ್ ಅನ್ನು ಕಳುಹಿಸಿ</string>
     <string name="send_data_button">ಅಂತಿಮ ಫಾರ್ಮ್ ಅನ್ನು ಕಳುಹಿಸಿ (%s)</string>
+    <string name="high_resolution_summary">ಹೆಚ್ಚಿನ ರೆಸಲ್ಯೂಶನ್ ಹೊಂದಿರುವ ವೀಡಿಯೊ ರೆಕಾರ್ಡಿಂಗ್‌ಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ</string>
     <string name="send_selected_data">ಆಯ್ಕೆಮಾಡಿದ ಕಳುಹಿಸಿ</string>
     <string name="view_sent_forms">ಕಳುಹಿಸಿದದನ್ನು ವೀಕ್ಷಿಸಿ</string>
     <string name="view_sent_forms_button">ಕಳುಹಿಸಿದ ಫಾರ್ಮ್ ಅನ್ನು ವೀಕ್ಷಿಸಿ (%s)</string>
@@ -83,7 +83,7 @@
     <string name="survey_loading_reading_form_message">ಫಾರ್ಮ್ ವ್ಯಾಖ್ಯಾನವನ್ನು ಓದುವುದು…</string>
     <string name="survey_loading_reading_data_message">ಸಮೀಕ್ಷೆಯ ಡೇಟಾವನ್ನು ಓದುವುದು…</string>
     <string name="odk_permissions_fail">ಸ್ವಯಂ ಕಳುಹಿಸುವಿಕೆ ಅನುಮತಿ ವಿಫಲವಾಗಿದೆ, ದಯವಿಟ್ಟು ನೀವು ಅಗತ್ಯವಿರುವ ಎಲ್ಲ ಅನುಮತಿಗಳನ್ನು ನೀಡಿದ್ದೀರಿ ಎಂದು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ</string>
-    <string name="odk_auto_note">ffem ಸಂಗ್ರಹಿಸಿ - ಸ್ವಯಂ ಕಳುಹಿಸಿ</string>
+    <string name="odk_auto_note">ಸ್ವಯಂ-ಕಳುಹಿಸುವ ಸ್ಥಿತಿ</string>
     <string name="about_preferences">ಬಗ್ಗೆ</string>
     <string name="streets">ಬೀದಿಗಳು</string>
     <string name="terrain">ಭೂ ಪ್ರದೇಶ</string>
@@ -110,7 +110,6 @@
     <string name="download_selected">ಡೌನ್‌ಲೋಡ್ ಆಯ್ಕೆಮಾಡಲಾಗಿದೆ</string>
     <string name="record_geopoint">ಒಂದು ಬಿಂದುವನ್ನು ರೆಕಾರ್ಡ್ ಮಾಡಿ</string>
     <string name="gps_result">ಅಕ್ಷಾಂಶ:  %1$s\nಉದ್ದ: %2$s\nಎತ್ತರ: %3$sm\nನಿಖರತೆ: %4$sm</string>
-    <string name="selected_answer">ಆಯ್ಕೆಮಾಡಲಾಗಿದೆ:% s</string>
     <string name="version_number">ಆವೃತ್ತಿ: %s</string>
     <string name="id_number">ID: %s</string>
     <string name="select_all">ಎಲ್ಲವನ್ನು ಆರಿಸು</string>
@@ -162,7 +161,7 @@
     <string name="camera_runtime_permission_denied_title">ಕ್ಯಾಮೆರಾ ಅನುಮತಿ</string>
     <string name="camera_runtime_permission_denied_desc">ಈ ಅನುಮತಿಯಿಲ್ಲದೆ ಸಂಗ್ರಹವು ಕ್ಯಾಮೆರಾವನ್ನು ಪ್ರವೇಶಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ. ನೀವು ಅದನ್ನು ನೀಡಲು ಸಿದ್ಧರಾದಾಗ ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.</string>
     <string name="read_phone_state_runtime_permission_denied_title">ಫೋನ್ ರಾಜ್ಯ ಅನುಮತಿಯನ್ನು ಓದಿ</string>
-    <string name="read_phone_state_runtime_permission_denied_desc">ffem Collect ಕರೆಗಳನ್ನು ಮಾಡುವುದಿಲ್ಲ ಆದರೆ ನಿಮ್ಮ ಸಾಧನದ ಬಗ್ಗೆ ಫೋನ್ ಸಂಖ್ಯೆ ಮತ್ತು ಸಾಧನ ID ಯಂತಹ ಕೆಲವು ಗುಣಲಕ್ಷಣಗಳನ್ನು ಪ್ರವೇಶಿಸುವ ಅಗತ್ಯವಿದೆ.</string>
+    <string name="read_phone_state_runtime_permission_denied_desc">ಅಪ್ಲಿಕೇಶನ್ ಕರೆಗಳನ್ನು ಮಾಡುವುದಿಲ್ಲ ಆದರೆ ನಿಮ್ಮ ಸಾಧನದ ಕುರಿತು ಫೋನ್ ಸಂಖ್ಯೆ ಮತ್ತು ಸಾಧನ ID ಯಂತಹ ಕೆಲವು ವೈಶಿಷ್ಟ್ಯಗಳಿಗೆ ಪ್ರವೇಶದ ಅಗತ್ಯವಿದೆ.</string>
     <string name="location_metadata">ಉಪಗ್ರಹಗಳು ಲಭ್ಯವಿದೆ: %1$d/24\n\nಸಮಯ ಮೀರಿದೆ: %2$s</string>
     <string name="go_to_settings">ಸೆಟ್ಟಿಂಗ್‌ಗಳಿಗೆ ಹೋಗಿ</string>
     <string name="close">ಮುಚ್ಚಿ</string>

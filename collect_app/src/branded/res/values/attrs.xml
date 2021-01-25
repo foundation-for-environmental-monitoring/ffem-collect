@@ -8,5 +8,10 @@
         <attr name="cardBackgroundColor" format="color" />
         <attr name="mainButtonBackground" format="color" />
         <attr name="warningColor" format="color" />
+
+        <attr name="colorPrimaryIntroDark" format="color" />
+        <attr name="colorDrawerCenter" format="color" />
+        <attr name="colorDrawerEnd" format="color" />
+        <attr name="colorDrawerStart" format="color" />
     </declare-styleable>
 </resources>

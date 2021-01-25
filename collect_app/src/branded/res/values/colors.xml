@@ -44,7 +44,6 @@ the License.
     <color name="primary_text">#444</color>
     <color name="toolbar">#585858</color>
     <color name="primary_dark">#4d4d4d</color>
-    <color name="white">@android:color/white</color>
     <color name="lightTintColor">#1a8302</color>
     <color name="button_text">#e33b3b3b</color>
     <color name="linkBlue">#517cc6</color>
@@ -52,4 +51,16 @@ the License.
     <!-- Diagnostic -->
     <color name="diagnostic">#910228</color>
     <color name="diagnostic_status">#830023</color>
+
+    <color name="app_bar">#007CA6</color>
+    <color name="status_bar">#00698C</color>
+    <color name="secondary">#016587</color>
+    <color name="secondary_variant">#016587</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
+    <color name="intro">#006485</color>
+    <color name="drawer_start">#016B8E</color>
+    <color name="drawer_center">#055570</color>
+    <color name="drawer_end">#FF0099cc</color>
 </resources>
