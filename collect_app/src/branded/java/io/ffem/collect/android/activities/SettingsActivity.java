@@ -13,8 +13,8 @@ import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialog;
 import org.odk.collect.android.listeners.OnBackPressedListener;
 import org.odk.collect.android.preferences.FormManagementPreferences;
-import org.odk.collect.android.preferences.ServerPreferences;
-import org.odk.collect.android.preferences.ServerPreferencesFragment;
+//import org.odk.collect.android.preferences.ServerPreferences;
+//import org.odk.collect.android.preferences.ServerPreferencesFragment;
 
 import io.ffem.collect.android.preferences.AdminPreferenceFragment;
 import io.ffem.collect.android.preferences.AppPreferences;
@@ -52,9 +52,9 @@ public class SettingsActivity extends CollectAbstractActivity
                 .replace(R.id.layoutInfo, new OtherPreferenceFragment())
                 .commit();
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.layoutServer, new ServerPreferences())
-                .commit();
+//        getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.layoutServer, new ServerPreferences())
+//                .commit();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.layoutAdmin, new AdminPreferenceFragment())
@@ -113,7 +113,7 @@ public class SettingsActivity extends CollectAbstractActivity
 
         AppPreferences.disableDiagnosticMode(this);
 
-        changeActionBarStyleBasedOnCurrentMode();
+//        changeActionBarStyleBasedOnCurrentMode();
 
         invalidateOptionsMenu();
 

@@ -18,7 +18,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.MenuItem;
 
 import androidx.fragment.app.Fragment;
 
@@ -110,15 +109,5 @@ public class AdminPreferencesActivity extends CollectAbstractActivity implements
     @Override
     public void onDialogClosed() {
         startActivityAndCloseAllOthers(this, MainMenuActivity.class);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

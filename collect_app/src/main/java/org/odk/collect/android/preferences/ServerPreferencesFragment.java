@@ -22,28 +22,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListPopupWindow;
-import android.widget.ListView;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceManager;
 
 import org.jetbrains.annotations.NotNull;
 import org.odk.collect.android.R;
@@ -51,8 +40,6 @@ import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.backgroundwork.FormUpdateManager;
 import org.odk.collect.android.configure.ServerRepository;
 import org.odk.collect.android.gdrive.GoogleAccountsManager;
-import org.odk.collect.android.formmanagement.FormUpdateMode;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.listeners.OnBackPressedListener;
 import org.odk.collect.android.listeners.PermissionListener;
@@ -62,24 +49,16 @@ import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.PlayServicesChecker;
-import org.odk.collect.android.utilities.SoftKeyboardUtils;
+import org.odk.collect.android.utilities.SoftKeyboardController;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.Validator;
-import org.odk.collect.android.utilities.WebCredentialsUtils;
-import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
 
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
 
-import io.ffem.collect.android.activities.SettingsActivity;
-
 import static android.app.Activity.RESULT_OK;
-import static io.ffem.collect.android.utilities.ListViewUtil.setListViewHeightBasedOnChildren;
-import static org.odk.collect.android.analytics.AnalyticsEvents.SET_CUSTOM_ENDPOINT;
 import static org.odk.collect.android.analytics.AnalyticsEvents.SET_FALLBACK_SHEETS_URL;
 import static org.odk.collect.android.analytics.AnalyticsEvents.SET_SERVER;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_FORMLIST_URL;
@@ -91,8 +70,6 @@ import static org.odk.collect.android.utilities.DialogUtils.showDialog;
 public class ServerPreferencesFragment extends BasePreferenceFragment implements View.OnTouchListener, OnBackPressedListener {
 
     private static final int REQUEST_ACCOUNT_PICKER = 1000;
-    private static final String KNOWN_URL_LIST = "knownUrlList";
-    private List<String> urlList;
 
     private EditTextPreference passwordPreference;
 
@@ -101,8 +78,6 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
 
     @Inject
     Analytics analytics;
-    @Inject
-    WebCredentialsUtils webCredentialsUtils;
 
     @Inject
     PreferencesProvider preferencesProvider;
@@ -113,6 +88,9 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     @Inject
     ServerRepository serverRepository;
 
+    @Inject
+    SoftKeyboardController softKeyboardController;
+
     private ListPopupWindow listPopupWindow;
     private Preference selectedGoogleAccountPreference;
     private boolean allowClickSelectedGoogleAccountPreference = true;
@@ -122,7 +100,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         super.onAttach(context);
         DaggerUtils.getComponent(context).inject(this);
 
-        ((SettingsActivity) context).setOnBackPressedListener(this);
+        ((PreferencesActivity) context).setOnBackPressedListener(this);
     }
 
     @Override
@@ -176,56 +154,43 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         EditTextPreference usernamePreference = (EditTextPreference) findPreference(GeneralKeys.KEY_USERNAME);
         passwordPreference = (EditTextPreference) findPreference(GeneralKeys.KEY_PASSWORD);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String urlListString = prefs.getString(KNOWN_URL_LIST, "");
-        if (urlListString.isEmpty()) {
-            urlList = new ArrayList<>();
-        } else {
-            urlList =
-                    new Gson().fromJson(urlListString, new TypeToken<List<String>>() {
-                    }.getType());
-        }
-        if (urlList.isEmpty()) {
-            addUrlToPreferencesList(getString(R.string.default_server_url), prefs);
-        }
+        serverUrlPreference.setOnPreferenceChangeListener(createChangeListener());
+        serverUrlPreference.setSummary(serverUrlPreference.getText());
 
-//        serverUrlPreference.setOnPreferenceChangeListener(createChangeListener());
-//        serverUrlPreference.setSummary(serverUrlPreference.getText());
-//
-//        serverUrlPreference.setOnBindEditTextListener(editText -> {
-//            urlDropdownSetup(editText);
-//            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_drop_down, 0);
-//            editText.setFilters(new InputFilter[]{new ControlCharacterFilter(), new WhitespaceFilter()});
-//            editText.setOnTouchListener(this);
-//        });
+        serverUrlPreference.setOnBindEditTextListener(editText -> {
+            urlDropdownSetup(editText);
+            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_drop_down, 0);
+            editText.setFilters(new InputFilter[]{new ControlCharacterFilter(), new WhitespaceFilter()});
+            editText.setOnTouchListener(this);
+        });
 
-//        usernamePreference.setOnPreferenceChangeListener(createChangeListener());
-//        usernamePreference.setSummary(usernamePreference.getText());
-//
-//        usernamePreference.setOnBindEditTextListener(editText -> {
-//            editText.setFilters(new InputFilter[]{new ControlCharacterFilter()});
-//        });
-//
-//        passwordPreference.setOnPreferenceChangeListener(createChangeListener());
-//        maskPasswordSummary(passwordPreference.getText());
-//
-//        passwordPreference.setOnBindEditTextListener(editText -> {
-//            editText.setFilters(new InputFilter[]{new ControlCharacterFilter()});
-//        });
-//
-//        findPreference("custom_server_paths").setOnPreferenceClickListener(preference -> {
-//            if (MultiClickGuard.allowClick(getClass().getName())) {
-//                Fragment fragment = new CustomServerPathsFragment();
-//                getActivity().getSupportFragmentManager()
-//                        .beginTransaction()
-//                        .replace(R.id.preferences_fragment_container, fragment)
-//                        .addToBackStack(null)
-//                        .commit();
-//                return true;
-//            } else {
-//                return false;
-//            }
-//        });
+        usernamePreference.setOnPreferenceChangeListener(createChangeListener());
+        usernamePreference.setSummary(usernamePreference.getText());
+
+        usernamePreference.setOnBindEditTextListener(editText -> {
+            editText.setFilters(new InputFilter[]{new ControlCharacterFilter()});
+        });
+
+        passwordPreference.setOnPreferenceChangeListener(createChangeListener());
+        maskPasswordSummary(passwordPreference.getText());
+
+        passwordPreference.setOnBindEditTextListener(editText -> {
+            editText.setFilters(new InputFilter[]{new ControlCharacterFilter()});
+        });
+
+        findPreference("custom_server_paths").setOnPreferenceClickListener(preference -> {
+            if (MultiClickGuard.allowClick(getClass().getName())) {
+                Fragment fragment = new CustomServerPathsFragment();
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.preferences_fragment_container, fragment)
+                        .addToBackStack(null)
+                        .commit();
+                return true;
+            } else {
+                return false;
+            }
+        });
     }
 
     private void urlDropdownSetup(EditText editText) {
@@ -277,7 +242,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     }
 
     private void requestAccountsPermission() {
-        new PermissionUtils().requestGetAccountsPermission(getActivity(), new PermissionListener() {
+        new PermissionUtils(R.style.Theme_Collect_Dialog_PermissionAlert).requestGetAccountsPermission(getActivity(), new PermissionListener() {
             @Override
             public void granted() {
                 Intent intent = accountsManager.getAccountChooserIntent();
@@ -297,7 +262,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         if (event.getAction() == MotionEvent.ACTION_UP) {
             if (event.getX() >= (v.getWidth() - ((EditText) v)
                     .getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                SoftKeyboardUtils.hideSoftKeyboard(v);
+                softKeyboardController.hideSoftKeyboard(v);
                 listPopupWindow.show();
                 return true;
             }
@@ -457,14 +422,4 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     public void doBack() {
         runGoogleAccountValidation();
     }
-
-    private void addUrlToPreferencesList(String url, SharedPreferences prefs) {
-        urlList.add(0, url);
-        String urlListString = new Gson().toJson(urlList);
-        prefs
-                .edit()
-                .putString(KNOWN_URL_LIST, urlListString)
-                .apply();
-    }
-
 }

@@ -53,7 +53,7 @@ public class SignInActivity extends CollectAbstractActivity {
 
         Collect.getInstance().getComponent().inject(this);
 
-        new PermissionUtils().requestStoragePermissions(this, new PermissionListener() {
+        new PermissionUtils(R.style.Theme_Collect_Dialog_PermissionAlert).requestStoragePermissions(this, new PermissionListener() {
             @Override
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent

@@ -58,7 +58,6 @@ public final class GeneralKeys {
     public static final String KEY_GUIDANCE_HINT            = "guidance_hint";
     public static final String KEY_INSTANCE_SYNC            = "instance_sync";
     public static final String KEY_FORM_UPDATE_MODE         = "form_update_mode";
-    public static final String KEY_DELETE_FORMS             = "delete_forms";
 
     // identity_preferences.xml
     public static final String KEY_ANALYTICS                = "analytics";
@@ -67,7 +66,6 @@ public final class GeneralKeys {
     public static final String KEY_METADATA_USERNAME        = "metadata_username";
     public static final String KEY_METADATA_PHONENUMBER     = "metadata_phonenumber";
     public static final String KEY_METADATA_EMAIL           = "metadata_email";
-    public static final String KEY_MAGENTA_THEME            = "magenta";
 
     static final String KEY_FORM_METADATA                   = "form_metadata";
 
@@ -75,9 +73,9 @@ public final class GeneralKeys {
 
     // values
     public static final String NAVIGATION_SWIPE             = "swipe";
-    public static final String CONSTRAINT_BEHAVIOR_ON_SWIPE = "on_swipe";
     public static final String NAVIGATION_BUTTONS           = "buttons";
-    public static final String NAVIGATION_SWIPE_BUTTONS     = "swipe_buttons";
+    public static final String NAVIGATION_BOTH              = "swipe_buttons";
+    public static final String CONSTRAINT_BEHAVIOR_ON_SWIPE = "on_swipe";
     private static final String AUTOSEND_OFF                = "off";
     private static final String GUIDANCE_HINT_OFF           = "no";
     static final String KEY_AUTOSEND_WIFI                   = "autosend_wifi";
@@ -94,6 +92,10 @@ public final class GeneralKeys {
     public static final String BASEMAP_SOURCE_STAMEN        = "stamen";
     public static final String BASEMAP_SOURCE_CARTO         = "carto";
 
+    // experimental
+    public static final String KEY_MAGENTA_THEME            = "magenta";
+    public static final String KEY_EXTERNAL_APP_RECORDING   = "external_app_recording";
+
     private static HashMap<String, Object> getHashMap() {
         HashMap<String, Object> hashMap = new HashMap<>();
         // odk_server_preferences.xmll
@@ -101,11 +103,11 @@ public final class GeneralKeys {
         hashMap.put(KEY_USERNAME,                   "");
         hashMap.put(KEY_PASSWORD,                   "");
         // form_management_preferences.xml
-        hashMap.put(KEY_AUTOSEND,                   "wifi_and_cellular");
+        hashMap.put(KEY_AUTOSEND,                   AUTOSEND_OFF);
         hashMap.put(KEY_GUIDANCE_HINT,              GUIDANCE_HINT_OFF);
         hashMap.put(KEY_DELETE_AFTER_SEND,          false);
         hashMap.put(KEY_COMPLETED_DEFAULT,          true);
-        hashMap.put(KEY_CONSTRAINT_BEHAVIOR,        "on_finalize");
+        hashMap.put(KEY_CONSTRAINT_BEHAVIOR,        CONSTRAINT_BEHAVIOR_ON_SWIPE);
         hashMap.put(KEY_HIGH_RESOLUTION,            true);
         hashMap.put(KEY_IMAGE_SIZE,                 "original_image_size");
         hashMap.put(KEY_INSTANCE_SYNC,              true);
@@ -131,11 +133,12 @@ public final class GeneralKeys {
         // user_interface_preferences.xml
         hashMap.put(KEY_APP_THEME,                  Collect.getInstance().getString(R.string.app_theme_light));
         hashMap.put(KEY_APP_LANGUAGE,               "");
-        hashMap.put(KEY_FONT_SIZE,                  Collect.DEFAULT_FONTSIZE);
-        hashMap.put(KEY_NAVIGATION,                 NAVIGATION_SWIPE_BUTTONS);
+        hashMap.put(KEY_FONT_SIZE,                  String.valueOf(QuestionFontSizeUtils.DEFAULT_FONT_SIZE));
+        hashMap.put(KEY_NAVIGATION,                 NAVIGATION_BOTH);
         hashMap.put(KEY_SHOW_SPLASH,                false);
         hashMap.put(KEY_SPLASH_PATH,                Collect.getInstance().getString(R.string.default_splash_path));
         hashMap.put(KEY_MAGENTA_THEME,              false);
+        hashMap.put(KEY_EXTERNAL_APP_RECORDING,     true);
         // map_preferences.xml
         hashMap.put(KEY_BASEMAP_SOURCE,             BASEMAP_SOURCE_GOOGLE);
         hashMap.put(KEY_CARTO_MAP_STYLE,            "positron");
