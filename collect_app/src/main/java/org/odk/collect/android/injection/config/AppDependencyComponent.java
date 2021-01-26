@@ -3,6 +3,7 @@ package org.odk.collect.android.injection.config;
 import android.app.Application;
 
 import org.javarosa.core.reference.ReferenceManager;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.DeleteSavedFormActivity;
 import org.odk.collect.android.activities.FillBlankFormActivity;
 import org.odk.collect.android.activities.FormDownloadListActivity;
@@ -59,6 +60,8 @@ import org.odk.collect.android.preferences.PreferencesProvider;
 import org.odk.collect.android.preferences.ServerAuthDialogFragment;
 import org.odk.collect.android.preferences.ServerPreferencesFragment;
 import org.odk.collect.android.preferences.UserInterfacePreferencesFragment;
+import org.odk.collect.android.provider.FormsProvider;
+import org.odk.collect.android.provider.InstanceProvider;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.storage.migration.StorageMigrationDialog;
 import org.odk.collect.android.storage.migration.StorageMigrationService;
@@ -72,8 +75,6 @@ import javax.inject.Singleton;
 
 import dagger.BindsInstance;
 import dagger.Component;
-import io.ffem.collect.android.activities.MainMenuActivityBranded;
-import io.ffem.collect.android.activities.SignInActivity;
 
 /**
  * Dagger component for the application. Should include
@@ -157,8 +158,6 @@ public interface AppDependencyComponent {
 
     void inject(MainMenuActivity mainMenuActivity);
 
-    void inject(MainMenuActivityBranded mainMenuActivity);
-
     void inject(QRCodeTabsActivity qrCodeTabsActivity);
 
     void inject(ShowQRCodeFragment showQRCodeFragment);
@@ -227,7 +226,11 @@ public interface AppDependencyComponent {
 
     void inject(AudioRecordingErrorDialogFragment audioRecordingErrorDialogFragment);
 
-    void inject(SignInActivity signInActivity);
+    void inject(CollectAbstractActivity collectAbstractActivity);
+
+    void inject(FormsProvider formsProvider);
+
+    void inject(InstanceProvider instanceProvider);
 
     OpenRosaHttpInterface openRosaHttpInterface();
 

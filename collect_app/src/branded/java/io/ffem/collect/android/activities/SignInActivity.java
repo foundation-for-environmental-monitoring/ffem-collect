@@ -20,11 +20,8 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.MainMenuActivity;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.storage.StorageInitializer;
-import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 
@@ -42,6 +39,7 @@ public class SignInActivity extends CollectAbstractActivity {
     private static final String MASK = "**********";
     @Inject
     WebCredentialsUtils webCredentialsUtils;
+
     private EditText editText;
     private EditText editPassword;
     private TextInputLayout layoutUserName;
@@ -52,24 +50,6 @@ public class SignInActivity extends CollectAbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         Collect.getInstance().getComponent().inject(this);
-
-        new PermissionUtils(R.style.Theme_Collect_Dialog_PermissionAlert).requestStoragePermissions(this, new PermissionListener() {
-            @Override
-            public void granted() {
-                // must be at the beginning of any activity that can be called from an external intent
-                try {
-                    new StorageInitializer().createOdkDirsOnStorage();
-                } catch (RuntimeException e) {
-                    createErrorDialog(e.getMessage());
-                }
-            }
-
-            @Override
-            public void denied() {
-                // The activity has to finish because ODK Collect cannot function without these permissions.
-                finish();
-            }
-        });
 
         isSettings = getIntent().getBooleanExtra("isSettings", false);
 

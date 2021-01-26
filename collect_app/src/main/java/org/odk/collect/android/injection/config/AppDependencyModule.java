@@ -23,6 +23,7 @@ import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.analytics.FirebaseAnalytics;
+import org.odk.collect.android.application.AppStateProvider;
 import org.odk.collect.android.application.CollectSettingsChangeHandler;
 import org.odk.collect.android.application.initialization.ApplicationInitializer;
 import org.odk.collect.android.application.initialization.CollectSettingsPreferenceMigrator;
@@ -76,8 +77,10 @@ import org.odk.collect.android.notifications.Notifier;
 import org.odk.collect.android.openrosa.CollectThenSystemContentTypeMapper;
 import org.odk.collect.android.openrosa.OpenRosaFormSource;
 import org.odk.collect.android.openrosa.OpenRosaHttpInterface;
+import org.odk.collect.android.openrosa.OpenRosaResponseParserImpl;
 import org.odk.collect.android.openrosa.okhttp.OkHttpConnection;
 import org.odk.collect.android.openrosa.okhttp.OkHttpOpenRosaServerClientProvider;
+import org.odk.collect.android.permissions.PermissionsChecker;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.GeneralKeys;
@@ -99,7 +102,7 @@ import org.odk.collect.android.utilities.FileProvider;
 import org.odk.collect.android.utilities.FileUtil;
 import org.odk.collect.android.utilities.FormsDirDiskFormsSynchronizer;
 import org.odk.collect.android.utilities.MediaUtils;
-import org.odk.collect.android.utilities.PermissionUtils;
+import org.odk.collect.android.permissions.PermissionsProvider;
 import org.odk.collect.android.utilities.ScreenUtils;
 import org.odk.collect.android.utilities.SoftKeyboardController;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
@@ -194,8 +197,8 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public PermissionUtils providesPermissionUtils() {
-        return new PermissionUtils(R.style.Theme_Collect_Dialog_PermissionAlert);
+    public PermissionsProvider providesPermissionsProvider(PermissionsChecker permissionsChecker, StorageStateProvider storageStateProvider) {
+        return new PermissionsProvider(permissionsChecker, storageStateProvider);
     }
 
     @Provides
@@ -337,8 +340,8 @@ public class AppDependencyModule {
 
     @Singleton
     @Provides
-    public ApplicationInitializer providesApplicationInitializer(Application application, UserAgentProvider userAgentProvider, SettingsPreferenceMigrator preferenceMigrator, PropertyManager propertyManager, Analytics analytics) {
-        return new ApplicationInitializer(application, userAgentProvider, preferenceMigrator, propertyManager, analytics);
+    public ApplicationInitializer providesApplicationInitializer(Application application, UserAgentProvider userAgentProvider, SettingsPreferenceMigrator preferenceMigrator, PropertyManager propertyManager, Analytics analytics, AppStateProvider appStateProvider, StorageStateProvider storageStateProvider) {
+        return new ApplicationInitializer(application, userAgentProvider, preferenceMigrator, propertyManager, analytics, appStateProvider, storageStateProvider);
     }
 
     @Provides
@@ -348,8 +351,8 @@ public class AppDependencyModule {
 
     @Provides
     @Singleton
-    public PropertyManager providesPropertyManager(Application application, RxEventBus eventBus, PermissionUtils permissionUtils, DeviceDetailsProvider deviceDetailsProvider) {
-        return new PropertyManager(application, eventBus, permissionUtils, deviceDetailsProvider);
+    public PropertyManager providesPropertyManager(Application application, RxEventBus eventBus, PermissionsProvider permissionsProvider, DeviceDetailsProvider deviceDetailsProvider) {
+        return new PropertyManager(application, eventBus, permissionsProvider, deviceDetailsProvider);
     }
 
     @Provides
@@ -403,7 +406,7 @@ public class AppDependencyModule {
         String serverURL = generalPrefs.getString(GeneralKeys.KEY_SERVER_URL, context.getString(R.string.default_server_url));
         String formListPath = generalPrefs.getString(GeneralKeys.KEY_FORMLIST_URL, context.getString(R.string.default_odk_formlist));
 
-        return new OpenRosaFormSource(serverURL, formListPath, openRosaHttpInterface, webCredentialsUtils, analytics);
+        return new OpenRosaFormSource(serverURL, formListPath, openRosaHttpInterface, webCredentialsUtils, analytics, new OpenRosaResponseParserImpl());
     }
 
     @Provides
@@ -498,5 +501,17 @@ public class AppDependencyModule {
     @Provides
     public JsonPreferencesGenerator providesJsonPreferencesGenerator() {
         return new JsonPreferencesGenerator();
+    }
+
+    @Provides
+    @Singleton
+    public AppStateProvider providesAppStateProvider() {
+        return new AppStateProvider();
+    }
+
+    @Provides
+    @Singleton
+    public PermissionsChecker providesPermissionsChecker(Context context) {
+        return new PermissionsChecker(context);
     }
 }
