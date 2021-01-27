@@ -223,17 +223,16 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
 
 // brand change ----
         // manage forms button. no result expected.
-//        manageFilesButton = findViewById(R.id.manage_forms);
-//        manageFilesButton.setText(getString(R.string.manage_files));
-//        manageFilesButton.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent i = new Intent(getApplicationContext(),
-//                        DeleteSavedFormActivity.class);
-//                startActivity(i);
-//            }
-//        });
-// end brand change ----
+        manageFilesButton = findViewById(R.id.manage_forms);
+        manageFilesButton.setText(getString(R.string.manage_files));
+        manageFilesButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(),
+                        DeleteSavedFormActivity.class);
+                startActivity(i);
+            }
+        });
 
         String versionSHA = viewModel.getVersionCommitDescription();
         if (versionSHA != null) {
@@ -545,7 +544,6 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         });
     }
 
-    // brand change ----
 //    private void tryToPerformAutomaticMigration() {
 //        if (storageStateProvider.shouldPerformAutomaticMigration()) {
 //            StorageMigrationDialog dialog = showStorageMigrationDialog();

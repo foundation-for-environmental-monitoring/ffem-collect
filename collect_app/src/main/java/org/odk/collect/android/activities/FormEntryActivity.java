@@ -21,7 +21,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.graphics.Rect;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -442,21 +441,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 finishAndRemoveTask();
             }
         });
-
-// brand change ------
-// Hide footer when keyboard is displayed
-        RelativeLayout mainLayout = findViewById(R.id.llParent);
-        mainLayout.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-                    Rect r = new Rect();
-                    mainLayout.getWindowVisibleDisplayFrame(r);
-                    if (mainLayout.getRootView().getHeight() - (r.bottom - r.top) > 150) {
-                        findViewById(R.id.buttonholder).setVisibility(View.GONE);
-                    } else {
-                        findViewById(R.id.buttonholder).setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
-                    }
-                }
-        );
-// end brand change ------
     }
 
     private void setupViewModels() {
@@ -832,8 +816,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     if (getCurrentViewIfODKView() != null) {
                         getCurrentViewIfODKView().setDataForFields(extras);
                     }
-                    // Brand change --------
-                    onScreenRefresh();
                 } catch (JavaRosaException e) {
                     Timber.e(e);
                     createErrorDialog(e.getCause().getMessage(), DO_NOT_EXIT);
@@ -1232,11 +1214,10 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
      * a button for saving and exiting.
      */
     private View createViewForFormEnd(FormController formController) {
-// brand change ------
-        View endView = View.inflate(this, R.layout.form_entry_end_branded, null);
-//        ((TextView) endView.findViewById(R.id.description))
-//                .setText(getString(R.string.save_enter_data_description,
-//                        formController.getFormTitle()));
+        View endView = View.inflate(this, R.layout.form_entry_end, null);
+        ((TextView) endView.findViewById(R.id.description))
+                .setText(getString(R.string.save_enter_data_description,
+                        formController.getFormTitle()));
 
         // checkbox for if finished or ready to send
         final CheckBox instanceComplete = endView
@@ -1282,13 +1263,10 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     }
                 }
             }
-// brand change ------
-// Default form name to blank
-//            if (saveName == null) {
-//                // last resort, default to the form title
-//                saveName = formController.getFormTitle();
-//            }
-// end brand change ------
+            if (saveName == null) {
+                // last resort, default to the form title
+                saveName = formController.getFormTitle();
+            }
             // present the prompt to allow user to name the form
             TextView sa = endView.findViewById(R.id.save_form_as);
             sa.setVisibility(View.VISIBLE);
