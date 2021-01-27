@@ -76,6 +76,8 @@ public final class GeneralKeys {
     public static final String NAVIGATION_BUTTONS           = "buttons";
     public static final String NAVIGATION_BOTH              = "swipe_buttons";
     public static final String CONSTRAINT_BEHAVIOR_ON_SWIPE = "on_swipe";
+    // brand change ----
+    public static final String CONSTRAINT_BEHAVIOR_ON_FINALIZE = "on_finalize";
     private static final String AUTOSEND_OFF                = "off";
     private static final String GUIDANCE_HINT_OFF           = "no";
     static final String KEY_AUTOSEND_WIFI                   = "autosend_wifi";
@@ -103,11 +105,14 @@ public final class GeneralKeys {
         hashMap.put(KEY_USERNAME,                   "");
         hashMap.put(KEY_PASSWORD,                   "");
         // form_management_preferences.xml
-        hashMap.put(KEY_AUTOSEND,                   AUTOSEND_OFF);
+        // brand change ----
+        hashMap.put(KEY_AUTOSEND,                   "wifi_and_cellular");
         hashMap.put(KEY_GUIDANCE_HINT,              GUIDANCE_HINT_OFF);
         hashMap.put(KEY_DELETE_AFTER_SEND,          false);
-        hashMap.put(KEY_COMPLETED_DEFAULT,          true);
-        hashMap.put(KEY_CONSTRAINT_BEHAVIOR,        CONSTRAINT_BEHAVIOR_ON_SWIPE);
+        // brand change ----
+        hashMap.put(KEY_COMPLETED_DEFAULT,          false);
+        // brand change ----
+        hashMap.put(KEY_CONSTRAINT_BEHAVIOR,        CONSTRAINT_BEHAVIOR_ON_FINALIZE);
         hashMap.put(KEY_HIGH_RESOLUTION,            true);
         hashMap.put(KEY_IMAGE_SIZE,                 "original_image_size");
         hashMap.put(KEY_INSTANCE_SYNC,              true);
@@ -140,7 +145,8 @@ public final class GeneralKeys {
         hashMap.put(KEY_MAGENTA_THEME,              false);
         hashMap.put(KEY_EXTERNAL_APP_RECORDING,     true);
         // map_preferences.xml
-        hashMap.put(KEY_BASEMAP_SOURCE,             BASEMAP_SOURCE_GOOGLE);
+        // Brand change ------
+        hashMap.put(KEY_BASEMAP_SOURCE,             BASEMAP_SOURCE_OSM);
         hashMap.put(KEY_CARTO_MAP_STYLE,            "positron");
         hashMap.put(KEY_USGS_MAP_STYLE,             "topographic");
         hashMap.put(KEY_GOOGLE_MAP_STYLE,           String.valueOf(GoogleMap.MAP_TYPE_NORMAL));

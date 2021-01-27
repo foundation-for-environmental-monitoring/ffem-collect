@@ -170,16 +170,17 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         });
 
         // send data button. expects a result.
-        sendDataButton = findViewById(R.id.send_data);
-        sendDataButton.setText(getString(R.string.send_data_button));
-        sendDataButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(),
-                        InstanceUploaderListActivity.class);
-                startActivity(i);
-            }
-        });
+// brand change ----
+//        sendDataButton = findViewById(R.id.send_data);
+//        sendDataButton.setText(getString(R.string.send_data_button));
+//        sendDataButton.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent i = new Intent(getApplicationContext(),
+//                        InstanceUploaderListActivity.class);
+//                startActivity(i);
+//            }
+//        });
 
         //View sent forms
         viewSentFormsButton = findViewById(R.id.view_sent_forms);
@@ -283,9 +284,9 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
     private void setButtonsVisibility() {
         reviewDataButton.setVisibility(viewModel.shouldEditSavedFormButtonBeVisible() ? View.VISIBLE : View.GONE);
 // brand change ----
-        if (sendDataButton.getVisibility() == View.VISIBLE) {
-            sendDataButton.setVisibility(viewModel.shouldSendFinalizedFormButtonBeVisible() ? View.VISIBLE : View.GONE);
-        }
+//        if (sendDataButton.getVisibility() == View.VISIBLE) {
+//            sendDataButton.setVisibility(viewModel.shouldSendFinalizedFormButtonBeVisible() ? View.VISIBLE : View.GONE);
+//        }
         viewSentFormsButton.setVisibility(viewModel.shouldViewSentFormButtonBeVisible() ? View.VISIBLE : View.GONE);
 //        getFormsButton.setVisibility(viewModel.shouldGetBlankFormButtonBeVisible() ? View.VISIBLE : View.GONE);
 //        manageFilesButton.setVisibility(viewModel.shouldDeleteSavedFormButtonBeVisible() ? View.VISIBLE : View.GONE);
@@ -362,8 +363,10 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
 
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setTitle(String.format("%s %s", getString(R.string.app_name), viewModel.getVersion()));
+        // Brand change
+        setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
     private void createErrorDialog(String errorMsg, final boolean shouldExit) {
@@ -411,12 +414,13 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
                 viewSentCount = 0;
             }
 
-            if (completedCount > 0) {
-                sendDataButton.setText(
-                        getString(R.string.send_data_button, String.valueOf(completedCount)));
-            } else {
-                sendDataButton.setText(getString(R.string.send_data));
-            }
+// brand change ----
+//            if (completedCount > 0) {
+//                sendDataButton.setText(
+//                        getString(R.string.send_data_button, String.valueOf(completedCount)));
+//            } else {
+//                sendDataButton.setText(getString(R.string.send_data));
+//            }
 
             if (savedCount > 0) {
                 reviewDataButton.setText(getString(R.string.review_data_button,

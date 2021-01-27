@@ -2,6 +2,7 @@ package org.odk.collect.android.analytics;
 
 import android.os.Bundle;
 
+import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 
@@ -13,7 +14,10 @@ public class FirebaseAnalytics implements Analytics {
     public FirebaseAnalytics(com.google.firebase.analytics.FirebaseAnalytics firebaseAnalytics, GeneralSharedPreferences generalSharedPreferences) {
         this.firebaseAnalytics = firebaseAnalytics;
         this.generalSharedPreferences = generalSharedPreferences;
-        setupRemoteAnalytics();
+        // Brand change -------
+        if (!BuildConfig.DEBUG) {
+            setupRemoteAnalytics();
+        }
     }
 
     @Deprecated

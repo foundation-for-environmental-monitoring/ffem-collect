@@ -38,7 +38,8 @@ public class ViewOnlyFormHierarchyActivity extends FormHierarchyActivity {
             finish();
         });
 
-        exitButton.setVisibility(View.VISIBLE);
+        // Brand change ------
+//        exitButton.setVisibility(View.VISIBLE);
 
         jumpBeginningButton.setVisibility(View.GONE);
         jumpEndButton.setVisibility(View.GONE);

@@ -39,7 +39,6 @@ public class SignInActivity extends CollectAbstractActivity {
     private static final String MASK = "**********";
     @Inject
     WebCredentialsUtils webCredentialsUtils;
-
     private EditText editText;
     private EditText editPassword;
     private TextInputLayout layoutUserName;

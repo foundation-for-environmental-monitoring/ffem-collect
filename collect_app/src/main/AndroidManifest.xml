@@ -171,11 +171,11 @@ the specific language governing permissions and limitations under the License.
 
         <provider
             android:name=".provider.FormsProvider"
-            android:authorities="org.odk.collect.android.provider.odk.forms"
+            android:authorities="io.ffem.collect.provider.odk.forms"
             android:exported="true" />
         <provider
             android:name=".provider.InstanceProvider"
-            android:authorities="org.odk.collect.android.provider.odk.instances"
+            android:authorities="io.ffem.collect.provider.odk.instances"
             android:exported="true" />
 
         <activity-alias
@@ -188,8 +188,8 @@ the specific language governing permissions and limitations under the License.
 
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:mimeType="vnd.android.cursor.item/vnd.odk.form" />
-                <data android:mimeType="vnd.android.cursor.item/vnd.odk.instance" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.ffem.form" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.ffem.instance" />
             </intent-filter>
         </activity-alias>
 
@@ -203,7 +203,7 @@ the specific language governing permissions and limitations under the License.
 
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:mimeType="vnd.android.cursor.dir/vnd.odk.instance" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.ffem.instance" />
             </intent-filter>
         </activity-alias>
 
@@ -218,7 +218,7 @@ the specific language governing permissions and limitations under the License.
 
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:mimeType="vnd.android.cursor.dir/vnd.odk.form" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.ffem.form" />
             </intent-filter>
         </activity-alias>
 
@@ -228,7 +228,7 @@ the specific language governing permissions and limitations under the License.
             <intent-filter>
                 <action android:name="org.odk.collect.android.FORM_DOWNLOAD" />
                 <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="vnd.android.cursor.dir/vnd.odk.form" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.ffem.form" />
             </intent-filter>
         </activity-alias>
 
@@ -249,7 +249,7 @@ the specific language governing permissions and limitations under the License.
             <intent-filter>
                 <action android:name="org.odk.collect.android.INSTANCE_UPLOAD" />
                 <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="vnd.android.cursor.dir/vnd.odk.instance" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.ffem.instance" />
             </intent-filter>
         </activity-alias>
 

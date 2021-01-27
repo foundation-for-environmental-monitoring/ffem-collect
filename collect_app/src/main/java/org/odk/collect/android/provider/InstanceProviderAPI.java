@@ -19,8 +19,11 @@ package org.odk.collect.android.provider;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import org.odk.collect.android.BuildConfig;
+
 public final class InstanceProviderAPI {
-    public static final String AUTHORITY = "org.odk.collect.android.provider.odk.instances";
+    // Brand change ---
+    public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider.odk.instances";
 
     // This class cannot be instantiated
     private InstanceProviderAPI() {
@@ -32,8 +35,9 @@ public final class InstanceProviderAPI {
         }
 
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/instances");
-        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.odk.instance";
-        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.odk.instance";
+        // brand change ----
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.ffem.instance";
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.ffem.instance";
 
         // instance column names
         public static final String DISPLAY_NAME = "displayName";
