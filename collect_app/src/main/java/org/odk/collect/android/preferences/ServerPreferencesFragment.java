@@ -52,11 +52,14 @@ import org.odk.collect.android.utilities.PlayServicesChecker;
 import org.odk.collect.android.utilities.SoftKeyboardController;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.Validator;
+import org.odk.collect.android.utilities.WebCredentialsUtils;
 
 import java.io.ByteArrayInputStream;
 import java.util.Locale;
 
 import javax.inject.Inject;
+
+import io.ffem.collect.android.activities.SettingsActivity;
 
 import static android.app.Activity.RESULT_OK;
 import static org.odk.collect.android.analytics.AnalyticsEvents.SET_FALLBACK_SHEETS_URL;
@@ -94,6 +97,10 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     @Inject
     PermissionsProvider permissionsProvider;
 
+    // Brand change
+    @Inject
+    WebCredentialsUtils webCredentialsUtils;
+
     private ListPopupWindow listPopupWindow;
     private Preference selectedGoogleAccountPreference;
     private boolean allowClickSelectedGoogleAccountPreference = true;
@@ -103,13 +110,15 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         super.onAttach(context);
         DaggerUtils.getComponent(context).inject(this);
 
-        ((PreferencesActivity) context).setOnBackPressedListener(this);
+        // Brand change
+        ((SettingsActivity) context).setOnBackPressedListener(this);
     }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.server_preferences, rootKey);
-        initProtocolPrefs();
+// Brand change
+//        setPreferencesFromResource(R.xml.server_preferences, rootKey);
+//        initProtocolPrefs();
     }
 
     @Override

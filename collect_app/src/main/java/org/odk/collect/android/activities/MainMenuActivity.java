@@ -310,9 +310,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-// brand change ----
-//        getMenuInflater().inflate(R.menu.main_menu, menu);
-// end brand change ----
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         qrcodeScannerMenuItem = menu.findItem(R.id.menu_configure_qr_code);
         return super.onCreateOptionsMenu(menu);
     }

@@ -13,8 +13,8 @@ import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialog;
 import org.odk.collect.android.listeners.OnBackPressedListener;
 import org.odk.collect.android.preferences.FormManagementPreferences;
-//import org.odk.collect.android.preferences.ServerPreferences;
-//import org.odk.collect.android.preferences.ServerPreferencesFragment;
+import org.odk.collect.android.preferences.ServerPreferences;
+import org.odk.collect.android.preferences.ServerPreferencesFragment;
 
 import io.ffem.collect.android.preferences.AdminPreferenceFragment;
 import io.ffem.collect.android.preferences.AppPreferences;
@@ -46,24 +46,24 @@ public class SettingsActivity extends CollectAbstractActivity
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.layoutFormManagement, new FormManagementPreferences())
-                .commit();
+                .commitAllowingStateLoss();
 
         getFragmentManager().beginTransaction()
                 .replace(R.id.layoutInfo, new OtherPreferenceFragment())
-                .commit();
+                .commitAllowingStateLoss();
 
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.layoutServer, new ServerPreferences())
-//                .commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.layoutServer, new ServerPreferences())
+                .commitAllowingStateLoss();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.layoutAdmin, new AdminPreferenceFragment())
-                .commit();
+                .commitAllowingStateLoss();
 
         if (AppPreferences.isDiagnosticMode(this)) {
             getFragmentManager().beginTransaction()
                     .add(R.id.layoutTesting, new TestingPreferenceFragment())
-                    .commit();
+                    .commitAllowingStateLoss();
 
             findViewById(R.id.layoutTesting).setVisibility(View.VISIBLE);
         }

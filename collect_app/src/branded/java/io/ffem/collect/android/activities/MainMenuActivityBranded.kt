@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import io.ffem.collect.android.util.ApkHelper.isNonStoreVersion
@@ -68,6 +69,16 @@ open class MainMenuActivityBranded : AppUpdateActivity() {
                 broadcastReceiver,
                 IntentFilter("DOWNLOAD_FORMS_ACTION")
         )
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_settings -> {
+                val intent = Intent(this, SettingsActivity::class.java)
+                startActivityForResult(intent, 100)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun hasAppVersionExpired(): Boolean {

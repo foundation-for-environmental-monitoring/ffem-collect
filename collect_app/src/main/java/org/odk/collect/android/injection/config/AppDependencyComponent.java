@@ -75,6 +75,7 @@ import javax.inject.Singleton;
 
 import dagger.BindsInstance;
 import dagger.Component;
+import io.ffem.collect.android.activities.SignInActivity;
 
 /**
  * Dagger component for the application. Should include
@@ -247,4 +248,7 @@ public interface AppDependencyComponent {
     ApplicationInitializer applicationInitializer();
 
     SettingsImporter settingsImporter();
+
+    // Brand change
+    void inject(SignInActivity signInActivity);
 }

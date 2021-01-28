@@ -1,7 +1,11 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <io.ffem.collect.android.preferences.PreferenceCategoryCustom android:title="@string/info">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:title="@string/info"
+        app:iconSpaceReserved="false">
         <Preference
             android:key="about"
-            android:title="@string/about_preferences" />
-    </io.ffem.collect.android.preferences.PreferenceCategoryCustom>
+            android:title="@string/about_preferences"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
 </PreferenceScreen>

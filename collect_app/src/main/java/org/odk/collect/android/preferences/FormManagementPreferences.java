@@ -63,7 +63,7 @@ public class FormManagementPreferences extends BasePreferenceFragment {
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.form_management_preferences, rootKey);
+        setPreferencesFromResource(R.xml.form_management_preferences_custom, rootKey);
 
         initListPref(KEY_PERIODIC_FORM_UPDATES_CHECK);
         initPref(KEY_AUTOMATIC_UPDATE);

@@ -80,7 +80,9 @@ public class SignInActivity extends CollectAbstractActivity {
 
             setTitle(R.string.server_credentials);
         } else {
-            toolbar.setVisibility(GONE);
+            if (toolbar != null) {
+                toolbar.setVisibility(GONE);
+            }
         }
 
         initialize();

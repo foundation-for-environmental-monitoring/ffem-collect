@@ -1,8 +1,14 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <org.odk.collect.android.preferences.ResetDialogPreference
-        android:dialogTitle="@string/reset_settings_dialog_title"
-        android:key="reset_settings"
-        android:negativeButtonText="@string/cancel"
-        android:positiveButtonText="@string/reset_settings_button_reset"
-        android:title="@string/reset_settings_dialog" />
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:title="@string/admin"
+        app:iconSpaceReserved="false">
+        <org.odk.collect.android.preferences.ResetDialogPreference
+            android:dialogTitle="@string/reset_settings_dialog_title"
+            android:key="reset_settings"
+            android:negativeButtonText="@string/cancel"
+            android:positiveButtonText="@string/reset_settings_button_reset"
+            android:title="@string/reset_settings_dialog"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
 </PreferenceScreen>

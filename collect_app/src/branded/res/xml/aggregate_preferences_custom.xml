@@ -1,6 +1,12 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <Preference
-        android:dialogTitle="@string/server_credentials"
-        android:key="server_credentials"
-        android:title="@string/server_credentials" />
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:title="@string/server_settings_title"
+        app:iconSpaceReserved="false">
+        <Preference
+            android:dialogTitle="@string/server_credentials"
+            android:key="server_credentials"
+            android:title="@string/server_credentials"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
 </PreferenceScreen>
