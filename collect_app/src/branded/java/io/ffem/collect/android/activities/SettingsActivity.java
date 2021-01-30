@@ -14,7 +14,6 @@ import org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialog;
 import org.odk.collect.android.listeners.OnBackPressedListener;
 import org.odk.collect.android.preferences.FormManagementPreferences;
 import org.odk.collect.android.preferences.ServerPreferences;
-import org.odk.collect.android.preferences.ServerPreferencesFragment;
 
 import io.ffem.collect.android.preferences.AdminPreferenceFragment;
 import io.ffem.collect.android.preferences.AppPreferences;
@@ -48,7 +47,7 @@ public class SettingsActivity extends CollectAbstractActivity
                 .replace(R.id.layoutFormManagement, new FormManagementPreferences())
                 .commitAllowingStateLoss();
 
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.layoutInfo, new OtherPreferenceFragment())
                 .commitAllowingStateLoss();
 
@@ -61,7 +60,7 @@ public class SettingsActivity extends CollectAbstractActivity
                 .commitAllowingStateLoss();
 
         if (AppPreferences.isDiagnosticMode(this)) {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.layoutTesting, new TestingPreferenceFragment())
                     .commitAllowingStateLoss();
 

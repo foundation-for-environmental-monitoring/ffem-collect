@@ -42,7 +42,7 @@ import org.odk.collect.android.activities.viewmodels.MainMenuViewModel;
 import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.configure.SettingsImporter;
-import org.odk.collect.android.configure.legacy.LegacySettingsFileImporter;
+//import org.odk.collect.android.configure.legacy.LegacySettingsFileImporter;
 import org.odk.collect.android.configure.qr.QRCodeTabsActivity;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.gdrive.GoogleDriveActivity;
@@ -98,6 +98,10 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
     private AlertDialog alertDialog;
     private MenuItem qrcodeScannerMenuItem;
     private int savedCount;
+    private int viewSentCount;
+    private Cursor finalizedCursor;
+    private Cursor savedCursor;
+    private Cursor viewSentCursor;
     private final IncomingHandler handler = new IncomingHandler(this);
     private final MyContentObserver contentObserver = new MyContentObserver();
 
@@ -270,6 +274,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         super.onResume();
         // Brand change
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        countSavedForms();
         updateButtons();
         if (!storageMigrationRepository.isMigrationBeingPerformed()) {
             getContentResolver().registerContentObserver(InstanceColumns.CONTENT_URI, true, contentObserver);
@@ -278,6 +283,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         setButtonsVisibility();
         invalidateOptionsMenu();
         setUpStorageMigrationBanner();
+// brand change ----
 //        tryToPerformAutomaticMigration();
     }
 
@@ -361,9 +367,53 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
 
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
-        // Brand change
-        setTitle(R.string.app_name);
+        // Brand change -----------------
+        setTitle(getString(R.string.app_name));
+        // setTitle(String.format("%s %s", getString(R.string.app_name), viewModel.getVersion()));
+        // end brand change -------------
         setSupportActionBar(toolbar);
+    }
+
+    private void countSavedForms() {
+        InstancesDao instancesDao = new InstancesDao();
+
+        // count for finalized instances
+        try {
+            finalizedCursor = instancesDao.getFinalizedInstancesCursor();
+        } catch (Exception e) {
+            createErrorDialog(e.getMessage(), EXIT);
+            return;
+        }
+
+        if (finalizedCursor != null) {
+            startManagingCursor(finalizedCursor);
+        }
+        completedCount = finalizedCursor != null ? finalizedCursor.getCount() : 0;
+
+        // count for saved instances
+        try {
+            savedCursor = instancesDao.getUnsentInstancesCursor();
+        } catch (Exception e) {
+            createErrorDialog(e.getMessage(), EXIT);
+            return;
+        }
+
+        if (savedCursor != null) {
+            startManagingCursor(savedCursor);
+        }
+        savedCount = savedCursor != null ? savedCursor.getCount() : 0;
+
+        //count for view sent form
+        try {
+            viewSentCursor = instancesDao.getSentInstancesCursor();
+        } catch (Exception e) {
+            createErrorDialog(e.getMessage(), EXIT);
+            return;
+        }
+        if (viewSentCursor != null) {
+            startManagingCursor(viewSentCursor);
+        }
+        viewSentCount = viewSentCursor != null ? viewSentCursor.getCount() : 0;
     }
 
     private void createErrorDialog(String errorMsg, final boolean shouldExit) {
@@ -388,50 +438,52 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
     }
 
     private void updateButtons() {
-        if (!storageMigrationRepository.isMigrationBeingPerformed()) {
-            InstancesDao instancesDao = new InstancesDao();
-
-            int completedCount;
-            try (Cursor finalizedCursor = instancesDao.getFinalizedInstancesCursor()) {
-                completedCount = finalizedCursor != null ? finalizedCursor.getCount() : 0;
-            } catch (Exception ignored) {
-                completedCount = 0;
-            }
-
-            try (Cursor savedCursor = instancesDao.getUnsentInstancesCursor()) {
-                savedCount = savedCursor != null ? savedCursor.getCount() : 0;
-            } catch (Exception ignored) {
-                savedCount = 0;
-            }
-
-            int viewSentCount;
-            try (Cursor viewSentCursor = instancesDao.getSentInstancesCursor()) {
-                viewSentCount = viewSentCursor != null ? viewSentCursor.getCount() : 0;
-            } catch (Exception ignored) {
-                viewSentCount = 0;
-            }
-
-// brand change ----
+//        if (finalizedCursor != null && !finalizedCursor.isClosed()) {
+//            finalizedCursor.requery();
+//            completedCount = finalizedCursor.getCount();
 //            if (completedCount > 0) {
 //                sendDataButton.setText(
 //                        getString(R.string.send_data_button, String.valueOf(completedCount)));
+//                sendDataButton.setVisibility(View.VISIBLE);
 //            } else {
 //                sendDataButton.setText(getString(R.string.send_data));
+//                sendDataButton.setVisibility(View.GONE);
 //            }
+//        } else {
+//            sendDataButton.setText(getString(R.string.send_data));
+//            Timber.w("Cannot update \"Send Finalized\" button label since the database is closed. Perhaps the app is running in the background?");
+//        }
 
+        if (savedCursor != null && !savedCursor.isClosed()) {
+            savedCursor.requery();
+            savedCount = savedCursor.getCount();
             if (savedCount > 0) {
                 reviewDataButton.setText(getString(R.string.review_data_button,
                         String.valueOf(savedCount)));
+                reviewDataButton.setEnabled(true);
             } else {
                 reviewDataButton.setText(getString(R.string.review_data));
+                reviewDataButton.setEnabled(false);
             }
+        } else {
+            reviewDataButton.setText(getString(R.string.review_data));
+            Timber.w("Cannot update \"Edit Form\" button label since the database is closed. Perhaps the app is running in the background?");
+        }
 
+        if (viewSentCursor != null && !viewSentCursor.isClosed()) {
+            viewSentCursor.requery();
+            viewSentCount = viewSentCursor.getCount();
             if (viewSentCount > 0) {
                 viewSentFormsButton.setText(
                         getString(R.string.view_sent_forms_button, String.valueOf(viewSentCount)));
+                viewSentFormsButton.setEnabled(true);
             } else {
                 viewSentFormsButton.setText(getString(R.string.view_sent_forms));
+                viewSentFormsButton.setEnabled(false);
             }
+        } else {
+            viewSentFormsButton.setText(getString(R.string.view_sent_forms));
+            Timber.w("Cannot update \"View Sent\" button label since the database is closed. Perhaps the app is running in the background?");
         }
     }
 
@@ -533,7 +585,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
     }
 
     private void displayBannerWithSuccessStorageMigrationResult() {
-        storageMigrationBanner.setVisibility(View.VISIBLE);
+        storageMigrationBanner.setVisibility(View.GONE);
         storageMigrationBanner.setText(getString(R.string.storage_migration_completed));
         storageMigrationBanner.setActionText(getString(R.string.scoped_storage_dismiss));
         storageMigrationBanner.setAction(() -> {
@@ -542,6 +594,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         });
     }
 
+// brand change ----
 //    private void tryToPerformAutomaticMigration() {
 //        if (storageStateProvider.shouldPerformAutomaticMigration()) {
 //            StorageMigrationDialog dialog = showStorageMigrationDialog();

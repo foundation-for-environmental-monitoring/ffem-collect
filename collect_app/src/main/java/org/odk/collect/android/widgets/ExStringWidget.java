@@ -174,7 +174,7 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
         if (question.length() > 20) {
             question = question.substring(0, 20) + "...";
         }
-        return v != null ? v : question + " " + getContext().getString(R.string.test);
+        return v != null ? v : question + " >";
     }
 
     protected void fireActivity(Intent i) throws ActivityNotFoundException {

@@ -493,6 +493,52 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         return TextUtils.join(" > ", segments);
     }
 
+    // Brand change
+    public static String convertToTitleCaseIteratingChars(String text) {
+        if (text == null || text.isEmpty()) {
+            return text;
+        }
+
+        StringBuilder converted = new StringBuilder();
+
+        boolean convertNext = true;
+        for (char ch : text.toCharArray()) {
+            if (Character.isSpaceChar(ch)) {
+                convertNext = true;
+            } else if (convertNext) {
+                ch = Character.toTitleCase(ch);
+                convertNext = false;
+            } else {
+                ch = Character.toLowerCase(ch);
+            }
+            converted.append(ch);
+        }
+
+        return converted.toString();
+    }
+
+    // Brand change
+    private String getButtonText(FormEntryCaption c) {
+        String v = c.getSpecialFormQuestionText("buttonText");
+        String question = c.getLongText();
+        String testId = c.getFormElement().getChild(0).getTextID();
+        if (testId.contains("group_")){
+            question = testId.substring(testId.lastIndexOf("/") + 1, testId.indexOf(":"));
+            question = question.replace("group_", "");
+            question = question.replace("_", " ");
+            question = convertToTitleCaseIteratingChars(question);
+        }
+
+        if (question == null) {
+            question = "";
+        }
+        if (question.length() > 20) {
+            question = question.substring(0, 20) + "...";
+        }
+
+        return v != null ? v : question + " >";
+    }
+
     /**
      * Adds a button to launch an intent if the group displayed by this view is an intent group.
      * An intent group launches an intent and receives multiple values from the launched app.
@@ -501,9 +547,9 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                                        FormEntryCaption c, String intentString, String textID) {
         final String buttonText;
         final String errorString;
-        String v = c.getSpecialFormQuestionText("buttonText");
-        buttonText = (v != null) ? v : context.getString(R.string.launch_app);
-        v = c.getSpecialFormQuestionText("noAppErrorString");
+
+        buttonText = getButtonText(c);
+        String v = c.getSpecialFormQuestionText("noAppErrorString");
         errorString = (v != null) ? v : context.getString(R.string.no_app);
 
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
