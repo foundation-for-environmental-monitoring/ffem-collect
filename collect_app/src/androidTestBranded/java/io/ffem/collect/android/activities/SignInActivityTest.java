@@ -47,7 +47,7 @@ public class SignInActivityTest {
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
             ))
-            .around(new ResetStateRule(true));
+            .around(new ResetStateRule(true, null));
 
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {

@@ -208,7 +208,7 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
     @SuppressWarnings("deprecation")
     private void setupLocationDialog() {
         // dialog displayed while fetching gps location
-        locationDialog = new ProgressDialog(this);
+        locationDialog = new ProgressDialog(this, themeUtils.getMaterialDialogTheme());
 
         locationDialog.setCancelable(false); // taping outside the dialog doesn't cancel
         locationDialog.setIndeterminate(true);
