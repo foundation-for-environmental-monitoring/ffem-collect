@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <include layout="@layout/app_bar_layout" />
 
@@ -35,6 +36,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:onClick="onClickGetBlankForm"
+                android:textColor="@color/button_text"
+                app:backgroundTint="@color/button"
                 android:padding="20dp"
                 android:paddingStart="50dp"
                 android:paddingEnd="50dp"

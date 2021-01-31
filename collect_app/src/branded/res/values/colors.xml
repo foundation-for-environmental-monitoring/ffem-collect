@@ -17,10 +17,10 @@ the License.
 
     <color name="primary">#D3D3D3</color>
     <color name="primary_text">#444</color>
-    <color name="toolbar">#585858</color>
+    <color name="button">#BFBFBF</color>
     <color name="primary_dark">#4d4d4d</color>
     <color name="lightTintColor">#1a8302</color>
-    <color name="button_text">#e33b3b3b</color>
+    <color name="button_text">#E3202020</color>
     <color name="linkBlue">#517cc6</color>
 
     <!-- Diagnostic -->
