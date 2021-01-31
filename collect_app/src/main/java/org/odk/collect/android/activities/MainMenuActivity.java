@@ -378,17 +378,17 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         InstancesDao instancesDao = new InstancesDao();
 
         // count for finalized instances
-        try {
-            finalizedCursor = instancesDao.getFinalizedInstancesCursor();
-        } catch (Exception e) {
-            createErrorDialog(e.getMessage(), EXIT);
-            return;
-        }
-
-        if (finalizedCursor != null) {
-            startManagingCursor(finalizedCursor);
-        }
-        completedCount = finalizedCursor != null ? finalizedCursor.getCount() : 0;
+//        try {
+//            finalizedCursor = instancesDao.getFinalizedInstancesCursor();
+//        } catch (Exception e) {
+//            createErrorDialog(e.getMessage(), EXIT);
+//            return;
+//        }
+//
+//        if (finalizedCursor != null) {
+//            startManagingCursor(finalizedCursor);
+//        }
+//        completedCount = finalizedCursor != null ? finalizedCursor.getCount() : 0;
 
         // count for saved instances
         try {

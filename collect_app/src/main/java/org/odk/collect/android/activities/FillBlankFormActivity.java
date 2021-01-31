@@ -54,6 +54,7 @@ import org.odk.collect.android.views.ObviousProgressBar;
 
 import javax.inject.Inject;
 
+import io.ffem.collect.android.activities.FillBlankFormActivityBranded;
 import timber.log.Timber;
 
 /**
@@ -63,7 +64,7 @@ import timber.log.Timber;
  * @author Yaw Anokwa (yanokwa@gmail.com)
  * @author Carl Hartung (carlhartung@gmail.com)
  */
-public class FillBlankFormActivity extends FormListActivity implements
+public class FillBlankFormActivity extends FillBlankFormActivityBranded implements
         DiskSyncListener, AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String FORM_CHOOSER_LIST_SORTING_ORDER = "formChooserListSortingOrder";
@@ -82,7 +83,7 @@ public class FillBlankFormActivity extends FormListActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.form_chooser_list);
+        setContentView(R.layout.form_chooser_list_branded);
         DaggerUtils.getComponent(this).inject(this);
 
         setTitle(getString(R.string.enter_data));
