@@ -247,9 +247,9 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
         errorString = (v != null) ? v : getContext().getString(R.string.no_app);
 
         // Brand change
-        if (answerText.getText().toString().isEmpty()){
+        if (answerText.getText().toString().isEmpty()) {
             launchQuestionIntent(intentName, exParams, errorString);
-        }else {
+        } else {
             AlertDialog alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme).create();
             alertDialog.setTitle(getContext().getString(R.string.delete_and_redo));
 

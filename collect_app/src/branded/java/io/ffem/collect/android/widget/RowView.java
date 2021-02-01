@@ -38,4 +38,8 @@ public class RowView extends TableRow {
     public void setSecondaryText(String s) {
         textSecondary.setText(s);
     }
+
+    public Boolean isAnswered(){
+        return textPrimary != null && !textPrimary.getText().toString().isEmpty();
+    }
 }

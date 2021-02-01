@@ -61,18 +61,19 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
          * This code won't run on activities that are entry points to the app because those activities
          * are able to handle permission checks and requests by themselves.
          */
-        if (!permissionsProvider.areStoragePermissionsGranted() && !isEntryPointActivity(this)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog);
-
-            builder.setTitle(R.string.storage_runtime_permission_denied_title)
-                    .setMessage(R.string.storage_runtime_permission_denied_desc)
-                    .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
-                        finishAndRemoveTask();
-                    })
-                    .setIcon(R.drawable.sd)
-                    .setCancelable(false)
-                    .show();
-        }
+// Brand change
+//        if (!permissionsProvider.areStoragePermissionsGranted() && !isEntryPointActivity(this)) {
+//            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog);
+//
+//            builder.setTitle(R.string.storage_runtime_permission_denied_title)
+//                    .setMessage(R.string.storage_runtime_permission_denied_desc)
+//                    .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
+//                        finishAndRemoveTask();
+//                    })
+//                    .setIcon(R.drawable.sd)
+//                    .setCancelable(false)
+//                    .show();
+//        }
     }
 
     @Override
