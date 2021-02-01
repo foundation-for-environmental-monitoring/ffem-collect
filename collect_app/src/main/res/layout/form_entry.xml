@@ -75,7 +75,7 @@ the License.
             android:id="@+id/form_back_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
+
             android:clickable="true"
             android:contentDescription="@string/form_backward"
             android:drawableStart="@drawable/ic_navigate_back_wrapped"
@@ -86,7 +86,7 @@ the License.
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
             android:textColor="?colorOnPrimary"
             android:textStyle="bold"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <View
             android:layout_width="0dp"
@@ -97,7 +97,7 @@ the License.
             android:id="@+id/form_forward_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@color/app_bar"
             android:clickable="true"
             android:contentDescription="@string/form_forward"
             android:drawableEnd="@drawable/ic_navigate_forward_wrapped"

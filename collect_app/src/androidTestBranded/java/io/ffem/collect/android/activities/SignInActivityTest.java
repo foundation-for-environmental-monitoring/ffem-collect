@@ -44,8 +44,6 @@ public class SignInActivityTest {
     @Rule
     public RuleChain copyFormChain = RuleChain
             .outerRule(GrantPermissionRule.grant(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
             ))
             .around(new ResetStateRule(true, null));
 

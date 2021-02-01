@@ -77,6 +77,8 @@ import butterknife.ButterKnife;
 import io.ffem.collect.android.activities.MainMenuActivityBranded;
 import timber.log.Timber;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static org.odk.collect.android.utilities.DialogUtils.getDialog;
 import static org.odk.collect.android.utilities.DialogUtils.showIfNotShowing;
 
@@ -242,7 +244,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         if (versionSHA != null) {
             versionSHAView.setText(versionSHA);
         } else {
-            versionSHAView.setVisibility(View.GONE);
+            versionSHAView.setVisibility(GONE);
         }
 
         // must be at the beginning of any activity that can be called from an
@@ -288,12 +290,12 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
     }
 
     private void setButtonsVisibility() {
-        reviewDataButton.setVisibility(viewModel.shouldEditSavedFormButtonBeVisible() ? View.VISIBLE : View.GONE);
 // brand change ----
+//        reviewDataButton.setVisibility(viewModel.shouldEditSavedFormButtonBeVisible() ? VISIBLE : GONE);
 //        if (sendDataButton.getVisibility() == View.VISIBLE) {
 //            sendDataButton.setVisibility(viewModel.shouldSendFinalizedFormButtonBeVisible() ? View.VISIBLE : View.GONE);
 //        }
-        viewSentFormsButton.setVisibility(viewModel.shouldViewSentFormButtonBeVisible() ? View.VISIBLE : View.GONE);
+//        viewSentFormsButton.setVisibility(viewModel.shouldViewSentFormButtonBeVisible() ? VISIBLE : GONE);
 //        getFormsButton.setVisibility(viewModel.shouldGetBlankFormButtonBeVisible() ? View.VISIBLE : View.GONE);
 //        manageFilesButton.setVisibility(viewModel.shouldDeleteSavedFormButtonBeVisible() ? View.VISIBLE : View.GONE);
 // end brand change ----
@@ -460,10 +462,10 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
             if (savedCount > 0) {
                 reviewDataButton.setText(getString(R.string.review_data_button,
                         String.valueOf(savedCount)));
-                reviewDataButton.setEnabled(true);
+                reviewDataButton.setVisibility(VISIBLE);
             } else {
                 reviewDataButton.setText(getString(R.string.review_data));
-                reviewDataButton.setEnabled(false);
+                reviewDataButton.setVisibility(GONE);
             }
         } else {
             reviewDataButton.setText(getString(R.string.review_data));
@@ -476,10 +478,10 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
             if (viewSentCount > 0) {
                 viewSentFormsButton.setText(
                         getString(R.string.view_sent_forms_button, String.valueOf(viewSentCount)));
-                viewSentFormsButton.setEnabled(true);
+                viewSentFormsButton.setVisibility(VISIBLE);
             } else {
                 viewSentFormsButton.setText(getString(R.string.view_sent_forms));
-                viewSentFormsButton.setEnabled(false);
+                viewSentFormsButton.setVisibility(GONE);
             }
         } else {
             viewSentFormsButton.setText(getString(R.string.view_sent_forms));
@@ -575,7 +577,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
     }
 
     private void displayStorageMigrationBanner() {
-        storageMigrationBanner.setVisibility(View.VISIBLE);
+        storageMigrationBanner.setVisibility(VISIBLE);
         storageMigrationBanner.setText(getText(R.string.scoped_storage_banner_text));
         storageMigrationBanner.setActionText(getString(R.string.scoped_storage_learn_more));
         storageMigrationBanner.setAction(() -> {
@@ -585,11 +587,11 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
     }
 
     private void displayBannerWithSuccessStorageMigrationResult() {
-        storageMigrationBanner.setVisibility(View.GONE);
+        storageMigrationBanner.setVisibility(GONE);
         storageMigrationBanner.setText(getString(R.string.storage_migration_completed));
         storageMigrationBanner.setActionText(getString(R.string.scoped_storage_dismiss));
         storageMigrationBanner.setAction(() -> {
-            storageMigrationBanner.setVisibility(View.GONE);
+            storageMigrationBanner.setVisibility(GONE);
             storageMigrationRepository.clearResult();
         });
     }

@@ -4,11 +4,14 @@
     <PreferenceCategory
         android:key="form_filling"
         android:title="@string/form_filling_category"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
         app:iconSpaceReserved="false">
         <CheckBoxPreference
             android:key="high_resolution"
             android:summary="@string/high_resolution_summary"
             android:title="@string/high_resolution_title"
+            app:allowDividerAbove="true"
             app:iconSpaceReserved="false" />
         <ListPreference
             android:dialogTitle="@string/image_size_dialog_title"
@@ -16,6 +19,7 @@
             android:entryValues="@array/image_size_entry_values"
             android:key="image_size"
             android:title="@string/image_size_title"
+            app:allowDividerBelow="true"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -82,10 +82,11 @@ public class FormEntryMenuDelegate implements MenuDelegate, RequiresFormControll
         menu.findItem(R.id.menu_languages).setVisible(useability)
                 .setEnabled(useability);
 
-        useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_ACCESS_SETTINGS);
+        // Brand change
+//        useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_ACCESS_SETTINGS);
 
-        menu.findItem(R.id.menu_preferences).setVisible(useability)
-                .setEnabled(useability);
+//        menu.findItem(R.id.menu_preferences).setVisible(useability)
+//                .setEnabled(useability);
 
         if (formController != null && formController.currentFormCollectsBackgroundLocation()
                 && new PlayServicesChecker().isGooglePlayServicesAvailable(activity)) {

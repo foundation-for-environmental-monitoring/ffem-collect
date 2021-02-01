@@ -2,10 +2,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory
         android:title="@string/admin"
+        app:allowDividerAbove="true"
         app:iconSpaceReserved="false">
         <Preference
             android:key="delete_forms"
             android:title="@string/delete_forms"
+            app:allowDividerAbove="true"
             app:iconSpaceReserved="false" />
         <org.odk.collect.android.preferences.ResetDialogPreference
             android:dialogTitle="@string/reset_settings_dialog_title"

@@ -605,7 +605,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
             } catch (ActivityNotFoundException e) {
                 Timber.d(e, "ActivityNotFoundExcept");
 
-                if (intentName.startsWith("io.") || intentName.startsWith("hd.sensor")) {
+                if (intentName.startsWith("io.ffem")) {
                     String appName =  intentName.substring(intentName.indexOf(".")).replace(".", " ");
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.Theme_AppCompat_Light_Dialog);
                     builder.setTitle(R.string.app_not_found)
@@ -863,7 +863,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                 intentString = intentString.replaceFirst("^ex[:]", "");
             }
 
-            if (intentString.length() < 12 || (!intentString.startsWith("io.") && !intentString.startsWith("hd.sensor"))) {
+            if (intentString.length() < 12 || (!intentString.startsWith("io.ffem"))) {
                 return null;
             }
         }

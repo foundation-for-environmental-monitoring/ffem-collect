@@ -3,6 +3,7 @@
 
     <style name="Widget.Collect.Button.Custom" parent="Widget.MaterialComponents.Button">
         <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/button_text</item>
         <item name="android:textStyle">normal</item>
     </style>
 

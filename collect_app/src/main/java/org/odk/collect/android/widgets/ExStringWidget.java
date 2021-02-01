@@ -372,8 +372,12 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
         // Brand change
         String exSpec = getFormEntryPrompt().getAppearanceHint().replaceFirst("^ex[:]", "");
         final String intentName = ExternalAppsUtils.extractIntentName(exSpec);
-        if (intentName.startsWith("io.") || intentName.startsWith("hd.sensor")) {
-            String appName =  intentName.substring(intentName.indexOf(".")).replace(".", " ");
+        if (intentName.startsWith("io.ffem")) {
+            String appName =  intentName.substring(intentName.indexOf("ffem"));
+            appName = appName.substring(appName.indexOf("ffem"), appName.indexOf(".")) +
+                    " " + Character.toUpperCase(appName.charAt(appName.indexOf(".") + 1)) +
+                    appName.substring(appName.indexOf(".") + 2);
+
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.Theme_AppCompat_Light_Dialog);
             builder.setTitle(R.string.app_not_found)
                     .setMessage(Html.fromHtml(getContext().getString(R.string.install_app, appName)))

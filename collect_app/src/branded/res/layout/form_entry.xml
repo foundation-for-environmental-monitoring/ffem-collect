@@ -65,8 +65,8 @@ the License.
         android:id="@+id/buttonholder"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:background="@color/app_bar"
         android:layout_alignParentBottom="true"
-        android:background="?colorPrimary"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -74,7 +74,7 @@ the License.
             android:id="@+id/form_back_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@color/app_bar"
             android:clickable="true"
             android:contentDescription="@string/form_backward"
             android:drawableStart="@drawable/ic_navigate_back_wrapped"
@@ -96,7 +96,7 @@ the License.
             android:id="@+id/form_forward_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@color/app_bar"
             android:clickable="true"
             android:contentDescription="@string/form_forward"
             android:drawableEnd="@drawable/ic_navigate_forward_wrapped"

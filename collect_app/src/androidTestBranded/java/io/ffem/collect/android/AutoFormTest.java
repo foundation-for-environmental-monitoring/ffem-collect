@@ -67,9 +67,7 @@ public class AutoFormTest {
     private final ActivityAvailability activityAvailability = mock(ActivityAvailability.class);
     @Rule
     public RuleChain copyFormChain = RuleChain
-            .outerRule(GrantPermissionRule.grant(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .outerRule(GrantPermissionRule.grant()
             )
             .around(new ResetStateRule(new AppDependencyModule() {
                 @Override
