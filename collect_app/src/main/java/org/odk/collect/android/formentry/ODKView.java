@@ -567,7 +567,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
 
 
         // set button formatting
-        Boolean answered = false;
+        boolean answered = false;
         if (widgetsList.getChildAt(widgetsList.getChildCount() - 1) instanceof RowView) {
             RowView rowView = (RowView) widgetsList.getChildAt(widgetsList.getChildCount() - 1);
             answered = rowView.isAnswered();
@@ -676,7 +676,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                 }
 
                 if (Collect.getInstance().getFormController() != null) {
-                    parseXml(Collect.getInstance().getFormController().getSubmissionXml().toString(), i);
+                    i.putExtra("xml", Collect.getInstance().getFormController().getSubmissionXml().toString());
                 }
 
                 ((Activity) getContext()).startActivityForResult(i, RequestCodes.EX_GROUP_CAPTURE);
@@ -705,31 +705,6 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
             } catch (IOException e) {
                 e.printStackTrace();
             }
-    }
-
-    public void parseXml(String xmlString, Intent intent){
-        try {
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            factory.setNamespaceAware(true);
-            XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput( new StringReader( xmlString ) );
-            int eventType = xpp.getEventType();
-            String text = "";
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                if (eventType == XmlPullParser.TEXT) {
-                    text = xpp.getText();
-                } else if(eventType == XmlPullParser.END_TAG) {
-                    if (!xpp.getName().contains("__") && !xpp.getName().contains("instanceID") && !text.isEmpty()) {
-                        intent.putExtra(xpp.getName(), text);
-                        Timber.e(xpp.getName() + " : " + text);
-                        text = "";
-                    }
-                }
-                eventType = xpp.next();
-            }
-        } catch (XmlPullParserException | IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void setFocus(Context context) {

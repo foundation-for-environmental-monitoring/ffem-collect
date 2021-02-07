@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.text.Html;
 import android.text.Selection;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -53,6 +54,7 @@ import timber.log.Timber;
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static android.content.Intent.ACTION_SENDTO;
+import static org.odk.collect.android.formentry.questions.WidgetViewUtils.createRedoButton;
 import static org.odk.collect.android.formentry.questions.WidgetViewUtils.createSimpleButton;
 import static org.odk.collect.android.injection.DaggerUtils.getComponent;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
@@ -104,7 +106,7 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
     private final WaitingForDataRegistry waitingForDataRegistry;
 
     private boolean hasExApp = true;
-    public Button launchIntentButton;
+    public View launchIntentButton;
     public TextView unitText;
 
     @Inject
@@ -119,8 +121,11 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
     @Override
     protected void setUpLayout(Context context) {
         answerText.setText(getFormEntryPrompt().getAnswerText());
-        launchIntentButton = createSimpleButton(getContext(), getFormEntryPrompt().isReadOnly(), getButtonText(), getAnswerFontSize(), this);
-
+        if (getFormEntryPrompt().getAnswerText() == null) {
+            launchIntentButton = createSimpleButton(getContext(), getFormEntryPrompt().isReadOnly(), getButtonText(), getAnswerFontSize(), this);
+        } else {
+            launchIntentButton = createRedoButton(getContext(), getFormEntryPrompt().isReadOnly(), getAnswerFontSize(), this);
+        }
         LinearLayout answerLayout = new LinearLayout(getContext());
         answerLayout.setOrientation(LinearLayout.VERTICAL);
         // Brand change - Display answer above the button

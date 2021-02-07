@@ -107,4 +107,31 @@ public class WidgetViewUtils {
     public static Button createSimpleButton(Context context, boolean readOnly, String text, int answerFontSize, ButtonClickListener listener) {
         return createSimpleButton(context, R.id.simple_button, readOnly, text, answerFontSize, listener);
     }
+
+    public static TextView createRedoButton(Context context, boolean readOnly, int answerFontSize, ButtonClickListener listener) {
+        final TextView button = (TextView) LayoutInflater
+                .from(context)
+                .inflate(R.layout.widget_redo_button, null, false);
+
+        if (readOnly) {
+            button.setVisibility(GONE);
+        } else {
+            button.setId(R.id.simple_button);
+            button.setText(R.string.redo_test);
+            button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, answerFontSize);
+
+            TableLayout.LayoutParams params = new TableLayout.LayoutParams();
+            params.setMargins(7, 5, 7, 5);
+
+            button.setLayoutParams(params);
+
+            button.setOnClickListener(v -> {
+                if (MultiClickGuard.allowClick(QuestionWidget.class.getName())) {
+                    listener.onButtonClick(R.id.simple_button);
+                }
+            });
+        }
+
+        return button;
+    }
 }
