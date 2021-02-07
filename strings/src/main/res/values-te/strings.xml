@@ -20,7 +20,7 @@
   <string name="get_forms">కొత్త ఫారం డౌన్లోడ్ చేసుకోండి</string>
   <!--Text for an action button on the main screen.-->
   <string name="manage_files">సేవ్ చేసిన ఫారంలను తొలగించండి </string>
-  <string name="version_number">వెర్షన్: %s</string>
+  <string name="version_number">%s</string>
   <string name="id_number">ID:%s</string>
   <!--Please format date appropriately for your language: http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html-->
   <string name="added_on_date_at_time">\'చేర్చిన తేదీ\' EEE, MMM dd, yyyy \'సమయం\' HH:mm</string>

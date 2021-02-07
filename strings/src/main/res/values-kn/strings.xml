@@ -110,7 +110,7 @@
     <string name="download_selected">ಡೌನ್‌ಲೋಡ್ ಆಯ್ಕೆಮಾಡಲಾಗಿದೆ</string>
     <string name="record_geopoint">ಒಂದು ಬಿಂದುವನ್ನು ರೆಕಾರ್ಡ್ ಮಾಡಿ</string>
     <string name="gps_result">ಅಕ್ಷಾಂಶ:  %1$s\nಉದ್ದ: %2$s\nಎತ್ತರ: %3$sm\nನಿಖರತೆ: %4$sm</string>
-    <string name="version_number">ಆವೃತ್ತಿ: %s</string>
+    <string name="version_number">%s</string>
     <string name="id_number">ID: %s</string>
     <string name="select_all">ಎಲ್ಲವನ್ನು ಆರಿಸು</string>
     <string name="clear_all">ಎಲ್ಲವನ್ನೂ ತೆಗೆ</string>

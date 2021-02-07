@@ -20,7 +20,7 @@
   <string name="get_forms">खाली फॉर्म प्राप्त करें</string>
   <!--Text for an action button on the main screen.-->
   <string name="manage_files">संरक्षित फॉर्म मिटायें</string>
-  <string name="version_number">संस्करण: %s</string>
+  <string name="version_number">%s</string>
   <!--Please format date appropriately for your language: http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html-->
   <string name="added_on_date_at_time">EEE, MMM dd, yyyy \'पर जोड़ा\' HH:mm \'पर\' </string>
   <!--Please format date appropriately for your language: http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html-->

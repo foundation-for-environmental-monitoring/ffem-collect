@@ -88,7 +88,9 @@ import org.odk.collect.audioclips.PlaybackFailedException;
 import org.odk.collect.audiorecorder.recording.AudioRecorderViewModel;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -115,6 +117,9 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.widget.TextViewCompat;
 
 import org.javarosa.core.model.GroupDef;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 /**
  * Contains either one {@link QuestionWidget} if the current form element is a question or
@@ -188,8 +193,6 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
 
         layout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-        // display which group you are in as well as the question
-        setGroupText(groups);
 
         // when the grouped fields are populated by an external app, this will get true.
         boolean questionAdded = false;
@@ -220,12 +223,16 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                             RowView answerRow = new RowView(context);
                             answerRow.setPrimaryText(qw.getQuestionDetails().getPrompt().getQuestionText() + ": ");
                             answerRow.setSecondaryText(qw.getAnswer().getDisplayText());
-                            widgetsList.addView(answerRow);
+                            if (!qw.getAnswer().getDisplayText().isEmpty()) {
+                                widgetsList.addView(answerRow);
+                            }
                         } else {
-                            AppCompatTextView textView = new AppCompatTextView(context);
-                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-                            textView.setLayoutParams(params);
-                            widgetsList.addView(textView);
+                            if (!questionAdded) {
+                                AppCompatTextView textView = new AppCompatTextView(context);
+                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                                textView.setLayoutParams(params);
+                                widgetsList.addView(textView);
+                            }
                         }
                     }
                     question.getQuestion().setAdditionalAttribute("", "done", "true");
@@ -234,13 +241,15 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
 
                 addIntentLaunchButton(context, questionPrompts, c, intentString, c.getFormElement().getTextID(), groups[0].getShortText());
             } else {
+                // display which group you are in as well as the question
+                setGroupText(groups);
+
                 IFormElement formElement = c.getFormElement();
                 for (int i = 0; i < formElement.getChildren().size(); i++) {
                     questionAdded = false;
                     if (formElement.getChild(i) instanceof GroupDef) {
                         intentString = getIntentString(formElement.getChild(i));
                         if (intentString != null) {
-                            setGroupText(groups);
                             List<FormEntryPrompt> formEntryPrompts = new ArrayList<>();
                             for (FormEntryPrompt prompt : questionPrompts) {
                                 if (prompt != null && prompt.getIndex().getNextLevel().getLocalIndex() == i) {
@@ -556,33 +565,50 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         String v = c.getSpecialFormQuestionText("noAppErrorString");
         errorString = (v != null) ? v : context.getString(R.string.no_app);
 
-        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.setMargins(24, 8, 24, 8);
 
         // set button formatting
-        final MaterialButton launchIntentButton = (MaterialButton) LayoutInflater
-                .from(context)
-                .inflate(R.layout.widget_answer_button, null, false);
-        launchIntentButton.setId(View.generateViewId());
-        launchIntentButton.setText(buttonText);
-        launchIntentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, questionTextSizeHelper.getHeadline6());
-        launchIntentButton.setLayoutParams(params);
-        launchIntentButton.setTag(textID);
+        Boolean answered = false;
+        if (widgetsList.getChildAt(widgetsList.getChildCount() - 1) instanceof RowView) {
+            RowView rowView = (RowView) widgetsList.getChildAt(widgetsList.getChildCount() - 1);
+            answered = rowView.isAnswered();
+        }
 
+        View launchIntentButton;
+        if (answered) {
+            LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(24, 8, 24, 8);
+            launchIntentButton = (TextView) LayoutInflater
+                    .from(context)
+                    .inflate(R.layout.widget_redo_button, null, false);
+            launchIntentButton.setLayoutParams(params);
+        } else {
+            LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(24, 8, 24, 8);
+            launchIntentButton = (MaterialButton) LayoutInflater
+                    .from(context)
+                    .inflate(R.layout.widget_answer_button, null, false);
+            ((MaterialButton)launchIntentButton).setText(buttonText);
+            launchIntentButton.setLayoutParams(params);
+            ((MaterialButton)launchIntentButton).setTextSize(TypedValue.COMPLEX_UNIT_DIP, questionTextSizeHelper.getHeadline6());
+        }
+
+        launchIntentButton.setId(View.generateViewId());
+        launchIntentButton.setTag(textID);
         launchIntentButton.setOnClickListener(view -> {
              // Brand change
-            Boolean answered = false;
+            Boolean answered1 = false;
             for (int i = 0; i < widgetsList.getChildCount(); i++) {
                 if (widgetsList.getChildAt(i) == view) {
                     if (widgetsList.getChildAt(i - 1) instanceof RowView) {
                         RowView rowView = (RowView) widgetsList.getChildAt(i - 1);
-                        answered = rowView.isAnswered();
+                        answered1 = rowView.isAnswered();
                     }
                 }
             }
 
-            if (answered) {
+            if (answered1) {
                 AlertDialog alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme).create();
                 alertDialog.setTitle(getContext().getString(R.string.delete_and_redo));
 
@@ -612,7 +638,9 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                 launchQuestionIntent(intentString, questionPrompts, errorString, c, view);
             }
         });
+
         widgetsList.addView(launchIntentButton);
+        widgetsList.addView(getDividerView());
     }
 
     public void launchQuestionIntent(String intentString, FormEntryPrompt[] questionPrompts,
@@ -647,6 +675,10 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                     }
                 }
 
+                if (Collect.getInstance().getFormController() != null) {
+                    parseXml(Collect.getInstance().getFormController().getSubmissionXml().toString(), i);
+                }
+
                 ((Activity) getContext()).startActivityForResult(i, RequestCodes.EX_GROUP_CAPTURE);
             } catch (ExternalParamsException e) {
                 Timber.e(e, "ExternalParamsException");
@@ -670,7 +702,34 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                 } else {
                     ToastUtils.showShortToast(errorString);
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+    }
+
+    public void parseXml(String xmlString, Intent intent){
+        try {
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            factory.setNamespaceAware(true);
+            XmlPullParser xpp = factory.newPullParser();
+            xpp.setInput( new StringReader( xmlString ) );
+            int eventType = xpp.getEventType();
+            String text = "";
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                if (eventType == XmlPullParser.TEXT) {
+                    text = xpp.getText();
+                } else if(eventType == XmlPullParser.END_TAG) {
+                    if (!xpp.getName().contains("__") && !xpp.getName().contains("instanceID") && !text.isEmpty()) {
+                        intent.putExtra(xpp.getName(), text);
+                        Timber.e(xpp.getName() + " : " + text);
+                        text = "";
+                    }
+                }
+                eventType = xpp.next();
+            }
+        } catch (XmlPullParserException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setFocus(Context context) {
