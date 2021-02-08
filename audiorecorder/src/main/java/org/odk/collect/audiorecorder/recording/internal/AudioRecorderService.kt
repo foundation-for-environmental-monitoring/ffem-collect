@@ -8,6 +8,7 @@ import org.odk.collect.async.Scheduler
 import org.odk.collect.audiorecorder.getComponent
 import org.odk.collect.audiorecorder.recorder.Output
 import org.odk.collect.audiorecorder.recorder.Recorder
+import java.io.Serializable
 import javax.inject.Inject
 
 internal class AudioRecorderService : Service() {
@@ -35,7 +36,7 @@ internal class AudioRecorderService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
             ACTION_START -> {
-                val sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
+                val sessionId = intent.getSerializableExtra(EXTRA_SESSION_ID)
                 val output = intent.getSerializableExtra(EXTRA_OUTPUT) as Output
 
                 if (!recorder.isRecording() && sessionId != null) {
@@ -44,17 +45,21 @@ internal class AudioRecorderService : Service() {
             }
 
             ACTION_PAUSE -> {
-                recorder.pause()
-                recordingRepository.setPaused(true)
+                if (recorder.isRecording()) {
+                    recorder.pause()
+                    recordingRepository.setPaused(true)
 
-                stopUpdates()
+                    stopUpdates()
+                }
             }
 
             ACTION_RESUME -> {
-                recorder.resume()
-                recordingRepository.setPaused(false)
+                if (recorder.isRecording()) {
+                    recorder.resume()
+                    recordingRepository.setPaused(false)
 
-                startUpdates()
+                    startUpdates()
+                }
             }
 
             ACTION_STOP -> {
@@ -71,7 +76,7 @@ internal class AudioRecorderService : Service() {
         return START_STICKY
     }
 
-    private fun startRecording(sessionId: String, output: Output) {
+    private fun startRecording(sessionId: Serializable, output: Output) {
         notification.show()
 
         try {

@@ -98,6 +98,7 @@ import org.odk.collect.android.utilities.ActivityAvailability;
 import org.odk.collect.android.utilities.AdminPasswordProvider;
 import org.odk.collect.android.utilities.AndroidUserAgent;
 import org.odk.collect.android.utilities.DeviceDetailsProvider;
+import org.odk.collect.android.utilities.ExternalAppIntentProvider;
 import org.odk.collect.android.utilities.FileProvider;
 import org.odk.collect.android.utilities.FileUtil;
 import org.odk.collect.android.utilities.FormsDirDiskFormsSynchronizer;
@@ -110,7 +111,8 @@ import org.odk.collect.android.version.VersionInformation;
 import org.odk.collect.android.views.BarcodeViewDecoder;
 import org.odk.collect.async.CoroutineAndWorkManagerScheduler;
 import org.odk.collect.async.Scheduler;
-import org.odk.collect.audiorecorder.recording.AudioRecorderViewModelFactory;
+import org.odk.collect.audiorecorder.recording.AudioRecorder;
+import org.odk.collect.audiorecorder.recording.AudioRecorderFactory;
 import org.odk.collect.utilities.Clock;
 import org.odk.collect.utilities.UserAgentProvider;
 
@@ -473,17 +475,17 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public AudioRecorderViewModelFactory providesAudioRecorderViewModelFactory(Application application) {
-        return new AudioRecorderViewModelFactory(application);
+    public AudioRecorder providesAudioRecorder(Application application) {
+        return new AudioRecorderFactory(application).create();
     }
 
     @Provides
-    public FormSaveViewModel.FactoryFactory providesFormSaveViewModelFactoryFactory(Analytics analytics, Scheduler scheduler) {
+    public FormSaveViewModel.FactoryFactory providesFormSaveViewModelFactoryFactory(Analytics analytics, Scheduler scheduler, AudioRecorder audioRecorder) {
         return (owner, defaultArgs) -> new AbstractSavedStateViewModelFactory(owner, defaultArgs) {
             @NonNull
             @Override
             protected <T extends ViewModel> T create(@NonNull String key, @NonNull Class<T> modelClass, @NonNull SavedStateHandle handle) {
-                return (T) new FormSaveViewModel(handle, System::currentTimeMillis, new DiskFormSaver(), new MediaUtils(), analytics, scheduler);
+                return (T) new FormSaveViewModel(handle, System::currentTimeMillis, new DiskFormSaver(), new MediaUtils(), analytics, scheduler, audioRecorder);
             }
         };
     }
@@ -513,5 +515,11 @@ public class AppDependencyModule {
     @Singleton
     public PermissionsChecker providesPermissionsChecker(Context context) {
         return new PermissionsChecker(context);
+    }
+
+    @Provides
+    @Singleton
+    public ExternalAppIntentProvider providesExternalAppIntentProvider() {
+        return new ExternalAppIntentProvider();
     }
 }

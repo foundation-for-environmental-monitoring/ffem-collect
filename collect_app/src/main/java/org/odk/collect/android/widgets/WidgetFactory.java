@@ -18,6 +18,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.hardware.SensorManager;
 
+import androidx.lifecycle.LifecycleOwner;
+
 import org.javarosa.core.model.Constants;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.application.Collect;
@@ -28,6 +30,8 @@ import org.odk.collect.android.utilities.ActivityAvailability;
 import org.odk.collect.android.utilities.CameraUtils;
 import org.odk.collect.android.utilities.CustomTabHelper;
 import org.odk.collect.android.permissions.PermissionsProvider;
+import org.odk.collect.android.utilities.ExternalAppIntentProvider;
+import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.utilities.QuestionMediaManager;
 import org.odk.collect.android.utilities.Appearances;
 import org.odk.collect.android.widgets.items.LabelWidget;
@@ -46,8 +50,10 @@ import org.odk.collect.android.widgets.utilities.AudioPlayer;
 import org.odk.collect.android.widgets.utilities.DateTimeWidgetUtils;
 import org.odk.collect.android.widgets.utilities.GetContentAudioFileRequester;
 import org.odk.collect.android.widgets.utilities.RecordingRequester;
-import org.odk.collect.android.widgets.utilities.RecordingRequesterFactory;
+import org.odk.collect.android.widgets.utilities.RecordingRequesterProvider;
+import org.odk.collect.android.widgets.utilities.AudioRecorderRecordingStatusHandler;
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry;
+import org.odk.collect.audiorecorder.recording.AudioRecorder;
 
 import static org.odk.collect.android.utilities.Appearances.MAPS;
 import static org.odk.collect.android.utilities.Appearances.PLACEMENT_MAP;
@@ -69,9 +75,12 @@ public class WidgetFactory {
     private final QuestionMediaManager questionMediaManager;
     private final AudioPlayer audioPlayer;
     private final ActivityAvailability activityAvailability;
-    private final RecordingRequesterFactory recordingRequesterFactory;
+    private final RecordingRequesterProvider recordingRequesterProvider;
     private final FormEntryViewModel formEntryViewModel;
+    private final AudioRecorder audioRecorder;
+    private final LifecycleOwner viewLifecycle;
 
+    @SuppressWarnings("PMD.ExcessiveParameterList")
     public WidgetFactory(Activity activity,
                          boolean readOnlyOverride,
                          boolean useExternalRecorder,
@@ -79,7 +88,10 @@ public class WidgetFactory {
                          QuestionMediaManager questionMediaManager,
                          AudioPlayer audioPlayer,
                          ActivityAvailability activityAvailability,
-                         RecordingRequesterFactory recordingRequesterFactory, FormEntryViewModel formEntryViewModel) {
+                         RecordingRequesterProvider recordingRequesterProvider,
+                         FormEntryViewModel formEntryViewModel,
+                         AudioRecorder audioRecorder,
+                         LifecycleOwner viewLifecycle) {
         this.context = activity;
         this.readOnlyOverride = readOnlyOverride;
         this.useExternalRecorder = useExternalRecorder;
@@ -87,8 +99,10 @@ public class WidgetFactory {
         this.questionMediaManager = questionMediaManager;
         this.audioPlayer = audioPlayer;
         this.activityAvailability = activityAvailability;
-        this.recordingRequesterFactory = recordingRequesterFactory;
+        this.recordingRequesterProvider = recordingRequesterProvider;
         this.formEntryViewModel = formEntryViewModel;
+        this.audioRecorder = audioRecorder;
+        this.viewLifecycle = viewLifecycle;
     }
 
     public QuestionWidget createWidgetFromPrompt(FormEntryPrompt prompt, PermissionsProvider permissionsProvider) {
@@ -167,7 +181,11 @@ public class WidgetFactory {
                 }
                 break;
             case Constants.CONTROL_FILE_CAPTURE:
-                questionWidget = new ArbitraryFileWidget(context, questionDetails, questionMediaManager, waitingForDataRegistry);
+                if (appearance.startsWith(Appearances.EX)) {
+                    questionWidget = new ExArbitraryFileWidget(context, questionDetails, new MediaUtils(), questionMediaManager, waitingForDataRegistry, new ExternalAppIntentProvider(), activityAvailability);
+                } else {
+                    questionWidget = new ArbitraryFileWidget(context, questionDetails, new MediaUtils(), questionMediaManager, waitingForDataRegistry);
+                }
                 break;
             case Constants.CONTROL_IMAGE_CHOOSE:
                 if (appearance.equals(Appearances.SIGNATURE)) {
@@ -184,8 +202,9 @@ public class WidgetFactory {
                 questionWidget = new OSMWidget(context, questionDetails, waitingForDataRegistry);
                 break;
             case Constants.CONTROL_AUDIO_CAPTURE:
-                RecordingRequester recordingRequester = recordingRequesterFactory.create(prompt, useExternalRecorder);
-                questionWidget = new AudioWidget(context, questionDetails, questionMediaManager, audioPlayer, recordingRequester, new GetContentAudioFileRequester(context, activityAvailability, waitingForDataRegistry, formEntryViewModel));
+                RecordingRequester recordingRequester = recordingRequesterProvider.create(prompt, useExternalRecorder);
+                GetContentAudioFileRequester audioFileRequester = new GetContentAudioFileRequester(context, activityAvailability, waitingForDataRegistry, formEntryViewModel);
+                questionWidget = new AudioWidget(context, questionDetails, questionMediaManager, audioPlayer, recordingRequester, audioFileRequester, new AudioRecorderRecordingStatusHandler(audioRecorder, viewLifecycle));
                 break;
             case Constants.CONTROL_VIDEO_CAPTURE:
                 questionWidget = new VideoWidget(context, questionDetails, questionMediaManager, waitingForDataRegistry);

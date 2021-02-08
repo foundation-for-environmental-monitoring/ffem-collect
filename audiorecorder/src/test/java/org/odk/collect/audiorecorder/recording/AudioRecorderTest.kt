@@ -7,12 +7,13 @@ import org.junit.Test
 import org.odk.collect.audiorecorder.recorder.Output
 import org.odk.collect.testshared.LiveDataTester
 import java.io.File
+import java.io.Serializable
 
-abstract class AudioRecorderViewModelTest {
+abstract class AudioRecorderTest {
 
     private val liveDataTester = LiveDataTester()
 
-    abstract val viewModel: AudioRecorderViewModel
+    abstract val viewModel: AudioRecorder
     abstract fun runBackground()
     abstract fun getLastRecordedFile(): File?
 
@@ -153,4 +154,16 @@ abstract class AudioRecorderViewModelTest {
         runBackground()
         assertThat(session.value?.failedToStart, equalTo(null))
     }
+
+    @Test
+    fun supportsSerializableSessionIds() {
+        val sessionId = SerializableId()
+        val session = liveDataTester.activate(viewModel.getCurrentSession())
+        viewModel.start(sessionId, Output.AAC)
+
+        runBackground()
+        assertThat(session.value!!.id, equalTo(sessionId))
+    }
 }
+
+private class SerializableId : Serializable
