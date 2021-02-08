@@ -75,7 +75,6 @@ import org.odk.collect.android.utilities.QuestionMediaManager;
 import org.odk.collect.android.utilities.ScreenContext;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ToastUtils;
-import org.odk.collect.android.widgets.ExStringWidget;
 import org.odk.collect.android.widgets.QuestionWidget;
 import org.odk.collect.android.widgets.StringWidget;
 import org.odk.collect.android.widgets.UrlWidget;
@@ -90,7 +89,6 @@ import org.odk.collect.audiorecorder.recording.AudioRecorderViewModel;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -117,9 +115,6 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.widget.TextViewCompat;
 
 import org.javarosa.core.model.GroupDef;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 /**
  * Contains either one {@link QuestionWidget} if the current form element is a question or
