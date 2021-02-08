@@ -1,7 +1,5 @@
 package org.odk.collect.android.formentry;
 
-import androidx.test.core.app.ApplicationProvider;
-
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.instance.TreeReference;
 import org.junit.Before;
@@ -12,8 +10,6 @@ import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.formentry.audit.AuditEvent;
 import org.odk.collect.android.formentry.audit.AuditEventLogger;
 import org.odk.collect.android.javarosawrapper.FormController;
-import org.odk.collect.android.preferences.PreferencesProvider;
-import org.odk.collect.audiorecorder.recording.AudioRecorder;
 import org.odk.collect.utilities.Clock;
 import org.robolectric.RobolectricTestRunner;
 
@@ -27,8 +23,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.odk.collect.android.formentry.FormEntryViewModel.NonFatal;
 
 @RunWith(RobolectricTestRunner.class)
+@SuppressWarnings("PMD.DoubleBraceInitialization")
 public class FormEntryViewModelTest {
 
     private FormEntryViewModel viewModel;
@@ -49,8 +47,7 @@ public class FormEntryViewModelTest {
 
         clock = mock(Clock.class);
 
-        AudioRecorder audioRecorder = mock(AudioRecorder.class);
-        viewModel = new FormEntryViewModel(clock, mock(Analytics.class), new PreferencesProvider(ApplicationProvider.getApplicationContext()), audioRecorder);
+        viewModel = new FormEntryViewModel(clock, mock(Analytics.class));
         viewModel.formLoaded(formController);
     }
 
@@ -65,7 +62,7 @@ public class FormEntryViewModelTest {
         doThrow(new RuntimeException(new IOException("OH NO"))).when(formController).newRepeat();
 
         viewModel.addRepeat();
-        assertThat(viewModel.getError().getValue(), equalTo("OH NO"));
+        assertThat(viewModel.getError().getValue(), equalTo(new NonFatal("OH NO")));
     }
 
     @Test
@@ -77,7 +74,7 @@ public class FormEntryViewModelTest {
         doThrow(runtimeException).when(formController).newRepeat();
 
         viewModel.addRepeat();
-        assertThat(viewModel.getError().getValue(), equalTo("Unknown issue occurred while adding a new group"));
+        assertThat(viewModel.getError().getValue(), equalTo(new NonFatal("Unknown issue occurred while adding a new group")));
     }
 
     @Test
@@ -85,7 +82,7 @@ public class FormEntryViewModelTest {
         when(formController.stepToNextScreenEvent()).thenThrow(new JavaRosaException(new IOException("OH NO")));
 
         viewModel.addRepeat();
-        assertThat(viewModel.getError().getValue(), equalTo("OH NO"));
+        assertThat(viewModel.getError().getValue(), equalTo(new NonFatal("OH NO")));
     }
 
     @Test
@@ -97,7 +94,7 @@ public class FormEntryViewModelTest {
         when(formController.stepToNextScreenEvent()).thenThrow(javaRosaException);
 
         viewModel.addRepeat();
-        assertThat(viewModel.getError().getValue(), equalTo("Unknown issue occurred while adding a new group"));
+        assertThat(viewModel.getError().getValue(), equalTo(new NonFatal("Unknown issue occurred while adding a new group")));
     }
 
     @Test
@@ -124,7 +121,7 @@ public class FormEntryViewModelTest {
         when(formController.stepToNextScreenEvent()).thenThrow(new JavaRosaException(new IOException("OH NO")));
 
         viewModel.cancelRepeatPrompt();
-        assertThat(viewModel.getError().getValue(), equalTo("OH NO"));
+        assertThat(viewModel.getError().getValue(), equalTo(new NonFatal("OH NO")));
     }
 
     @Test

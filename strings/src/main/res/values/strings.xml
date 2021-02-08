@@ -197,6 +197,8 @@
     <!-- Error message displayed when copying media from a temporary directory fails -->
     <string name="answer_file_copy_failed_message">Media could not be attached to form but is available at %1$s</string>
 
+    <string name="saving_audio_recording_failed">Saving audio recording failed</string>
+
     <!--
     ##############################################
     # FORM FEATURES
@@ -277,6 +279,8 @@
 
     <!-- Text next to checkbox to allow the user to toggle audio recording on and off -->
     <string name="record_audio">Record audio</string>
+
+    <string name="background_audio_permission_explanation">This form records audio in the background. You must grant permission to use your microphone. If you do not, you will not be able to open this form.</string>
 
     <!-- Text asking the user to confirm whether they want to stop recording or not (which deletes the recording file) -->
     <string name="stop_recording_confirmation">This form requests background audio recording. Disabling it will stop recording and discard existing audio. Are you sure you want to proceed?</string>
