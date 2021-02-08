@@ -23,15 +23,24 @@ the specific language governing permissions and limitations under the License.
         android:padding="10dp">
 
         <TextView
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="?colorOnSurface"
+            android:textSize="17sp" />
+
+        <TextView
             android:id="@+id/save_form_as"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:gravity="start"
             android:lineSpacingMultiplier="1.2"
             android:text="@string/save_form_as"
             android:textColor="?colorOnSurface"
-            android:textSize="21sp" />
+            android:textSize="20sp" />
 
         <EditText
             android:id="@+id/save_name"
@@ -44,19 +53,19 @@ the specific language governing permissions and limitations under the License.
             android:id="@+id/mark_finished"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_gravity="start"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginBottom="10dp"
             android:text="@string/mark_finished"
-            android:textSize="21sp" />
+            android:textSize="19sp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/save_exit_button"
             style="@style/Widget.Collect.Button.FullWidth"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:text="@string/quit_entry" />
 
     </LinearLayout>

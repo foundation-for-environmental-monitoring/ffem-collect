@@ -1252,26 +1252,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
      * a button for saving and exiting.
      */
     private View createViewForFormEnd(FormController formController) {
-        // brand change ------
-        View endView = View.inflate(this, R.layout.form_entry_end_branded, null);
-//        ((TextView) endView.findViewById(R.id.description))
-//                .setText(getString(R.string.save_enter_data_description,
-//                        formController.getFormTitle()));
-
-        // checkbox for if finished or ready to send
-        final CheckBox instanceComplete = endView
-                .findViewById(R.id.mark_finished);
-//        instanceComplete.setChecked(InstancesDaoHelper.isInstanceComplete(true));
-        instanceComplete.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            MaterialButton saveButton = endView.findViewById(R.id.save_exit_button);
-            if (isChecked) {
-                saveButton.setText(R.string.submit_form);
-            } else {
-                saveButton.setText(R.string.quit_entry);
-            }
-        });
-// end brand change ------
-
         if (formController.getSubmissionMetadata().instanceName != null) {
             saveName = formController.getSubmissionMetadata().instanceName;
         } else {
@@ -1303,9 +1283,9 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             }
 
 // brand change ------
-//            if (saveName == null) {
-//                saveName = formSaveViewModel.getFormName();
-//            }
+            if (saveName == null) {
+                saveName = "";
+            }
 // end brand change ------
         }
 
@@ -1325,6 +1305,25 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 }
             }
         });
+
+        // brand change ------
+//        View endView = View.inflate(this, R.layout.form_entry_end_branded, null);
+//        ((TextView) endView.findViewById(R.id.description))
+//                .setText(getString(R.string.save_enter_data_description,
+//                        formController.getFormTitle()));
+
+        // checkbox for if finished or ready to send
+        final CheckBox instanceComplete = endView.findViewById(R.id.mark_finished);
+//        instanceComplete.setChecked(InstancesDaoHelper.isInstanceComplete(true));
+        instanceComplete.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            MaterialButton saveButton = endView.findViewById(R.id.save_exit_button);
+            if (isChecked) {
+                saveButton.setText(R.string.submit_form);
+            } else {
+                saveButton.setText(R.string.quit_entry);
+            }
+        });
+// end brand change ------
 
         if (!(boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_MARK_AS_FINALIZED)) {
             endView.findViewById(R.id.mark_finished).setVisibility(View.GONE);

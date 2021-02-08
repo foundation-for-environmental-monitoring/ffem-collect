@@ -241,29 +241,20 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
 
     @Override
     public void onButtonClick(int buttonId) {
-        waitingForDataRegistry.waitForData(getFormEntryPrompt().getIndex());
-        try {
-            Intent intent = new ExternalAppIntentProvider().getIntentToRunExternalApp(getContext(), getFormEntryPrompt(), activityAvailability);
-            // ACTION_SENDTO used for sending text messages or emails doesn't require any results
-            if (ACTION_SENDTO.equals(intent.getAction())) {
-                getContext().startActivity(intent);
-            } else {
-                fireActivity(intent);
-            }
-        } catch (Exception | Error e) {
-            onException(e.getMessage());
-        }
-
-        String exSpec = getFormEntryPrompt().getAppearanceHint().replaceFirst("^ex[:]", "");
-        final String intentName = ExternalAppsUtils.extractIntentName(exSpec);
-        final Map<String, String> exParams = ExternalAppsUtils.extractParameters(exSpec);
-        final String errorString;
-        String v = getFormEntryPrompt().getSpecialFormQuestionText("noAppErrorString");
-        errorString = (v != null) ? v : getContext().getString(R.string.no_app);
-
         // Brand change
         if (answerText.getText().toString().isEmpty()) {
-            launchQuestionIntent(intentName, exParams, errorString);
+            waitingForDataRegistry.waitForData(getFormEntryPrompt().getIndex());
+            try {
+                Intent intent = new ExternalAppIntentProvider().getIntentToRunExternalApp(getContext(), getFormEntryPrompt(), activityAvailability);
+                // ACTION_SENDTO used for sending text messages or emails doesn't require any results
+                if (ACTION_SENDTO.equals(intent.getAction())) {
+                    getContext().startActivity(intent);
+                } else {
+                    fireActivity(intent);
+                }
+            } catch (Exception | Error e) {
+                onException(e.getMessage());
+            }
         } else {
             AlertDialog alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme).create();
             alertDialog.setTitle(getContext().getString(R.string.delete_and_redo));
@@ -281,7 +272,18 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
 
             DialogInterface.OnClickListener quitListener = (dialog, button) -> {
                 if (button == BUTTON_POSITIVE) { // yes
-                    launchQuestionIntent(intentName, exParams, errorString);
+                    waitingForDataRegistry.waitForData(getFormEntryPrompt().getIndex());
+                    try {
+                        Intent intent = new ExternalAppIntentProvider().getIntentToRunExternalApp(getContext(), getFormEntryPrompt(), activityAvailability);
+                        // ACTION_SENDTO used for sending text messages or emails doesn't require any results
+                        if (ACTION_SENDTO.equals(intent.getAction())) {
+                            getContext().startActivity(intent);
+                        } else {
+                            fireActivity(intent);
+                        }
+                    } catch (Exception | Error e) {
+                        onException(e.getMessage());
+                    }
                 }
             };
             alertDialog.setCancelable(true);

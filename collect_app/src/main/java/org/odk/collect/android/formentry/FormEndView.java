@@ -27,7 +27,7 @@ public class FormEndView extends FrameLayout {
     }
 
     private void init(Context context, boolean instanceComplete) {
-        inflate(context, R.layout.form_entry_end, this);
+        inflate(context, R.layout.form_entry_end_branded, this);
 
         ((TextView) findViewById(R.id.description)).setText(context.getString(R.string.save_enter_data_description, formTitle));
 
