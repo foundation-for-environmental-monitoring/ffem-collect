@@ -682,7 +682,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                 }
 
                 if (Collect.getInstance().getFormController() != null) {
-                    i.putExtra("xml", Collect.getInstance().getFormController().getSubmissionXml().toString());
+                    i.putExtra("survey_data", Collect.getInstance().getFormController().getSubmissionXml().toString());
                 }
 
                 ((Activity) getContext()).startActivityForResult(i, RequestCodes.EX_GROUP_CAPTURE);

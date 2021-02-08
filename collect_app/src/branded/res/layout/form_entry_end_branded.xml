@@ -37,6 +37,7 @@ the specific language governing permissions and limitations under the License.
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:gravity="start"
+            android:labelFor="@id/save_name"
             android:lineSpacingMultiplier="1.2"
             android:text="@string/save_form_as"
             android:textColor="?colorOnSurface"
@@ -46,6 +47,9 @@ the specific language governing permissions and limitations under the License.
             android:id="@+id/save_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:importantForAutofill="no"
             android:inputType="textMultiLine"
             android:textSize="21sp" />
 

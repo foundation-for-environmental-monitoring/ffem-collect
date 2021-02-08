@@ -57,7 +57,12 @@ public class FormEndView extends FrameLayout {
         markAsFinalized.setChecked(instanceComplete);
 
         findViewById(R.id.save_exit_button).setOnClickListener(v -> {
-            listener.onSaveClicked(markAsFinalized.isChecked());
+            if (saveAs.getText().toString().isEmpty()) {
+                saveAs.setError(context.getString(R.string.save_as_error));
+                saveAs.requestFocus();
+            } else {
+                listener.onSaveClicked(markAsFinalized.isChecked());
+            }
         });
     }
 
