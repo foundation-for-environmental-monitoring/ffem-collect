@@ -6,11 +6,13 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/margin_small">
 
+    <!--    Brand change-->
     <org.odk.collect.android.formentry.questions.AudioVideoImageTextLabel
         android:id="@+id/question_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:visibility="gone"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@id/center"
         tools:ignore="RtlHardcoded" />

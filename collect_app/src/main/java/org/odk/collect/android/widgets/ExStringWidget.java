@@ -28,6 +28,7 @@ import android.text.Selection;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,13 +39,12 @@ import org.odk.collect.android.external.ExternalAppsUtils;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.formentry.questions.WidgetViewUtils;
 import org.odk.collect.android.utilities.ActivityAvailability;
+import org.odk.collect.android.utilities.Appearances;
 import org.odk.collect.android.utilities.ExternalAppIntentProvider;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.interfaces.ButtonClickListener;
 import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry;
-
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -53,6 +53,7 @@ import timber.log.Timber;
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static android.content.Intent.ACTION_SENDTO;
+import static io.ffem.collect.android.helper.AppHelper.getUnitText;
 import static org.odk.collect.android.formentry.questions.WidgetViewUtils.createRedoButton;
 import static org.odk.collect.android.formentry.questions.WidgetViewUtils.createSimpleButton;
 import static org.odk.collect.android.injection.DaggerUtils.getComponent;
@@ -125,45 +126,28 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
         }
         LinearLayout answerLayout = new LinearLayout(getContext());
         answerLayout.setOrientation(LinearLayout.VERTICAL);
-        // Brand change - Display answer above the button
         LinearLayout resultLayout = new LinearLayout(getContext());
         resultLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-        resultLayout.addView(answerText);
-
-        unitText = new TextView(context);
-        unitText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize());
-        resultLayout.addView(unitText);
-
-        if (getFormEntryPrompt().getAnswerText() != null) {
-            setUnitText();
+        // Brand change - Display answer above the button
+        if (Appearances.hasAppearance(getFormEntryPrompt(), Appearances.EX)) {
+            if (getFormEntryPrompt().getAnswerText() != null) {
+                resultLayout.addView(answerText);
+                unitText = new TextView(context);
+                unitText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize());
+                resultLayout.addView(unitText);
+                unitText.setText(getUnitText(getFormEntryPrompt().getQuestion().getAppearanceAttr(), "",""));
+                answerLayout.addView(resultLayout);
+                resultLayout.addView(launchIntentButton);
+            } else {
+                answerLayout.addView(launchIntentButton);
+            }
+        } else {
+            resultLayout.addView(answerText);
+            answerLayout.addView(resultLayout);
         }
 
-        answerLayout.addView(resultLayout);
-        answerLayout.addView(launchIntentButton);
         addAnswerView(answerLayout, WidgetViewUtils.getStandardMargin(context));
-    }
-
-    private void setUnitText() {
-        // todo: remove unit hard coding
-        try {
-            String testId = getFormEntryPrompt().getQuestion().getAppearanceAttr();
-            String unit = "mg/l";
-            if (testId.startsWith("s-")) {
-                unit = "mg/kg";
-            }
-            if (testId.endsWith("-pH")) {
-                unit = "";
-            } else if (testId.contains("-hydrogen-peroxide")) {
-                unit = "M";
-            } else if (testId.equals("s-organic-carbon")) {
-                unit = "%";
-            }
-
-            unitText.setText(String.format(" %s", unit));
-        } catch (Exception e) {
-            Timber.e(e);
-        }
     }
 
     private String getButtonText() {
@@ -173,10 +157,10 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
         if (question == null) {
             question = "";
         }
-        if (question.length() > 20) {
-            question = question.substring(0, 20) + "...";
+        if (question.length() > 25) {
+            question = question.substring(0, 25) + "…";
         }
-        return v != null ? v : question + " >";
+        return v != null ? v : question ;
     }
 
     protected void fireActivity(Intent i) throws ActivityNotFoundException {
@@ -194,8 +178,8 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
         StringData stringData = ExternalAppsUtils.asStringData(answer);
         answerText.setText(stringData == null ? null : stringData.getValue().toString());
         // Brand change
-        if (stringData != null) {
-            setUnitText();
+        if (stringData != null && unitText != null) {
+            unitText.setText(getUnitText(getFormEntryPrompt().getQuestion().getAppearanceAttr(), "",""));
         }
         widgetValueChanged();
     }

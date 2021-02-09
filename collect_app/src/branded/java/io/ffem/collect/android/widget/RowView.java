@@ -3,6 +3,7 @@ package io.ffem.collect.android.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -11,6 +12,7 @@ import org.odk.collect.android.R;
 public class RowView extends TableRow {
     private final TextView textPrimary;
     private final TextView textSecondary;
+    private final TextView textTertiary;
 
     public RowView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -24,7 +26,8 @@ public class RowView extends TableRow {
 
         TableRow tableRow = (TableRow) getChildAt(0);
         textPrimary = (TextView) tableRow.getChildAt(0);
-        textSecondary = (TextView) tableRow.getChildAt(1);
+        textSecondary = (TextView) ((LinearLayout) tableRow.getChildAt(1)).getChildAt(0);
+        textTertiary = (TextView) ((LinearLayout) tableRow.getChildAt(1)).getChildAt(1);
     }
 
     public RowView(Context context) {
@@ -37,6 +40,10 @@ public class RowView extends TableRow {
 
     public void setSecondaryText(String s) {
         textSecondary.setText(s);
+    }
+
+    public void setTertiaryText(String s) {
+        textTertiary.setText(s);
     }
 
     public Boolean isAnswered(){

@@ -45,6 +45,7 @@ import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.GuidanceHint;
 import org.odk.collect.android.utilities.AnimationUtils;
+import org.odk.collect.android.utilities.Appearances;
 import org.odk.collect.android.utilities.FormEntryPromptUtils;
 import org.odk.collect.android.utilities.ScreenUtils;
 import org.odk.collect.android.utilities.SoftKeyboardController;
@@ -118,7 +119,17 @@ public abstract class QuestionWidget extends FrameLayout implements Widget {
         containerView = inflate(context, getLayout(), this).findViewById(R.id.question_widget_container);
 
         audioVideoImageTextLabel = containerView.findViewById(R.id.question_label);
-        setupQuestionLabel(audioVideoImageTextLabel, formEntryPrompt);
+
+        // Brand change
+        if (Appearances.hasAppearance(getFormEntryPrompt(), Appearances.EX)) {
+            if (getFormEntryPrompt().getAnswerText() != null && !questionDetails.getPrompt().getAnswerText().isEmpty()) {
+                audioVideoImageTextLabel.setVisibility(VISIBLE);
+                setupQuestionLabel(audioVideoImageTextLabel, formEntryPrompt);
+            }
+        } else {
+            audioVideoImageTextLabel.setVisibility(VISIBLE);
+            setupQuestionLabel(audioVideoImageTextLabel, formEntryPrompt);
+        }
 
         helpTextLayout = findViewById(R.id.help_text);
         guidanceTextLayout = helpTextLayout.findViewById(R.id.guidance_text_layout);

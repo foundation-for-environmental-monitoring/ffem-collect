@@ -108,6 +108,7 @@ public class WidgetViewUtils {
         return createSimpleButton(context, R.id.simple_button, readOnly, text, answerFontSize, listener);
     }
 
+    // Brand change
     public static TextView createRedoButton(Context context, boolean readOnly, int answerFontSize, ButtonClickListener listener) {
         final TextView button = (TextView) LayoutInflater
                 .from(context)
@@ -118,10 +119,9 @@ public class WidgetViewUtils {
         } else {
             button.setId(R.id.simple_button);
             button.setText(R.string.redo_test);
-            button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, answerFontSize);
 
             TableLayout.LayoutParams params = new TableLayout.LayoutParams();
-            params.setMargins(7, 5, 7, 5);
+            params.setMargins(16, 0, 7, 5);
 
             button.setLayoutParams(params);
 

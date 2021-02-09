@@ -848,6 +848,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 if (getCurrentViewIfODKView() != null) {
                     setWidgetData(externalValue);
                 }
+                // Brand change --------
+                onScreenRefresh();
                 break;
             case RequestCodes.EX_ARBITRARY_FILE_CHOOSER:
                 if (intent.getClipData() != null
