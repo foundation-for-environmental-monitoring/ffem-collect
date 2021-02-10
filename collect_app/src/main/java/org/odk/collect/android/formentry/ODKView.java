@@ -615,7 +615,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         launchIntentButton.setId(View.generateViewId());
         launchIntentButton.setTag(textID);
         launchIntentButton.setOnClickListener(view -> {
-             // Brand change
+            // Brand change
             Boolean answered1 = false;
             for (int i = 0; i < widgetsList.getChildCount(); i++) {
                 if (widgetsList.getChildAt(i) == view) {
@@ -664,65 +664,65 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
     public void launchQuestionIntent(String intentString, FormEntryPrompt[] questionPrompts,
                                      String errorString, FormEntryCaption c, View view) {
         String intentName = ExternalAppsUtils.extractIntentName(intentString);
-            Map<String, String> parameters = ExternalAppsUtils.extractParameters(intentString);
+        Map<String, String> parameters = ExternalAppsUtils.extractParameters(intentString);
 
-            Intent i = new Intent(intentName);
-            try {
-                ExternalAppsUtils.populateParameters(i, parameters,
-                        c.getIndex().getReference());
+        Intent i = new Intent(intentName);
+        try {
+            ExternalAppsUtils.populateParameters(i, parameters,
+                    c.getIndex().getReference());
 
-                for (FormEntryPrompt p : questionPrompts) {
-                    String group = p.getQuestion().getTextID().substring(0, p.getQuestion().getTextID().lastIndexOf("/"));
-                    if (!view.getTag().equals(group + ":label")){
-                        continue;
+            for (FormEntryPrompt p : questionPrompts) {
+                String group = p.getQuestion().getTextID().substring(0, p.getQuestion().getTextID().lastIndexOf("/"));
+                if (!view.getTag().equals(group + ":label")) {
+                    continue;
+                }
+                IFormElement formElement = p.getFormElement();
+                if (formElement instanceof QuestionDef) {
+                    TreeReference reference = (TreeReference) formElement.getBind().getReference();
+                    IAnswerData answerValue = p.getAnswerValue();
+                    Object value = answerValue == null ? null : answerValue.getValue();
+                    switch (p.getDataType()) {
+                        case Constants.DATATYPE_TEXT:
+                        case Constants.DATATYPE_INTEGER:
+                        case Constants.DATATYPE_DECIMAL:
+                        case Constants.DATATYPE_BINARY:
+                            i.putExtra(reference.getNameLast(),
+                                    (Serializable) value);
+                            break;
                     }
-                    IFormElement formElement = p.getFormElement();
-                    if (formElement instanceof QuestionDef) {
-                        TreeReference reference = (TreeReference) formElement.getBind().getReference();
-                        IAnswerData answerValue = p.getAnswerValue();
-                        Object value = answerValue == null ? null : answerValue.getValue();
-                        switch (p.getDataType()) {
-                            case Constants.DATATYPE_TEXT:
-                            case Constants.DATATYPE_INTEGER:
-                            case Constants.DATATYPE_DECIMAL:
-                            case Constants.DATATYPE_BINARY:
-                                i.putExtra(reference.getNameLast(),
-                                        (Serializable) value);
-                                break;
-                        }
-                    }
                 }
-
-                if (Collect.getInstance().getFormController() != null) {
-                    i.putExtra("survey-data-xml", Collect.getInstance().getFormController().getSubmissionXml().toString());
-                }
-
-                ((Activity) getContext()).startActivityForResult(i, RequestCodes.EX_GROUP_CAPTURE);
-            } catch (ExternalParamsException e) {
-                Timber.e(e, "ExternalParamsException");
-
-                ToastUtils.showShortToast(e.getMessage());
-            } catch (ActivityNotFoundException e) {
-                Timber.d(e, "ActivityNotFoundExcept");
-
-                if (intentName.startsWith("io.ffem")) {
-                    String appName =  intentName.substring(intentName.indexOf(".")).replace(".", " ");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.Theme_AppCompat_Light_Dialog);
-                    builder.setTitle(R.string.app_not_found)
-                            .setMessage(Html.fromHtml(getContext().getString(R.string.install_app, appName)))
-                            .setPositiveButton(R.string.go_to_play_store, (dialogInterface, j)
-                                    -> getContext().startActivity(new Intent(Intent.ACTION_VIEW,
-                                    Uri.parse("https://play.google.com/store/apps/developer?id=Foundation+for+Environmental+Monitoring"))))
-                            .setNegativeButton(android.R.string.cancel,
-                                    (dialogInterface, j) -> dialogInterface.dismiss())
-                            .setCancelable(false)
-                            .show();
-                } else {
-                    ToastUtils.showShortToast(errorString);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+
+            if (Collect.getInstance().getFormController() != null) {
+                i.putExtra("survey-data-xml", Collect.getInstance().getFormController().getSubmissionXml().toString());
+            }
+
+            ((Activity) getContext()).startActivityForResult(i, RequestCodes.EX_GROUP_CAPTURE);
+        } catch (ExternalParamsException e) {
+            Timber.e(e, "ExternalParamsException");
+
+            ToastUtils.showShortToast(e.getMessage());
+        } catch (ActivityNotFoundException e) {
+            Timber.d(e, "ActivityNotFoundExcept");
+
+            if (intentName.startsWith("io.ffem")) {
+                String appName = intentName.substring(intentName.indexOf(".")).replace(".", " ");
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.Theme_AppCompat_Light_Dialog);
+                builder.setTitle(R.string.app_not_found)
+                        .setMessage(Html.fromHtml(getContext().getString(R.string.install_app, appName)))
+                        .setPositiveButton(R.string.go_to_play_store, (dialogInterface, j)
+                                -> getContext().startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("https://play.google.com/store/apps/developer?id=Foundation+for+Environmental+Monitoring"))))
+                        .setNegativeButton(android.R.string.cancel,
+                                (dialogInterface, j) -> dialogInterface.dismiss())
+                        .setCancelable(false)
+                        .show();
+            } else {
+                ToastUtils.showShortToast(errorString);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setFocus(Context context) {

@@ -56,6 +56,7 @@ public class FormEndView extends FrameLayout {
         final CheckBox markAsFinalized = findViewById(R.id.mark_finished);
         markAsFinalized.setChecked(instanceComplete);
 
+        // Brand change
         findViewById(R.id.save_exit_button).setOnClickListener(v -> {
             if (saveAs.getText().toString().isEmpty()) {
                 saveAs.setError(context.getString(R.string.save_as_error));

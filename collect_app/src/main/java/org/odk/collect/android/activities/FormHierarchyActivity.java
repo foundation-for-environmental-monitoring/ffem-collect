@@ -743,7 +743,13 @@ public class FormHierarchyActivity extends CollectAbstractActivity implements De
     }
 
     protected void onBackPressedWithoutLogger() {
-        super.onBackPressed();
+        // Brand change --------------
+        boolean isAtBeginning = screenIndex.isBeginningOfFormIndex() && !shouldShowRepeatGroupPicker();
+        if (!isAtBeginning) {
+            goUpLevel();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void navigateToTheLastRelevantIndex(FormController formController) {

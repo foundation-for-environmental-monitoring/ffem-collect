@@ -130,13 +130,13 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
         resultLayout.setOrientation(LinearLayout.HORIZONTAL);
 
         // Brand change - Display answer above the button
+        unitText = new TextView(context);
+        unitText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize());
         if (Appearances.hasAppearance(getFormEntryPrompt(), Appearances.EX)) {
             if (getFormEntryPrompt().getAnswerText() != null) {
                 resultLayout.addView(answerText);
-                unitText = new TextView(context);
-                unitText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize());
-                resultLayout.addView(unitText);
                 unitText.setText(getUnitText(getFormEntryPrompt().getQuestion().getAppearanceAttr(), "",""));
+                resultLayout.addView(unitText);
                 answerLayout.addView(resultLayout);
                 resultLayout.addView(launchIntentButton);
             } else {
