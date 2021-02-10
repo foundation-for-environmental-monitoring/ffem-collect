@@ -2619,7 +2619,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             return;
         }
 
-        if (formController.indexIsInFieldList()) {
+// Brand change
+//        if (formController.indexIsInFieldList()) {
             // Some widgets may call widgetValueChanged from a non-main thread but odkView can only be modified from the main thread
             runOnUiThread(new Runnable() {
                 @Override
@@ -2642,7 +2643,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     }
                 }
             });
-        }
+//        }
     }
 
     /**
