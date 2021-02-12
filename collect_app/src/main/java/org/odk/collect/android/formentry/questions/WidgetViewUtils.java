@@ -86,7 +86,7 @@ public class WidgetViewUtils {
             button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, answerFontSize);
 
             TableLayout.LayoutParams params = new TableLayout.LayoutParams();
-            params.setMargins(7, 5, 7, 5);
+            params.setMargins(7, 5, 7, 16);
 
             button.setLayoutParams(params);
 

@@ -200,6 +200,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
 
         layout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
+        layout.setMargins(0, 0, 0, 16);
 
         for (FormEntryPrompt question : questionPrompts) {
             question.getQuestion().setAdditionalAttribute("", "done", null);
@@ -229,7 +230,8 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
             final FormEntryCaption c = groups[groups.length - 1];
             String intentString = c.getFormElement().getAdditionalAttribute(null, "intent");
             if (intentString != null && intentString.length() != 0) {
-
+                LinearLayout answerLayout = new LinearLayout(getContext());
+                answerLayout.setOrientation(LinearLayout.VERTICAL);
                 for (FormEntryPrompt question : questionPrompts) {
                     QuestionWidget qw = configureWidgetForQuestion(question);
                     widgets.add(qw);
@@ -240,7 +242,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                         params.setMargins(32,16,16,0);
                         textView.setLayoutParams(params);
                         textView.setText(groups[0].getShortText());
-                        widgetsList.addView(textView);
+                        answerLayout.addView(textView);
                         qw.setContainer((View) textView.getParent());
                     }
 
@@ -253,15 +255,16 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                                     qw.getQuestionDetails().getPrompt().getQuestionText(),
                                     qw.getAnswer().getDisplayText()));
                             if (!qw.getAnswer().getDisplayText().isEmpty()) {
-                                widgetsList.addView(answerRow);
+                                answerLayout.addView(answerRow, layout);
                             }
                         }
                     }
                     question.getQuestion().setAdditionalAttribute("", "done", "true");
                     questionAdded = true;
                 }
-
-                addIntentLaunchButton(context, questionPrompts, c, intentString, c.getFormElement().getTextID(), groups[0].getShortText());
+                widgetsList.addView(answerLayout);
+                addIntentLaunchButton(context, questionPrompts, c, intentString,
+                        c.getFormElement().getTextID(), groups[0].getShortText(), answerLayout);
             } else {
                 // display which group you are in as well as the question
                 setGroupText(groups);
@@ -272,13 +275,16 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                     if (formElement.getChild(i) instanceof GroupDef) {
                         intentString = getIntentString(formElement.getChild(i));
                         if (intentString != null) {
-                            widgetsList.addView(getDividerView());
                             List<FormEntryPrompt> formEntryPrompts = new ArrayList<>();
                             for (FormEntryPrompt prompt : questionPrompts) {
                                 if (prompt != null && prompt.getIndex().getNextLevel().getLocalIndex() == i) {
                                     formEntryPrompts.add(prompt);
                                 }
                             }
+
+                            LinearLayout answerLayout = new LinearLayout(getContext());
+                            answerLayout.setOrientation(LinearLayout.VERTICAL);
+
                             for (FormEntryPrompt question : formEntryPrompts) {
                                 QuestionWidget qw = configureWidgetForQuestion(question);
                                 widgets.add(qw);
@@ -291,7 +297,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                                     textView.setLayoutParams(params);
                                     String questionText = c.getQuestionText(formElement.getChild(i).getTextID());
                                     textView.setText(questionText);
-                                    widgetsList.addView(textView);
+                                    answerLayout.addView(textView);
                                     qw.setContainer((View) textView.getParent());
                                 }
 
@@ -303,14 +309,17 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                                         answerRow.setTertiaryText(getUnitText(intentString,
                                                 qw.getQuestionDetails().getPrompt().getQuestionText(),
                                                 qw.getAnswer().getDisplayText()));
-                                        widgetsList.addView(answerRow, layout);
+                                        answerLayout.addView(answerRow, layout);
                                     }
                                 }
 
                                 questionAdded = true;
                                 question.getQuestion().setAdditionalAttribute("", "done", "true");
                             }
-                            addIntentLaunchButton(context, questionPrompts, c, intentString, formElement.getChild(i).getTextID(), c.getQuestionText(formElement.getChild(i).getTextID()));
+                            widgetsList.addView(answerLayout);
+                            addIntentLaunchButton(context, questionPrompts, c, intentString,
+                                    formElement.getChild(i).getTextID(),
+                                    c.getQuestionText(formElement.getChild(i).getTextID()), answerLayout);
                         } else {
                             for (FormEntryPrompt question : questionPrompts) {
                                 if (formElement.getChild(i).getID() == question.getQuestion().getID()) {
@@ -399,7 +408,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         widgets.add(qw);
 
         if (widgets.size() > 1) {
-            widgetsList.addView(getDividerView());
+//            widgetsList.addView(getDividerView());
         }
         widgetsList.addView(qw, layout);
     }
@@ -422,7 +431,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
 
         int indexAccountingForDividers = index * 2;
         if (index > 0) {
-            widgetsList.addView(getDividerView(), indexAccountingForDividers - 1);
+//            widgetsList.addView(getDividerView(), indexAccountingForDividers - 1);
         }
 
         widgetsList.addView(qw, indexAccountingForDividers, layout);
@@ -575,19 +584,19 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
      * An intent group launches an intent and receives multiple values from the launched app.
      */
     private void addIntentLaunchButton(Context context, FormEntryPrompt[] questionPrompts,
-                                       FormEntryCaption c, String intentString, String textID, String questionText) {
+                                       FormEntryCaption c, String intentString, String textID,
+                                       String questionText, LinearLayout layout) {
         final String buttonText;
         final String errorString;
 
-//        buttonText = getButtonText(c);
         buttonText = questionText;
         String v = c.getSpecialFormQuestionText("noAppErrorString");
         errorString = (v != null) ? v : context.getString(R.string.no_app);
 
         // set button formatting
         boolean answered = false;
-        if (widgetsList.getChildAt(widgetsList.getChildCount() - 1) instanceof RowView) {
-            RowView rowView = (RowView) widgetsList.getChildAt(widgetsList.getChildCount() - 1);
+        if (layout.getChildAt(layout.getChildCount() - 1) instanceof RowView) {
+            RowView rowView = (RowView) layout.getChildAt(layout.getChildCount() - 1);
             answered = rowView.isAnswered();
         }
 
@@ -595,7 +604,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         if (answered) {
             LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(24, 8, 24, 8);
+            params.setMargins(24, 8, 24, 12);
             launchIntentButton = (TextView) LayoutInflater
                     .from(context)
                     .inflate(R.layout.widget_redo_button, null, false);
@@ -603,7 +612,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         } else {
             LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(24, 8, 24, 8);
+            params.setMargins(24, 8, 24, 16);
             launchIntentButton = (MaterialButton) LayoutInflater
                     .from(context)
                     .inflate(R.layout.widget_answer_button, null, false);
@@ -657,8 +666,10 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
             }
         });
 
-        widgetsList.addView(launchIntentButton);
-        widgetsList.addView(getDividerView());
+        layout.addView(launchIntentButton);
+        TextView textView = new TextView(context);
+        textView.setHeight(8);
+        layout.addView(textView);
     }
 
     public void launchQuestionIntent(String intentString, FormEntryPrompt[] questionPrompts,

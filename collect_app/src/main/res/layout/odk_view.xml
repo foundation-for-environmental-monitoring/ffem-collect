@@ -47,6 +47,8 @@ limitations under the License.
 
         <LinearLayout
             android:id="@+id/widgets"
+            android:divider="@drawable/action_bar_shadow"
+            android:showDividers="middle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top"
