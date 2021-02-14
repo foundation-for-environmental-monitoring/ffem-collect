@@ -210,6 +210,8 @@ android {
         checkGeneratedSources true
         lintConfig file("${project.rootDir}/config/lint.xml")
     }
+
+    kotlinOptions { jvmTarget = "1.8" }
 }
 
 configurations.all {

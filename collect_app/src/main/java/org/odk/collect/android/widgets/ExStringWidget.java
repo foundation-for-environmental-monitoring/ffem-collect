@@ -16,22 +16,23 @@ package org.odk.collect.android.widgets;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Editable;
-import android.net.Uri;
-import android.text.Html;
 import android.text.Selection;
-import android.util.TypedValue;
-import android.view.View;
+import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.net.Uri;
+import android.text.Html;
+import android.widget.TextView;
+import android.util.TypedValue;
+import android.view.View;
 
 import org.javarosa.core.model.data.StringData;
 import org.odk.collect.android.R;
@@ -40,20 +41,20 @@ import org.odk.collect.android.external.ExternalAppsUtils;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.formentry.questions.WidgetViewUtils;
 import org.odk.collect.android.utilities.ActivityAvailability;
-import org.odk.collect.android.utilities.Appearances;
 import org.odk.collect.android.utilities.ExternalAppIntentProvider;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.interfaces.ButtonClickListener;
 import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry;
+import org.odk.collect.android.utilities.Appearances;
 
 import javax.inject.Inject;
 
 import timber.log.Timber;
 
+import static android.content.Intent.ACTION_SENDTO;
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
-import static android.content.Intent.ACTION_SENDTO;
 import static io.ffem.collect.android.helper.AppHelper.getUnitText;
 import static org.odk.collect.android.formentry.questions.WidgetViewUtils.createRedoButton;
 import static org.odk.collect.android.formentry.questions.WidgetViewUtils.createSimpleButton;
@@ -259,7 +260,7 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
                 if (button == BUTTON_POSITIVE) { // yes
                     waitingForDataRegistry.waitForData(getFormEntryPrompt().getIndex());
                     try {
-                        Intent intent = new ExternalAppIntentProvider().getIntentToRunExternalApp(getContext(), getFormEntryPrompt(), activityAvailability);
+                        Intent intent = new ExternalAppIntentProvider().getIntentToRunExternalApp(getContext(), getFormEntryPrompt(), activityAvailability, Collect.getInstance().getPackageManager());
                         // ACTION_SENDTO used for sending text messages or emails doesn't require any results
                         if (ACTION_SENDTO.equals(intent.getAction())) {
                             getContext().startActivity(intent);

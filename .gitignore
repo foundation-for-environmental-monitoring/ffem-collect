@@ -1,6 +1,5 @@
 build
 .gradle
-.idea
 local.properties
 *.iml
 .DS_Store
@@ -47,3 +46,9 @@ collect_app/src/odkCollectRelease/
 
 # Firebase
 **/branded/google-services.json
+
+# IntelliJ
+.idea/**
+!.idea
+!.idea/dictionaries/
+!.idea/dictionaries/common.xml

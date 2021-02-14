@@ -1,6 +1,5 @@
 package io.ffem.collect.android;
 
-import android.Manifest;
 import android.app.Instrumentation.ActivityResult;
 import android.content.Context;
 import android.content.Intent;
