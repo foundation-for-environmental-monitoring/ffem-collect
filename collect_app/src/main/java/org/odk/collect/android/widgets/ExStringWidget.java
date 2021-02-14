@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import org.javarosa.core.model.data.StringData;
 import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.external.ExternalAppsUtils;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.formentry.questions.WidgetViewUtils;
@@ -229,7 +230,7 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
         if (answerText.getText().toString().isEmpty()) {
             waitingForDataRegistry.waitForData(getFormEntryPrompt().getIndex());
             try {
-                Intent intent = new ExternalAppIntentProvider().getIntentToRunExternalApp(getContext(), getFormEntryPrompt(), activityAvailability);
+                Intent intent = new ExternalAppIntentProvider().getIntentToRunExternalApp(getContext(), getFormEntryPrompt(), activityAvailability, Collect.getInstance().getPackageManager());
                 // ACTION_SENDTO used for sending text messages or emails doesn't require any results
                 if (ACTION_SENDTO.equals(intent.getAction())) {
                     getContext().startActivity(intent);

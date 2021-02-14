@@ -96,7 +96,6 @@ public class BackgroundAudioRecordingTest {
     @Test
     public void fillingOutForm_recordsAudio() throws Exception {
         FormEntryPage formEntryPage = rule.mainMenu()
-                .enableBackgroundAudioRecording()
                 .copyForm("one-question-background-audio.xml")
                 .startBlankForm("One Question");
         assertThat(stubAudioRecorderViewModel.isRecording(), is(true));
@@ -119,7 +118,6 @@ public class BackgroundAudioRecordingTest {
     @Test
     public void fillingOutForm_withMultipleRecordActions_recordsAudioOnceForAllOfThem() throws Exception {
         FormEntryPage formEntryPage = rule.mainMenu()
-                .enableBackgroundAudioRecording()
                 .copyForm("one-question-background-audio-multiple.xml")
                 .startBlankForm("One Question");
         assertThat(stubAudioRecorderViewModel.isRecording(), is(true));
@@ -147,7 +145,6 @@ public class BackgroundAudioRecordingTest {
     @Test
     public void fillingOutForm_doesntShowStopOrPauseButtons() {
         rule.mainMenu()
-                .enableBackgroundAudioRecording()
                 .copyForm("one-question-background-audio.xml")
                 .startBlankForm("One Question")
                 .assertContentDescriptionNotDisplayed(R.string.stop_recording)
@@ -155,9 +152,18 @@ public class BackgroundAudioRecordingTest {
     }
 
     @Test
+    public void pressingBackWhileRecording_andClickingSave_exitsForm() {
+        rule.mainMenu()
+                .copyForm("one-question-background-audio.xml")
+                .startBlankForm("One Question")
+                .closeSoftKeyboard()
+                .pressBack(new SaveOrIgnoreDialog<>("One Question", new MainMenuPage(rule), rule))
+                .clickSaveChanges();
+    }
+
+    @Test
     public void uncheckingRecordAudio_andConfirming_endsAndDeletesRecording() {
         FormEntryPage formEntryPage = rule.mainMenu()
-                .enableBackgroundAudioRecording()
                 .copyForm("one-question-background-audio.xml")
                 .startBlankForm("One Question")
                 .clickOptionsIcon()
@@ -181,7 +187,6 @@ public class BackgroundAudioRecordingTest {
         permissionsProvider.makeControllable();
 
         rule.mainMenu()
-                .enableBackgroundAudioRecording()
                 .copyForm("one-question-background-audio.xml")
                 .startBlankFormWithDialog("One Question")
                 .assertText(R.string.background_audio_permission_explanation)

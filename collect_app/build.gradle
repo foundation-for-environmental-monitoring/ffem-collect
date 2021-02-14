@@ -1,9 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'com.google.firebase.firebase-perf'
-apply plugin: 'kotlin-android'
 apply from: '../config/quality.gradle'
 apply from: '../config/jacoco.gradle'
+apply plugin: 'kotlin-android'
 
 import com.android.ddmlib.DdmPreferences
 
@@ -148,9 +147,6 @@ android {
             resValue("bool", "CRASHLYTICS_ENABLED", "false")
             resValue("string", "GOOGLE_MAPS_API_KEY", googleMapsApiKey)
             buildConfigField 'String', "MAPBOX_ACCESS_TOKEN", '"' + mapboxToken + '"'
-            FirebasePerformance {
-                instrumentationEnabled false
-            }
         }
     }
 
@@ -249,7 +245,6 @@ dependencies {
     implementation "com.google.android.gms:play-services-maps:17.0.0"
     implementation "com.google.android.gms:play-services-location:17.1.0"
 
-    implementation 'com.google.firebase:firebase-perf:19.0.11'
     implementation 'com.google.firebase:firebase-analytics:18.0.2'
     implementation 'com.google.firebase:firebase-crashlytics:17.3.1'
 
@@ -270,7 +265,7 @@ dependencies {
     implementation "com.rarepebble:colorpicker:3.0.1"
     implementation "commons-io:commons-io:2.5" // Commons 2.6+ introduce java.nio usage that we can't access until our minSdkVersion >= 26 (https://developer.android.com/reference/java/io/File#toPath())
     implementation "net.sf.opencsv:opencsv:2.4"
-    implementation("org.getodk:javarosa:3.1.0-SNAPSHOT") {
+    implementation("org.getodk:javarosa:3.1.0") {
         exclude group: 'joda-time'
         exclude group: 'org.slf4j'
     }
@@ -328,6 +323,10 @@ dependencies {
 
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
+
+    implementation('org.mp4parser:muxer:1.9.41') {
+        exclude group: 'org.hamcrest'
+    }
 
     implementation project(':nbistubs')
     implementation project(':strings')

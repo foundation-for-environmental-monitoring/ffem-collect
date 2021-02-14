@@ -14,6 +14,7 @@ import org.javarosa.core.model.actions.recordaudio.RecordAudioActionHandler;
 import org.javarosa.form.api.FormEntryController;
 import org.jetbrains.annotations.NotNull;
 import org.odk.collect.android.analytics.Analytics;
+import org.odk.collect.android.analytics.AnalyticsEvents;
 import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.formentry.audit.AuditEvent;
 import org.odk.collect.android.javarosawrapper.FormController;
@@ -27,7 +28,9 @@ public class FormEntryViewModel extends ViewModel implements RequiresFormControl
 
     private final Clock clock;
     private final Analytics analytics;
+
     private final MutableLiveData<FormError> error = new MutableLiveData<>(null);
+    private final MutableLiveData<Boolean> hasBackgroundRecording = new MutableLiveData<>(false);
 
     @Nullable
     private FormController formController;
@@ -44,6 +47,13 @@ public class FormEntryViewModel extends ViewModel implements RequiresFormControl
     @Override
     public void formLoaded(@NotNull FormController formController) {
         this.formController = formController;
+
+        boolean hasBackgroundRecording = formController.getFormDef().hasAction(RecordAudioActionHandler.ELEMENT_NAME);
+        this.hasBackgroundRecording.setValue(hasBackgroundRecording);
+
+        if (hasBackgroundRecording) {
+            analytics.logFormEvent(AnalyticsEvents.REQUESTS_BACKGROUND_AUDIO, getFormIdentifierHash());
+        }
     }
 
     public boolean isFormControllerSet() {
@@ -165,12 +175,8 @@ public class FormEntryViewModel extends ViewModel implements RequiresFormControl
         analytics.logFormEvent(event, getFormIdentifierHash());
     }
 
-    public boolean hasBackgroundRecording() {
-        if (formController != null) {
-            return formController.getFormDef().hasAction(RecordAudioActionHandler.ELEMENT_NAME);
-        } else {
-            return false;
-        }
+    public LiveData<Boolean> hasBackgroundRecording() {
+        return hasBackgroundRecording;
     }
 
     private String getFormIdentifierHash() {

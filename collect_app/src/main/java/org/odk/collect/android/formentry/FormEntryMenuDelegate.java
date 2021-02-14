@@ -100,8 +100,8 @@ public class FormEntryMenuDelegate implements MenuDelegate, RequiresFormControll
         }
 
         menu.findItem(R.id.menu_add_repeat).setVisible(formEntryViewModel.canAddRepeat());
-        menu.findItem(R.id.menu_record_audio).setVisible(formEntryViewModel.hasBackgroundRecording());
-        menu.findItem(R.id.menu_record_audio).setChecked(backgroundAudioViewModel.isBackgroundRecordingEnabled());
+        menu.findItem(R.id.menu_record_audio).setVisible(formEntryViewModel.hasBackgroundRecording().getValue());
+        menu.findItem(R.id.menu_record_audio).setChecked(backgroundAudioViewModel.isBackgroundRecordingEnabled().getValue());
     }
 
     @Override
@@ -146,12 +146,14 @@ public class FormEntryMenuDelegate implements MenuDelegate, RequiresFormControll
             if (!enabled) {
                 new MaterialAlertDialogBuilder(activity)
                         .setMessage(R.string.stop_recording_confirmation)
-                        .setPositiveButton(R.string.ok, (dialog, which) -> backgroundAudioViewModel.setBackgroundRecordingEnabled(false))
+                        .setPositiveButton(R.string.disable_recording, (dialog, which) -> backgroundAudioViewModel.setBackgroundRecordingEnabled(false))
+                        .setNegativeButton(R.string.cancel, null)
                         .create()
                         .show();
             } else {
                 new MaterialAlertDialogBuilder(activity)
                         .setMessage(R.string.background_audio_recording_enabled_explanation)
+                        .setCancelable(false)
                         .setPositiveButton(R.string.ok, null)
                         .create()
                         .show();

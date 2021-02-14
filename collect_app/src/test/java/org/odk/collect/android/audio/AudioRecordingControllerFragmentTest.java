@@ -5,6 +5,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.testing.FragmentScenario;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -13,7 +14,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.odk.collect.android.R;
+import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.formentry.BackgroundAudioViewModel;
+import org.odk.collect.android.formentry.FormEntryViewModel;
 import org.odk.collect.android.injection.config.AppDependencyModule;
 import org.odk.collect.android.permissions.PermissionsChecker;
 import org.odk.collect.android.preferences.PreferencesProvider;
@@ -21,6 +24,7 @@ import org.odk.collect.android.support.RobolectricHelpers;
 import org.odk.collect.audiorecorder.recorder.Output;
 import org.odk.collect.audiorecorder.recording.AudioRecorder;
 import org.odk.collect.audiorecorder.testsupport.StubAudioRecorder;
+import org.odk.collect.utilities.Clock;
 import org.robolectric.annotation.Config;
 
 import java.io.File;
@@ -31,6 +35,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.odk.collect.android.support.RobolectricHelpers.getFragmentByClass;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -39,6 +44,9 @@ public class AudioRecordingControllerFragmentTest {
 
     public StubAudioRecorder audioRecorder;
     private BackgroundAudioViewModel backgroundAudioViewModel;
+    private FormEntryViewModel formEntryViewModel;
+    private MutableLiveData<Boolean> hasBackgroundRecording;
+    private MutableLiveData<Boolean> isBackgroundRecordingEnabled;
 
     @Before
     public void setup() throws IOException {
@@ -47,16 +55,33 @@ public class AudioRecordingControllerFragmentTest {
 
         audioRecorder = new StubAudioRecorder(stubRecording.getAbsolutePath());
         backgroundAudioViewModel = mock(BackgroundAudioViewModel.class);
+        formEntryViewModel = mock(FormEntryViewModel.class);
+
+        hasBackgroundRecording = new MutableLiveData<>(false);
+        when(formEntryViewModel.hasBackgroundRecording()).thenReturn(hasBackgroundRecording);
+        isBackgroundRecordingEnabled = new MutableLiveData<>(false);
+        when(backgroundAudioViewModel.isBackgroundRecordingEnabled()).thenReturn(isBackgroundRecordingEnabled);
 
         RobolectricHelpers.overrideAppDependencyModule(new AppDependencyModule() {
 
             @Override
-            public BackgroundAudioViewModel.Factory providesBackgroundAudioViewModelFactory(AudioRecorder audioRecorder, PreferencesProvider preferencesProvider, PermissionsChecker permissionsChecker) {
-                return new BackgroundAudioViewModel.Factory(audioRecorder, preferencesProvider, permissionsChecker) {
+            public BackgroundAudioViewModel.Factory providesBackgroundAudioViewModelFactory(AudioRecorder audioRecorder, PreferencesProvider preferencesProvider, PermissionsChecker permissionsChecker, Clock clock, Analytics analytics) {
+                return new BackgroundAudioViewModel.Factory(audioRecorder, preferencesProvider, permissionsChecker, clock, analytics) {
                     @NonNull
                     @Override
                     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
                         return (T) backgroundAudioViewModel;
+                    }
+                };
+            }
+
+            @Override
+            public FormEntryViewModel.Factory providesFormEntryViewModelFactory(Clock clock, Analytics analytics) {
+                return new FormEntryViewModel.Factory(clock, analytics) {
+                    @NonNull
+                    @Override
+                    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+                        return (T) formEntryViewModel;
                     }
                 };
             }
@@ -69,13 +94,12 @@ public class AudioRecordingControllerFragmentTest {
 
         // Needed to inflate views with theme attributes - needs to be a "real theme" because of DialogFragment
         ApplicationProvider.getApplicationContext().setTheme(R.style.Theme_Collect_Light);
-
-        // View only shows when recording in progress
-        audioRecorder.start("session", Output.AAC);
     }
 
     @Test
     public void updatesTimecode() {
+        audioRecorder.start("session", Output.AAC);
+
         FragmentScenario<AudioRecordingControllerFragment> scenario = FragmentScenario.launch(AudioRecordingControllerFragment.class);
         scenario.onFragment(fragment -> {
             assertThat(fragment.binding.timeCode.getText().toString(), equalTo("00:00"));
@@ -87,6 +111,8 @@ public class AudioRecordingControllerFragmentTest {
 
     @Test
     public void updatesWaveform() {
+        audioRecorder.start("session", Output.AAC);
+
         FragmentScenario<AudioRecordingControllerFragment> scenario = FragmentScenario.launch(AudioRecordingControllerFragment.class);
         scenario.onFragment(fragment -> {
             assertThat(fragment.binding.waveform.getLatestAmplitude(), equalTo(0));
@@ -98,6 +124,8 @@ public class AudioRecordingControllerFragmentTest {
 
     @Test
     public void clickingPause_pausesRecording() {
+        audioRecorder.start("session", Output.AAC);
+
         FragmentScenario<AudioRecordingControllerFragment> scenario = FragmentScenario.launch(AudioRecordingControllerFragment.class);
         scenario.onFragment(fragment -> {
             fragment.binding.pauseRecording.performClick();
@@ -107,6 +135,7 @@ public class AudioRecordingControllerFragmentTest {
 
     @Test
     public void whenRecordingPaused_clickingPause_resumesRecording() {
+        audioRecorder.start("session", Output.AAC);
         audioRecorder.pause();
 
         FragmentScenario<AudioRecordingControllerFragment> scenario = FragmentScenario.launch(AudioRecordingControllerFragment.class);
@@ -118,6 +147,7 @@ public class AudioRecordingControllerFragmentTest {
 
     @Test
     public void whenRecordingPaused_pauseIconChangesToResume() {
+        audioRecorder.start("session", Output.AAC);
         audioRecorder.pause();
 
         FragmentScenario<AudioRecordingControllerFragment> scenario = FragmentScenario.launch(AudioRecordingControllerFragment.class);
@@ -129,6 +159,7 @@ public class AudioRecordingControllerFragmentTest {
 
     @Test
     public void whenRecordingPaused_recordingStatusChangesToPaused() {
+        audioRecorder.start("session", Output.AAC);
         audioRecorder.pause();
 
         FragmentScenario<AudioRecordingControllerFragment> scenario = FragmentScenario.launch(AudioRecordingControllerFragment.class);
@@ -139,6 +170,7 @@ public class AudioRecordingControllerFragmentTest {
 
     @Test
     public void whenRecordingResumed_pauseIconChangesToPause() {
+        audioRecorder.start("session", Output.AAC);
         audioRecorder.pause();
         audioRecorder.resume();
 
@@ -151,6 +183,7 @@ public class AudioRecordingControllerFragmentTest {
 
     @Test
     public void whenRecordingResumed_recordingStatusChangesToRecording() {
+        audioRecorder.start("session", Output.AAC);
         audioRecorder.pause();
         audioRecorder.resume();
 
@@ -163,6 +196,8 @@ public class AudioRecordingControllerFragmentTest {
     @Test
     @Config(sdk = 23)
     public void whenSDKOlderThan24_hidesPauseButton() {
+        audioRecorder.start("session", Output.AAC);
+
         FragmentScenario<AudioRecordingControllerFragment> scenario = FragmentScenario.launch(AudioRecordingControllerFragment.class);
         scenario.onFragment(fragment -> {
             assertThat(fragment.binding.pauseRecording.getVisibility(), is(View.GONE));
@@ -172,6 +207,8 @@ public class AudioRecordingControllerFragmentTest {
     @Test
     @Config(sdk = 24)
     public void whenSDK24OrNewer_showsPauseButton() {
+        audioRecorder.start("session", Output.AAC);
+
         FragmentScenario<AudioRecordingControllerFragment> scenario = FragmentScenario.launch(AudioRecordingControllerFragment.class);
         scenario.onFragment(fragment -> {
             assertThat(fragment.binding.pauseRecording.getVisibility(), is(View.VISIBLE));
@@ -180,8 +217,6 @@ public class AudioRecordingControllerFragmentTest {
 
     @Test
     public void whenThereIsAnErrorStartingRecording_showsErrorDialog() {
-        audioRecorder.cleanUp(); // Reset recorder
-
         FragmentScenario<AudioRecordingControllerFragment> scenario = FragmentScenario.launch(AudioRecordingControllerFragment.class);
 
         audioRecorder.failOnStart();
@@ -189,6 +224,32 @@ public class AudioRecordingControllerFragmentTest {
         scenario.onFragment(fragment -> {
             AudioRecordingErrorDialogFragment dialog = getFragmentByClass(fragment.getParentFragmentManager(), AudioRecordingErrorDialogFragment.class);
             assertThat(dialog, notNullValue());
+        });
+    }
+
+    @Test
+    public void whenFormHasBackgroundRecording_andBackgroundRecordingIsDisabled_showsThatRecordingIsDisabled() {
+        hasBackgroundRecording.setValue(true);
+        isBackgroundRecordingEnabled.setValue(false);
+
+        FragmentScenario<AudioRecordingControllerFragment> scenario = FragmentScenario.launch(AudioRecordingControllerFragment.class);
+        scenario.onFragment(fragment -> {
+            assertThat(fragment.binding.getRoot().getVisibility(), is(View.VISIBLE));
+            assertThat(fragment.binding.timeCode.getText(), is(fragment.getString(R.string.recording_disabled, "⋮")));
+            assertThat(fragment.binding.pauseRecording.getVisibility(), is(View.GONE));
+            assertThat(fragment.binding.stopRecording.getVisibility(), is(View.GONE));
+            assertThat(fragment.binding.waveform.getVisibility(), is(View.GONE));
+        });
+    }
+
+    @Test
+    public void whenFormDoesNotHaveBackgroundRecording_andBackgroundRecordingIsDisabled_doesNotShowRecordingIsDisabled() {
+        hasBackgroundRecording.setValue(false);
+        isBackgroundRecordingEnabled.setValue(false);
+
+        FragmentScenario<AudioRecordingControllerFragment> scenario = FragmentScenario.launch(AudioRecordingControllerFragment.class);
+        scenario.onFragment(fragment -> {
+            assertThat(fragment.binding.getRoot().getVisibility(), is(View.GONE));
         });
     }
 }
