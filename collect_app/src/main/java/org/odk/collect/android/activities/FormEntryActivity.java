@@ -1923,6 +1923,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     case BUTTON_POSITIVE: // yes
                         clearAnswer(qw);
                         saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
+                        // Brand change
+                        onScreenRefresh();
                         break;
                 }
             }
