@@ -285,8 +285,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         setButtonsVisibility();
         invalidateOptionsMenu();
         setUpStorageMigrationBanner();
-// brand change ----
-//        tryToPerformAutomaticMigration();
+        tryToPerformAutomaticMigration();
     }
 
     private void setButtonsVisibility() {
@@ -596,13 +595,12 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         });
     }
 
-// brand change ----
-//    private void tryToPerformAutomaticMigration() {
-//        if (storageStateProvider.shouldPerformAutomaticMigration()) {
-//            StorageMigrationDialog dialog = showStorageMigrationDialog();
-//            if (dialog != null) {
-//                dialog.startStorageMigration();
-//            }
-//        }
-//    }
+    private void tryToPerformAutomaticMigration() {
+        if (storageStateProvider.shouldPerformAutomaticMigration()) {
+            StorageMigrationDialog dialog = showStorageMigrationDialog();
+            if (dialog != null) {
+                dialog.startStorageMigration();
+            }
+        }
+    }
 }

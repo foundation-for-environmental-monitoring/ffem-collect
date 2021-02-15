@@ -243,6 +243,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                         textView.setLayoutParams(params);
                         textView.setText(groups[0].getShortText());
                         answerLayout.addView(textView);
+//                        context.registerForContextMenu(textView);
                         qw.setContainer((View) textView.getParent());
                     }
 
@@ -298,6 +299,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                                     String questionText = c.getQuestionText(formElement.getChild(i).getTextID());
                                     textView.setText(questionText);
                                     answerLayout.addView(textView);
+//                                    context.registerForContextMenu(textView);
                                     qw.setContainer((View) textView.getParent());
                                 }
 

@@ -1110,7 +1110,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         if (formController.indexContainsRepeatableGroup()) {
             menu.add(0, DELETE_REPEAT, 0, getString(R.string.delete_repeat));
         }
-        menu.setHeaderTitle(getString(R.string.edit_prompt));
+//        menu.setHeaderTitle(getString(R.string.edit_prompt));
     }
 
     @Override
