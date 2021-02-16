@@ -3,6 +3,7 @@ package io.ffem.collect.android.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -46,7 +47,11 @@ public class RowView extends TableRow {
         textTertiary.setText(s);
     }
 
-    public Boolean isAnswered(){
+    public void setLaunchButton(View t) {
+        ((LinearLayout) findViewById(R.id.row_layout)).addView(t);
+    }
+
+    public Boolean isAnswered() {
         return textPrimary != null && !textPrimary.getText().toString().isEmpty();
     }
 }

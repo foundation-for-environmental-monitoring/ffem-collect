@@ -101,7 +101,6 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
     private MenuItem qrcodeScannerMenuItem;
     private int savedCount;
     private int viewSentCount;
-    private Cursor finalizedCursor;
     private Cursor savedCursor;
     private Cursor viewSentCursor;
     private final IncomingHandler handler = new IncomingHandler(this);

@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
-    android:layout_marginTop="6dp"
+    android:layout_marginTop="4dp"
     android:clickable="false"
     android:columnCount="2"
     android:focusable="false">
@@ -18,9 +18,11 @@
         tools:text="Primary Text:" />
 
     <LinearLayout
+        android:id="@+id/row_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
@@ -37,6 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
+            android:layout_marginEnd="0dp"
             android:lineSpacingExtra="3dp"
             android:paddingStart="2dp"
             android:paddingEnd="0dp"

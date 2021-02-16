@@ -604,17 +604,17 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
 
         View launchIntentButton;
         if (answered) {
-            LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(24, 8, 24, 12);
+            params.setMargins(16, 2, 16, 0);
             launchIntentButton = (TextView) LayoutInflater
                     .from(context)
                     .inflate(R.layout.widget_redo_button, null, false);
             launchIntentButton.setLayoutParams(params);
         } else {
-            LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams params = new  LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(24, 8, 24, 16);
+            params.setMargins(32, 16, 32, 16);
             launchIntentButton = (MaterialButton) LayoutInflater
                     .from(context)
                     .inflate(R.layout.widget_answer_button, null, false);
@@ -627,14 +627,11 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         launchIntentButton.setTag(textID);
         launchIntentButton.setOnClickListener(view -> {
             // Brand change
-            Boolean answered1 = false;
-            for (int i = 0; i < widgetsList.getChildCount(); i++) {
-                if (widgetsList.getChildAt(i) == view) {
-                    if (widgetsList.getChildAt(i - 1) instanceof RowView) {
-                        RowView rowView = (RowView) widgetsList.getChildAt(i - 1);
-                        answered1 = rowView.isAnswered();
-                    }
-                }
+            boolean answered1 = false;
+            if (((TextView) view) instanceof TextView) {
+                answered1 = ((TextView) view).getText().equals(context.getString(R.string.redo_test));
+            } else {
+                answered1 = ((MaterialButton) view).getText().equals(context.getString(R.string.redo_test));
             }
 
             if (answered1) {
@@ -668,10 +665,11 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
             }
         });
 
-        layout.addView(launchIntentButton);
-        TextView textView = new TextView(context);
-        textView.setHeight(8);
-        layout.addView(textView);
+        if (layout.getChildAt(layout.getChildCount() - 1) instanceof RowView) {
+            ((RowView) layout.getChildAt(layout.getChildCount() - 1)).setLaunchButton(launchIntentButton);
+        } else {
+            layout.addView(launchIntentButton);
+        }
     }
 
     public void launchQuestionIntent(String intentString, FormEntryPrompt[] questionPrompts,
