@@ -1359,14 +1359,10 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         // checkbox for if finished or ready to send
         final CheckBox instanceComplete = endView.findViewById(R.id.mark_finished);
+        checkFinalizedCheckBox(endView, InstancesDaoHelper.isInstanceComplete(true));
 //        instanceComplete.setChecked(InstancesDaoHelper.isInstanceComplete(true));
         instanceComplete.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            MaterialButton saveButton = endView.findViewById(R.id.save_exit_button);
-            if (isChecked) {
-                saveButton.setText(R.string.submit_form);
-            } else {
-                saveButton.setText(R.string.quit_entry);
-            }
+            checkFinalizedCheckBox(endView, isChecked);
         });
 // end brand change ------
 
@@ -1394,6 +1390,15 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         }
 
         return endView;
+    }
+
+    private void checkFinalizedCheckBox(FormEndView endView, boolean isChecked) {
+        MaterialButton saveButton = endView.findViewById(R.id.save_exit_button);
+        if (isChecked) {
+            saveButton.setText(R.string.submit_form);
+        } else {
+            saveButton.setText(R.string.quit_entry);
+        }
     }
 
     @Override
