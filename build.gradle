@@ -16,7 +16,7 @@ buildscript {
         // Do not upgrade until https://github.com/google/play-services-plugins/issues/163 is addressed
         classpath 'com.google.gms:google-services:4.3.5'
         classpath 'org.jacoco:org.jacoco.core:0.8.6'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.5.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jlleitschuh.gradle:ktlint-gradle:9.4.1"
     }

@@ -627,8 +627,8 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         launchIntentButton.setTag(textID);
         launchIntentButton.setOnClickListener(view -> {
             // Brand change
-            boolean answered1 = false;
-            if (((TextView) view) instanceof TextView) {
+            boolean answered1;
+            if (view instanceof TextView) {
                 answered1 = ((TextView) view).getText().equals(context.getString(R.string.redo_test));
             } else {
                 answered1 = ((MaterialButton) view).getText().equals(context.getString(R.string.redo_test));
