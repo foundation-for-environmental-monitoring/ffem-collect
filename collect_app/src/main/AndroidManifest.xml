@@ -76,7 +76,6 @@ the specific language governing permissions and limitations under the License.
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
-        android:requestLegacyExternalStorage="true"
         android:networkSecurityConfig="@xml/network_security_config">
 
         <provider
@@ -269,10 +268,6 @@ the specific language governing permissions and limitations under the License.
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <!--        <service-->
-        <!--            android:name=".storage.migration.StorageMigrationService"-->
-        <!--            android:exported="false" />-->
 
         <activity android:name="io.ffem.collect.android.activities.SettingsActivity" />
         <activity

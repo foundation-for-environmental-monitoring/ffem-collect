@@ -5,10 +5,11 @@ import android.os.Handler;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.startup.AppInitializer;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
-import net.danlew.android.joda.JodaTimeAndroid;
+import net.danlew.android.joda.JodaTimeInitializer;
 
 import org.javarosa.core.model.CoreModelModule;
 import org.javarosa.core.services.PrototypeManager;
@@ -17,7 +18,6 @@ import org.javarosa.model.xform.XFormsModule;
 import org.javarosa.xform.parse.XFormParser;
 import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.analytics.Analytics;
-import org.odk.collect.android.application.AppStateProvider;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.preferences.FormUpdateMode;
 import org.odk.collect.android.geo.MapboxUtils;
@@ -25,7 +25,7 @@ import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.logic.actions.setgeopoint.CollectSetGeopointActionHandler;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.storage.StorageStateProvider;
+import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.utilities.UserAgentProvider;
 
 import java.util.Locale;
@@ -43,31 +43,30 @@ public class ApplicationInitializer {
     private final Analytics analytics;
     private final GeneralSharedPreferences generalSharedPreferences;
     private final AdminSharedPreferences adminSharedPreferences;
-    private final AppStateProvider appStateProvider;
-    private final StorageStateProvider storageStateProvider;
+    private final StorageInitializer storageInitializer;
 
     public ApplicationInitializer(Application context, UserAgentProvider userAgentProvider, SettingsPreferenceMigrator preferenceMigrator,
-                                  PropertyManager propertyManager, Analytics analytics, AppStateProvider appStateProvider, StorageStateProvider storageStateProvider) {
+                                  PropertyManager propertyManager, Analytics analytics, StorageInitializer storageInitializer) {
         this.context = context;
         this.userAgentProvider = userAgentProvider;
         this.preferenceMigrator = preferenceMigrator;
         this.propertyManager = propertyManager;
         this.analytics = analytics;
-        this.appStateProvider = appStateProvider;
-        this.storageStateProvider = storageStateProvider;
+        this.storageInitializer = storageInitializer;
 
         generalSharedPreferences = GeneralSharedPreferences.getInstance();
         adminSharedPreferences = AdminSharedPreferences.getInstance();
     }
 
     public void initialize() {
+        initializeStorage();
         initializePreferences();
         initializeFrameworks();
         initializeLocale();
+    }
 
-        if (appStateProvider.isFreshInstall(context)) {
-            storageStateProvider.enableUsingScopedStorage();
-        }
+    private void initializeStorage() {
+        storageInitializer.createOdkDirsOnStorage();
     }
 
     private void initializePreferences() {
@@ -76,7 +75,7 @@ public class ApplicationInitializer {
     }
 
     private void initializeFrameworks() {
-        JodaTimeAndroid.init(context);
+        AppInitializer.getInstance(context).initializeComponent(JodaTimeInitializer.class);
         initializeLogging();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         initializeMapFrameworks();

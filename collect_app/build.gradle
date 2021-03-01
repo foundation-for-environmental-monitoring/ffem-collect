@@ -272,12 +272,12 @@ dependencies {
         exclude group: 'org.slf4j'
     }
     implementation "com.karumi:dexter:6.2.2"
-    implementation "org.osmdroid:osmdroid-android:6.1.8"
-    implementation("com.google.api-client:google-api-client-android:1.31.1") {
+    implementation "org.osmdroid:osmdroid-android:6.1.10"
+    implementation("com.google.api-client:google-api-client-android:1.31.2") {
         exclude group: 'org.apache.httpcomponents'
         exclude group: 'com.google.guava'
     }
-    implementation("com.google.apis:google-api-services-drive:v3-rev20201130-1.31.0") {
+    implementation("com.google.apis:google-api-services-drive:v3-rev20210207-1.31.0") {
         exclude group: 'org.apache.httpcomponents'
         exclude group: 'com.google.guava'
     }
@@ -293,10 +293,10 @@ dependencies {
     //updating would require minSdkVersion >=24, it uses zxing:core 3.3.2 by default
     implementation "com.journeyapps:zxing-android-embedded:3.6.0"
 
-    implementation "net.danlew:android.joda:2.10.7.2"
+    implementation "net.danlew:android.joda:2.10.9"
 
     // Real LeakCanary for debug builds only: notifications, analysis, etc
-//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
 
     // Android Architecture Components:
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
@@ -316,7 +316,7 @@ dependencies {
 
     // RxJava 2:
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
-    implementation "io.reactivex.rxjava2:rxjava:2.2.20"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.21"
 
     // Better "Subjects" for Rx:
     implementation "com.jakewharton.rxrelay2:rxrelay:2.1.1"
@@ -324,7 +324,7 @@ dependencies {
     implementation 'com.github.Armen101:AudioRecordView:1.0.5'
 
     // Glide
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
 
     implementation('org.mp4parser:muxer:1.9.41') {
         exclude group: 'org.hamcrest'
@@ -360,7 +360,7 @@ dependencies {
         exclude group: 'androidx.test', module: 'monitor' //fixes issue https://github.com/android/android-test/issues/731
     }
     testImplementation "androidx.arch.core:core-testing:2.1.0"
-    testImplementation "org.robolectric:shadows-multidex:4.4"
+    testImplementation "org.robolectric:shadows-multidex:4.5.1"
     testImplementation "com.squareup.okhttp3:mockwebserver:${rootProject.okhttp3Version}"
     testImplementation "com.squareup.okhttp3:okhttp-tls:${rootProject.okhttp3Version}"
 
@@ -372,7 +372,7 @@ dependencies {
 
     testImplementation "org.json:json:20201115"
 
-    androidTestImplementation "org.mockito:mockito-android:3.6.28"
+    androidTestImplementation "org.mockito:mockito-android:3.7.7"
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0"

@@ -19,7 +19,7 @@ import org.odk.collect.android.support.pages.MainMenuPage;
 import org.odk.collect.utilities.UserAgentProvider;
 
 @RunWith(AndroidJUnit4.class)
-public class GetAndSubmitFormTest {
+public class BadServerTest {
 
     public final StubOpenRosaServer server = new StubOpenRosaServer();
 
@@ -28,6 +28,8 @@ public class GetAndSubmitFormTest {
     @Rule
     public RuleChain copyFormChain = RuleChain
             .outerRule(GrantPermissionRule.grant(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_PHONE_STATE,
                     Manifest.permission.GET_ACCOUNTS
             ))
@@ -40,7 +42,8 @@ public class GetAndSubmitFormTest {
             .around(rule);
 
     @Test
-    public void canGetBlankForm_fillItIn_andSubmit() {
+    public void whenHashNotIncludedInFormList_canGetBlankForm_fillItIn_andSubmit() {
+        server.removeHashInFormList();
         server.addForm("One Question", "one-question", "1", "one-question.xml");
 
         rule.mainMenu()
