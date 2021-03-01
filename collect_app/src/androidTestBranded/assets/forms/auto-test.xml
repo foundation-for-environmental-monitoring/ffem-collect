@@ -1,241 +1,165 @@
 <?xml version="1.0"?>
-<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa">
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:odk="http://www.opendatakit.org/xforms">
   <h:head>
     <h:title>Automated Testing</h:title>
     <model>
       <itext>
-        <translation lang="Kannada (kn)">
-          <text id="/data/group_hw5xj60/Available_Potassium_001:label">
-            <value></value>
-          </text>
-          <text id="/data/group_hr02n72:label">
-            <value></value>
-          </text>
-          <text id="/data/group_ro1iv44/Fluoride_Lite:label">
-            <value></value>
-          </text>
-          <text id="/data/group_hr02n72/Available_Boron:label">
-            <value></value>
-          </text>
-          <text id="/data/group_ep33t57/Total_Iron:label">
-            <value></value>
-          </text>
-          <text id="/data/Calcium_and_Magnesium:label">
-            <value></value>
-          </text>
-          <text id="/data/group_hw5xj60/Available_Nitrogen:label">
-            <value></value>
-          </text>
-          <text id="/data/group_hw5xj60/pH:label">
-            <value></value>
-          </text>
-          <text id="/data/group_ro1iv44:label">
-            <value></value>
-          </text>
-          <text id="/data/group_zc3re54/Arsenic_0_4000:label">
-            <value>ಆರ್ಸೆನಿಕ್ (0 - 4000)</value>
-          </text>
-          <text id="/data/group_hw5xj60:label">
-            <value></value>
-          </text>
-          <text id="/data/group_et5co41/pH_001:label">
-            <value></value>
-          </text>
-          <text id="/data/group_pg7xj25/Arsenic_III:label">
-            <value></value>
-          </text>
-          <text id="/data/group_zc3re54:label">
-            <value></value>
-          </text>
-          <text id="/data/group_ep33t57:label">
-            <value></value>
-          </text>
-          <text id="/data/group_ep33t57/Phosphate:label">
-            <value></value>
-          </text>
-          <text id="/data/group_xx6id67:label">
-            <value></value>
-          </text>
-          <text id="/data/group_pg7xj25:label">
-            <value></value>
-          </text>
-          <text id="/data/group_et5co41/Free_Chlorine:label">
-            <value></value>
-          </text>
-          <text id="/data/group_et5co41/Nitrate:label">
-            <value></value>
-          </text>
-          <text id="/data/group_pg7xj25/Fluoride:label">
-            <value></value>
-          </text>
-          <text id="/data/group_xx6id67/Carbonate:label">
-            <value></value>
-          </text>
-          <text id="/data/group_hr02n72/Available_Potassium:label">
-            <value></value>
-          </text>
-          <text id="/data/group_hr02n72/Available_Iron:label">
-            <value></value>
-          </text>
-          <text id="/data/group_xx6id67/Calcium_and_Magnesium_001:label">
-            <value></value>
-          </text>
-          <text id="/data/group_zc3re54/Arsenic_0_500:label">
-            <value>ಆರ್ಸೆನಿಕ್ (0 - 500)</value>
-          </text>
-          <text id="/data/group_hw5xj60/Available_Phosphorous:label">
-            <value></value>
-          </text>
-          <text id="/data/group_pg7xj25/Chromium:label">
-            <value></value>
-          </text>
-          <text id="/data/group_et5co41:label">
-            <value></value>
-          </text>
-        </translation>
         <translation lang="Hindi (hi)">
-          <text id="/data/group_hw5xj60/Available_Potassium_001:label">
-            <value></value>
-          </text>
-          <text id="/data/group_hr02n72:label">
-            <value></value>
+          <text id="/data/group_ro1iv44:label">
+            <value>Lite</value>
           </text>
           <text id="/data/group_ro1iv44/Fluoride_Lite:label">
-            <value></value>
-          </text>
-          <text id="/data/group_hr02n72/Available_Boron:label">
-            <value></value>
-          </text>
-          <text id="/data/group_ep33t57/Total_Iron:label">
-            <value></value>
-          </text>
-          <text id="/data/Calcium_and_Magnesium:label">
-            <value></value>
-          </text>
-          <text id="/data/group_hw5xj60/Available_Nitrogen:label">
-            <value></value>
-          </text>
-          <text id="/data/group_hw5xj60/pH:label">
-            <value></value>
-          </text>
-          <text id="/data/group_ro1iv44:label">
-            <value></value>
-          </text>
-          <text id="/data/group_zc3re54/Arsenic_0_4000:label">
-            <value>आर्सेनिक (0 - 4000)</value>
-          </text>
-          <text id="/data/group_hw5xj60:label">
-            <value></value>
-          </text>
-          <text id="/data/group_et5co41/pH_001:label">
-            <value></value>
-          </text>
-          <text id="/data/group_pg7xj25/Arsenic_III:label">
-            <value></value>
+            <value>Fluoride Lite</value>
           </text>
           <text id="/data/group_zc3re54:label">
-            <value></value>
-          </text>
-          <text id="/data/group_ep33t57:label">
-            <value></value>
-          </text>
-          <text id="/data/group_ep33t57/Phosphate:label">
-            <value></value>
-          </text>
-          <text id="/data/group_xx6id67:label">
-            <value></value>
-          </text>
-          <text id="/data/group_pg7xj25:label">
-            <value></value>
-          </text>
-          <text id="/data/group_et5co41/Free_Chlorine:label">
-            <value></value>
-          </text>
-          <text id="/data/group_et5co41/Nitrate:label">
-            <value></value>
-          </text>
-          <text id="/data/group_pg7xj25/Fluoride:label">
-            <value></value>
-          </text>
-          <text id="/data/group_xx6id67/Carbonate:label">
-            <value></value>
-          </text>
-          <text id="/data/group_hr02n72/Available_Potassium:label">
-            <value></value>
-          </text>
-          <text id="/data/group_hr02n72/Available_Iron:label">
-            <value></value>
-          </text>
-          <text id="/data/group_xx6id67/Calcium_and_Magnesium_001:label">
-            <value></value>
+            <value>आर्सेनिक</value>
           </text>
           <text id="/data/group_zc3re54/Arsenic_0_500:label">
             <value>आर्सेनिक (0 - 500)</value>
           </text>
+          <text id="/data/group_zc3re54/Arsenic_0_4000:label">
+            <value>आर्सेनिक (0 - 4000)</value>
+          </text>
+          <text id="/data/group_zc3re54/group_arsenic:label">
+            <value>आर्सेनिक (0 - 500)</value>
+          </text>
+          <text id="/data/group_zc3re54/group_arsenic/Arsenic:label">
+            <value>आर्सेनिक</value>
+          </text>
+          <text id="/data/group_zc3re54/group_arsenic/Arsenic_Unit:label">
+            <value>Unit</value>
+          </text>
+          <text id="/data/group_hw5xj60:label">
+            <value>Soil Tests 1</value>
+          </text>
+          <text id="/data/group_hw5xj60/pH:label">
+            <value>pH</value>
+          </text>
+          <text id="/data/group_hw5xj60/Available_Nitrogen:label">
+            <value>Available Nitrogen</value>
+          </text>
           <text id="/data/group_hw5xj60/Available_Phosphorous:label">
-            <value></value>
+            <value>Available Phosphorous</value>
           </text>
-          <text id="/data/group_pg7xj25/Chromium:label">
-            <value></value>
-          </text>
-          <text id="/data/group_et5co41:label">
-            <value></value>
-          </text>
-        </translation>
-        <translation default="true()" lang="English (en)">
           <text id="/data/group_hw5xj60/Available_Potassium_001:label">
             <value>Available Potassium</value>
           </text>
           <text id="/data/group_hr02n72:label">
             <value>Soil Tests 2</value>
           </text>
-          <text id="/data/group_ro1iv44/Fluoride_Lite:label">
-            <value>Fluoride Lite</value>
+          <text id="/data/group_hr02n72/Available_Potassium:label">
+            <value>Available Potassium</value>
           </text>
           <text id="/data/group_hr02n72/Available_Boron:label">
             <value>Available Boron</value>
           </text>
-          <text id="/data/group_ep33t57/Total_Iron:label">
-            <value>Total Iron</value>
+          <text id="/data/group_hr02n72/Available_Iron:label">
+            <value>Available Iron</value>
           </text>
-          <text id="/data/Calcium_and_Magnesium:label">
-            <value>Calcium and Magnesium</value>
+          <text id="/data/group_ft2js70:label">
+            <value>Soil Tests 3</value>
           </text>
-          <text id="/data/group_hw5xj60/Available_Nitrogen:label">
-            <value>Available Nitrogen</value>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium:label">
+            <value>कैल्शियम &amp; मैग्नीशियम</value>
           </text>
-          <text id="/data/group_hw5xj60/pH:label">
-            <value>pH</value>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Calcium_001:label">
+            <value>कैल्शियम</value>
           </text>
-          <text id="/data/group_ro1iv44:label">
-            <value>Lite</value>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Calcium_Unit_001:label">
+            <value>इकाई</value>
           </text>
-          <text id="/data/group_zc3re54/Arsenic_0_4000:label">
-            <value>Arsenic (0 - 4000)</value>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Magnesium_001:label">
+            <value>मैग्निशियम</value>
           </text>
-          <text id="/data/group_hw5xj60:label">
-            <value>Soil Tests 1</value>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Magnesium_Unit_001:label">
+            <value>इकाई</value>
           </text>
-          <text id="/data/group_et5co41/pH_001:label">
-            <value>pH</value>
+          <text id="/data/group_cf1hd68:label">
+            <value>अनुमापन</value>
           </text>
-          <text id="/data/group_pg7xj25/Arsenic_III:label">
-            <value>Arsenic (III)</value>
+          <text id="/data/group_cf1hd68/group_carbonate:label">
+            <value>कार्बोनेट</value>
           </text>
-          <text id="/data/group_zc3re54:label">
-            <value>Arsenic</value>
+          <text id="/data/group_cf1hd68/group_carbonate/Carbonate:label">
+            <value>कार्बोनेट</value>
           </text>
-          <text id="/data/group_ep33t57:label">
-            <value>Water Tests 3</value>
+          <text id="/data/group_cf1hd68/group_carbonate/Carbonate_Unit:label">
+            <value>इकाई</value>
           </text>
-          <text id="/data/group_ep33t57/Phosphate:label">
-            <value>Phosphate</value>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium:label">
+            <value>कैल्शियम &amp; मैग्नीशियम</value>
           </text>
-          <text id="/data/group_xx6id67:label">
-            <value>Water Tests</value>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium/Calcium:label">
+            <value>कैल्शियम</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium/Calcium_Unit:label">
+            <value>इकाई</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium/Magnesium:label">
+            <value>मैग्निशियम</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium/Magnesium_Unit:label">
+            <value>इकाई</value>
+          </text>
+          <text id="/data/group_titration2:label">
+            <value>अनुमापन</value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness:label">
+            <value></value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness/Total_Hardness_002:label">
+            <value></value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness/Calcium_002:label">
+            <value>कैल्शियम</value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness/Magnesium_002:label">
+            <value>मैग्निशियम</value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness/Total_Hardness_Unit_002:label">
+            <value>इकाई</value>
+          </text>
+          <text id="/data/group_chloride:label">
+            <value></value>
+          </text>
+          <text id="/data/group_chloride/Chloride:label">
+            <value></value>
+          </text>
+          <text id="/data/group_chloride/Chloride_Unit:label">
+            <value>इकाई</value>
           </text>
           <text id="/data/group_pg7xj25:label">
-            <value>Water Tests 1</value>
+            <value>जल परीक्षण 1</value>
+          </text>
+          <text id="/data/group_pg7xj25/Arsenic_III:label">
+            <value>आर्सेनिक (III)</value>
+          </text>
+          <text id="/data/group_pg7xj25/Chromium:label">
+            <value>क्रोमियम</value>
+          </text>
+          <text id="/data/group_pg7xj25/Fluoride:label">
+            <value>फ्लोराइड</value>
+          </text>
+          <text id="/data/group_av8bq69:label">
+            <value></value>
+          </text>
+          <text id="/data/group_av8bq69/group_fluoride_hr:label">
+            <value>फ्लोराइड - उच्च श्रेणी</value>
+          </text>
+          <text id="/data/group_av8bq69/group_fluoride_hr/Fluoride_xHR:label">
+            <value>फ्लोराइड</value>
+          </text>
+          <text id="/data/group_av8bq69/group_fluoride_hr/Fluoride_Unit_xHR:label">
+            <value>इकाई</value>
+          </text>
+          <text id="/data/group_av8bq69/group_fluoride_hr/Fluoride_Dilution_xHR:label">
+            <value>Dilution</value>
+          </text>
+          <text id="/data/group_av8bq69/Total_Alkalinity:label">
+            <value></value>
+          </text>
+          <text id="/data/group_et5co41:label">
+            <value>जल परीक्षण 2</value>
           </text>
           <text id="/data/group_et5co41/Free_Chlorine:label">
             <value>Free Chlorine</value>
@@ -243,121 +167,593 @@
           <text id="/data/group_et5co41/Nitrate:label">
             <value>Nitrate</value>
           </text>
-          <text id="/data/group_pg7xj25/Fluoride:label">
+          <text id="/data/group_et5co41/pH_001:label">
+            <value>pH</value>
+          </text>
+          <text id="/data/group_ep33t57:label">
+            <value>जल परीक्षण 3</value>
+          </text>
+          <text id="/data/group_ep33t57/Phosphate:label">
+            <value>Phosphate</value>
+          </text>
+          <text id="/data/group_ep33t57/group_fluoride:label">
+            <value>Fluoride - Borewell</value>
+          </text>
+          <text id="/data/group_ep33t57/group_fluoride/Fluoride_xBorewell:label">
             <value>Fluoride</value>
           </text>
-          <text id="/data/group_xx6id67/Carbonate:label">
-            <value>Carbonate</value>
+          <text id="/data/group_ep33t57/group_fluoride/Fluoride_Unit_xBorewell:label">
+            <value>इकाई</value>
           </text>
-          <text id="/data/group_hr02n72/Available_Potassium:label">
-            <value>Available Potassium</value>
+          <text id="/data/group_ep33t57/group_fluoride/Fluoride_Dilution_xBorewell:label">
+            <value>Dilution</value>
           </text>
-          <text id="/data/group_hr02n72/Available_Iron:label">
-            <value>Available Iron</value>
+          <text id="/data/group_ep33t57/Total_Iron:label">
+            <value>Total Iron</value>
           </text>
-          <text id="/data/group_xx6id67/Calcium_and_Magnesium_001:label">
-            <value>Calcium and Magnesium</value>
+        </translation>
+        <translation lang="English (en)" default="true()">
+          <text id="/data/group_ro1iv44:label">
+            <value>Lite</value>
+          </text>
+          <text id="/data/group_ro1iv44/Fluoride_Lite:label">
+            <value>Fluoride Lite</value>
+          </text>
+          <text id="/data/group_zc3re54:label">
+            <value>Arsenic</value>
           </text>
           <text id="/data/group_zc3re54/Arsenic_0_500:label">
             <value>Arsenic (0 - 500)</value>
           </text>
+          <text id="/data/group_zc3re54/Arsenic_0_4000:label">
+            <value>Arsenic (0 - 4000)</value>
+          </text>
+          <text id="/data/group_zc3re54/group_arsenic:label">
+            <value>Arsenic (0 - 500)</value>
+          </text>
+          <text id="/data/group_zc3re54/group_arsenic/Arsenic:label">
+            <value>Arsenic</value>
+          </text>
+          <text id="/data/group_zc3re54/group_arsenic/Arsenic_Unit:label">
+            <value>Unit</value>
+          </text>
+          <text id="/data/group_hw5xj60:label">
+            <value>Soil Tests 1</value>
+          </text>
+          <text id="/data/group_hw5xj60/pH:label">
+            <value>pH</value>
+          </text>
+          <text id="/data/group_hw5xj60/Available_Nitrogen:label">
+            <value>Available Nitrogen</value>
+          </text>
           <text id="/data/group_hw5xj60/Available_Phosphorous:label">
             <value>Available Phosphorous</value>
+          </text>
+          <text id="/data/group_hw5xj60/Available_Potassium_001:label">
+            <value>Available Potassium</value>
+          </text>
+          <text id="/data/group_hr02n72:label">
+            <value>Soil Tests 2</value>
+          </text>
+          <text id="/data/group_hr02n72/Available_Potassium:label">
+            <value>Available Potassium</value>
+          </text>
+          <text id="/data/group_hr02n72/Available_Boron:label">
+            <value>Available Boron</value>
+          </text>
+          <text id="/data/group_hr02n72/Available_Iron:label">
+            <value>Available Iron</value>
+          </text>
+          <text id="/data/group_ft2js70:label">
+            <value>Soil Tests 3</value>
+          </text>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium:label">
+            <value>Calcium &amp; Magnesium</value>
+          </text>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Calcium_001:label">
+            <value>Calcium</value>
+          </text>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Calcium_Unit_001:label">
+            <value>Unit</value>
+          </text>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Magnesium_001:label">
+            <value>Magnesium</value>
+          </text>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Magnesium_Unit_001:label">
+            <value>Unit</value>
+          </text>
+          <text id="/data/group_cf1hd68:label">
+            <value>Titration</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_carbonate:label">
+            <value>Carbonate</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_carbonate/Carbonate:label">
+            <value>Carbonate</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_carbonate/Carbonate_Unit:label">
+            <value>Unit</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium:label">
+            <value>Calcium &amp; Magnesium</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium/Calcium:label">
+            <value>Calcium</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium/Calcium_Unit:label">
+            <value>Unit</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium/Magnesium:label">
+            <value>Magnesium</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium/Magnesium_Unit:label">
+            <value>Unit</value>
+          </text>
+          <text id="/data/group_titration2:label">
+            <value>Titration 2</value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness:label">
+            <value>Total Hardness</value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness/Total_Hardness_002:label">
+            <value>Total Hardness</value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness/Calcium_002:label">
+            <value>Calcium</value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness/Magnesium_002:label">
+            <value>Magnesium</value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness/Total_Hardness_Unit_002:label">
+            <value>Unit</value>
+          </text>
+          <text id="/data/group_chloride:label">
+            <value>Chloride</value>
+          </text>
+          <text id="/data/group_chloride/Chloride:label">
+            <value>Chloride</value>
+          </text>
+          <text id="/data/group_chloride/Chloride_Unit:label">
+            <value>Unit</value>
+          </text>
+          <text id="/data/group_pg7xj25:label">
+            <value>Water Tests 1</value>
+          </text>
+          <text id="/data/group_pg7xj25/Arsenic_III:label">
+            <value>Arsenic (III)</value>
           </text>
           <text id="/data/group_pg7xj25/Chromium:label">
             <value>Chromium</value>
           </text>
+          <text id="/data/group_pg7xj25/Fluoride:label">
+            <value>Fluoride</value>
+          </text>
+          <text id="/data/group_av8bq69:label">
+            <value>Water Tests</value>
+          </text>
+          <text id="/data/group_av8bq69/group_fluoride_hr:label">
+            <value>Fluoride - High Range</value>
+          </text>
+          <text id="/data/group_av8bq69/group_fluoride_hr/Fluoride_xHR:label">
+            <value>Fluoride</value>
+          </text>
+          <text id="/data/group_av8bq69/group_fluoride_hr/Fluoride_Unit_xHR:label">
+            <value>Unit</value>
+          </text>
+          <text id="/data/group_av8bq69/group_fluoride_hr/Fluoride_Dilution_xHR:label">
+            <value>Dilution</value>
+          </text>
+          <text id="/data/group_av8bq69/Total_Alkalinity:label">
+            <value>Total Alkalinity</value>
+          </text>
           <text id="/data/group_et5co41:label">
             <value>Water Tests 2</value>
           </text>
-        </translation>
-        <translation lang="Telugu (te)">
-          <text id="/data/group_hw5xj60/Available_Potassium_001:label">
-            <value></value>
-          </text>
-          <text id="/data/group_hr02n72:label">
-            <value></value>
-          </text>
-          <text id="/data/group_ro1iv44/Fluoride_Lite:label">
-            <value></value>
-          </text>
-          <text id="/data/group_hr02n72/Available_Boron:label">
-            <value></value>
-          </text>
-          <text id="/data/group_ep33t57/Total_Iron:label">
-            <value></value>
-          </text>
-          <text id="/data/Calcium_and_Magnesium:label">
-            <value></value>
-          </text>
-          <text id="/data/group_hw5xj60/Available_Nitrogen:label">
-            <value></value>
-          </text>
-          <text id="/data/group_hw5xj60/pH:label">
-            <value></value>
-          </text>
-          <text id="/data/group_ro1iv44:label">
-            <value></value>
-          </text>
-          <text id="/data/group_zc3re54/Arsenic_0_4000:label">
-            <value>ఆర్సెనిక్ (0 - 4000)</value>
-          </text>
-          <text id="/data/group_hw5xj60:label">
-            <value></value>
-          </text>
-          <text id="/data/group_et5co41/pH_001:label">
-            <value></value>
-          </text>
-          <text id="/data/group_pg7xj25/Arsenic_III:label">
-            <value></value>
-          </text>
-          <text id="/data/group_zc3re54:label">
-            <value></value>
-          </text>
-          <text id="/data/group_ep33t57:label">
-            <value></value>
-          </text>
-          <text id="/data/group_ep33t57/Phosphate:label">
-            <value></value>
-          </text>
-          <text id="/data/group_xx6id67:label">
-            <value></value>
-          </text>
-          <text id="/data/group_pg7xj25:label">
-            <value></value>
-          </text>
           <text id="/data/group_et5co41/Free_Chlorine:label">
-            <value></value>
+            <value>Free Chlorine</value>
           </text>
           <text id="/data/group_et5co41/Nitrate:label">
-            <value></value>
+            <value>Nitrate</value>
           </text>
-          <text id="/data/group_pg7xj25/Fluoride:label">
-            <value></value>
+          <text id="/data/group_et5co41/pH_001:label">
+            <value>pH</value>
           </text>
-          <text id="/data/group_xx6id67/Carbonate:label">
-            <value></value>
+          <text id="/data/group_ep33t57:label">
+            <value>Water Tests 3</value>
           </text>
-          <text id="/data/group_hr02n72/Available_Potassium:label">
-            <value></value>
+          <text id="/data/group_ep33t57/Phosphate:label">
+            <value>Phosphate</value>
           </text>
-          <text id="/data/group_hr02n72/Available_Iron:label">
-            <value></value>
+          <text id="/data/group_ep33t57/group_fluoride:label">
+            <value>Fluoride - Borewell</value>
           </text>
-          <text id="/data/group_xx6id67/Calcium_and_Magnesium_001:label">
-            <value></value>
+          <text id="/data/group_ep33t57/group_fluoride/Fluoride_xBorewell:label">
+            <value>Fluoride</value>
+          </text>
+          <text id="/data/group_ep33t57/group_fluoride/Fluoride_Unit_xBorewell:label">
+            <value>Unit</value>
+          </text>
+          <text id="/data/group_ep33t57/group_fluoride/Fluoride_Dilution_xBorewell:label">
+            <value>Dilution</value>
+          </text>
+          <text id="/data/group_ep33t57/Total_Iron:label">
+            <value>Total Iron</value>
+          </text>
+        </translation>
+        <translation lang="Telugu (te)">
+          <text id="/data/group_ro1iv44:label">
+            <value>Lite</value>
+          </text>
+          <text id="/data/group_ro1iv44/Fluoride_Lite:label">
+            <value>Fluoride Lite</value>
+          </text>
+          <text id="/data/group_zc3re54:label">
+            <value>ఆర్సెనిక్</value>
           </text>
           <text id="/data/group_zc3re54/Arsenic_0_500:label">
             <value>ఆర్సెనిక్ (0 - 500)</value>
           </text>
+          <text id="/data/group_zc3re54/Arsenic_0_4000:label">
+            <value>ఆర్సెనిక్ (0 - 4000)</value>
+          </text>
+          <text id="/data/group_zc3re54/group_arsenic:label">
+            <value>ఆర్సెనిక్ (0 - 500)</value>
+          </text>
+          <text id="/data/group_zc3re54/group_arsenic/Arsenic:label">
+            <value>ఆర్సెనిక్</value>
+          </text>
+          <text id="/data/group_zc3re54/group_arsenic/Arsenic_Unit:label">
+            <value>Unit</value>
+          </text>
+          <text id="/data/group_hw5xj60:label">
+            <value>Soil Tests 1</value>
+          </text>
+          <text id="/data/group_hw5xj60/pH:label">
+            <value>pH</value>
+          </text>
+          <text id="/data/group_hw5xj60/Available_Nitrogen:label">
+            <value>Available Nitrogen</value>
+          </text>
           <text id="/data/group_hw5xj60/Available_Phosphorous:label">
+            <value>Available Phosphorous</value>
+          </text>
+          <text id="/data/group_hw5xj60/Available_Potassium_001:label">
+            <value>Available Potassium</value>
+          </text>
+          <text id="/data/group_hr02n72:label">
+            <value>Soil Tests 2</value>
+          </text>
+          <text id="/data/group_hr02n72/Available_Potassium:label">
+            <value>Available Potassium</value>
+          </text>
+          <text id="/data/group_hr02n72/Available_Boron:label">
+            <value>Available Boron</value>
+          </text>
+          <text id="/data/group_hr02n72/Available_Iron:label">
+            <value>Available Iron</value>
+          </text>
+          <text id="/data/group_ft2js70:label">
+            <value>Soil Tests 3</value>
+          </text>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium:label">
+            <value>కాల్షియం &amp; మెగ్నీషియం</value>
+          </text>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Calcium_001:label">
+            <value>కాల్షియం</value>
+          </text>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Calcium_Unit_001:label">
+            <value>యూనిట్</value>
+          </text>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Magnesium_001:label">
+            <value>మెగ్నీషియం</value>
+          </text>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Magnesium_Unit_001:label">
+            <value>యూనిట్</value>
+          </text>
+          <text id="/data/group_cf1hd68:label">
+            <value>టిట్రాషన్</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_carbonate:label">
+            <value>కార్బోనేట్</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_carbonate/Carbonate:label">
+            <value>కార్బోనేట్</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_carbonate/Carbonate_Unit:label">
+            <value>యూనిట్</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium:label">
+            <value>కాల్షియం &amp; మెగ్నీషియం</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium/Calcium:label">
+            <value>కాల్షియం</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium/Calcium_Unit:label">
+            <value>యూనిట్</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium/Magnesium:label">
+            <value>మెగ్నీషియం</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium/Magnesium_Unit:label">
+            <value>యూనిట్</value>
+          </text>
+          <text id="/data/group_titration2:label">
+            <value>టిట్రాషన్</value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness:label">
             <value></value>
           </text>
+          <text id="/data/group_titration2/group_total_hardness/Total_Hardness_002:label">
+            <value></value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness/Calcium_002:label">
+            <value>కాల్షియం</value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness/Magnesium_002:label">
+            <value>మెగ్నీషియం</value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness/Total_Hardness_Unit_002:label">
+            <value>యూనిట్</value>
+          </text>
+          <text id="/data/group_chloride:label">
+            <value></value>
+          </text>
+          <text id="/data/group_chloride/Chloride:label">
+            <value></value>
+          </text>
+          <text id="/data/group_chloride/Chloride_Unit:label">
+            <value>యూనిట్</value>
+          </text>
+          <text id="/data/group_pg7xj25:label">
+            <value>నీటి పరీక్షలు 1</value>
+          </text>
+          <text id="/data/group_pg7xj25/Arsenic_III:label">
+            <value>ఆర్సెనిక్ (III)</value>
+          </text>
           <text id="/data/group_pg7xj25/Chromium:label">
+            <value>క్రోమియం</value>
+          </text>
+          <text id="/data/group_pg7xj25/Fluoride:label">
+            <value>ఫ్లోరైడ్</value>
+          </text>
+          <text id="/data/group_av8bq69:label">
+            <value></value>
+          </text>
+          <text id="/data/group_av8bq69/group_fluoride_hr:label">
+            <value>ఫ్లోరైడ్ - అధిక శ్రేణి</value>
+          </text>
+          <text id="/data/group_av8bq69/group_fluoride_hr/Fluoride_xHR:label">
+            <value>ఫ్లోరైడ్</value>
+          </text>
+          <text id="/data/group_av8bq69/group_fluoride_hr/Fluoride_Unit_xHR:label">
+            <value>యూనిట్</value>
+          </text>
+          <text id="/data/group_av8bq69/group_fluoride_hr/Fluoride_Dilution_xHR:label">
+            <value>Dilution</value>
+          </text>
+          <text id="/data/group_av8bq69/Total_Alkalinity:label">
             <value></value>
           </text>
           <text id="/data/group_et5co41:label">
+            <value>Water Tests 2</value>
+          </text>
+          <text id="/data/group_et5co41/Free_Chlorine:label">
+            <value>Free Chlorine</value>
+          </text>
+          <text id="/data/group_et5co41/Nitrate:label">
+            <value>Nitrate</value>
+          </text>
+          <text id="/data/group_et5co41/pH_001:label">
+            <value>pH</value>
+          </text>
+          <text id="/data/group_ep33t57:label">
+            <value>Water Tests 3</value>
+          </text>
+          <text id="/data/group_ep33t57/Phosphate:label">
+            <value>Phosphate</value>
+          </text>
+          <text id="/data/group_ep33t57/group_fluoride:label">
+            <value>Fluoride - Borewell</value>
+          </text>
+          <text id="/data/group_ep33t57/group_fluoride/Fluoride_xBorewell:label">
+            <value>Fluoride</value>
+          </text>
+          <text id="/data/group_ep33t57/group_fluoride/Fluoride_Unit_xBorewell:label">
+            <value>యూనిట్</value>
+          </text>
+          <text id="/data/group_ep33t57/group_fluoride/Fluoride_Dilution_xBorewell:label">
+            <value>Dilution</value>
+          </text>
+          <text id="/data/group_ep33t57/Total_Iron:label">
+            <value>Total Iron</value>
+          </text>
+        </translation>
+        <translation lang="Kannada (kn)">
+          <text id="/data/group_ro1iv44:label">
+            <value>Lite</value>
+          </text>
+          <text id="/data/group_ro1iv44/Fluoride_Lite:label">
+            <value>Fluoride Lite</value>
+          </text>
+          <text id="/data/group_zc3re54:label">
+            <value>ಆರ್ಸೆನಿಕ್</value>
+          </text>
+          <text id="/data/group_zc3re54/Arsenic_0_500:label">
+            <value>ಆರ್ಸೆನಿಕ್ (0 - 500)</value>
+          </text>
+          <text id="/data/group_zc3re54/Arsenic_0_4000:label">
+            <value>ಆರ್ಸೆನಿಕ್ (0 - 4000)</value>
+          </text>
+          <text id="/data/group_zc3re54/group_arsenic:label">
+            <value>ಆರ್ಸೆನಿಕ್ (0 - 500)</value>
+          </text>
+          <text id="/data/group_zc3re54/group_arsenic/Arsenic:label">
+            <value>ಆರ್ಸೆನಿಕ್</value>
+          </text>
+          <text id="/data/group_zc3re54/group_arsenic/Arsenic_Unit:label">
+            <value>Unit</value>
+          </text>
+          <text id="/data/group_hw5xj60:label">
+            <value>Soil Tests 1</value>
+          </text>
+          <text id="/data/group_hw5xj60/pH:label">
+            <value>pH</value>
+          </text>
+          <text id="/data/group_hw5xj60/Available_Nitrogen:label">
+            <value>Available Nitrogen</value>
+          </text>
+          <text id="/data/group_hw5xj60/Available_Phosphorous:label">
+            <value>Available Phosphorous</value>
+          </text>
+          <text id="/data/group_hw5xj60/Available_Potassium_001:label">
+            <value>Available Potassium</value>
+          </text>
+          <text id="/data/group_hr02n72:label">
+            <value>Soil Tests 2</value>
+          </text>
+          <text id="/data/group_hr02n72/Available_Potassium:label">
+            <value>Available Potassium</value>
+          </text>
+          <text id="/data/group_hr02n72/Available_Boron:label">
+            <value>Available Boron</value>
+          </text>
+          <text id="/data/group_hr02n72/Available_Iron:label">
+            <value>Available Iron</value>
+          </text>
+          <text id="/data/group_ft2js70:label">
+            <value>Soil Tests 3</value>
+          </text>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium:label">
+            <value>ಕ್ಯಾಲ್ಸಿಯಂ &amp; ಮೆಗ್ನೀಸಿಯಮ್</value>
+          </text>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Calcium_001:label">
+            <value>ಕ್ಯಾಲ್ಸಿಯಂ</value>
+          </text>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Calcium_Unit_001:label">
+            <value>ಘಟಕ</value>
+          </text>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Magnesium_001:label">
+            <value>ಮೆಗ್ನೀಸಿಯಮ್</value>
+          </text>
+          <text id="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Magnesium_Unit_001:label">
+            <value>ಘಟಕ</value>
+          </text>
+          <text id="/data/group_cf1hd68:label">
+            <value>ಟೈಟರೇಶನ್</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_carbonate:label">
+            <value>ಕಾರ್ಬೊನೇಟ್</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_carbonate/Carbonate:label">
+            <value>ಕಾರ್ಬೊನೇಟ್</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_carbonate/Carbonate_Unit:label">
+            <value>ಘಟಕ</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium:label">
+            <value>ಕ್ಯಾಲ್ಸಿಯಂ &amp; ಮೆಗ್ನೀಸಿಯಮ್</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium/Calcium:label">
+            <value>ಕ್ಯಾಲ್ಸಿಯಂ</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium/Calcium_Unit:label">
+            <value>ಘಟಕ</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium/Magnesium:label">
+            <value>ಮೆಗ್ನೀಸಿಯಮ್</value>
+          </text>
+          <text id="/data/group_cf1hd68/group_calcium_and_magnesium/Magnesium_Unit:label">
+            <value>ಘಟಕ</value>
+          </text>
+          <text id="/data/group_titration2:label">
+            <value>ಟೈಟರೇಶನ್</value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness:label">
             <value></value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness/Total_Hardness_002:label">
+            <value></value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness/Calcium_002:label">
+            <value>ಕ್ಯಾಲ್ಸಿಯಂ</value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness/Magnesium_002:label">
+            <value>ಮೆಗ್ನೀಸಿಯಮ್</value>
+          </text>
+          <text id="/data/group_titration2/group_total_hardness/Total_Hardness_Unit_002:label">
+            <value>ಘಟಕ</value>
+          </text>
+          <text id="/data/group_chloride:label">
+            <value></value>
+          </text>
+          <text id="/data/group_chloride/Chloride:label">
+            <value></value>
+          </text>
+          <text id="/data/group_chloride/Chloride_Unit:label">
+            <value>ಘಟಕ</value>
+          </text>
+          <text id="/data/group_pg7xj25:label">
+            <value>ನೀರಿನ ಪರೀಕ್ಷೆಗಳು 1</value>
+          </text>
+          <text id="/data/group_pg7xj25/Arsenic_III:label">
+            <value>ಆರ್ಸೆನಿಕ್ (III)</value>
+          </text>
+          <text id="/data/group_pg7xj25/Chromium:label">
+            <value>ಕ್ರೋಮಿಯಂ</value>
+          </text>
+          <text id="/data/group_pg7xj25/Fluoride:label">
+            <value>ಫ್ಲೋರೈಡ್</value>
+          </text>
+          <text id="/data/group_av8bq69:label">
+            <value></value>
+          </text>
+          <text id="/data/group_av8bq69/group_fluoride_hr:label">
+            <value>ಫ್ಲೋರೈಡ್ - ಹೆಚ್ಚಿನ ಶ್ರೇಣಿ</value>
+          </text>
+          <text id="/data/group_av8bq69/group_fluoride_hr/Fluoride_xHR:label">
+            <value>ಫ್ಲೋರೈಡ್</value>
+          </text>
+          <text id="/data/group_av8bq69/group_fluoride_hr/Fluoride_Unit_xHR:label">
+            <value>ಘಟಕ</value>
+          </text>
+          <text id="/data/group_av8bq69/group_fluoride_hr/Fluoride_Dilution_xHR:label">
+            <value>Dilution</value>
+          </text>
+          <text id="/data/group_av8bq69/Total_Alkalinity:label">
+            <value></value>
+          </text>
+          <text id="/data/group_et5co41:label">
+            <value>Water Tests 2</value>
+          </text>
+          <text id="/data/group_et5co41/Free_Chlorine:label">
+            <value>Free Chlorine</value>
+          </text>
+          <text id="/data/group_et5co41/Nitrate:label">
+            <value>Nitrate</value>
+          </text>
+          <text id="/data/group_et5co41/pH_001:label">
+            <value>pH</value>
+          </text>
+          <text id="/data/group_ep33t57:label">
+            <value>Water Tests 3</value>
+          </text>
+          <text id="/data/group_ep33t57/Phosphate:label">
+            <value>Phosphate</value>
+          </text>
+          <text id="/data/group_ep33t57/group_fluoride:label">
+            <value>Fluoride - Borewell</value>
+          </text>
+          <text id="/data/group_ep33t57/group_fluoride/Fluoride_xBorewell:label">
+            <value>ಫ್ಲೋರೈಡ್</value>
+          </text>
+          <text id="/data/group_ep33t57/group_fluoride/Fluoride_Unit_xBorewell:label">
+            <value>ಘಟಕ</value>
+          </text>
+          <text id="/data/group_ep33t57/group_fluoride/Fluoride_Dilution_xBorewell:label">
+            <value>Dilution</value>
+          </text>
+          <text id="/data/group_ep33t57/Total_Iron:label">
+            <value>Total Iron</value>
           </text>
         </translation>
       </itext>
@@ -365,12 +761,19 @@
         <data id="snapshot_xml">
           <start/>
           <end/>
+          <today/>
+          <username/>
+          <deviceid/>
           <group_ro1iv44>
             <Fluoride_Lite/>
           </group_ro1iv44>
           <group_zc3re54>
             <Arsenic_0_500/>
             <Arsenic_0_4000/>
+            <group_arsenic>
+              <Arsenic/>
+              <Arsenic_Unit/>
+            </group_arsenic>
           </group_zc3re54>
           <group_hw5xj60>
             <pH/>
@@ -383,16 +786,51 @@
             <Available_Boron/>
             <Available_Iron/>
           </group_hr02n72>
-          <Calcium_and_Magnesium/>
-          <group_xx6id67>
-            <Calcium_and_Magnesium_001/>
-            <Carbonate/>
-          </group_xx6id67>
+          <group_ft2js70>
+            <group_exchangeable_calcium_and_magnesium>
+              <Calcium_001/>
+              <Calcium_Unit_001/>
+              <Magnesium_001/>
+              <Magnesium_Unit_001/>
+            </group_exchangeable_calcium_and_magnesium>
+          </group_ft2js70>
+          <group_cf1hd68>
+            <group_carbonate>
+              <Carbonate/>
+              <Carbonate_Unit/>
+            </group_carbonate>
+            <group_calcium_and_magnesium>
+              <Calcium/>
+              <Calcium_Unit/>
+              <Magnesium/>
+              <Magnesium_Unit/>
+            </group_calcium_and_magnesium>
+          </group_cf1hd68>
+          <group_titration2>
+            <group_total_hardness>
+              <Total_Hardness_002/>
+              <Calcium_002/>
+              <Magnesium_002/>
+              <Total_Hardness_Unit_002/>
+            </group_total_hardness>
+          </group_titration2>
+          <group_chloride>
+            <Chloride/>
+            <Chloride_Unit/>
+          </group_chloride>
           <group_pg7xj25>
             <Arsenic_III/>
             <Chromium/>
             <Fluoride/>
           </group_pg7xj25>
+          <group_av8bq69>
+            <group_fluoride_hr>
+              <Fluoride_xHR/>
+              <Fluoride_Unit_xHR/>
+              <Fluoride_Dilution_xHR/>
+            </group_fluoride_hr>
+            <Total_Alkalinity/>
+          </group_av8bq69>
           <group_et5co41>
             <Free_Chlorine/>
             <Nitrate/>
@@ -400,53 +838,92 @@
           </group_et5co41>
           <group_ep33t57>
             <Phosphate/>
+            <group_fluoride>
+              <Fluoride_xBorewell/>
+              <Fluoride_Unit_xBorewell/>
+              <Fluoride_Dilution_xBorewell/>
+            </group_fluoride>
             <Total_Iron/>
           </group_ep33t57>
-          <__version__/>
           <meta>
             <instanceID/>
           </meta>
         </data>
       </instance>
-      <bind jr:preload="timestamp" jr:preloadParams="start" nodeset="/data/start" type="dateTime"/>
-      <bind jr:preload="timestamp" jr:preloadParams="end" nodeset="/data/end" type="dateTime"/>
+      <bind nodeset="/data/start" jr:preload="timestamp" type="dateTime" jr:preloadParams="start"/>
+      <bind nodeset="/data/end" jr:preload="timestamp" type="dateTime" jr:preloadParams="end"/>
+      <bind nodeset="/data/today" jr:preload="date" type="date" jr:preloadParams="today"/>
+      <bind nodeset="/data/username" jr:preload="property" type="string" jr:preloadParams="username"/>
+      <bind nodeset="/data/deviceid" jr:preload="property" type="string" jr:preloadParams="deviceid"/>
       <bind nodeset="/data/group_ro1iv44" required="false()"/>
-      <bind nodeset="/data/group_ro1iv44/Fluoride_Lite" required="false()" type="string"/>
+      <bind nodeset="/data/group_ro1iv44/Fluoride_Lite" type="string" required="false()"/>
       <bind nodeset="/data/group_zc3re54" required="false()"/>
-      <bind nodeset="/data/group_zc3re54/Arsenic_0_500" required="false()" type="string"/>
-      <bind nodeset="/data/group_zc3re54/Arsenic_0_4000" required="false()" type="string"/>
+      <bind nodeset="/data/group_zc3re54/Arsenic_0_500" type="string" required="false()"/>
+      <bind nodeset="/data/group_zc3re54/Arsenic_0_4000" type="string" required="false()"/>
+      <bind nodeset="/data/group_zc3re54/group_arsenic" required="false()"/>
+      <bind nodeset="/data/group_zc3re54/group_arsenic/Arsenic" type="string" required="false()"/>
+      <bind nodeset="/data/group_zc3re54/group_arsenic/Arsenic_Unit" type="string" required="false()"/>
       <bind nodeset="/data/group_hw5xj60" required="false()"/>
-      <bind nodeset="/data/group_hw5xj60/pH" required="false()" type="string"/>
-      <bind nodeset="/data/group_hw5xj60/Available_Nitrogen" required="false()" type="string"/>
-      <bind nodeset="/data/group_hw5xj60/Available_Phosphorous" required="false()" type="string"/>
-      <bind nodeset="/data/group_hw5xj60/Available_Potassium_001" required="false()" type="string"/>
+      <bind nodeset="/data/group_hw5xj60/pH" type="string" required="false()"/>
+      <bind nodeset="/data/group_hw5xj60/Available_Nitrogen" type="string" required="false()"/>
+      <bind nodeset="/data/group_hw5xj60/Available_Phosphorous" type="string" required="false()"/>
+      <bind nodeset="/data/group_hw5xj60/Available_Potassium_001" type="string" required="false()"/>
       <bind nodeset="/data/group_hr02n72" required="false()"/>
-      <bind nodeset="/data/group_hr02n72/Available_Potassium" required="false()" type="string"/>
-      <bind nodeset="/data/group_hr02n72/Available_Boron" required="false()" type="string"/>
-      <bind nodeset="/data/group_hr02n72/Available_Iron" required="false()" type="string"/>
-      <bind nodeset="/data/Calcium_and_Magnesium" required="false()" type="string"/>
-      <bind nodeset="/data/group_xx6id67" required="false()"/>
-      <bind nodeset="/data/group_xx6id67/Calcium_and_Magnesium_001" required="false()" type="string"/>
-      <bind nodeset="/data/group_xx6id67/Carbonate" required="false()" type="string"/>
+      <bind nodeset="/data/group_hr02n72/Available_Potassium" type="string" required="false()"/>
+      <bind nodeset="/data/group_hr02n72/Available_Boron" type="string" required="false()"/>
+      <bind nodeset="/data/group_hr02n72/Available_Iron" type="string" required="false()"/>
+      <bind nodeset="/data/group_ft2js70" required="false()"/>
+      <bind nodeset="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium" required="false()"/>
+      <bind nodeset="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Calcium_001" type="string" required="false()"/>
+      <bind nodeset="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Calcium_Unit_001" type="string" required="false()"/>
+      <bind nodeset="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Magnesium_001" type="string" required="false()"/>
+      <bind nodeset="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Magnesium_Unit_001" type="string" required="false()"/>
+      <bind nodeset="/data/group_cf1hd68" required="false()"/>
+      <bind nodeset="/data/group_cf1hd68/group_carbonate" required="false()"/>
+      <bind nodeset="/data/group_cf1hd68/group_carbonate/Carbonate" type="string" required="false()"/>
+      <bind nodeset="/data/group_cf1hd68/group_carbonate/Carbonate_Unit" type="string" required="false()"/>
+      <bind nodeset="/data/group_cf1hd68/group_calcium_and_magnesium" required="false()"/>
+      <bind nodeset="/data/group_cf1hd68/group_calcium_and_magnesium/Calcium" type="string" required="false()"/>
+      <bind nodeset="/data/group_cf1hd68/group_calcium_and_magnesium/Calcium_Unit" type="string" required="false()"/>
+      <bind nodeset="/data/group_cf1hd68/group_calcium_and_magnesium/Magnesium" type="string" required="false()"/>
+      <bind nodeset="/data/group_cf1hd68/group_calcium_and_magnesium/Magnesium_Unit" type="string" required="false()"/>
+      <bind nodeset="/data/group_titration2" required="false()"/>
+      <bind nodeset="/data/group_titration2/group_total_hardness" required="false()"/>
+      <bind nodeset="/data/group_titration2/group_total_hardness/Total_Hardness_002" type="string" required="false()"/>
+      <bind nodeset="/data/group_titration2/group_total_hardness/Calcium_002" type="string" required="false()"/>
+      <bind nodeset="/data/group_titration2/group_total_hardness/Magnesium_002" type="string" required="false()"/>
+      <bind nodeset="/data/group_titration2/group_total_hardness/Total_Hardness_Unit_002" type="string" required="false()"/>
+      <bind nodeset="/data/group_chloride" required="false()"/>
+      <bind nodeset="/data/group_chloride/Chloride" type="string" required="false()"/>
+      <bind nodeset="/data/group_chloride/Chloride_Unit" type="string" required="false()"/>
       <bind nodeset="/data/group_pg7xj25" required="false()"/>
-      <bind nodeset="/data/group_pg7xj25/Arsenic_III" required="false()" type="string"/>
-      <bind nodeset="/data/group_pg7xj25/Chromium" required="false()" type="string"/>
-      <bind nodeset="/data/group_pg7xj25/Fluoride" required="false()" type="string"/>
+      <bind nodeset="/data/group_pg7xj25/Arsenic_III" type="string" required="false()"/>
+      <bind nodeset="/data/group_pg7xj25/Chromium" type="string" required="false()"/>
+      <bind nodeset="/data/group_pg7xj25/Fluoride" type="string" required="false()"/>
+      <bind nodeset="/data/group_av8bq69" required="false()"/>
+      <bind nodeset="/data/group_av8bq69/group_fluoride_hr" required="false()"/>
+      <bind nodeset="/data/group_av8bq69/group_fluoride_hr/Fluoride_xHR" type="string" required="false()"/>
+      <bind nodeset="/data/group_av8bq69/group_fluoride_hr/Fluoride_Unit_xHR" type="string" required="false()"/>
+      <bind nodeset="/data/group_av8bq69/group_fluoride_hr/Fluoride_Dilution_xHR" type="int" required="false()"/>
+      <bind nodeset="/data/group_av8bq69/Total_Alkalinity" type="string" required="false()"/>
       <bind nodeset="/data/group_et5co41" required="false()"/>
-      <bind nodeset="/data/group_et5co41/Free_Chlorine" required="false()" type="string"/>
-      <bind nodeset="/data/group_et5co41/Nitrate" required="false()" type="string"/>
-      <bind nodeset="/data/group_et5co41/pH_001" required="false()" type="string"/>
+      <bind nodeset="/data/group_et5co41/Free_Chlorine" type="string" required="false()"/>
+      <bind nodeset="/data/group_et5co41/Nitrate" type="string" required="false()"/>
+      <bind nodeset="/data/group_et5co41/pH_001" type="string" required="false()"/>
       <bind nodeset="/data/group_ep33t57" required="false()"/>
-      <bind nodeset="/data/group_ep33t57/Phosphate" required="false()" type="string"/>
-      <bind nodeset="/data/group_ep33t57/Total_Iron" required="false()" type="string"/>
-      <bind calculate="'vkMFBR8pdkXJJJTo4fLNBT'" nodeset="/data/__version__" required="false()" type="string"/>
-      <bind calculate="concat('uuid:', uuid())" nodeset="/data/meta/instanceID" readonly="true()" type="string"/>
+      <bind nodeset="/data/group_ep33t57/Phosphate" type="string" required="false()"/>
+      <bind nodeset="/data/group_ep33t57/group_fluoride" required="false()"/>
+      <bind nodeset="/data/group_ep33t57/group_fluoride/Fluoride_xBorewell" type="string" required="false()"/>
+      <bind nodeset="/data/group_ep33t57/group_fluoride/Fluoride_Unit_xBorewell" type="string" required="false()"/>
+      <bind nodeset="/data/group_ep33t57/group_fluoride/Fluoride_Dilution_xBorewell" type="int" required="false()"/>
+      <bind nodeset="/data/group_ep33t57/Total_Iron" type="string" required="false()"/>
+      <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" jr:preload="uid"/>
     </model>
   </h:head>
   <h:body>
     <group appearance="field-list" ref="/data/group_ro1iv44">
       <label ref="jr:itext('/data/group_ro1iv44:label')"/>
-      <input appearance="ex:io.ffem.lite(testId='&quot;f0f3c1dd-89af-49f1-83e7-bcc31cb6115&quot;')" ref="/data/group_ro1iv44/Fluoride_Lite">
+      <input appearance="ex:io.ffem.lite(testId='f0f3c1dd-89af-49f1-83e7-bcc31cb61159')" ref="/data/group_ro1iv44/Fluoride_Lite">
         <label ref="jr:itext('/data/group_ro1iv44/Fluoride_Lite:label')"/>
       </input>
     </group>
@@ -458,6 +935,15 @@
       <input appearance="ex:io.ffem.water(testId='beca9731-63f4-434f-a3c2-ac33b44f9992')" ref="/data/group_zc3re54/Arsenic_0_4000">
         <label ref="jr:itext('/data/group_zc3re54/Arsenic_0_4000:label')"/>
       </input>
+      <group intent="io.ffem.water(testId='32b6d11b-c7f3-475f-adf9-32d9b8f4aecf')" appearance="field-list" ref="/data/group_zc3re54/group_arsenic">
+        <label ref="jr:itext('/data/group_zc3re54/group_arsenic:label')"/>
+        <input ref="/data/group_zc3re54/group_arsenic/Arsenic">
+          <label ref="jr:itext('/data/group_zc3re54/group_arsenic/Arsenic:label')"/>
+        </input>
+        <input ref="/data/group_zc3re54/group_arsenic/Arsenic_Unit">
+          <label ref="jr:itext('/data/group_zc3re54/group_arsenic/Arsenic_Unit:label')"/>
+        </input>
+      </group>
     </group>
     <group appearance="field-list" ref="/data/group_hw5xj60">
       <label ref="jr:itext('/data/group_hw5xj60:label')"/>
@@ -486,16 +972,76 @@
         <label ref="jr:itext('/data/group_hr02n72/Available_Iron:label')"/>
       </input>
     </group>
-    <input appearance="ex:io.ffem.soil(testId='52ec4ca0-d691-4f2b-b17a-232c2966974a')" ref="/data/Calcium_and_Magnesium">
-      <label ref="jr:itext('/data/Calcium_and_Magnesium:label')"/>
-    </input>
-    <group appearance="field-list" ref="/data/group_xx6id67">
-      <label ref="jr:itext('/data/group_xx6id67:label')"/>
-      <input appearance="ex:io.ffem.water(testId='670d2d65-bb76-4d72-ae4f-867d031b7712')" ref="/data/group_xx6id67/Calcium_and_Magnesium_001">
-        <label ref="jr:itext('/data/group_xx6id67/Calcium_and_Magnesium_001:label')"/>
+    <group appearance="field-list" ref="/data/group_ft2js70">
+      <label ref="jr:itext('/data/group_ft2js70:label')"/>
+      <group intent="io.ffem.soil(testId='52ec4ca0-d691-4f2b-b17a-232c2966974a')" appearance="field-list" ref="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium">
+        <label ref="jr:itext('/data/group_ft2js70/group_exchangeable_calcium_and_magnesium:label')"/>
+        <input ref="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Calcium_001">
+          <label ref="jr:itext('/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Calcium_001:label')"/>
+        </input>
+        <input ref="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Calcium_Unit_001">
+          <label ref="jr:itext('/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Calcium_Unit_001:label')"/>
+        </input>
+        <input ref="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Magnesium_001">
+          <label ref="jr:itext('/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Magnesium_001:label')"/>
+        </input>
+        <input ref="/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Magnesium_Unit_001">
+          <label ref="jr:itext('/data/group_ft2js70/group_exchangeable_calcium_and_magnesium/Magnesium_Unit_001:label')"/>
+        </input>
+      </group>
+    </group>
+    <group appearance="field-list" ref="/data/group_cf1hd68">
+      <label ref="jr:itext('/data/group_cf1hd68:label')"/>
+      <group intent="io.ffem.water(testId='783c30ee-57c5-498e-aaaa-ed2904f7972a')" appearance="field-list" ref="/data/group_cf1hd68/group_carbonate">
+        <label ref="jr:itext('/data/group_cf1hd68/group_carbonate:label')"/>
+        <input ref="/data/group_cf1hd68/group_carbonate/Carbonate">
+          <label ref="jr:itext('/data/group_cf1hd68/group_carbonate/Carbonate:label')"/>
+        </input>
+        <input ref="/data/group_cf1hd68/group_carbonate/Carbonate_Unit">
+          <label ref="jr:itext('/data/group_cf1hd68/group_carbonate/Carbonate_Unit:label')"/>
+        </input>
+      </group>
+      <group intent="io.ffem.water(testId='670d2d65-bb76-4d72-ae4f-867d031b7712')" appearance="field-list" ref="/data/group_cf1hd68/group_calcium_and_magnesium">
+        <label ref="jr:itext('/data/group_cf1hd68/group_calcium_and_magnesium:label')"/>
+        <input ref="/data/group_cf1hd68/group_calcium_and_magnesium/Calcium">
+          <label ref="jr:itext('/data/group_cf1hd68/group_calcium_and_magnesium/Calcium:label')"/>
+        </input>
+        <input ref="/data/group_cf1hd68/group_calcium_and_magnesium/Calcium_Unit">
+          <label ref="jr:itext('/data/group_cf1hd68/group_calcium_and_magnesium/Calcium_Unit:label')"/>
+        </input>
+        <input ref="/data/group_cf1hd68/group_calcium_and_magnesium/Magnesium">
+          <label ref="jr:itext('/data/group_cf1hd68/group_calcium_and_magnesium/Magnesium:label')"/>
+        </input>
+        <input ref="/data/group_cf1hd68/group_calcium_and_magnesium/Magnesium_Unit">
+          <label ref="jr:itext('/data/group_cf1hd68/group_calcium_and_magnesium/Magnesium_Unit:label')"/>
+        </input>
+      </group>
+    </group>
+    <group appearance="field-list" ref="/data/group_titration2">
+      <label ref="jr:itext('/data/group_titration2:label')"/>
+      <group intent="io.ffem.water(testId='58b23c8d-d1b2-49b1-b530-1431be9133a4')" appearance="field-list" ref="/data/group_titration2/group_total_hardness">
+        <label ref="jr:itext('/data/group_titration2/group_total_hardness:label')"/>
+        <input ref="/data/group_titration2/group_total_hardness/Total_Hardness_002">
+          <label ref="jr:itext('/data/group_titration2/group_total_hardness/Total_Hardness_002:label')"/>
+        </input>
+        <input ref="/data/group_titration2/group_total_hardness/Calcium_002">
+          <label ref="jr:itext('/data/group_titration2/group_total_hardness/Calcium_002:label')"/>
+        </input>
+        <input ref="/data/group_titration2/group_total_hardness/Magnesium_002">
+          <label ref="jr:itext('/data/group_titration2/group_total_hardness/Magnesium_002:label')"/>
+        </input>
+        <input ref="/data/group_titration2/group_total_hardness/Total_Hardness_Unit_002">
+          <label ref="jr:itext('/data/group_titration2/group_total_hardness/Total_Hardness_Unit_002:label')"/>
+        </input>
+      </group>
+    </group>
+    <group intent="io.ffem.water(testId='561ed7c9-052d-4b4d-84bd-823ac4095ed7')" appearance="field-list" ref="/data/group_chloride">
+      <label ref="jr:itext('/data/group_chloride:label')"/>
+      <input ref="/data/group_chloride/Chloride">
+        <label ref="jr:itext('/data/group_chloride/Chloride:label')"/>
       </input>
-      <input appearance="ex:io.ffem.water(testId='783c30ee-57c5-498e-aaaa-ed2904f7972a')" ref="/data/group_xx6id67/Carbonate">
-        <label ref="jr:itext('/data/group_xx6id67/Carbonate:label')"/>
+      <input ref="/data/group_chloride/Chloride_Unit">
+        <label ref="jr:itext('/data/group_chloride/Chloride_Unit:label')"/>
       </input>
     </group>
     <group appearance="field-list" ref="/data/group_pg7xj25">
@@ -508,6 +1054,24 @@
       </input>
       <input appearance="ex:io.ffem.water(testId='f0f3c1dd-89af-49f1-83e7-bcc31c3006cf')" ref="/data/group_pg7xj25/Fluoride">
         <label ref="jr:itext('/data/group_pg7xj25/Fluoride:label')"/>
+      </input>
+    </group>
+    <group appearance="field-list" ref="/data/group_av8bq69">
+      <label ref="jr:itext('/data/group_av8bq69:label')"/>
+      <group intent="io.ffem.water(testId='5920816a-21f1-47d3-9976-8f34e73f101c')" appearance="field-list" ref="/data/group_av8bq69/group_fluoride_hr">
+        <label ref="jr:itext('/data/group_av8bq69/group_fluoride_hr:label')"/>
+        <input ref="/data/group_av8bq69/group_fluoride_hr/Fluoride_xHR">
+          <label ref="jr:itext('/data/group_av8bq69/group_fluoride_hr/Fluoride_xHR:label')"/>
+        </input>
+        <input ref="/data/group_av8bq69/group_fluoride_hr/Fluoride_Unit_xHR">
+          <label ref="jr:itext('/data/group_av8bq69/group_fluoride_hr/Fluoride_Unit_xHR:label')"/>
+        </input>
+        <input ref="/data/group_av8bq69/group_fluoride_hr/Fluoride_Dilution_xHR">
+          <label ref="jr:itext('/data/group_av8bq69/group_fluoride_hr/Fluoride_Dilution_xHR:label')"/>
+        </input>
+      </group>
+      <input appearance="ex:io.ffem.water(testId='020dccb1-9a35-4097-bf02-292a92d7ae5a')" ref="/data/group_av8bq69/Total_Alkalinity">
+        <label ref="jr:itext('/data/group_av8bq69/Total_Alkalinity:label')"/>
       </input>
     </group>
     <group appearance="field-list" ref="/data/group_et5co41">
@@ -527,6 +1091,18 @@
       <input appearance="ex:io.ffem.water(testId='6fbe9952-7199-4c9d-8664-977236176cc9')" ref="/data/group_ep33t57/Phosphate">
         <label ref="jr:itext('/data/group_ep33t57/Phosphate:label')"/>
       </input>
+      <group intent="io.ffem.water(testId='f0f3c1dd-89af-49f1-83e7-bcc31c3006cf')" appearance="field-list" ref="/data/group_ep33t57/group_fluoride">
+        <label ref="jr:itext('/data/group_ep33t57/group_fluoride:label')"/>
+        <input ref="/data/group_ep33t57/group_fluoride/Fluoride_xBorewell">
+          <label ref="jr:itext('/data/group_ep33t57/group_fluoride/Fluoride_xBorewell:label')"/>
+        </input>
+        <input ref="/data/group_ep33t57/group_fluoride/Fluoride_Unit_xBorewell">
+          <label ref="jr:itext('/data/group_ep33t57/group_fluoride/Fluoride_Unit_xBorewell:label')"/>
+        </input>
+        <input ref="/data/group_ep33t57/group_fluoride/Fluoride_Dilution_xBorewell">
+          <label ref="jr:itext('/data/group_ep33t57/group_fluoride/Fluoride_Dilution_xBorewell:label')"/>
+        </input>
+      </group>
       <input appearance="ex:io.ffem.water(testId='5a7cf06e-5e73-4044-9aa5-0206cc627c82')" ref="/data/group_ep33t57/Total_Iron">
         <label ref="jr:itext('/data/group_ep33t57/Total_Iron:label')"/>
       </input>

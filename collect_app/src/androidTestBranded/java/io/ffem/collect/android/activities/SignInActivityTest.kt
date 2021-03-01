@@ -60,12 +60,7 @@ class SignInActivityTest {
         materialButton.perform(scrollTo(), click())
 
         val multiClickSafeButton = onView(
-                allOf(withId(R.id.enter_data), withText("Fill Blank Form"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(`is`("android.widget.LinearLayout")),
-                                        1),
-                                0)))
+                allOf(withId(R.id.enter_data), withText("Fill Blank Form")))
         multiClickSafeButton.perform(scrollTo(), click())
 
         val materialButton2 = onView(
@@ -100,12 +95,7 @@ class SignInActivityTest {
         pressBack()
 
         val multiClickSafeButton2 = onView(
-                allOf(withId(R.id.get_forms), withText("Get Blank Form"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(`is`("android.widget.LinearLayout")),
-                                        1),
-                                3)))
+                allOf(withId(R.id.get_forms), withText("Get Blank Form")))
         multiClickSafeButton2.perform(scrollTo(), click())
 
         val appCompatButton3 = onView(

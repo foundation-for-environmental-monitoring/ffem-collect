@@ -21,8 +21,6 @@ import org.odk.collect.android.configure.SettingsImporter
 import org.odk.collect.android.configure.qr.QRCodeDecoder
 import org.odk.collect.android.gdrive.GoogleDriveActivity
 import org.odk.collect.android.preferences.GeneralKeys
-import org.odk.collect.android.storage.StorageInitializer
-import org.odk.collect.android.storage.StorageStateProvider
 import org.odk.collect.android.utilities.MultiClickGuard
 import org.odk.collect.android.utilities.PlayServicesChecker
 import org.odk.collect.android.utilities.WebCredentialsUtils
@@ -58,12 +56,6 @@ open class MainMenuActivityBranded : AppUpdateActivity() {
         if (hasAppVersionExpired()) {
             return
         }
-
-        val storageStateProvider = StorageStateProvider()
-        if (!storageStateProvider.isScopedStorageUsed) {
-            storageStateProvider.enableUsingScopedStorage()
-        }
-        StorageInitializer().createOdkDirsOnStorage()
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 broadcastReceiver,
@@ -130,12 +122,10 @@ open class MainMenuActivityBranded : AppUpdateActivity() {
 
     fun getBlankForm() {
         if (MultiClickGuard.allowClick(javaClass.name)) {
-            val sharedPreferences = PreferenceManager
-                    .getDefaultSharedPreferences(this)
+            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
             val protocol = sharedPreferences.getString(
                     GeneralKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default))
-            val i: Intent
-            i = if (protocol.equals(getString(R.string.protocol_google_sheets), ignoreCase = true)) {
+            val i: Intent = if (protocol.equals(getString(R.string.protocol_google_sheets), ignoreCase = true)) {
                 if (PlayServicesChecker().isGooglePlayServicesAvailable(this)) {
                     Intent(applicationContext,
                             GoogleDriveActivity::class.java)
