@@ -1,7 +1,5 @@
 package io.ffem.collect.android.activities;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -20,8 +18,8 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.MainMenuActivity;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.preferences.GeneralKeys;
-import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 
@@ -35,10 +33,12 @@ import static android.view.View.GONE;
  * Sign in screen shown on app first launch
  */
 public class SignInActivity extends CollectAbstractActivity {
-    private static final boolean EXIT = true;
     private static final String MASK = "**********";
     @Inject
     WebCredentialsUtils webCredentialsUtils;
+    @Inject
+    PropertyManager propertyManager;
+
     private EditText editText;
     private EditText editPassword;
     private TextInputLayout layoutUserName;
@@ -113,11 +113,9 @@ public class SignInActivity extends CollectAbstractActivity {
 
         findViewById(R.id.buttonSignIn).setOnClickListener(view -> {
             if (isInputValid()) {
-                GeneralSharedPreferences.getInstance().save(GeneralKeys.KEY_USERNAME,
-                        editText.getText().toString().trim());
                 if (!editPassword.getText().toString().equals(MASK)) {
-                    GeneralSharedPreferences.getInstance().save(GeneralKeys.KEY_PASSWORD,
-                            editPassword.getText().toString().trim());
+                    webCredentialsUtils.saveCredentialsPreferences(editText.getText().toString().trim(),
+                            editPassword.getText().toString().trim(), propertyManager);
                 }
 
                 startActivity(new Intent(getBaseContext(), MainMenuActivity.class));
@@ -208,21 +206,6 @@ public class SignInActivity extends CollectAbstractActivity {
                 && storedUsername.trim().length() != 0
                 && storedPassword != null
                 && storedPassword.trim().length() != 0;
-    }
-
-    private void createErrorDialog(String errorMsg) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setMessage(errorMsg);
-        DialogInterface.OnClickListener errorListener = (dialog, i) -> {
-            if (i == DialogInterface.BUTTON_POSITIVE) {
-                if (SignInActivity.EXIT) {
-                    finish();
-                }
-            }
-        };
-        alertDialog.setCancelable(false);
-        alertDialog.setButton(getString(R.string.ok), errorListener);
-        alertDialog.show();
     }
 
     @Override

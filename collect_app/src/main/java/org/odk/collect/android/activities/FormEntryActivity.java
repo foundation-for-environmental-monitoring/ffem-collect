@@ -1326,7 +1326,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         // checkbox for if finished or ready to send
         final CheckBox instanceComplete = endView.findViewById(R.id.mark_finished);
-        checkFinalizedCheckBox(endView, InstancesDaoHelper.isInstanceComplete(true));
+        checkFinalizedCheckBox(endView, InstancesDaoHelper.isInstanceComplete(true, false));
 //        instanceComplete.setChecked(InstancesDaoHelper.isInstanceComplete(true));
         instanceComplete.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             checkFinalizedCheckBox(endView, isChecked);

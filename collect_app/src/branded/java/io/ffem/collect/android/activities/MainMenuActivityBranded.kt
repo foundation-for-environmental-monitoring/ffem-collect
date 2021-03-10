@@ -15,7 +15,6 @@ import io.ffem.collect.android.util.ApkHelper.isNonStoreVersion
 import org.odk.collect.android.BuildConfig
 import org.odk.collect.android.R
 import org.odk.collect.android.activities.FormDownloadListActivity
-import org.odk.collect.android.analytics.Analytics
 import org.odk.collect.android.application.Collect
 import org.odk.collect.android.configure.SettingsImporter
 import org.odk.collect.android.configure.qr.QRCodeDecoder
@@ -37,9 +36,6 @@ open class MainMenuActivityBranded : AppUpdateActivity() {
 
     @Inject
     lateinit var settingsImporter: SettingsImporter
-
-    @Inject
-    lateinit var analytics: Analytics
 
     private var toolbar: Toolbar? = null
 

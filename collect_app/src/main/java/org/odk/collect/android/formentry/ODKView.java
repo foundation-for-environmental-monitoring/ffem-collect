@@ -134,7 +134,6 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
     private final AudioHelper audioHelper;
 
     private WidgetValueChangedListener widgetValueChangedListener;
-    private final QuestionTextSizeHelper questionTextSizeHelper = new QuestionTextSizeHelper();
 
     @Inject
     public AudioHelperFactory audioHelperFactory;
@@ -620,7 +619,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                     .inflate(R.layout.widget_answer_button, null, false);
             ((MaterialButton)launchIntentButton).setText(buttonText);
             launchIntentButton.setLayoutParams(params);
-            ((MaterialButton)launchIntentButton).setTextSize(TypedValue.COMPLEX_UNIT_DIP, questionTextSizeHelper.getHeadline6());
+            ((MaterialButton)launchIntentButton).setTextSize(TypedValue.COMPLEX_UNIT_DIP,  QuestionFontSizeUtils.getQuestionFontSize() - 2);
         }
 
         launchIntentButton.setId(View.generateViewId());
