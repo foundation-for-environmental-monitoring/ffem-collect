@@ -120,7 +120,6 @@ android {
             shrinkResources true
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            resValue("bool", "CRASHLYTICS_ENABLED", "false")
             resValue("string", "GOOGLE_MAPS_API_KEY", googleMapsApiKey)
             buildConfigField 'String', "MAPBOX_ACCESS_TOKEN", '"' + mapboxToken + '"'
             buildConfigField "java.util.Date", "BUILD_TIME", "new java.util.Date(" +
@@ -134,7 +133,17 @@ android {
             }
             minifyEnabled(true)
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            resValue("bool", "CRASHLYTICS_ENABLED", "true")
+            resValue("string", "GOOGLE_MAPS_API_KEY", googleMapsApiKey)
+            buildConfigField 'String', "MAPBOX_ACCESS_TOKEN", '"' + mapboxToken + '"'
+
+            matchingFallbacks = ['release'] // So other modules use release build type for this
+        }
+
+        selfSignedRelease {
+            signingConfig signingConfigs.selfSignedRelease
+
+            minifyEnabled(true)
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             resValue("string", "GOOGLE_MAPS_API_KEY", googleMapsApiKey)
             buildConfigField 'String', "MAPBOX_ACCESS_TOKEN", '"' + mapboxToken + '"'
 
@@ -144,7 +153,6 @@ android {
         debug {
             debuggable(true)
             testCoverageEnabled((findProperty("enableJacoco") ?: "false").toBoolean())
-            resValue("bool", "CRASHLYTICS_ENABLED", "false")
             resValue("string", "GOOGLE_MAPS_API_KEY", googleMapsApiKey)
             buildConfigField 'String', "MAPBOX_ACCESS_TOKEN", '"' + mapboxToken + '"'
         }
@@ -208,6 +216,7 @@ android {
         xmlReport true
         htmlReport true
         checkGeneratedSources true
+        checkDependencies true
         lintConfig file("${project.rootDir}/config/lint.xml")
     }
 
@@ -335,6 +344,7 @@ dependencies {
     implementation project(':strings')
     implementation project(':material')
     implementation project(':async')
+    implementation project(':analytics')
     implementation project(':audioclips')
     implementation project(path: ':audiorecorder')
 

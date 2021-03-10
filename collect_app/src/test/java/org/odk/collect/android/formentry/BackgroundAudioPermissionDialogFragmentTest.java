@@ -13,13 +13,13 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.odk.collect.analytics.Analytics;
 import org.odk.collect.android.R;
-import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.fakes.FakePermissionsProvider;
 import org.odk.collect.android.injection.config.AppDependencyModule;
 import org.odk.collect.android.permissions.PermissionsChecker;
 import org.odk.collect.android.permissions.PermissionsProvider;
-import org.odk.collect.android.preferences.PreferencesProvider;
+import org.odk.collect.android.preferences.PreferencesDataSourceProvider;
 import org.odk.collect.android.support.RobolectricHelpers;
 import org.odk.collect.audiorecorder.recording.AudioRecorder;
 import org.odk.collect.utilities.Clock;
@@ -44,8 +44,8 @@ public class BackgroundAudioPermissionDialogFragmentTest {
         RobolectricHelpers.overrideAppDependencyModule(new AppDependencyModule() {
 
             @Override
-            public BackgroundAudioViewModel.Factory providesBackgroundAudioViewModelFactory(AudioRecorder audioRecorder, PreferencesProvider preferencesProvider, PermissionsChecker permissionsChecker, Clock clock, Analytics analytics) {
-                return new BackgroundAudioViewModel.Factory(audioRecorder, preferencesProvider, permissionsChecker, clock, analytics) {
+            public BackgroundAudioViewModel.Factory providesBackgroundAudioViewModelFactory(AudioRecorder audioRecorder, PreferencesDataSourceProvider preferencesDataSourceProvider, PermissionsChecker permissionsChecker, Clock clock, Analytics analytics) {
+                return new BackgroundAudioViewModel.Factory(audioRecorder, preferencesDataSourceProvider.getGeneralPreferences(), permissionsChecker, clock, analytics) {
                     @NonNull
                     @Override
                     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
