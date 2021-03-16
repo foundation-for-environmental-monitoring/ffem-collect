@@ -99,6 +99,7 @@ public class ServerPreferencesFragment extends BaseGeneralPreferencesFragment im
 
     // Brand change
     @Inject
+    protected
     WebCredentialsUtils webCredentialsUtils;
 
     private ListPopupWindow listPopupWindow;

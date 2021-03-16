@@ -10,11 +10,12 @@ import androidx.preference.Preference;
 
 import org.jetbrains.annotations.NotNull;
 import org.odk.collect.android.R;
+import org.odk.collect.android.preferences.screens.ServerPreferencesFragment;
 
 import io.ffem.collect.android.activities.SignInActivity;
 
-import static org.odk.collect.android.preferences.GeneralKeys.KEY_PROTOCOL;
-import static org.odk.collect.android.preferences.PreferencesActivity.INTENT_KEY_ADMIN_MODE;
+import static org.odk.collect.android.preferences.keys.GeneralKeys.KEY_PROTOCOL;
+import static org.odk.collect.android.preferences.screens.GeneralPreferencesActivity.INTENT_KEY_ADMIN_MODE;
 
 public class ServerPreferences extends ServerPreferencesFragment {
 

@@ -12,10 +12,10 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialog;
 import org.odk.collect.android.listeners.OnBackPressedListener;
-import org.odk.collect.android.preferences.FormManagementPreferences;
 import org.odk.collect.android.preferences.ServerPreferences;
+import org.odk.collect.android.preferences.screens.AdminPreferencesFragment;
+import org.odk.collect.android.preferences.screens.FormManagementPreferencesFragment;
 
-import io.ffem.collect.android.preferences.AdminPreferenceFragment;
 import io.ffem.collect.android.preferences.AppPreferences;
 import io.ffem.collect.android.preferences.OtherPreferenceFragment;
 import io.ffem.collect.android.preferences.TestingPreferenceFragment;
@@ -44,7 +44,7 @@ public class SettingsActivity extends CollectAbstractActivity
         setContentView(R.layout.activity_settings);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.layoutFormManagement, new FormManagementPreferences())
+                .replace(R.id.layoutFormManagement, new FormManagementPreferencesFragment())
                 .commitAllowingStateLoss();
 
         getSupportFragmentManager().beginTransaction()
@@ -56,7 +56,7 @@ public class SettingsActivity extends CollectAbstractActivity
                 .commitAllowingStateLoss();
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.layoutAdmin, new AdminPreferenceFragment())
+                .replace(R.id.layoutAdmin, new AdminPreferencesFragment())
                 .commitAllowingStateLoss();
 
         if (AppPreferences.isDiagnosticMode(this)) {

@@ -19,7 +19,7 @@ import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.MainMenuActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.logic.PropertyManager;
-import org.odk.collect.android.preferences.GeneralKeys;
+import org.odk.collect.android.preferences.keys.GeneralKeys;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 

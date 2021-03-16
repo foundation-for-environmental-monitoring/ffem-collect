@@ -19,7 +19,7 @@ import org.odk.collect.android.application.Collect
 import org.odk.collect.android.configure.SettingsImporter
 import org.odk.collect.android.configure.qr.QRCodeDecoder
 import org.odk.collect.android.gdrive.GoogleDriveActivity
-import org.odk.collect.android.preferences.GeneralKeys
+import org.odk.collect.android.preferences.keys.GeneralKeys
 import org.odk.collect.android.utilities.MultiClickGuard
 import org.odk.collect.android.utilities.PlayServicesChecker
 import org.odk.collect.android.utilities.WebCredentialsUtils
