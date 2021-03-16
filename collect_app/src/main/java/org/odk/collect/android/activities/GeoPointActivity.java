@@ -253,7 +253,7 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
         if (location != null) {
             Intent i = new Intent();
 
-            i.putExtra(FormEntryActivity.LOCATION_RESULT, getResultStringForLocation(location));
+            i.putExtra(FormEntryActivity.ANSWER_KEY, getResultStringForLocation(location));
 
             setResult(RESULT_OK, i);
         }

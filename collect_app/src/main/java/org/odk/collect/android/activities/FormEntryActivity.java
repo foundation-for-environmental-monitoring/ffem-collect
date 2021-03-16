@@ -54,9 +54,6 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.SelectChoice;
@@ -132,8 +129,8 @@ import org.odk.collect.android.logic.FormInfo;
 import org.odk.collect.android.logic.ImmutableDisplayableQuestion;
 import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.permissions.PermissionsChecker;
-import org.odk.collect.android.preferences.AdminKeys;
-import org.odk.collect.android.preferences.GeneralKeys;
+import org.odk.collect.android.preferences.keys.AdminKeys;
+import org.odk.collect.android.preferences.keys.GeneralKeys;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.storage.StoragePathProvider;
@@ -187,10 +184,9 @@ import static org.javarosa.form.api.FormEntryController.EVENT_PROMPT_NEW_REPEAT;
 import static org.odk.collect.android.analytics.AnalyticsEvents.SAVE_INCOMPLETE;
 import static org.odk.collect.android.formentry.FormIndexAnimationHandler.Direction.BACKWARDS;
 import static org.odk.collect.android.formentry.FormIndexAnimationHandler.Direction.FORWARDS;
-import static org.odk.collect.android.fragments.BarcodeWidgetScannerFragment.BARCODE_RESULT_KEY;
-import static org.odk.collect.android.preferences.AdminKeys.KEY_MOVING_BACKWARDS;
-import static org.odk.collect.android.preferences.GeneralKeys.KEY_COMPLETED_DEFAULT;
-import static org.odk.collect.android.preferences.GeneralKeys.KEY_NAVIGATION;
+import static org.odk.collect.android.preferences.keys.AdminKeys.KEY_MOVING_BACKWARDS;
+import static org.odk.collect.android.preferences.keys.GeneralKeys.KEY_COMPLETED_DEFAULT;
+import static org.odk.collect.android.preferences.keys.GeneralKeys.KEY_NAVIGATION;
 import static org.odk.collect.android.utilities.AnimationUtils.areAnimationsEnabled;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
 import static org.odk.collect.android.utilities.DialogUtils.getDialog;
@@ -224,11 +220,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     private static final boolean EVALUATE_CONSTRAINTS = true;
     public static final boolean DO_NOT_EVALUATE_CONSTRAINTS = false;
 
-    // Extra returned from gp activity
-    public static final String LOCATION_RESULT = "LOCATION_RESULT";
-    public static final String BEARING_RESULT = "BEARING_RESULT";
-    public static final String GEOSHAPE_RESULTS = "GEOSHAPE_RESULTS";
-    public static final String ANSWER_KEY = "ANSWER_KEY";
+    public static final String ANSWER_KEY = "value"; // this value can not be changed because it is also used by external apps
 
     public static final String KEY_INSTANCES = "instances";
     public static final String KEY_SUCCESS = "success";
@@ -380,7 +372,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         Collect.getInstance().getComponent().inject(this);
         setContentView(R.layout.form_entry);
         setupViewModels();
-        swipeHandler = new SwipeHandler(this, preferencesDataSourceProvider.getGeneralPreferences().getString(KEY_NAVIGATION));
+        swipeHandler = new SwipeHandler(this, settingsProvider.getGeneralSettings().getString(KEY_NAVIGATION));
 
         compositeDisposable.add(eventBus
                 .register(ReadPhoneStatePermissionRxEvent.class)
@@ -406,7 +398,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 audioRecorder,
                 backgroundLocationViewModel,
                 backgroundAudioViewModel,
-                preferencesDataSourceProvider
+                settingsProvider
         );
 
         nextButton = findViewById(R.id.form_forward_button);
@@ -449,7 +441,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
     private void setupViewModels() {
         backgroundLocationViewModel = ViewModelProviders
-                .of(this, new BackgroundLocationViewModel.Factory(permissionsProvider, preferencesDataSourceProvider.getGeneralPreferences()))
+                .of(this, new BackgroundLocationViewModel.Factory(permissionsProvider, settingsProvider.getGeneralSettings()))
                 .get(BackgroundLocationViewModel.class);
 
         backgroundAudioViewModel = new ViewModelProvider(this, backgroundAudioViewModelFactory).get(BackgroundAudioViewModel.class);
@@ -569,7 +561,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     }
 
     private void loadForm() {
-        allowMovingBackwards = preferencesDataSourceProvider.getAdminPreferences().getBoolean(KEY_MOVING_BACKWARDS);
+        allowMovingBackwards = settingsProvider.getAdminSettings().getBoolean(KEY_MOVING_BACKWARDS);
 
         // If a parse error message is showing then nothing else is loaded
         // Dialogs mid form just disappear on rotation.
@@ -804,41 +796,9 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             return;
         }
 
-        // Handling results returned by the Zxing Barcode scanning library is done outside the
-        // switch statement because IntentIntegrator.REQUEST_CODE is not final.
-        // TODO: see if we can update the ZXing Android Embedded dependency to 3.6.0.
-        // https://github.com/journeyapps/zxing-android-embedded#adding-aar-dependency-with-gradle
-        // makes it unclear
-        IntentResult barcodeScannerResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (barcodeScannerResult != null) {
-            if (barcodeScannerResult.getContents() == null) {
-                // request was canceled...
-                Timber.i("QR code scanning cancelled");
-            } else {
-                String sb = intent.getStringExtra(BARCODE_RESULT_KEY);
-                if (getCurrentViewIfODKView() != null) {
-                    setWidgetData(sb);
-                }
-                return;
-            }
-        }
-
         switch (requestCode) {
             case RequestCodes.OSM_CAPTURE:
-                String osmFileName = intent.getStringExtra("OSM_FILE_NAME");
-                if (getCurrentViewIfODKView() != null) {
-                    setWidgetData(osmFileName);
-                }
-                break;
-            case RequestCodes.EX_STRING_CAPTURE:
-            case RequestCodes.EX_INT_CAPTURE:
-            case RequestCodes.EX_DECIMAL_CAPTURE:
-                Object externalValue = externalAppIntentProvider.getValueFromIntent(intent);
-                if (getCurrentViewIfODKView() != null) {
-                    setWidgetData(externalValue);
-                }
-                // Brand change --------
-                onScreenRefresh();
+                setWidgetData(intent.getStringExtra("OSM_FILE_NAME"));
                 break;
             case RequestCodes.EX_ARBITRARY_FILE_CHOOSER:
             case RequestCodes.EX_VIDEO_CHOOSER:
@@ -881,23 +841,16 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 loadFile(intent.getData());
                 break;
             case RequestCodes.LOCATION_CAPTURE:
-                String sl = intent.getStringExtra(LOCATION_RESULT);
-                if (getCurrentViewIfODKView() != null) {
-                    setWidgetData(sl);
-                }
-                break;
             case RequestCodes.GEOSHAPE_CAPTURE:
             case RequestCodes.GEOTRACE_CAPTURE:
-                String gshr = intent.getStringExtra(ANSWER_KEY);
-                if (getCurrentViewIfODKView() != null) {
-                    setWidgetData(gshr);
-                }
-                break;
             case RequestCodes.BEARING_CAPTURE:
-                String bearing = intent.getStringExtra(BEARING_RESULT);
-                if (getCurrentViewIfODKView() != null) {
-                    setWidgetData(bearing);
-                }
+            case RequestCodes.BARCODE_CAPTURE:
+            case RequestCodes.EX_STRING_CAPTURE:
+            case RequestCodes.EX_INT_CAPTURE:
+            case RequestCodes.EX_DECIMAL_CAPTURE:
+                setWidgetData(intent.getExtras().get(ANSWER_KEY));
+                // Brand change --------
+                onScreenRefresh();
                 break;
         }
     }
@@ -994,7 +947,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
             case R.id.menu_save:
                 // don't exit
-                saveForm(false, InstancesDaoHelper.isInstanceComplete(false, preferencesDataSourceProvider.getGeneralPreferences().getBoolean(KEY_COMPLETED_DEFAULT)), null, true);
+                saveForm(false, InstancesDaoHelper.isInstanceComplete(false, settingsProvider.getGeneralSettings().getBoolean(KEY_COMPLETED_DEFAULT)), null, true);
                 return true;
         }
 
@@ -1301,7 +1254,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 // end brand change ------
         }
 
-        FormEndView endView = new FormEndView(this, formSaveViewModel.getFormName(), saveName, InstancesDaoHelper.isInstanceComplete(true, preferencesDataSourceProvider.getGeneralPreferences().getBoolean(KEY_COMPLETED_DEFAULT)), new FormEndView.Listener() {
+        FormEndView endView = new FormEndView(this, formSaveViewModel.getFormName(), saveName, InstancesDaoHelper.isInstanceComplete(true, settingsProvider.getGeneralSettings().getBoolean(KEY_COMPLETED_DEFAULT)), new FormEndView.Listener() {
             @Override
             public void onSaveAsChanged(String saveAs) {
                 // Seems like this is needed for rotation?
@@ -1319,21 +1272,15 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         });
 
         // brand change ------
-//        View endView = View.inflate(this, R.layout.form_entry_end_branded, null);
-//        ((TextView) endView.findViewById(R.id.description))
-//                .setText(getString(R.string.save_enter_data_description,
-//                        formController.getFormTitle()));
-
         // checkbox for if finished or ready to send
         final CheckBox instanceComplete = endView.findViewById(R.id.mark_finished);
         checkFinalizedCheckBox(endView, InstancesDaoHelper.isInstanceComplete(true, false));
-//        instanceComplete.setChecked(InstancesDaoHelper.isInstanceComplete(true));
         instanceComplete.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             checkFinalizedCheckBox(endView, isChecked);
         });
 // end brand change ------
 
-        if (!preferencesDataSourceProvider.getAdminPreferences().getBoolean(AdminKeys.KEY_MARK_AS_FINALIZED)) {
+        if (!settingsProvider.getAdminSettings().getBoolean(AdminKeys.KEY_MARK_AS_FINALIZED)) {
             endView.findViewById(R.id.mark_finished).setVisibility(View.GONE);
         }
 
@@ -1347,7 +1294,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         }
 
         // override the visibility settings based upon admin preferences
-        if (!preferencesDataSourceProvider.getAdminPreferences().getBoolean(AdminKeys.KEY_SAVE_AS)) {
+        if (!settingsProvider.getAdminSettings().getBoolean(AdminKeys.KEY_SAVE_AS)) {
             endView.findViewById(R.id.save_form_as).setVisibility(View.GONE);
             endView.findViewById(R.id.save_name).setVisibility(View.GONE);
         }
@@ -1502,7 +1449,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     private boolean saveBeforeNextView(FormController formController) {
         if (formController.currentPromptIsQuestion()) {
             // get constraint behavior preference value with appropriate default
-            String constraintBehavior = preferencesDataSourceProvider.getGeneralPreferences().getString(GeneralKeys.KEY_CONSTRAINT_BEHAVIOR);
+            String constraintBehavior = settingsProvider.getGeneralSettings().getString(GeneralKeys.KEY_CONSTRAINT_BEHAVIOR);
 
             // if constraint behavior says we should validate on swipe, do so
             if (constraintBehavior.equals(GeneralKeys.CONSTRAINT_BEHAVIOR_ON_SWIPE)) {
@@ -1839,7 +1786,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 onScreenRefresh();
 
                 // get constraint behavior preference value with appropriate default
-                String constraintBehavior = preferencesDataSourceProvider.getGeneralPreferences().getString(GeneralKeys.KEY_CONSTRAINT_BEHAVIOR);
+                String constraintBehavior = settingsProvider.getGeneralSettings().getString(GeneralKeys.KEY_CONSTRAINT_BEHAVIOR);
 
                 // an answer constraint was violated, so we need to display the proper toast(s)
                 // if constraint behavior is on_swipe, this will happen if we do a 'swipe' to the
@@ -1858,7 +1805,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
     @Override
     public void onSaveChangesClicked() {
-        saveForm(true, InstancesDaoHelper.isInstanceComplete(false, preferencesDataSourceProvider.getGeneralPreferences().getBoolean(KEY_COMPLETED_DEFAULT)), null, true);
+        saveForm(true, InstancesDaoHelper.isInstanceComplete(false, settingsProvider.getGeneralSettings().getBoolean(KEY_COMPLETED_DEFAULT)), null, true);
     }
 
     @Nullable
@@ -2021,7 +1968,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     protected void onResume() {
         super.onResume();
 
-        String navigation = preferencesDataSourceProvider.getGeneralPreferences().getString(KEY_NAVIGATION);
+        String navigation = settingsProvider.getGeneralSettings().getString(KEY_NAVIGATION);
         showNavigationButtons = navigation.contains(GeneralKeys.NAVIGATION_BUTTONS);
 
         findViewById(R.id.buttonholder).setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);

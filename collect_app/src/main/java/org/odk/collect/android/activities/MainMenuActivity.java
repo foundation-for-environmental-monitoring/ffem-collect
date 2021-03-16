@@ -39,12 +39,12 @@ import org.odk.collect.android.configure.qr.QRCodeTabsActivity;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.gdrive.GoogleDriveActivity;
 import org.odk.collect.android.injection.DaggerUtils;
-import org.odk.collect.android.preferences.AdminKeys;
-import org.odk.collect.android.preferences.AdminPasswordDialogFragment;
-import org.odk.collect.android.preferences.AdminPasswordDialogFragment.Action;
-import org.odk.collect.android.preferences.AdminPreferencesActivity;
-import org.odk.collect.android.preferences.GeneralKeys;
-import org.odk.collect.android.preferences.PreferencesActivity;
+import org.odk.collect.android.preferences.keys.AdminKeys;
+import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment;
+import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment.Action;
+import org.odk.collect.android.preferences.screens.AdminPreferencesActivity;
+import org.odk.collect.android.preferences.keys.GeneralKeys;
+import org.odk.collect.android.preferences.screens.GeneralPreferencesActivity;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.utilities.AdminPasswordProvider;
 import org.odk.collect.android.utilities.ApplicationConstants;
@@ -169,7 +169,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         getFormsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String protocol = preferencesDataSourceProvider.getGeneralPreferences().getString(GeneralKeys.KEY_PROTOCOL);
+                String protocol = settingsProvider.getGeneralSettings().getString(GeneralKeys.KEY_PROTOCOL);
                 Intent i = null;
                 if (protocol.equalsIgnoreCase(getString(R.string.protocol_google_sheets))) {
                     if (new PlayServicesChecker().isGooglePlayServicesAvailable(MainMenuActivity.this)) {
@@ -245,10 +245,10 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         return super.onCreateOptionsMenu(menu);
     }
 
-// brand change ----
+    // brand change ----
 //    @Override
 //    public boolean onPrepareOptionsMenu(Menu menu) {
-//        qrcodeScannerMenuItem.setVisible(preferencesDataSourceProvider.getAdminPreferences().getBoolean(AdminKeys.KEY_QR_CODE_SCANNER));
+//        qrcodeScannerMenuItem.setVisible(settingsProvider.getAdminSettings().getBoolean(AdminKeys.KEY_QR_CODE_SCANNER));
 //        return super.onPrepareOptionsMenu(menu);
 //    }
 // end brand change ----
@@ -269,12 +269,12 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
                     startActivity(new Intent(this, QRCodeTabsActivity.class));
                 }
                 return true;
-// Brand change ----
+            // Brand change ----
 //            case R.id.menu_about:
 //                startActivity(new Intent(this, AboutActivity.class));
 //                return true;
 //            case R.id.menu_general_preferences:
-//                startActivity(new Intent(this, PreferencesActivity.class));
+//                startActivity(new Intent(this, GeneralPreferencesActivity.class));
 //                return true;
 //            case R.id.menu_admin_preferences:
 //                if (adminPasswordProvider.isAdminPasswordSet()) {
