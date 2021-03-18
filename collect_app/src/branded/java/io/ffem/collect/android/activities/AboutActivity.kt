@@ -10,7 +10,7 @@ import io.ffem.collect.android.helper.AppHelper.getVersionedAppName
 import io.ffem.collect.android.helper.AppHelper.isTestDevice
 import org.odk.collect.android.R
 import org.odk.collect.android.activities.WebViewActivity
-import org.odk.collect.android.utilities.CustomTabHelper
+import org.odk.collect.android.utilities.ExternalWebPageHelper
 
 /**
  * Activity to display info about the app.
@@ -38,7 +38,7 @@ class AboutActivity : BaseActivity() {
     fun onSoftwareNoticesClick(@Suppress("UNUSED_PARAMETER") view: View?) {
         if (!isTestDevice(this)) {
             val intent = Intent(this, WebViewActivity::class.java)
-            intent.putExtra(CustomTabHelper.OPEN_URL, LICENSES_HTML_PATH)
+            intent.putExtra(ExternalWebPageHelper.OPEN_URL, LICENSES_HTML_PATH)
             startActivity(intent)
         }
     }

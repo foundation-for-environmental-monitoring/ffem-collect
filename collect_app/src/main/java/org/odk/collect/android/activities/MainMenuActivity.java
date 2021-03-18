@@ -32,8 +32,6 @@ import androidx.lifecycle.ViewModelProviders;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.viewmodels.MainMenuViewModel;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.configure.SettingsImporter;
-//import org.odk.collect.android.configure.legacy.LegacySettingsFileImporter;
 import org.odk.collect.android.configure.qr.QRCodeTabsActivity;
 import org.odk.collect.android.gdrive.GoogleDriveActivity;
 import org.odk.collect.android.injection.DaggerUtils;
@@ -58,13 +56,12 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.ffem.collect.android.activities.MainMenuActivityBranded;
-import timber.log.Timber;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static org.odk.collect.android.utilities.DialogUtils.getDialog;
 import static org.odk.collect.android.utilities.DialogUtils.showIfNotShowing;
+
+import io.ffem.collect.android.activities.MainMenuActivityBranded;
 
 /**
  * Responsible for displaying buttons to launch the major activities. Launches
@@ -74,7 +71,6 @@ import static org.odk.collect.android.utilities.DialogUtils.showIfNotShowing;
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
 public class MainMenuActivity extends MainMenuActivityBranded implements AdminPasswordDialogFragment.AdminPasswordDialogCallback {
-    private static final boolean EXIT = true;
     // buttons
     private Button manageFilesButton;
     private Button sendDataButton;
@@ -82,10 +78,6 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
     private Button reviewDataButton;
     private Button getFormsButton;
     private MenuItem qrcodeScannerMenuItem;
-    private int savedCount;
-    private int viewSentCount;
-    private Cursor savedCursor;
-    private Cursor viewSentCursor;
     private final IncomingHandler handler = new IncomingHandler(this);
     private final MyContentObserver contentObserver = new MyContentObserver();
 
@@ -207,7 +199,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         if (versionSHA != null) {
             versionSHAView.setText(versionSHA);
         } else {
-            versionSHAView.setVisibility(GONE);
+            versionSHAView.setVisibility(View.GONE);
         }
     }
 
@@ -306,24 +298,27 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         int sentInstances = instancesRepository.getCountByStatus(Instance.STATUS_SUBMITTED);
         int unsentInstances = instancesRepository.getCountByStatus(Instance.STATUS_INCOMPLETE, Instance.STATUS_COMPLETE, Instance.STATUS_SUBMISSION_FAILED);
 
-        if (finalizedInstances > 0) {
-            sendDataButton.setText(getString(R.string.send_data_button, String.valueOf(finalizedInstances)));
-        } else {
-            sendDataButton.setText(getString(R.string.send_data));
-        }
+        // Brand change -----------------
+//        if (finalizedInstances > 0) {
+//            sendDataButton.setText(getString(R.string.send_data_button, String.valueOf(finalizedInstances)));
+//        } else {
+//            sendDataButton.setText(getString(R.string.send_data));
+//        }
 
         if (unsentInstances > 0) {
+            reviewDataButton.setVisibility(VISIBLE);
             reviewDataButton.setText(getString(R.string.review_data_button, String.valueOf(unsentInstances)));
         } else {
+            reviewDataButton.setVisibility(GONE);
             reviewDataButton.setText(getString(R.string.review_data));
-            Timber.w("Cannot update \"Edit Form\" button label since the database is closed. Perhaps the app is running in the background?");
         }
 
         if (sentInstances > 0) {
+            viewSentFormsButton.setVisibility(VISIBLE);
             viewSentFormsButton.setText(getString(R.string.view_sent_forms_button, String.valueOf(sentInstances)));
         } else {
+            viewSentFormsButton.setVisibility(GONE);
             viewSentFormsButton.setText(getString(R.string.view_sent_forms));
-            Timber.w("Cannot update \"View Sent\" button label since the database is closed. Perhaps the app is running in the background?");
         }
     }
 
