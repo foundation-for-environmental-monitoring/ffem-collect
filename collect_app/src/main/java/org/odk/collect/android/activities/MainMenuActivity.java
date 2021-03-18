@@ -16,7 +16,6 @@ package org.odk.collect.android.activities;
 
 import android.content.Intent;
 import android.database.ContentObserver;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -36,14 +35,15 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.configure.SettingsImporter;
 //import org.odk.collect.android.configure.legacy.LegacySettingsFileImporter;
 import org.odk.collect.android.configure.qr.QRCodeTabsActivity;
-import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.gdrive.GoogleDriveActivity;
 import org.odk.collect.android.injection.DaggerUtils;
-import org.odk.collect.android.preferences.keys.AdminKeys;
+import org.odk.collect.android.instances.Instance;
+import org.odk.collect.android.instances.InstancesRepository;
 import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment;
 import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment.Action;
-import org.odk.collect.android.preferences.screens.AdminPreferencesActivity;
+import org.odk.collect.android.preferences.keys.AdminKeys;
 import org.odk.collect.android.preferences.keys.GeneralKeys;
+import org.odk.collect.android.preferences.screens.AdminPreferencesActivity;
 import org.odk.collect.android.preferences.screens.GeneralPreferencesActivity;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.utilities.AdminPasswordProvider;
@@ -97,6 +97,9 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
 
     @Inject
     MainMenuViewModel.Factory viewModelFactory;
+
+    @Inject
+    InstancesRepository instancesRepository;
 
     private MainMenuViewModel viewModel;
 
@@ -299,49 +302,25 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
     }
 
     private void updateButtons() {
-//        if (finalizedCursor != null && !finalizedCursor.isClosed()) {
-//            finalizedCursor.requery();
-//            completedCount = finalizedCursor.getCount();
-//            if (completedCount > 0) {
-//                sendDataButton.setText(
-//                        getString(R.string.send_data_button, String.valueOf(completedCount)));
-//                sendDataButton.setVisibility(View.VISIBLE);
-//            } else {
-//                sendDataButton.setText(getString(R.string.send_data));
-//                sendDataButton.setVisibility(View.GONE);
-//            }
-//        } else {
-//            sendDataButton.setText(getString(R.string.send_data));
-//            Timber.w("Cannot update \"Send Finalized\" button label since the database is closed. Perhaps the app is running in the background?");
-//        }
+        int finalizedInstances = instancesRepository.getCountByStatus(Instance.STATUS_COMPLETE, Instance.STATUS_SUBMISSION_FAILED);
+        int sentInstances = instancesRepository.getCountByStatus(Instance.STATUS_SUBMITTED);
+        int unsentInstances = instancesRepository.getCountByStatus(Instance.STATUS_INCOMPLETE, Instance.STATUS_COMPLETE, Instance.STATUS_SUBMISSION_FAILED);
 
-        if (savedCursor != null && !savedCursor.isClosed()) {
-            savedCursor.requery();
-            savedCount = savedCursor.getCount();
-            if (savedCount > 0) {
-                reviewDataButton.setText(getString(R.string.review_data_button,
-                        String.valueOf(savedCount)));
-                reviewDataButton.setVisibility(VISIBLE);
-            } else {
-                reviewDataButton.setText(getString(R.string.review_data));
-                reviewDataButton.setVisibility(GONE);
-            }
+        if (finalizedInstances > 0) {
+            sendDataButton.setText(getString(R.string.send_data_button, String.valueOf(finalizedInstances)));
+        } else {
+            sendDataButton.setText(getString(R.string.send_data));
+        }
+
+        if (unsentInstances > 0) {
+            reviewDataButton.setText(getString(R.string.review_data_button, String.valueOf(unsentInstances)));
         } else {
             reviewDataButton.setText(getString(R.string.review_data));
             Timber.w("Cannot update \"Edit Form\" button label since the database is closed. Perhaps the app is running in the background?");
         }
 
-        if (viewSentCursor != null && !viewSentCursor.isClosed()) {
-            viewSentCursor.requery();
-            viewSentCount = viewSentCursor.getCount();
-            if (viewSentCount > 0) {
-                viewSentFormsButton.setText(
-                        getString(R.string.view_sent_forms_button, String.valueOf(viewSentCount)));
-                viewSentFormsButton.setVisibility(VISIBLE);
-            } else {
-                viewSentFormsButton.setText(getString(R.string.view_sent_forms));
-                viewSentFormsButton.setVisibility(GONE);
-            }
+        if (sentInstances > 0) {
+            viewSentFormsButton.setText(getString(R.string.view_sent_forms_button, String.valueOf(sentInstances)));
         } else {
             viewSentFormsButton.setText(getString(R.string.view_sent_forms));
             Timber.w("Cannot update \"View Sent\" button label since the database is closed. Perhaps the app is running in the background?");

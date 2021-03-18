@@ -42,7 +42,6 @@ import org.odk.collect.android.configure.qr.QRCodeDecoder;
 import org.odk.collect.android.configure.qr.QRCodeGenerator;
 import org.odk.collect.android.configure.qr.QRCodeUtils;
 import org.odk.collect.android.dao.FormsDao;
-import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.database.DatabaseFormsRepository;
 import org.odk.collect.android.database.DatabaseInstancesRepository;
 import org.odk.collect.android.database.DatabaseMediaFileRepository;
@@ -96,6 +95,7 @@ import org.odk.collect.android.utilities.AdminPasswordProvider;
 import org.odk.collect.android.utilities.AndroidUserAgent;
 import org.odk.collect.android.utilities.DeviceDetailsProvider;
 import org.odk.collect.android.utilities.ExternalAppIntentProvider;
+import org.odk.collect.android.utilities.ExternalWebPageHelper;
 import org.odk.collect.android.utilities.FileProvider;
 import org.odk.collect.android.utilities.FileUtil;
 import org.odk.collect.android.utilities.FormsDirDiskFormsSynchronizer;
@@ -138,11 +138,6 @@ public class AppDependencyModule {
     @Provides
     Context context(Application application) {
         return application;
-    }
-
-    @Provides
-    public InstancesDao provideInstancesDao() {
-        return new InstancesDao();
     }
 
     @Provides
@@ -509,5 +504,10 @@ public class AppDependencyModule {
     @Singleton
     public SettingsStore providesAdminSettingsStore(SettingsProvider settingsProvider) {
         return new SettingsStore(settingsProvider.getAdminSettings());
+    }
+
+    @Provides
+    public ExternalWebPageHelper providesExternalWebPageHelper() {
+        return new ExternalWebPageHelper();
     }
 }
