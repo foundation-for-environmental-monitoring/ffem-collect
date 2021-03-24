@@ -256,9 +256,10 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         }
 
         switch (item.getItemId()) {
-            case R.id.projects:
-                DialogUtils.showIfNotShowing(ProjectSettingsDialog.class, getSupportFragmentManager());
-                return true;
+// Brand change -----------------
+//            case R.id.projects:
+//                DialogUtils.showIfNotShowing(ProjectSettingsDialog.class, getSupportFragmentManager());
+//                return true;
             case R.id.menu_configure_qr_code:
                 if (adminPasswordProvider.isAdminPasswordSet()) {
                     Bundle args = new Bundle();
