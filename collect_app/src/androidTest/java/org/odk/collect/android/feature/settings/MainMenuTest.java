@@ -30,14 +30,13 @@ public class MainMenuTest {
     @Test
     public void configureWithQRCanBeDisabled() {
         new MainMenuPage(rule)
-                .clickOnMenu()
+                .openProjectSettingsDialog()
                 .clickAdminSettings()
                 .clickOnString(R.string.main_menu_settings)
                 .clickOnString(R.string.qr_code)
                 .pressBack(new AdminSettingsPage(rule))
                 .pressBack(new MainMenuPage(rule))
-                .clickOnMenu()
-                .assertTextDoesNotExist(R.string.configure_via_qr_code);
+                .assertOverflowMenuDoesNotExist();
     }
 
 }

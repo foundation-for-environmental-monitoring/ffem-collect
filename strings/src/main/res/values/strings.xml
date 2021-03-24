@@ -31,7 +31,7 @@
     <!-- Text for an action button on the main screen. -->
     <string name="manage_files">Delete Saved Form</string>
 
-    <string name="version_number">%s</string>
+    <string name="version_number">Version: %s</string>
     <string name="id_number">ID: %s</string>
     <!-- Please format date appropriately for your language: http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html -->
     <string name="added_on_date_at_time">\'Added on\' EEE, MMM dd, yyyy \'at\' HH:mm</string>
@@ -980,6 +980,8 @@
 
     <string name="select_odk_shortcut">Select Shortcut</string>
     <string name="background_audio_help">This form records the audio from your device\'s microphone.\n\nYou can use the volume indicator to make sure the microphone is close enough to the sound you need to record.\n\nTo stop the recording please exit this form.\n\nFor more information please contact the person who asked you to collect data.</string>
+
+    <string name="projects">Projects</string>
 
     <string name="redo_test">Redo</string>
     <string name="submit_form">Submit Form</string>

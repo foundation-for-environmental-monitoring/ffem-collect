@@ -16,12 +16,14 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.matcher.CursorMatchers.withRowString;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
@@ -42,7 +44,17 @@ public class MainMenuPage extends Page<MainMenuPage> {
     public MainMenuPage clickOnMenu() {
         assertOnPage(); // Make sure we've waited for the application load correctly
         Espresso.openActionBarOverflowOrOptionsMenu(ActivityHelpers.getActivity());
-        onView(withText(getTranslatedString(R.string.general_preferences))).check(matches(isDisplayed()));
+        return this;
+    }
+
+    public MainMenuPage assertOverflowMenuDoesNotExist() {
+        onView(withContentDescription("More options")).check(doesNotExist());
+        return this;
+    }
+
+    public MainMenuPage openProjectSettingsDialog() {
+        assertOnPage(); // Make sure we've waited for the application load correctly
+        onView(withId(R.id.projects)).perform(click());
         return this;
     }
 
@@ -148,7 +160,7 @@ public class MainMenuPage extends Page<MainMenuPage> {
     }
 
     public MainMenuPage setServer(String url) {
-        return clickOnMenu()
+        return openProjectSettingsDialog()
                 .clickGeneralSettings()
                 .clickServerSettings()
                 .clickOnURL()
@@ -159,7 +171,7 @@ public class MainMenuPage extends Page<MainMenuPage> {
     }
 
     public MainMenuPage enableManualUpdates() {
-        return clickOnMenu()
+        return openProjectSettingsDialog()
                 .clickGeneralSettings()
                 .clickFormManagement()
                 .clickUpdateForms()
@@ -169,7 +181,7 @@ public class MainMenuPage extends Page<MainMenuPage> {
     }
 
     public MainMenuPage enablePreviouslyDownloadedOnlyUpdates() {
-        return clickOnMenu()
+        return openProjectSettingsDialog()
                 .clickGeneralSettings()
                 .clickFormManagement()
                 .clickUpdateForms()
@@ -179,7 +191,7 @@ public class MainMenuPage extends Page<MainMenuPage> {
     }
 
     public MainMenuPage enableMatchExactly() {
-        return clickOnMenu()
+        return openProjectSettingsDialog()
                 .clickGeneralSettings()
                 .clickFormManagement()
                 .clickUpdateForms()
@@ -189,7 +201,7 @@ public class MainMenuPage extends Page<MainMenuPage> {
     }
 
     public MainMenuPage enableAutoSend() {
-        return clickOnMenu()
+        return openProjectSettingsDialog()
                 .clickGeneralSettings()
                 .clickFormManagement()
                 .clickOnString(R.string.autosend)
@@ -204,7 +216,7 @@ public class MainMenuPage extends Page<MainMenuPage> {
         Instrumentation.ActivityResult activityResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, data);
         intending(hasAction("PICK_GOOGLE_ACCOUNT")).respondWith(activityResult);
 
-        return clickOnMenu()
+        return openProjectSettingsDialog()
                 .clickGeneralSettings()
                 .clickServerSettings()
                 .clickOnServerType()
