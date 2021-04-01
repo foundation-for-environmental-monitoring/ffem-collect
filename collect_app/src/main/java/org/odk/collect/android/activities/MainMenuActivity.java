@@ -233,18 +233,19 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (!MultiClickGuard.allowClick(getClass().getName())) {
-            return true;
-        }
-
-        if (item.getItemId() == R.id.projects) {
-            showIfNotShowing(ProjectSettingsDialog.class, getSupportFragmentManager());
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+// Brand change -----------------
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (!MultiClickGuard.allowClick(getClass().getName())) {
+//            return true;
+//        }
+//
+//        if (item.getItemId() == R.id.projects) {
+//            showIfNotShowing(ProjectSettingsDialog.class, getSupportFragmentManager());
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
