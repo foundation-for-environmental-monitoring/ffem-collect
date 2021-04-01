@@ -16,14 +16,12 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.matcher.CursorMatchers.withRowString;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
@@ -47,15 +45,10 @@ public class MainMenuPage extends Page<MainMenuPage> {
         return this;
     }
 
-    public MainMenuPage assertOverflowMenuDoesNotExist() {
-        onView(withContentDescription("More options")).check(doesNotExist());
-        return this;
-    }
-
-    public MainMenuPage openProjectSettingsDialog() {
+    public ProjectSettingsDialogPage openProjectSettingsDialog() {
         assertOnPage(); // Make sure we've waited for the application load correctly
         onView(withId(R.id.projects)).perform(click());
-        return this;
+        return new ProjectSettingsDialogPage(rule).assertOnPage();
     }
 
     public FormEntryPage startBlankForm(String formName) {
@@ -78,28 +71,6 @@ public class MainMenuPage extends Page<MainMenuPage> {
         return new OkDialog(rule).assertOnPage();
     }
 
-    public GeneralSettingsPage clickGeneralSettings() {
-        clickOnString(R.string.general_preferences);
-        return new GeneralSettingsPage(rule).assertOnPage();
-    }
-
-    public AdminSettingsPage clickAdminSettings() {
-        clickOnString(R.string.admin_preferences);
-        return new AdminSettingsPage(rule).assertOnPage();
-    }
-
-    public QRCodePage clickConfigureQR() {
-        clickOnString(R.string.configure_via_qr_code);
-        return new QRCodePage(rule).assertOnPage();
-    }
-
-    public QRCodePage clickConfigureQRWithAdminPassword(String password) {
-        clickOnString(R.string.configure_via_qr_code);
-        inputText(password);
-        clickOKOnDialog();
-        return new QRCodePage(rule).assertOnPage();
-    }
-
     public FillBlankFormPage clickFillBlankForm() {
         onView(withId(R.id.enter_data)).perform(click());
         return new FillBlankFormPage(rule).assertOnPage();
@@ -118,11 +89,6 @@ public class MainMenuPage extends Page<MainMenuPage> {
     public EditSavedFormPage clickEditSavedForm(int formCount) {
         assertNumberOfEditableForms(formCount);
         return clickEditSavedForm();
-    }
-
-    public AboutPage clickAbout() {
-        clickOnString(R.string.about_preferences);
-        return new AboutPage(rule).assertOnPage();
     }
 
     public MainMenuPage assertNumberOfFinalizedForms(int number) {

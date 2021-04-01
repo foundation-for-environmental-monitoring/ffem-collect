@@ -15,7 +15,6 @@
 package org.odk.collect.android.activities;
 
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -66,16 +65,14 @@ import org.javarosa.form.api.FormEntryPrompt;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
-import org.odk.collect.android.R;
 import org.odk.collect.analytics.Analytics;
+import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.audio.AMRAppender;
 import org.odk.collect.android.audio.AudioControllerView;
 import org.odk.collect.android.audio.M4AAppender;
 import org.odk.collect.android.backgroundwork.FormSubmitManager;
-import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.helpers.ContentResolverHelper;
-import org.odk.collect.android.dao.helpers.FormsDaoHelper;
 import org.odk.collect.android.dao.helpers.InstancesDaoHelper;
 import org.odk.collect.android.events.ReadPhoneStatePermissionRxEvent;
 import org.odk.collect.android.events.RxEventBus;
@@ -636,7 +633,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 return;
             }
 
-            formPath = storagePathProvider.getAbsoluteFormFilePath(candidateForms.get(0).getFormFilePath());
+            formPath = candidateForms.get(0).getFormFilePath();
         } else if (uriMimeType != null
                 && uriMimeType.equals(FormsColumns.CONTENT_ITEM_TYPE)) {
             formPath = ContentResolverHelper.getFormPath(uri);
@@ -1872,32 +1869,21 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         }
         alertDialog = new AlertDialog.Builder(this)
                 .setSingleChoiceItems(languages, selected,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int whichButton) {
-                                // Update the language in the content provider
-                                // when selecting a new
-                                // language
-                                ContentValues values = new ContentValues();
-                                values.put(FormsColumns.LANGUAGE,
-                                        languages[whichButton]);
-                                String selection = FormsColumns.FORM_FILE_PATH
-                                        + "=?";
-                                String[] selectArgs = {storagePathProvider.getRelativeFormPath(formPath)};
-                                int updated = new FormsDao().updateForm(values, selection, selectArgs);
-                                Timber.i("Updated language to: %s in %d rows",
-                                        languages[whichButton],
-                                        updated);
-
-                                FormController formController = getFormController();
-                                formController.setLanguage(languages[whichButton]);
-                                dialog.dismiss();
-                                if (formController.currentPromptIsQuestion()) {
-                                    saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
-                                }
-                                onScreenRefresh();
+                        (dialog, whichButton) -> {
+                            Form form = formsRepository.getOneByPath(formPath);
+                            if (form != null) {
+                                formsRepository.save(new Form.Builder(form)
+                                        .language(languages[whichButton])
+                                        .build()
+                                );
                             }
+
+                            getFormController().setLanguage(languages[whichButton]);
+                            dialog.dismiss();
+                            if (getFormController().currentPromptIsQuestion()) {
+                                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
+                            }
+                            onScreenRefresh();
                         })
                 .setTitle(getString(R.string.change_language))
                 .setNegativeButton(getString(R.string.do_not_change), null).create();
@@ -2184,27 +2170,28 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 String[] languageTest = formController.getLanguages();
                 if (languageTest != null) {
                     String defaultLanguage = formController.getLanguage();
-                    String newLanguage = FormsDaoHelper.getFormLanguage(formPath);
+                    Form form = formsRepository.getOneByPath(formPath);
 
-                    long start = System.currentTimeMillis();
-                    Timber.i("calling formController.setLanguage");
-                    try {
+                    if (form != null) {
+                        String newLanguage = form.getLanguage();
+
+                        try {
 // brand change ----
 // Auto set form language to system language
-                        if (newLanguage != null) {
-                            formController.setLanguage(newLanguage);
-                        } else {
-                            String systemLanguage = Locale.getDefault().getDisplayLanguage(Locale.US)
-                                    + " (" + Locale.getDefault().getLanguage().substring(0, 2) + ")";
-                            formController.setLanguage(systemLanguage);
-                        }
+                            if (newLanguage != null) {
+                                formController.setLanguage(newLanguage);
+                            } else {
+                                String systemLanguage = Locale.getDefault().getDisplayLanguage(Locale.US)
+                                        + " (" + Locale.getDefault().getLanguage().substring(0, 2) + ")";
+                                formController.setLanguage(systemLanguage);
+                            }
 // end brand change ----
-                    } catch (Exception e) {
-                        // if somehow we end up with a bad language, set it to the default
-                        Timber.i("Ended up with a bad language. %s", newLanguage);
-                        formController.setLanguage(defaultLanguage);
+                        } catch (Exception e) {
+                            // if somehow we end up with a bad language, set it to the default
+                            Timber.i("Ended up with a bad language. %s", newLanguage);
+                            formController.setLanguage(defaultLanguage);
+                        }
                     }
-                    Timber.i("Done in %.3f seconds.", (System.currentTimeMillis() - start) / 1000F);
                 }
 
                 boolean pendingActivityResult = task.hasPendingActivityResult();
