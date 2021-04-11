@@ -31,6 +31,8 @@ import org.odk.collect.android.activities.viewmodels.MainMenuViewModel;
 import org.odk.collect.android.configure.qr.QRCodeTabsActivity;
 import org.odk.collect.android.gdrive.GoogleDriveActivity;
 import org.odk.collect.android.injection.DaggerUtils;
+import org.odk.collect.android.instances.Instance;
+import org.odk.collect.android.instances.InstancesRepository;
 import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment;
 import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment.Action;
 import org.odk.collect.android.preferences.keys.GeneralKeys;
@@ -66,12 +68,16 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
 
     @Inject
     MainMenuViewModel.Factory viewModelFactory;
+
+    @Inject
+    InstancesRepository instancesRepository;
+
     private MainMenuViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DaggerUtils.getComponent().inject(this);
+        DaggerUtils.getComponent(this).inject(this);
         // brand change ----
         setContentView(R.layout.main_menu_branded);
         // end brand change ----
@@ -173,13 +179,13 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
             versionSHAView.setVisibility(View.GONE);
         }
 
-        viewModel.getFinalizedFormsCount().observe(this, finalized -> {
-            if (finalized > 0) {
-                sendDataButton.setText(getString(R.string.send_data_button, String.valueOf(finalized)));
-            } else {
-                sendDataButton.setText(getString(R.string.send_data));
-            }
-        });
+//        viewModel.getFinalizedFormsCount().observe(this, finalized -> {
+//            if (finalized > 0) {
+//                sendDataButton.setText(getString(R.string.send_data_button, String.valueOf(finalized)));
+//            } else {
+//                sendDataButton.setText(getString(R.string.send_data));
+//            }
+//        });
 
 
         viewModel.getUnsentFormsCount().observe(this, unsent -> {
@@ -208,6 +214,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         // Brand change
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
+        updateButtons();
         setButtonsVisibility();
         invalidateOptionsMenu();
     }
