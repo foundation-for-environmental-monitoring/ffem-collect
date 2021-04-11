@@ -16,6 +16,7 @@ import androidx.work.WorkManager;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.drive.DriveScopes;
+import com.google.gson.Gson;
 
 import org.javarosa.core.reference.ReferenceManager;
 import org.odk.collect.analytics.Analytics;
@@ -44,6 +45,8 @@ import org.odk.collect.android.configure.qr.QRCodeGenerator;
 import org.odk.collect.android.configure.qr.QRCodeUtils;
 import org.odk.collect.android.database.DatabaseFormsRepository;
 import org.odk.collect.android.database.DatabaseInstancesRepository;
+import org.odk.collect.android.database.DatabaseFastExternalItemsetsRepository;
+import org.odk.collect.android.database.FormsDatabaseProvider;
 import org.odk.collect.android.events.RxEventBus;
 import org.odk.collect.android.formentry.BackgroundAudioViewModel;
 import org.odk.collect.android.formentry.FormEntryViewModel;
@@ -54,6 +57,7 @@ import org.odk.collect.android.formentry.saving.FormSaveViewModel;
 import org.odk.collect.android.formmanagement.DiskFormsSynchronizer;
 import org.odk.collect.android.formmanagement.FormDownloader;
 import org.odk.collect.android.formmanagement.FormMetadataParser;
+import org.odk.collect.android.formmanagement.InstancesCountRepository;
 import org.odk.collect.android.formmanagement.ServerFormDownloader;
 import org.odk.collect.android.formmanagement.ServerFormsDetailsFetcher;
 import org.odk.collect.android.formmanagement.matchexactly.ServerFormsSynchronizer;
@@ -65,6 +69,7 @@ import org.odk.collect.android.gdrive.GoogleAccountPicker;
 import org.odk.collect.android.gdrive.GoogleApiProvider;
 import org.odk.collect.android.geo.MapProvider;
 import org.odk.collect.android.instances.InstancesRepository;
+import org.odk.collect.android.itemsets.FastExternalItemsetsRepository;
 import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.metadata.InstallIDProvider;
 import org.odk.collect.android.metadata.SharedPreferencesInstallIDProvider;
@@ -84,8 +89,9 @@ import org.odk.collect.android.preferences.keys.AdminKeys;
 import org.odk.collect.android.preferences.keys.GeneralKeys;
 import org.odk.collect.android.preferences.source.SettingsProvider;
 import org.odk.collect.android.preferences.source.SettingsStore;
-import org.odk.collect.android.projects.InMemProjectsRepository;
+import org.odk.collect.android.projects.CurrentProjectProvider;
 import org.odk.collect.android.projects.ProjectsRepository;
+import org.odk.collect.android.projects.SharedPreferencesProjectsRepository;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.storage.StorageSubdirectory;
@@ -383,8 +389,8 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public ServerFormsSynchronizer providesServerFormSynchronizer(ServerFormsDetailsFetcher serverFormsDetailsFetcher, FormsRepository formsRepository, FormDownloader formDownloader, InstancesRepository instancesRepository) {
-        return new ServerFormsSynchronizer(serverFormsDetailsFetcher, formsRepository, instancesRepository, formDownloader);
+    public ServerFormsSynchronizer providesServerFormSynchronizer(ServerFormsDetailsFetcher serverFormsDetailsFetcher, FormsRepository formsRepository, FormDownloader formDownloader, InstancesRepository instancesRepository, FastExternalItemsetsRepository fastExternalItemsetsRepository) {
+        return new ServerFormsSynchronizer(serverFormsDetailsFetcher, formsRepository, instancesRepository, formDownloader, fastExternalItemsetsRepository);
     }
 
     @Provides
@@ -502,13 +508,40 @@ public class AppDependencyModule {
 
     @Provides
     @Singleton
-    public ProjectsRepository providesProjectsRepository(UUIDGenerator uuidGenerator) {
-        return new InMemProjectsRepository(uuidGenerator);
+    public ProjectsRepository providesProjectsRepository(UUIDGenerator uuidGenerator, Gson gson, SettingsProvider settingsProvider) {
+        return new SharedPreferencesProjectsRepository(uuidGenerator, gson, settingsProvider.getMetaSettings());
+    }
+
+    @Provides
+    public Gson providesGson() {
+        return new Gson();
     }
 
     @Provides
     @Singleton
     public UUIDGenerator providesUUIDGenerator() {
         return new UUIDGenerator();
+    }
+
+    @Provides
+    @Singleton
+    public InstancesCountRepository providesFormCountRepository() {
+        return new InstancesCountRepository();
+    }
+
+    @Provides
+    @Singleton
+    public FormsDatabaseProvider providesFormsDatabaseProvider() {
+        return new FormsDatabaseProvider();
+    }
+
+    @Provides
+    public FastExternalItemsetsRepository providesItemsetsRepository() {
+        return new DatabaseFastExternalItemsetsRepository();
+    }
+
+    @Provides
+    public CurrentProjectProvider providesCurrentProjectProvider(SettingsProvider settingsProvider, ProjectsRepository projectsRepository) {
+        return new CurrentProjectProvider(settingsProvider, projectsRepository);
     }
 }

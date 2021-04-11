@@ -15,10 +15,7 @@
 package org.odk.collect.android.activities;
 
 import android.content.Intent;
-import android.database.ContentObserver;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,33 +24,24 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.viewmodels.MainMenuViewModel;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.configure.qr.QRCodeTabsActivity;
 import org.odk.collect.android.gdrive.GoogleDriveActivity;
 import org.odk.collect.android.injection.DaggerUtils;
-import org.odk.collect.android.instances.Instance;
-import org.odk.collect.android.instances.InstancesRepository;
 import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment;
 import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment.Action;
 import org.odk.collect.android.preferences.keys.GeneralKeys;
 import org.odk.collect.android.preferences.screens.AdminPreferencesActivity;
 import org.odk.collect.android.projects.ProjectSettingsDialog;
-import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.utilities.PlayServicesChecker;
 import org.odk.collect.android.utilities.ToastUtils;
 
-import java.lang.ref.WeakReference;
-
 import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -75,33 +63,21 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
     private Button viewSentFormsButton;
     private Button reviewDataButton;
     private Button getFormsButton;
-    private final IncomingHandler handler = new IncomingHandler(this);
-    private final MyContentObserver contentObserver = new MyContentObserver();
-
-    @BindView(R.id.version_sha)
-    TextView versionSHAView;
 
     @Inject
     MainMenuViewModel.Factory viewModelFactory;
-
-    @Inject
-    InstancesRepository instancesRepository;
-
     private MainMenuViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Collect.getInstance().getComponent().inject(this);
+        DaggerUtils.getComponent().inject(this);
         // brand change ----
         setContentView(R.layout.main_menu_branded);
         // end brand change ----
-        ButterKnife.bind(this);
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainMenuViewModel.class);
+        viewModel = new ViewModelProvider(this, viewModelFactory).get(MainMenuViewModel.class);
 
         initToolbar();
-        DaggerUtils.getComponent(this).inject(this);
-
         // enter data button. expects a result.
         Button enterDataButton = findViewById(R.id.enter_data);
         enterDataButton.setText(getString(R.string.enter_data_button));
@@ -189,22 +165,49 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
 //            }
 //        });
 
+        TextView versionSHAView = findViewById(R.id.version_sha);
         String versionSHA = viewModel.getVersionCommitDescription();
         if (versionSHA != null) {
             versionSHAView.setText(versionSHA);
         } else {
             versionSHAView.setVisibility(View.GONE);
         }
+
+        viewModel.getFinalizedFormsCount().observe(this, finalized -> {
+            if (finalized > 0) {
+                sendDataButton.setText(getString(R.string.send_data_button, String.valueOf(finalized)));
+            } else {
+                sendDataButton.setText(getString(R.string.send_data));
+            }
+        });
+
+
+        viewModel.getUnsentFormsCount().observe(this, unsent -> {
+            if (unsent > 0) {
+                reviewDataButton.setText(getString(R.string.review_data_button, String.valueOf(unsent)));
+            } else {
+                reviewDataButton.setText(getString(R.string.review_data));
+            }
+        });
+
+
+        viewModel.getSentFormsCount().observe(this, sent -> {
+            if (sent > 0) {
+                viewSentFormsButton.setText(getString(R.string.view_sent_forms_button, String.valueOf(sent)));
+            } else {
+                viewSentFormsButton.setText(getString(R.string.view_sent_forms));
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        viewModel.resume();
+
         // Brand change
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        updateButtons();
-        getContentResolver().registerContentObserver(InstanceColumns.CONTENT_URI, true, contentObserver);
         setButtonsVisibility();
         invalidateOptionsMenu();
     }
@@ -219,12 +222,6 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
 //        getFormsButton.setVisibility(viewModel.shouldGetBlankFormButtonBeVisible() ? View.VISIBLE : View.GONE);
 //        manageFilesButton.setVisibility(viewModel.shouldDeleteSavedFormButtonBeVisible() ? View.VISIBLE : View.GONE);
 // end brand change ----
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        getContentResolver().unregisterContentObserver(contentObserver);
     }
 
     @Override
@@ -300,40 +297,5 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
     @Override
     public void onIncorrectAdminPassword() {
         ToastUtils.showShortToast(R.string.admin_password_incorrect);
-    }
-
-    /*
-     * Used to prevent memory leaks
-     */
-    static class IncomingHandler extends Handler {
-        private final WeakReference<MainMenuActivity> target;
-
-        IncomingHandler(MainMenuActivity target) {
-            this.target = new WeakReference<>(target);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            MainMenuActivity target = this.target.get();
-            if (target != null) {
-                target.updateButtons();
-            }
-        }
-    }
-
-    /**
-     * notifies us that something changed
-     */
-    private class MyContentObserver extends ContentObserver {
-
-        MyContentObserver() {
-            super(null);
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
-            handler.sendEmptyMessage(0);
-        }
     }
 }

@@ -4,9 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
@@ -19,6 +22,7 @@ import org.odk.collect.android.preferences.screens.AdminPreferencesActivity
 import org.odk.collect.android.preferences.screens.GeneralPreferencesActivity
 import org.odk.collect.android.utilities.AdminPasswordProvider
 import org.odk.collect.android.utilities.DialogUtils
+import org.odk.collect.android.utilities.ToastUtils
 import javax.inject.Inject
 
 class ProjectSettingsDialog : DialogFragment() {
@@ -28,6 +32,9 @@ class ProjectSettingsDialog : DialogFragment() {
 
     @Inject
     lateinit var projectsRepository: ProjectsRepository
+
+    @Inject
+    lateinit var currentProjectProvider: CurrentProjectProvider
 
     private lateinit var binding: ProjectSettingsDialogLayoutBinding
 
@@ -45,6 +52,7 @@ class ProjectSettingsDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupCurrentProjectView()
         inflateListOfInActiveProjects()
 
         binding.closeIcon.setOnClickListener {
@@ -80,12 +88,44 @@ class ProjectSettingsDialog : DialogFragment() {
     }
 
     private fun inflateListOfInActiveProjects() {
-        projectsRepository.getAll().forEach { project ->
+        if (projectsRepository.getAll().none { it.uuid != currentProjectProvider.getCurrentProjectId() }) {
+            binding.topDivider.visibility = GONE
+        } else {
+            binding.topDivider.visibility = VISIBLE
+        }
+
+        projectsRepository.getAll().filter {
+            it.uuid != currentProjectProvider.getCurrentProjectId()
+        }.forEach { project ->
             val projectView = LayoutInflater.from(context).inflate(R.layout.project_list_item, null)
 
+            projectView.setOnClickListener {
+                switchProject(project)
+            }
+
+            projectView.findViewById<TextView>(R.id.project_icon).apply {
+                (background as GradientDrawable).setColor(Color.parseColor(project.color))
+                text = project.icon
+            }
             projectView.findViewById<TextView>(R.id.project_name).text = project.name
 
             binding.projectList.addView(projectView)
         }
+    }
+
+    private fun switchProject(project: Project) {
+        currentProjectProvider.setCurrentProject(project.uuid)
+        dismiss()
+        ToastUtils.showLongToast(getString(R.string.switched_project, project.name))
+    }
+
+    private fun setupCurrentProjectView() {
+        val currentProject = currentProjectProvider.getCurrentProject() ?: return
+
+        binding.currentProject.projectIcon.apply {
+            (background as GradientDrawable).setColor(Color.parseColor(currentProject.color))
+            text = currentProject.icon
+        }
+        binding.currentProject.projectName.text = currentProject.name
     }
 }
