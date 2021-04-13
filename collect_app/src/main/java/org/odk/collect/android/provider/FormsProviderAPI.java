@@ -39,6 +39,7 @@ public final class FormsProviderAPI {
      */
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/forms");
 
+    // Brand change ---
     public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.ffem.form";
     public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.ffem.form";
 

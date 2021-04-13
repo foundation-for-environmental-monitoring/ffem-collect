@@ -206,7 +206,9 @@ public class InstanceChooserList extends InstanceListActivity implements
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
-        hideProgressBarIfAllowed();
+        // Brand change
+        hideProgressBarAndAllow();
+//        hideProgressBarIfAllowed();
         listAdapter.swapCursor(cursor);
     }
 

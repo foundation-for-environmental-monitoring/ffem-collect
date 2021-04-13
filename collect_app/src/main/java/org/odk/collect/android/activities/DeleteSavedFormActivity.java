@@ -46,6 +46,11 @@ public class DeleteSavedFormActivity extends CollectAbstractActivity {
         setContentView(R.layout.tabs_layout);
         initToolbar(getString(R.string.manage_files));
         setUpViewPager();
+
+        // Brand change ---------
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

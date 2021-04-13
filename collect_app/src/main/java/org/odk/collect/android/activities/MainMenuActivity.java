@@ -31,8 +31,7 @@ import org.odk.collect.android.activities.viewmodels.MainMenuViewModel;
 import org.odk.collect.android.configure.qr.QRCodeTabsActivity;
 import org.odk.collect.android.gdrive.GoogleDriveActivity;
 import org.odk.collect.android.injection.DaggerUtils;
-import org.odk.collect.android.instances.Instance;
-import org.odk.collect.android.instances.InstancesRepository;
+import org.odk.collect.android.network.NetworkStateProvider;
 import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment;
 import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment.Action;
 import org.odk.collect.android.preferences.keys.GeneralKeys;
@@ -45,10 +44,8 @@ import org.odk.collect.android.utilities.ToastUtils;
 
 import javax.inject.Inject;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-import static org.odk.collect.android.utilities.DialogUtils.showIfNotShowing;
-
+import org.odk.collect.android.instances.Instance;
+import org.odk.collect.android.instances.InstancesRepository;
 import io.ffem.collect.android.activities.MainMenuActivityBranded;
 
 /**
@@ -71,6 +68,9 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
 
     @Inject
     InstancesRepository instancesRepository;
+
+    @Inject
+    NetworkStateProvider connectivityProvider;
 
     private MainMenuViewModel viewModel;
 
@@ -140,6 +140,11 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         getFormsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                // brand change ----
+                if (!connectivityProvider.isDeviceOnline()) {
+                    ToastUtils.showShortToast(R.string.no_connection);
+                    return;
+                }
                 String protocol = settingsProvider.getGeneralSettings().getString(GeneralKeys.KEY_PROTOCOL);
                 Intent i = null;
                 if (protocol.equalsIgnoreCase(getString(R.string.protocol_google_sheets))) {
@@ -191,8 +196,12 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         viewModel.getUnsentFormsCount().observe(this, unsent -> {
             if (unsent > 0) {
                 reviewDataButton.setText(getString(R.string.review_data_button, String.valueOf(unsent)));
+                // Brand change
+                reviewDataButton.setVisibility(View.VISIBLE);
             } else {
                 reviewDataButton.setText(getString(R.string.review_data));
+                // Brand change
+                reviewDataButton.setVisibility(View.GONE);
             }
         });
 
@@ -200,8 +209,12 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         viewModel.getSentFormsCount().observe(this, sent -> {
             if (sent > 0) {
                 viewSentFormsButton.setText(getString(R.string.view_sent_forms_button, String.valueOf(sent)));
+                // Brand change
+                viewSentFormsButton.setVisibility(View.VISIBLE);
             } else {
                 viewSentFormsButton.setText(getString(R.string.view_sent_forms));
+                // Brand change
+                viewSentFormsButton.setVisibility(View.GONE);
             }
         });
     }
@@ -214,7 +227,6 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         // Brand change
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        updateButtons();
         setButtonsVisibility();
         invalidateOptionsMenu();
     }
@@ -258,35 +270,6 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         // setTitle(String.format("%s %s", getString(R.string.app_name), viewModel.getVersion()));
         // end brand change -------------
         setSupportActionBar(toolbar);
-    }
-
-    private void updateButtons() {
-        int finalizedInstances = instancesRepository.getCountByStatus(Instance.STATUS_COMPLETE, Instance.STATUS_SUBMISSION_FAILED);
-        int sentInstances = instancesRepository.getCountByStatus(Instance.STATUS_SUBMITTED);
-        int unsentInstances = instancesRepository.getCountByStatus(Instance.STATUS_INCOMPLETE, Instance.STATUS_COMPLETE, Instance.STATUS_SUBMISSION_FAILED);
-
-        // Brand change -----------------
-//        if (finalizedInstances > 0) {
-//            sendDataButton.setText(getString(R.string.send_data_button, String.valueOf(finalizedInstances)));
-//        } else {
-//            sendDataButton.setText(getString(R.string.send_data));
-//        }
-
-        if (unsentInstances > 0) {
-            reviewDataButton.setVisibility(VISIBLE);
-            reviewDataButton.setText(getString(R.string.review_data_button, String.valueOf(unsentInstances)));
-        } else {
-            reviewDataButton.setVisibility(GONE);
-            reviewDataButton.setText(getString(R.string.review_data));
-        }
-
-        if (sentInstances > 0) {
-            viewSentFormsButton.setVisibility(VISIBLE);
-            viewSentFormsButton.setText(getString(R.string.view_sent_forms_button, String.valueOf(sentInstances)));
-        } else {
-            viewSentFormsButton.setVisibility(GONE);
-            viewSentFormsButton.setText(getString(R.string.view_sent_forms));
-        }
     }
 
     @Override

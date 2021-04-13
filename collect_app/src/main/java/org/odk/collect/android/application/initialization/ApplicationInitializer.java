@@ -127,11 +127,12 @@ public class ApplicationInitializer {
 
     private void initializeMapFrameworks() {
         try {
-            Handler handler = new Handler(context.getMainLooper());
-            handler.post(() -> {
-                // This has to happen on the main thread but we might call `initialize` from tests
-                new com.google.android.gms.maps.MapView(context).onCreate(null);
-            });
+            // Brand change ----
+//            Handler handler = new Handler(context.getMainLooper());
+//            handler.post(() -> {
+//                // This has to happen on the main thread but we might call `initialize` from tests
+//                new com.google.android.gms.maps.MapView(context).onCreate(null);
+//            });
             org.osmdroid.config.Configuration.getInstance().setUserAgentValue(userAgentProvider.getUserAgent());
             // Brand change ----
 //            MapboxUtils.initMapbox();

@@ -23,15 +23,16 @@ package org.odk.collect.android.geo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Tile;
-import com.google.android.gms.maps.model.TileProvider;
+//import com.google.android.gms.maps.model.LatLng;
+//import com.google.android.gms.maps.model.LatLngBounds;
+//import com.google.android.gms.maps.model.Tile;
+//import com.google.android.gms.maps.model.TileProvider;
 
 import java.io.Closeable;
 import java.io.File;
 
-public class GoogleMapsMapBoxOfflineTileProvider implements TileProvider, Closeable {
+// Brand change ----
+public class GoogleMapsMapBoxOfflineTileProvider implements Closeable {
 
     // ------------------------------------------------------------------------
     // Instance Variables
@@ -41,7 +42,7 @@ public class GoogleMapsMapBoxOfflineTileProvider implements TileProvider, Closea
 
     private int maximumZoom = Integer.MAX_VALUE;
 
-    private LatLngBounds bounds;
+//    private LatLngBounds bounds;
 
     private SQLiteDatabase database;
 
@@ -64,30 +65,30 @@ public class GoogleMapsMapBoxOfflineTileProvider implements TileProvider, Closea
     // TileProvider Interface
     // ------------------------------------------------------------------------
 
-    @Override
-    public Tile getTile(int x, int y, int z) {
-        Tile tile = NO_TILE;
-        if (this.isZoomLevelAvailable(z) && this.isDatabaseAvailable()) {
-            String[] projection = {
-                    "tile_data"
-            };
-            int row = (int) (Math.pow(2, z) - y) - 1;
-            String predicate = "tile_row = ? AND tile_column = ? AND zoom_level = ?";
-            String[] values = {
-                    String.valueOf(row), String.valueOf(x), String.valueOf(z)
-            };
-            Cursor c = this.database.query("tiles", projection, predicate, values, null, null,
-                    null);
-            if (c != null) {
-                c.moveToFirst();
-                if (!c.isAfterLast()) {
-                    tile = new Tile(256, 256, c.getBlob(0));
-                }
-                c.close();
-            }
-        }
-        return tile;
-    }
+//    @Override
+//    public Tile getTile(int x, int y, int z) {
+//        Tile tile = NO_TILE;
+//        if (this.isZoomLevelAvailable(z) && this.isDatabaseAvailable()) {
+//            String[] projection = {
+//                    "tile_data"
+//            };
+//            int row = (int) (Math.pow(2, z) - y) - 1;
+//            String predicate = "tile_row = ? AND tile_column = ? AND zoom_level = ?";
+//            String[] values = {
+//                    String.valueOf(row), String.valueOf(x), String.valueOf(z)
+//            };
+//            Cursor c = this.database.query("tiles", projection, predicate, values, null, null,
+//                    null);
+//            if (c != null) {
+//                c.moveToFirst();
+//                if (!c.isAfterLast()) {
+//                    tile = new Tile(256, 256, c.getBlob(0));
+//                }
+//                c.close();
+//            }
+//        }
+//        return tile;
+//    }
 
     // ------------------------------------------------------------------------
     // Closeable Interface
@@ -112,9 +113,9 @@ public class GoogleMapsMapBoxOfflineTileProvider implements TileProvider, Closea
         return this.maximumZoom;
     }
 
-    public LatLngBounds getBounds() {
-        return this.bounds;
-    }
+//    public LatLngBounds getBounds() {
+//        return this.bounds;
+//    }
 
     public boolean isZoomLevelAvailable(int zoom) {
         return (zoom >= this.minimumZoom) && (zoom <= this.maximumZoom);
@@ -165,10 +166,10 @@ public class GoogleMapsMapBoxOfflineTileProvider implements TileProvider, Closea
                 double e = Double.parseDouble(parts[2]);
                 double n = Double.parseDouble(parts[3]);
 
-                LatLng ne = new LatLng(n, e);
-                LatLng sw = new LatLng(s, w);
-
-                this.bounds = new LatLngBounds(sw, ne);
+//                LatLng ne = new LatLng(n, e);
+//                LatLng sw = new LatLng(s, w);
+//
+//                this.bounds = new LatLngBounds(sw, ne);
             }
             c.close();
         }

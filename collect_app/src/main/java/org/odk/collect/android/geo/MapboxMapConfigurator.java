@@ -32,17 +32,19 @@ class MapboxMapConfigurator implements MapConfigurator {
         this.options = options;
     }
 
+    // Brand change ----
     @Override public boolean isAvailable(Context context) {
-        return MapboxUtils.initMapbox() != null;
+        return false;
     }
 
     @Override public void showUnavailableMessage(Context context) {
         ToastUtils.showLongToast(context.getString(
-            R.string.basemap_source_unavailable, context.getString(sourceLabelId)));
+                R.string.basemap_source_unavailable, context.getString(sourceLabelId)));
     }
 
+    // Brand change ----
     @Override public MapFragment createMapFragment(Context context) {
-        return MapboxUtils.initMapbox() != null ? new MapboxMapFragment() : null;
+        return null;
     }
 
     @Override public List<Preference> createPrefs(Context context) {
@@ -53,24 +55,20 @@ class MapboxMapConfigurator implements MapConfigurator {
             values[i] = options[i].url;
         }
         String prefTitle = context.getString(
-            R.string.map_style_label, context.getString(sourceLabelId));
+                R.string.map_style_label, context.getString(sourceLabelId));
         return Collections.singletonList(PrefUtils.createListPref(
-            context, prefKey, prefTitle, labelIds, values
+                context, prefKey, prefTitle, labelIds, values
         ));
     }
 
     @Override public Set<String> getPrefKeys() {
         return prefKey.isEmpty() ? ImmutableSet.of(KEY_REFERENCE_LAYER) :
-            ImmutableSet.of(prefKey, KEY_REFERENCE_LAYER);
+                ImmutableSet.of(prefKey, KEY_REFERENCE_LAYER);
     }
 
+    // Brand change ----
     @Override public Bundle buildConfig(Settings prefs) {
-        Bundle config = new Bundle();
-        config.putString(MapboxMapFragment.KEY_STYLE_URL,
-            prefs.getString(KEY_MAPBOX_MAP_STYLE));
-        config.putString(MapboxMapFragment.KEY_REFERENCE_LAYER,
-            prefs.getString(KEY_REFERENCE_LAYER));
-        return config;
+        return new Bundle();
     }
 
     @Override public boolean supportsLayer(File file) {

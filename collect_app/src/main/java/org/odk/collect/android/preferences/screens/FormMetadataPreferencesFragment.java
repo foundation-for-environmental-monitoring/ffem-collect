@@ -59,20 +59,21 @@ public class FormMetadataPreferencesFragment extends BaseGeneralPreferencesFragm
 
         setupPrefs();
 
-        if (permissionsProvider.isReadPhoneStatePermissionGranted()) {
-            phonePreference.setSummaryProvider(new PropertyManagerPropertySummaryProvider(propertyManager, PROPMGR_PHONE_NUMBER));
-        } else if (savedInstanceState == null) {
-            permissionsProvider.requestReadPhoneStatePermission(getActivity(), true, new PermissionListener() {
-                @Override
-                public void granted() {
-                    phonePreference.setSummaryProvider(new PropertyManagerPropertySummaryProvider(propertyManager, PROPMGR_PHONE_NUMBER));
-                }
-
-                @Override
-                public void denied() {
-                }
-            });
-        }
+        // Brand change ----
+//        if (permissionsProvider.isReadPhoneStatePermissionGranted()) {
+//            phonePreference.setSummaryProvider(new PropertyManagerPropertySummaryProvider(propertyManager, PROPMGR_PHONE_NUMBER));
+//        } else if (savedInstanceState == null) {
+//            permissionsProvider.requestReadPhoneStatePermission(getActivity(), true, new PermissionListener() {
+//                @Override
+//                public void granted() {
+//                    phonePreference.setSummaryProvider(new PropertyManagerPropertySummaryProvider(propertyManager, PROPMGR_PHONE_NUMBER));
+//                }
+//
+//                @Override
+//                public void denied() {
+//                }
+//            });
+//        }
     }
 
     private void setupPrefs() {

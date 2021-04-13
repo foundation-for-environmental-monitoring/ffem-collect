@@ -1,7 +1,7 @@
 package org.odk.collect.android.preferences.keys;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.mapbox.mapboxsdk.maps.Style;
+//import com.google.android.gms.maps.GoogleMap;
+//import com.mapbox.mapboxsdk.maps.Style;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
@@ -149,8 +149,9 @@ public final class GeneralKeys {
         hashMap.put(KEY_BASEMAP_SOURCE, BASEMAP_SOURCE_OSM);
         hashMap.put(KEY_CARTO_MAP_STYLE, "positron");
         hashMap.put(KEY_USGS_MAP_STYLE, "topographic");
-        hashMap.put(KEY_GOOGLE_MAP_STYLE, String.valueOf(GoogleMap.MAP_TYPE_NORMAL));
-        hashMap.put(KEY_MAPBOX_MAP_STYLE, Style.MAPBOX_STREETS);
+// Brand change ----
+//        hashMap.put(KEY_GOOGLE_MAP_STYLE, String.valueOf(GoogleMap.MAP_TYPE_NORMAL));
+//        hashMap.put(KEY_MAPBOX_MAP_STYLE, Style.MAPBOX_STREETS);
         return hashMap;
     }
 

@@ -1297,6 +1297,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         return endView;
     }
 
+    // brand change ------
     private void checkFinalizedCheckBox(FormEndView endView, boolean isChecked) {
         MaterialButton saveButton = endView.findViewById(R.id.save_exit_button);
         if (isChecked) {
@@ -1948,8 +1949,9 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     protected void onResume() {
         super.onResume();
 
-        String navigation = settingsProvider.getGeneralSettings().getString(KEY_NAVIGATION);
-        showNavigationButtons = navigation.contains(GeneralKeys.NAVIGATION_BUTTONS);
+// Brand change
+//        String navigation = settingsProvider.getGeneralSettings().getString(KEY_NAVIGATION);
+        showNavigationButtons = true;
 
         findViewById(R.id.buttonholder).setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
         findViewById(R.id.shadow_up).setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);

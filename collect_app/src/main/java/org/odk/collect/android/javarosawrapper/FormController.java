@@ -674,7 +674,10 @@ public class FormController {
         FormIndex startIndex = index;
 
         // Step out once more no matter what.
-        index = getPreviousLevel(index);
+        // Brand change -------
+        if (index != null) {
+            index = getPreviousLevel(index);
+        }
 
         // Step out of any group indexes that are present, unless they're visible.
         while (index != null

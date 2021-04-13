@@ -101,16 +101,18 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import io.ffem.collect.android.widget.RowView;
 import timber.log.Timber;
 
-import static android.content.DialogInterface.BUTTON_NEGATIVE;
-import static android.content.DialogInterface.BUTTON_POSITIVE;
-import static io.ffem.collect.android.helper.AppHelper.getUnitText;
 import static org.odk.collect.android.injection.DaggerUtils.getComponent;
 import static org.odk.collect.android.preferences.keys.GeneralKeys.KEY_EXTERNAL_APP_RECORDING;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
 
+import static android.content.DialogInterface.BUTTON_NEGATIVE;
+import static android.content.DialogInterface.BUTTON_POSITIVE;
+import static io.ffem.collect.android.helper.AppHelper.getUnitText;
+
+import io.ffem.collect.android.widget.RowView;
+import android.content.DialogInterface;
 import android.app.AlertDialog;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -238,7 +240,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                         AppCompatTextView textView = new AppCompatTextView(context);
                         TextViewCompat.setTextAppearance(textView, R.style.TextAppearance_Collect_Headline6);
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-                        params.setMargins(32,16,16,0);
+                        params.setMargins(32, 16, 16, 0);
                         textView.setLayoutParams(params);
                         textView.setText(groups[0].getShortText());
                         answerLayout.addView(textView);
@@ -293,7 +295,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                                     AppCompatTextView textView = new AppCompatTextView(context);
                                     TextViewCompat.setTextAppearance(textView, R.style.TextAppearance_Collect_Headline6);
                                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-                                    params.setMargins(32,16,16,0);
+                                    params.setMargins(32, 16, 16, 0);
                                     textView.setLayoutParams(params);
                                     String questionText = c.getQuestionText(formElement.getChild(i).getTextID());
                                     textView.setText(questionText);
@@ -563,7 +565,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         String v = c.getSpecialFormQuestionText("buttonText");
         String question = c.getLongText();
         String testId = c.getFormElement().getChild(0).getTextID();
-        if (testId.contains("group_")){
+        if (testId.contains("group_")) {
             question = testId.substring(testId.lastIndexOf("/") + 1, testId.indexOf(":"));
             question = question.replace("group_", "");
             question = question.replace("_", " ");
@@ -606,20 +608,20 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(16, 2, 16, 0);
-            launchIntentButton = (TextView) LayoutInflater
+            launchIntentButton = LayoutInflater
                     .from(context)
                     .inflate(R.layout.widget_redo_button, null, false);
             launchIntentButton.setLayoutParams(params);
         } else {
-            LinearLayout.LayoutParams params = new  LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(32, 16, 32, 16);
-            launchIntentButton = (MaterialButton) LayoutInflater
+            launchIntentButton = LayoutInflater
                     .from(context)
                     .inflate(R.layout.widget_answer_button, null, false);
-            ((MaterialButton)launchIntentButton).setText(buttonText);
+            ((MaterialButton) launchIntentButton).setText(buttonText);
             launchIntentButton.setLayoutParams(params);
-            ((MaterialButton)launchIntentButton).setTextSize(TypedValue.COMPLEX_UNIT_DIP,  QuestionFontSizeUtils.getQuestionFontSize() - 2);
+            ((MaterialButton) launchIntentButton).setTextSize(TypedValue.COMPLEX_UNIT_DIP,  QuestionFontSizeUtils.getQuestionFontSize() - 2);
         }
 
         launchIntentButton.setId(View.generateViewId());
