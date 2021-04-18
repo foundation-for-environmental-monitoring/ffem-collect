@@ -432,12 +432,12 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
 
         widgets.add(index, qw);
 
-        int indexAccountingForDividers = index * 2;
-        if (index > 0) {
+//        int indexAccountingForDividers = index * 2;
+//        if (index > 0) {
 //            widgetsList.addView(getDividerView(), indexAccountingForDividers - 1);
-        }
+//        }
 
-        widgetsList.addView(qw, indexAccountingForDividers, layout);
+        widgetsList.addView(qw, index, layout);
     }
 
     /**
@@ -933,17 +933,17 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
      * Removes the widget and corresponding divider at a particular index.
      */
     public void removeWidgetAt(int index) {
-        int indexAccountingForDividers = index * 2;
+//        int indexAccountingForDividers = index * 2;
 
         // There may be a first TextView to display the group path. See addGroupText(FormEntryCaption[])
-        if (widgetsList.getChildCount() > 0 && widgetsList.getChildAt(0) instanceof TextView) {
-            indexAccountingForDividers += 1;
-        }
-        widgetsList.removeViewAt(indexAccountingForDividers);
+//        if (widgetsList.getChildCount() > 0 && widgetsList.getChildAt(0) instanceof TextView) {
+//            indexAccountingForDividers += 1;
+//        }
+        widgetsList.removeViewAt(index);
 
-        if (index > 0) {
-            widgetsList.removeViewAt(indexAccountingForDividers - 1);
-        }
+//        if (index > 0) {
+//            widgetsList.removeViewAt(indexAccountingForDividers - 1);
+//        }
 
         widgets.remove(index);
     }
