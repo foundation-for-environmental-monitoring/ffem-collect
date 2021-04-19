@@ -43,7 +43,7 @@ class GoogleMapConfigurator implements MapConfigurator {
     @Override public void showUnavailableMessage(Context context) {
         if (!isGoogleMapsSdkAvailable(context)) {
             ToastUtils.showLongToast(context.getString(
-                    R.string.basemap_source_unavailable, context.getString(sourceLabelId)));
+                R.string.basemap_source_unavailable, context.getString(sourceLabelId)));
         }
         if (!isGooglePlayServicesAvailable(context)) {
             new PlayServicesChecker().showGooglePlayServicesAvailabilityErrorDialog(context);
@@ -54,7 +54,7 @@ class GoogleMapConfigurator implements MapConfigurator {
         // The Google Maps SDK for Android requires OpenGL ES version 2.
         // See https://developers.google.com/maps/documentation/android-sdk/config
         return ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE))
-                .getDeviceConfigurationInfo().reqGlEsVersion >= 0x20000;
+            .getDeviceConfigurationInfo().reqGlEsVersion >= 0x20000;
     }
 
     private boolean isGooglePlayServicesAvailable(Context context) {
@@ -74,15 +74,15 @@ class GoogleMapConfigurator implements MapConfigurator {
             values[i] = Integer.toString(options[i].mapType);
         }
         String prefTitle = context.getString(
-                R.string.map_style_label, context.getString(sourceLabelId));
+            R.string.map_style_label, context.getString(sourceLabelId));
         return Collections.singletonList(PrefUtils.createListPref(
-                context, prefKey, prefTitle, labelIds, values
+            context, prefKey, prefTitle, labelIds, values
         ));
     }
 
     @Override public Set<String> getPrefKeys() {
         return prefKey.isEmpty() ? ImmutableSet.of(KEY_REFERENCE_LAYER) :
-                ImmutableSet.of(prefKey, KEY_REFERENCE_LAYER);
+            ImmutableSet.of(prefKey, KEY_REFERENCE_LAYER);
     }
 
     // Brand change ----

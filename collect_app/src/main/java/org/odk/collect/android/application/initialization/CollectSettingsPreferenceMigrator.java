@@ -71,7 +71,7 @@ public class CollectSettingsPreferenceMigrator implements SettingsPreferenceMigr
 //                        .fromValue("terrain").toValue(Integer.toString(GoogleMap.MAP_TYPE_TERRAIN))
 //                        .fromValue("hybrid").toValue(Integer.toString(GoogleMap.MAP_TYPE_HYBRID))
 //                        .fromValue("satellite").toValue(Integer.toString(GoogleMap.MAP_TYPE_SATELLITE)),
-//
+
 //                translateKey("map_basemap_behavior").toKey(KEY_MAPBOX_MAP_STYLE)
 //                        .fromValue("mapbox_streets").toValue(Style.MAPBOX_STREETS)
 //                        .fromValue("mapbox_light").toValue(Style.LIGHT)

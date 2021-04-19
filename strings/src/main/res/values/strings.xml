@@ -589,9 +589,9 @@
 
     <string name="send_in_progress">Background send running, please try again shortly</string>
 
-    <string name="odk_permissions_fail">ODK auto send permission failure, please make sure your have granted all required permissions</string>
-    <string name="odk_auto_note">ODK auto-send results</string>
-    <string name="odk_auto_download_notification_title">ODK auto-download results</string>
+    <string name="odk_permissions_fail">Auto send permission failure, please make sure your have granted all required permissions</string>
+    <string name="odk_auto_note">Auto-send results</string>
+    <string name="odk_auto_download_notification_title">Auto-download results</string>
     <string name="notification_error">Error displaying notification text</string>
 
     <!--

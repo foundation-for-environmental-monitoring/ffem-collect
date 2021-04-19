@@ -78,8 +78,8 @@ android {
         applicationId('io.ffem.collect')
         minSdkVersion rootProject.androidMinSdk
         targetSdkVersion rootProject.androidTargetSdk
-        versionCode 13
-        versionName "Beta 2.0"
+        versionCode 14
+        versionName "Beta 2.1"
         testInstrumentationRunner('androidx.test.runner.AndroidJUnitRunner')
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true

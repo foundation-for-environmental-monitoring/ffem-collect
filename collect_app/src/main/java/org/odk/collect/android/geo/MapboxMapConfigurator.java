@@ -39,7 +39,7 @@ class MapboxMapConfigurator implements MapConfigurator {
 
     @Override public void showUnavailableMessage(Context context) {
         ToastUtils.showLongToast(context.getString(
-                R.string.basemap_source_unavailable, context.getString(sourceLabelId)));
+            R.string.basemap_source_unavailable, context.getString(sourceLabelId)));
     }
 
     // Brand change ----
@@ -55,15 +55,15 @@ class MapboxMapConfigurator implements MapConfigurator {
             values[i] = options[i].url;
         }
         String prefTitle = context.getString(
-                R.string.map_style_label, context.getString(sourceLabelId));
+            R.string.map_style_label, context.getString(sourceLabelId));
         return Collections.singletonList(PrefUtils.createListPref(
-                context, prefKey, prefTitle, labelIds, values
+            context, prefKey, prefTitle, labelIds, values
         ));
     }
 
     @Override public Set<String> getPrefKeys() {
         return prefKey.isEmpty() ? ImmutableSet.of(KEY_REFERENCE_LAYER) :
-                ImmutableSet.of(prefKey, KEY_REFERENCE_LAYER);
+            ImmutableSet.of(prefKey, KEY_REFERENCE_LAYER);
     }
 
     // Brand change ----

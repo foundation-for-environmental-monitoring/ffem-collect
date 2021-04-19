@@ -212,6 +212,9 @@ public class FillBlankFormActivity extends FillBlankFormActivityBranded implemen
                 syncComplete(formSyncTask.getStatusMessage());
             }
         }
+
+        // Brand change
+        init();
     }
 
     @Override
