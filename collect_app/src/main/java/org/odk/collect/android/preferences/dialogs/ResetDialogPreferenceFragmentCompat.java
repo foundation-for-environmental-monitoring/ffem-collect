@@ -219,7 +219,7 @@ public class ResetDialogPreferenceFragmentCompat extends PreferenceDialogFragmen
         if (!((SettingsActivity) context).isInstanceStateSaved()) {
             ((SettingsActivity) context).runOnUiThread(() -> {
                 if (resetActions.contains(RESET_PREFERENCES)) {
-                    ((AdminPreferencesActivity) context).recreate();
+                    ((SettingsActivity) context).recreate();
                 }
                 ResetSettingsResultDialog resetSettingsResultDialog = ResetSettingsResultDialog.newInstance(String.valueOf(resultMessage));
                 try {

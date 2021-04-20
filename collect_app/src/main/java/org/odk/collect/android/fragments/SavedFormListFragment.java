@@ -140,6 +140,8 @@ public class SavedFormListFragment extends InstanceListFragment
                 R.layout.form_chooser_list_item_multiple_choice, null, data, view, false);
         setListAdapter(listAdapter);
         checkPreviouslyCheckedItems();
+        // Brand change
+        hideProgressBarAndAllow();
     }
 
     @Override
@@ -216,6 +218,8 @@ public class SavedFormListFragment extends InstanceListFragment
         if (deletedInstances == toDeleteCount) {
             // all deletes were successful
             ToastUtils.showShortToast(getString(R.string.file_deleted_ok, String.valueOf(deletedInstances)));
+            // Brand change
+            setupAdapter();
         } else {
             // had some failures
             Timber.e("Failed to delete %d instances", toDeleteCount - deletedInstances);
