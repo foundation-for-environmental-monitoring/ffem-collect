@@ -24,6 +24,7 @@ import androidx.preference.CheckBoxPreference;
 import androidx.preference.Preference;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.activities.DeleteSavedFormActivity;
 import org.odk.collect.android.configure.qr.QRCodeTabsActivity;
 import org.odk.collect.android.fragments.dialogs.MovingBackwardsDialog;
 import org.odk.collect.android.fragments.dialogs.SimpleDialog;
@@ -54,7 +55,7 @@ public class AdminPreferencesFragment extends BaseAdminPreferencesFragment imple
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         super.onCreatePreferences(savedInstanceState, rootKey);
-        setPreferencesFromResource(R.xml.admin_preferences, rootKey);
+        setPreferencesFromResource(R.xml.admin_preferences_custom, rootKey);
 
         findPreference("odk_preferences").setOnPreferenceClickListener(this);
         findPreference(KEY_CHANGE_ADMIN_PASSWORD).setOnPreferenceClickListener(this);
@@ -62,6 +63,7 @@ public class AdminPreferencesFragment extends BaseAdminPreferencesFragment imple
         findPreference("main_menu").setOnPreferenceClickListener(this);
         findPreference("user_settings").setOnPreferenceClickListener(this);
         findPreference("form_entry").setOnPreferenceClickListener(this);
+        findPreference("delete_forms").setOnPreferenceClickListener(this);
     }
 
     @Override
@@ -108,6 +110,10 @@ public class AdminPreferencesFragment extends BaseAdminPreferencesFragment imple
                     break;
                 case "form_entry":
                     displayPreferences(new FormEntryAccessPreferences());
+                    break;
+                case "delete_forms":
+                    Intent deleteIntent = new Intent(getActivity(), DeleteSavedFormActivity.class);
+                    startActivity(deleteIntent);
                     break;
             }
 

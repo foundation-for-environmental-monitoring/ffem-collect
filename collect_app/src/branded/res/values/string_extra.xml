@@ -12,6 +12,7 @@
     <string name="enter_username">Please enter a username</string>
     <string name="enter_password">Please enter a password</string>
     <string name="create_new_account">or create an account</string>
+    <string name="delete">Delete</string>
     <string name="delete_forms">Delete Blank or Saved Forms</string>
     <string name="server_credentials">Server credentials</string>
     <string name="outbox">Outbox</string>
