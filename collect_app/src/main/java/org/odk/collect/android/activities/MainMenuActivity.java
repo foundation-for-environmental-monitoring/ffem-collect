@@ -44,8 +44,6 @@ import org.odk.collect.android.utilities.ToastUtils;
 
 import javax.inject.Inject;
 
-import org.odk.collect.android.instances.Instance;
-import org.odk.collect.android.instances.InstancesRepository;
 import io.ffem.collect.android.activities.MainMenuActivityBranded;
 
 /**
@@ -65,9 +63,6 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
 
     @Inject
     MainMenuViewModel.Factory viewModelFactory;
-
-    @Inject
-    InstancesRepository instancesRepository;
 
     @Inject
     NetworkStateProvider connectivityProvider;
