@@ -42,6 +42,7 @@ import org.odk.collect.android.fragments.BarCodeScannerFragment;
 import org.odk.collect.android.fragments.BlankFormListFragment;
 import org.odk.collect.android.fragments.MapBoxInitializationFragment;
 import org.odk.collect.android.fragments.SavedFormListFragment;
+import org.odk.collect.android.fragments.dialogs.FirstLaunchDialog;
 import org.odk.collect.android.fragments.dialogs.SelectMinimalDialog;
 import org.odk.collect.android.gdrive.GoogleDriveActivity;
 import org.odk.collect.android.gdrive.GoogleSheetsUploaderActivity;
@@ -70,7 +71,7 @@ import org.odk.collect.android.preferences.source.SettingsProvider;
 import org.odk.collect.android.projects.AddProjectDialog;
 import org.odk.collect.android.projects.CurrentProjectProvider;
 import org.odk.collect.android.projects.ProjectSettingsDialog;
-import org.odk.collect.android.projects.ProjectsRepository;
+import org.odk.collect.projects.ProjectsRepository;
 import org.odk.collect.android.provider.FormsProvider;
 import org.odk.collect.android.provider.InstanceProvider;
 import org.odk.collect.android.storage.StorageInitializer;
@@ -261,6 +262,8 @@ public interface AppDependencyComponent {
     void inject(ProjectSettingsDialog projectSettingsDialog);
 
     void inject(AddProjectDialog addProjectDialog);
+
+    void inject(FirstLaunchDialog firstLaunchDialog);
 
     OpenRosaHttpInterface openRosaHttpInterface();
 

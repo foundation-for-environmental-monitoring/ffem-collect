@@ -13,7 +13,7 @@ import org.odk.collect.android.configure.SettingsUtils;
 import org.odk.collect.android.formmanagement.InstancesCountRepository;
 import org.odk.collect.android.preferences.FormUpdateMode;
 import org.odk.collect.android.preferences.keys.AdminKeys;
-import org.odk.collect.android.preferences.source.Settings;
+import org.odk.collect.shared.Settings;
 import org.odk.collect.android.preferences.source.SettingsProvider;
 import org.odk.collect.android.version.VersionInformation;
 
@@ -36,11 +36,7 @@ public class MainMenuViewModel extends ViewModel {
     }
 
     public String getVersion() {
-        if (version.getBetaNumber() != null) {
-            return version.getSemanticVersion() + " Beta " + version.getBetaNumber();
-        } else {
-            return version.getSemanticVersion();
-        }
+        return version.getVersionToDisplay();
     }
 
     @Nullable

@@ -24,6 +24,7 @@ import org.odk.collect.analytics.BlockableFirebaseAnalytics;
 import org.odk.collect.analytics.NoopAnalytics;
 import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
+import org.odk.collect.android.activities.viewmodels.SplashScreenViewModel;
 import org.odk.collect.android.application.CollectSettingsChangeHandler;
 import org.odk.collect.android.application.initialization.ApplicationInitializer;
 import org.odk.collect.android.application.initialization.CollectSettingsPreferenceMigrator;
@@ -83,17 +84,20 @@ import org.odk.collect.android.permissions.PermissionsChecker;
 import org.odk.collect.android.permissions.PermissionsProvider;
 import org.odk.collect.android.preferences.keys.AdminKeys;
 import org.odk.collect.android.preferences.keys.GeneralKeys;
+import org.odk.collect.android.preferences.keys.MetaKeys;
 import org.odk.collect.android.preferences.source.SettingsProvider;
 import org.odk.collect.android.preferences.source.SettingsStore;
 import org.odk.collect.android.projects.CurrentProjectProvider;
-import org.odk.collect.android.projects.ProjectsRepository;
-import org.odk.collect.android.projects.SharedPreferencesProjectsRepository;
+import org.odk.collect.android.projects.ProjectImporter;
+import org.odk.collect.projects.SharedPreferencesProjectsRepository;
+import org.odk.collect.projects.ProjectsRepository;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.storage.StorageSubdirectory;
 import org.odk.collect.android.utilities.ActivityAvailability;
 import org.odk.collect.android.utilities.AdminPasswordProvider;
 import org.odk.collect.android.utilities.AndroidUserAgent;
+import org.odk.collect.android.utilities.AppStateProvider;
 import org.odk.collect.android.utilities.DeviceDetailsProvider;
 import org.odk.collect.android.utilities.ExternalAppIntentProvider;
 import org.odk.collect.android.utilities.ExternalWebPageHelper;
@@ -104,7 +108,7 @@ import org.odk.collect.android.utilities.InstancesRepositoryProvider;
 import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.utilities.ScreenUtils;
 import org.odk.collect.android.utilities.SoftKeyboardController;
-import org.odk.collect.android.utilities.UUIDGenerator;
+import org.odk.collect.shared.UUIDGenerator;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 import org.odk.collect.android.version.VersionInformation;
 import org.odk.collect.android.views.BarcodeViewDecoder;
@@ -304,12 +308,16 @@ public class AppDependencyModule {
         return new CoroutineAndWorkManagerScheduler(workManager);
     }
 
+    @SuppressWarnings("PMD.ExcessiveParameterList")
     @Singleton
     @Provides
     public ApplicationInitializer providesApplicationInitializer(Application application, UserAgentProvider userAgentProvider,
                                                                  SettingsPreferenceMigrator preferenceMigrator, PropertyManager propertyManager,
-                                                                 Analytics analytics, StorageInitializer storageInitializer, SettingsProvider settingsProvider) {
-        return new ApplicationInitializer(application, userAgentProvider, preferenceMigrator, propertyManager, analytics, storageInitializer, settingsProvider);
+                                                                 Analytics analytics, StorageInitializer storageInitializer, SettingsProvider settingsProvider,
+                                                                 ProjectsRepository projectsRepository, AppStateProvider appStateProvider, ProjectImporter projectImporter) {
+        return new ApplicationInitializer(application, userAgentProvider, preferenceMigrator,
+                propertyManager, analytics, storageInitializer, settingsProvider.getGeneralSettings(),
+                settingsProvider.getAdminSettings(), projectsRepository, appStateProvider, projectImporter);
     }
 
     @Provides
@@ -498,7 +506,7 @@ public class AppDependencyModule {
     @Provides
     @Singleton
     public ProjectsRepository providesProjectsRepository(UUIDGenerator uuidGenerator, Gson gson, SettingsProvider settingsProvider) {
-        return new SharedPreferencesProjectsRepository(uuidGenerator, gson, settingsProvider.getMetaSettings());
+        return new SharedPreferencesProjectsRepository(uuidGenerator, gson, settingsProvider.getMetaSettings(), MetaKeys.KEY_PROJECTS);
     }
 
     @Provides
@@ -548,5 +556,20 @@ public class AppDependencyModule {
     @Provides
     public InstancesRepositoryProvider providesInstancesRepositoryProvider() {
         return new InstancesRepositoryProvider();
+    }
+
+    @Provides
+    public SplashScreenViewModel.Factory providesSplashScreenViewModel(SettingsProvider settingsProvider, AppStateProvider appStateProvider) {
+        return new SplashScreenViewModel.Factory(settingsProvider.getGeneralSettings(), appStateProvider);
+    }
+
+    @Provides
+    public ProjectImporter providesProjectImporter(ProjectsRepository projectsRepository, SettingsProvider settingsProvider) {
+        return new ProjectImporter(projectsRepository, settingsProvider.getMetaSettings());
+    }
+
+    @Provides
+    public AppStateProvider providesAppStateProvider(Context context) {
+        return new AppStateProvider(context);
     }
 }

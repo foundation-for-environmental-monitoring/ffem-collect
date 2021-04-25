@@ -12,6 +12,8 @@ import org.odk.collect.android.R
 import org.odk.collect.android.databinding.AddProjectDialogLayoutBinding
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.material.MaterialFullScreenDialogFragment
+import org.odk.collect.projects.Project
+import org.odk.collect.projects.ProjectsRepository
 import javax.inject.Inject
 
 class AddProjectDialog : MaterialFullScreenDialogFragment() {
@@ -21,9 +23,15 @@ class AddProjectDialog : MaterialFullScreenDialogFragment() {
 
     private lateinit var binding: AddProjectDialogLayoutBinding
 
+    private var listener: AddProjectDialogListener? = null
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         DaggerUtils.getComponent(context).inject(this)
+
+        if (context is AddProjectDialogListener) {
+            listener = context
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -61,6 +69,7 @@ class AddProjectDialog : MaterialFullScreenDialogFragment() {
 
         binding.addButton.setOnClickListener {
             projectsRepository.add(Project(getProjectName(), getProjectIcon(), getProjectColor()))
+            listener?.onProjectAdded()
             dismiss()
         }
     }
@@ -86,4 +95,8 @@ class AddProjectDialog : MaterialFullScreenDialogFragment() {
     private fun getProjectIcon() = binding.projectIcon.editText?.text?.trim().toString()
 
     private fun getProjectColor() = binding.projectColor.editText?.text?.trim().toString()
+
+    interface AddProjectDialogListener {
+        fun onProjectAdded()
+    }
 }

@@ -993,6 +993,11 @@
     <string name="project_icon">Project icon</string>
     <string name="project_color">Project color</string>
     <string name="switched_project">Switched to %s</string>
+    <string name="configure_with_qr_code">Configure with QR code</string>
+    <string name="configure_manually">Manually enter project details</string>
+    <string name="configure_later">Try Collect and configure later</string>
+    <string name="using_project">Using %s</string>
+    <string name="switch_to_project">Switch to %s</string>
 
     <string name="redo_test">Redo</string>
     <string name="submit_form">Submit Form</string>
