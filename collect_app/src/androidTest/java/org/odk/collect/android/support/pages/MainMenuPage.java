@@ -47,7 +47,7 @@ public class MainMenuPage extends Page<MainMenuPage> {
 
     public ProjectSettingsDialogPage openProjectSettingsDialog() {
         assertOnPage(); // Make sure we've waited for the application load correctly
-        onView(withId(R.id.projects)).perform(click());
+//        onView(withId(R.id.projects)).perform(click());
         return new ProjectSettingsDialogPage(rule).assertOnPage();
     }
 
