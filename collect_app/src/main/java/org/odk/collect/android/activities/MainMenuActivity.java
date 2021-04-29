@@ -250,11 +250,12 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        final MenuItem projectsMenuItem = menu.findItem(R.id.projects);
+// brand change ----
+//        final MenuItem projectsMenuItem = menu.findItem(R.id.projects);
 
-        ProjectIconView projectIconView = (ProjectIconView) projectsMenuItem.getActionView();
-        projectIconView.setProject(currentProjectViewModel.getCurrentProject().getValue());
-        projectIconView.setOnClickListener(v -> onOptionsItemSelected(projectsMenuItem));
+//        ProjectIconView projectIconView = (ProjectIconView) projectsMenuItem.getActionView();
+//        projectIconView.setProject(currentProjectViewModel.getCurrentProject().getValue());
+//        projectIconView.setOnClickListener(v -> onOptionsItemSelected(projectsMenuItem));
 
         return super.onPrepareOptionsMenu(menu);
     }
