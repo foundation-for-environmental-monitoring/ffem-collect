@@ -27,6 +27,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.activities.viewmodels.CurrentProjectViewModel;
 import org.odk.collect.android.activities.viewmodels.MainMenuViewModel;
 import org.odk.collect.android.configure.qr.QRCodeTabsActivity;
 import org.odk.collect.android.gdrive.GoogleDriveActivity;
@@ -36,6 +37,7 @@ import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment;
 import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment.Action;
 import org.odk.collect.android.preferences.keys.GeneralKeys;
 import org.odk.collect.android.preferences.screens.AdminPreferencesActivity;
+import org.odk.collect.android.projects.ProjectIconView;
 import org.odk.collect.android.projects.ProjectSettingsDialog;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.MultiClickGuard;
@@ -65,9 +67,14 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
     MainMenuViewModel.Factory viewModelFactory;
 
     @Inject
-    NetworkStateProvider connectivityProvider;
+    CurrentProjectViewModel.Factory currentProjectViewModelFactory;
 
-    private MainMenuViewModel viewModel;
+    private MainMenuViewModel mainMenuViewModel;
+
+    private CurrentProjectViewModel currentProjectViewModel;
+
+    @Inject
+    NetworkStateProvider connectivityProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +83,15 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         // brand change ----
         setContentView(R.layout.main_menu_branded);
         // end brand change ----
-        viewModel = new ViewModelProvider(this, viewModelFactory).get(MainMenuViewModel.class);
+
+        mainMenuViewModel = new ViewModelProvider(this, viewModelFactory).get(MainMenuViewModel.class);
+        currentProjectViewModel = new ViewModelProvider(this, currentProjectViewModelFactory).get(CurrentProjectViewModel.class);
+        currentProjectViewModel.getCurrentProject().observe(this, project -> {
+            invalidateOptionsMenu();
+        });
 
         initToolbar();
+
         // enter data button. expects a result.
         Button enterDataButton = findViewById(R.id.enter_data);
         enterDataButton.setText(getString(R.string.enter_data_button));
@@ -172,14 +185,14 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
 //        });
 
         TextView versionSHAView = findViewById(R.id.version_sha);
-        String versionSHA = viewModel.getVersionCommitDescription();
+        String versionSHA = mainMenuViewModel.getVersionCommitDescription();
         if (versionSHA != null) {
             versionSHAView.setText(versionSHA);
         } else {
             versionSHAView.setVisibility(View.GONE);
         }
 
-//        viewModel.getFinalizedFormsCount().observe(this, finalized -> {
+//        mainMenuViewModel.getFinalizedFormsCount().observe(this, finalized -> {
 //            if (finalized > 0) {
 //                sendDataButton.setText(getString(R.string.send_data_button, String.valueOf(finalized)));
 //            } else {
@@ -188,7 +201,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
 //        });
 
 
-        viewModel.getUnsentFormsCount().observe(this, unsent -> {
+        mainMenuViewModel.getUnsentFormsCount().observe(this, unsent -> {
             if (unsent > 0) {
                 reviewDataButton.setText(getString(R.string.review_data_button, String.valueOf(unsent)));
                 // Brand change
@@ -201,7 +214,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         });
 
 
-        viewModel.getSentFormsCount().observe(this, sent -> {
+        mainMenuViewModel.getSentFormsCount().observe(this, sent -> {
             if (sent > 0) {
                 viewSentFormsButton.setText(getString(R.string.view_sent_forms_button, String.valueOf(sent)));
                 // Brand change
@@ -217,7 +230,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
     @Override
     protected void onResume() {
         super.onResume();
-        viewModel.resume();
+        mainMenuViewModel.resume();
 
         // Brand change
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -228,14 +241,22 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
 
     private void setButtonsVisibility() {
 // brand change ----
-//        reviewDataButton.setVisibility(viewModel.shouldEditSavedFormButtonBeVisible() ? VISIBLE : GONE);
-//        if (sendDataButton.getVisibility() == View.VISIBLE) {
-//            sendDataButton.setVisibility(viewModel.shouldSendFinalizedFormButtonBeVisible() ? View.VISIBLE : View.GONE);
-//        }
-//        viewSentFormsButton.setVisibility(viewModel.shouldViewSentFormButtonBeVisible() ? VISIBLE : GONE);
-//        getFormsButton.setVisibility(viewModel.shouldGetBlankFormButtonBeVisible() ? View.VISIBLE : View.GONE);
-//        manageFilesButton.setVisibility(viewModel.shouldDeleteSavedFormButtonBeVisible() ? View.VISIBLE : View.GONE);
-// end brand change ----
+//        reviewDataButton.setVisibility(mainMenuViewModel.shouldEditSavedFormButtonBeVisible() ? View.VISIBLE : View.GONE);
+//        sendDataButton.setVisibility(mainMenuViewModel.shouldSendFinalizedFormButtonBeVisible() ? View.VISIBLE : View.GONE);
+//        viewSentFormsButton.setVisibility(mainMenuViewModel.shouldViewSentFormButtonBeVisible() ? View.VISIBLE : View.GONE);
+//        getFormsButton.setVisibility(mainMenuViewModel.shouldGetBlankFormButtonBeVisible() ? View.VISIBLE : View.GONE);
+//        manageFilesButton.setVisibility(mainMenuViewModel.shouldDeleteSavedFormButtonBeVisible() ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        final MenuItem projectsMenuItem = menu.findItem(R.id.projects);
+
+        ProjectIconView projectIconView = (ProjectIconView) projectsMenuItem.getActionView();
+        projectIconView.setProject(currentProjectViewModel.getCurrentProject().getValue());
+        projectIconView.setOnClickListener(v -> onOptionsItemSelected(projectsMenuItem));
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -262,7 +283,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         Toolbar toolbar = findViewById(R.id.toolbar);
         // Brand change -----------------
         setTitle(getString(R.string.app_name));
-        // setTitle(String.format("%s %s", getString(R.string.app_name), viewModel.getVersion()));
+        // setTitle(String.format("%s %s", getString(R.string.app_name), mainMenuViewModel.getVersion()));
         // end brand change -------------
         setSupportActionBar(toolbar);
     }
