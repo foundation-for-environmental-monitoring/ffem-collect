@@ -2,7 +2,6 @@
 ![Platform](https://img.shields.io/badge/platform-Android-blue.svg)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Build status](https://circleci.com/gh/getodk/collect.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/getodk/collect)
-[![codecov.io](https://codecov.io/github/getodk/collect/branch/master/graph/badge.svg)](https://codecov.io/github/getodk/collect)
 [![Slack](https://img.shields.io/badge/chat-on%20slack-brightgreen)](https://slack.getodk.org)
 
 ffem Collect is an Android app for filling out forms. It is integrated with ffem Water and ffem Soil.

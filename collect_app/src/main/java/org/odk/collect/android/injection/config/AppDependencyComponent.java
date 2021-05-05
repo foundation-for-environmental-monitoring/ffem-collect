@@ -68,7 +68,7 @@ import org.odk.collect.android.preferences.screens.IdentityPreferencesFragment;
 import org.odk.collect.android.preferences.screens.ServerPreferencesFragment;
 import org.odk.collect.android.preferences.screens.UserInterfacePreferencesFragment;
 import org.odk.collect.android.preferences.source.SettingsProvider;
-import org.odk.collect.android.projects.AddProjectDialog;
+import org.odk.collect.projects.AddProjectDialog;
 import org.odk.collect.android.projects.CurrentProjectProvider;
 import org.odk.collect.android.projects.ProjectImporter;
 import org.odk.collect.android.projects.ProjectSettingsDialog;
@@ -225,8 +225,6 @@ public interface AppDependencyComponent {
 
     void inject(DeleteSavedFormActivity deleteSavedFormActivity);
 
-    void inject(AdminPreferencesFragment.MainMenuAccessPreferences mainMenuAccessPreferences);
-
     void inject(SelectMinimalDialog selectMinimalDialog);
 
     void inject(AudioRecordingControllerFragment audioRecordingControllerFragment);
@@ -264,6 +262,8 @@ public interface AppDependencyComponent {
     void inject(AddProjectDialog addProjectDialog);
 
     void inject(FirstLaunchDialog firstLaunchDialog);
+
+    void inject(AdminPreferencesFragment adminPreferencesFragment);
 
     OpenRosaHttpInterface openRosaHttpInterface();
 

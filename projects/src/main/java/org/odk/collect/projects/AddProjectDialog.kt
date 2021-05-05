@@ -1,19 +1,14 @@
-package org.odk.collect.android.projects
+package org.odk.collect.projects
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
-import org.odk.collect.android.R
-import org.odk.collect.android.databinding.AddProjectDialogLayoutBinding
-import org.odk.collect.android.injection.DaggerUtils
+import org.odk.collect.androidshared.OneSignTextWatcher
 import org.odk.collect.material.MaterialFullScreenDialogFragment
-import org.odk.collect.projects.Project
-import org.odk.collect.projects.ProjectsRepository
+import org.odk.collect.projects.databinding.AddProjectDialogLayoutBinding
 import javax.inject.Inject
 
 class AddProjectDialog : MaterialFullScreenDialogFragment() {
@@ -27,7 +22,8 @@ class AddProjectDialog : MaterialFullScreenDialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        DaggerUtils.getComponent(context).inject(this)
+        val provider = context.applicationContext as ProjectsDependencyComponentProvider
+        provider.projectsDependencyComponent.inject(this)
 
         if (context is AddProjectDialogListener) {
             listener = context
@@ -43,32 +39,14 @@ class AddProjectDialog : MaterialFullScreenDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         setUpToolbar()
 
-        lateinit var oldTextString: String
-        binding.projectIconInputText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                oldTextString = charSequence.toString()
-            }
-
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-
-            override fun afterTextChanged(editable: Editable) {
-                var newTextString = editable.toString()
-                if (oldTextString != newTextString) {
-                    if (Character.codePointCount(newTextString, 0, newTextString.length) > 1) {
-                        newTextString = oldTextString
-                    }
-                    binding.projectIconInputText.setText(newTextString)
-                    binding.projectIconInputText.setSelection(newTextString.length)
-                }
-            }
-        })
+        binding.projectIconInputText.addTextChangedListener(OneSignTextWatcher(binding.projectIconInputText))
 
         binding.cancelButton.setOnClickListener {
             dismiss()
         }
 
         binding.addButton.setOnClickListener {
-            projectsRepository.add(Project(getProjectName(), getProjectIcon(), getProjectColor()))
+            projectsRepository.save(Project(getProjectName(), getProjectIcon(), getProjectColor()))
             listener?.onProjectAdded()
             dismiss()
         }
@@ -82,7 +60,7 @@ class AddProjectDialog : MaterialFullScreenDialogFragment() {
     }
 
     override fun getToolbar(): Toolbar? {
-        return binding.addProjectToolbar.toolbar
+        return binding.toolbar
     }
 
     private fun setUpToolbar() {

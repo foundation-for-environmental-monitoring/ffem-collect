@@ -29,14 +29,15 @@ import androidx.lifecycle.ViewModelProvider;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.viewmodels.CurrentProjectViewModel;
 import org.odk.collect.android.activities.viewmodels.MainMenuViewModel;
-import org.odk.collect.android.configure.qr.QRCodeTabsActivity;
 import org.odk.collect.android.gdrive.GoogleDriveActivity;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.network.NetworkStateProvider;
 import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment;
 import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment.Action;
 import org.odk.collect.android.preferences.keys.GeneralKeys;
+import org.odk.collect.android.preferences.keys.MetaKeys;
 import org.odk.collect.android.preferences.screens.AdminPreferencesActivity;
+import org.odk.collect.android.preferences.source.SettingsProvider;
 import org.odk.collect.android.projects.ProjectIconView;
 import org.odk.collect.android.projects.ProjectSettingsDialog;
 import org.odk.collect.android.utilities.ApplicationConstants;
@@ -69,6 +70,9 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
     @Inject
     CurrentProjectViewModel.Factory currentProjectViewModelFactory;
 
+    @Inject
+    SettingsProvider settingsProvider;
+
     private MainMenuViewModel mainMenuViewModel;
 
     private CurrentProjectViewModel currentProjectViewModel;
@@ -83,6 +87,8 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         // brand change ----
         setContentView(R.layout.main_menu_branded);
         // end brand change ----
+
+        settingsProvider.getMetaSettings().save(MetaKeys.FIRST_LAUNCH, false);
 
         mainMenuViewModel = new ViewModelProvider(this, viewModelFactory).get(MainMenuViewModel.class);
         currentProjectViewModel = new ViewModelProvider(this, currentProjectViewModelFactory).get(CurrentProjectViewModel.class);
@@ -236,7 +242,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         setButtonsVisibility();
-        invalidateOptionsMenu();
+        currentProjectViewModel.refresh();
     }
 
     private void setButtonsVisibility() {
@@ -291,13 +297,8 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
 
     @Override
     public void onCorrectAdminPassword(Action action) {
-        switch (action) {
-            case ADMIN_SETTINGS:
-                startActivity(new Intent(this, AdminPreferencesActivity.class));
-                break;
-            case SCAN_QR_CODE:
-                startActivity(new Intent(this, QRCodeTabsActivity.class));
-                break;
+        if (action == Action.ADMIN_SETTINGS) {
+            startActivity(new Intent(this, AdminPreferencesActivity.class));
         }
     }
 
