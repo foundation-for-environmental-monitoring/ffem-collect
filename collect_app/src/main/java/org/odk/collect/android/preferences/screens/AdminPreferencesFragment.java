@@ -78,19 +78,20 @@ public class AdminPreferencesFragment extends BaseAdminPreferencesFragment
         findPreference("user_settings").setOnPreferenceClickListener(this);
         findPreference("form_entry").setOnPreferenceClickListener(this);
 
-        findPreference(PROJECT_NAME_KEY).setSummaryProvider(new ProjectDetailsSummaryProvider(PROJECT_NAME_KEY, currentProjectProvider));
-        findPreference(PROJECT_ICON_KEY).setSummaryProvider(new ProjectDetailsSummaryProvider(PROJECT_ICON_KEY, currentProjectProvider));
-        findPreference(PROJECT_COLOR_KEY).setSummaryProvider(new ProjectDetailsSummaryProvider(PROJECT_COLOR_KEY, currentProjectProvider));
+//        findPreference(PROJECT_NAME_KEY).setSummaryProvider(new ProjectDetailsSummaryProvider(PROJECT_NAME_KEY, currentProjectProvider));
+//        findPreference(PROJECT_ICON_KEY).setSummaryProvider(new ProjectDetailsSummaryProvider(PROJECT_ICON_KEY, currentProjectProvider));
+//        findPreference(PROJECT_COLOR_KEY).setSummaryProvider(new ProjectDetailsSummaryProvider(PROJECT_COLOR_KEY, currentProjectProvider));
 
-        findPreference(PROJECT_NAME_KEY).setOnPreferenceChangeListener(this);
-        findPreference(PROJECT_ICON_KEY).setOnPreferenceChangeListener(this);
-        findPreference(PROJECT_COLOR_KEY).setOnPreferenceChangeListener(this);
+//        findPreference(PROJECT_NAME_KEY).setOnPreferenceChangeListener(this);
+//        findPreference(PROJECT_ICON_KEY).setOnPreferenceChangeListener(this);
+//        findPreference(PROJECT_COLOR_KEY).setOnPreferenceChangeListener(this);
 
-        ((EditTextPreference) findPreference(PROJECT_NAME_KEY)).setText(currentProjectProvider.getCurrentProject().getName());
-        ((EditTextPreference) findPreference(PROJECT_ICON_KEY)).setText(currentProjectProvider.getCurrentProject().getIcon());
-        ((EditTextPreference) findPreference(PROJECT_COLOR_KEY)).setText(currentProjectProvider.getCurrentProject().getColor());
+//        ((EditTextPreference) findPreference(PROJECT_NAME_KEY)).setText(currentProjectProvider.getCurrentProject().getName());
+//        ((EditTextPreference) findPreference(PROJECT_ICON_KEY)).setText(currentProjectProvider.getCurrentProject().getIcon());
+//        ((EditTextPreference) findPreference(PROJECT_COLOR_KEY)).setText(currentProjectProvider.getCurrentProject().getColor());
+//
+//        ((EditTextPreference) findPreference(PROJECT_ICON_KEY)).setOnBindEditTextListener(editText -> editText.addTextChangedListener(new OneSignTextWatcher(editText)));
 
-        ((EditTextPreference) findPreference(PROJECT_ICON_KEY)).setOnBindEditTextListener(editText -> editText.addTextChangedListener(new OneSignTextWatcher(editText)));
         findPreference("delete_forms").setOnPreferenceClickListener(this);
     }
 
