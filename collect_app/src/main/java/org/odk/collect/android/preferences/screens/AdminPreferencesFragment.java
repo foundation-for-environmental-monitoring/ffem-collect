@@ -84,7 +84,7 @@ public class AdminPreferencesFragment extends BaseAdminPreferencesFragment
         findPreference("main_menu").setOnPreferenceClickListener(this);
         findPreference("user_settings").setOnPreferenceClickListener(this);
         findPreference("form_entry").setOnPreferenceClickListener(this);
-        findPreference(DELETE_PROJECT_KEY).setOnPreferenceClickListener(this);
+//        findPreference(DELETE_PROJECT_KEY).setOnPreferenceClickListener(this);
 
 //        findPreference(PROJECT_NAME_KEY).setSummaryProvider(new ProjectDetailsSummaryProvider(PROJECT_NAME_KEY, currentProjectProvider));
 //        findPreference(PROJECT_ICON_KEY).setSummaryProvider(new ProjectDetailsSummaryProvider(PROJECT_ICON_KEY, currentProjectProvider));
