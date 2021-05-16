@@ -93,8 +93,6 @@ import org.odk.collect.android.preferences.source.SettingsProvider;
 import org.odk.collect.android.preferences.source.SettingsStore;
 import org.odk.collect.android.projects.CurrentProjectProvider;
 import org.odk.collect.android.projects.ProjectImporter;
-import org.odk.collect.projects.SharedPreferencesProjectsRepository;
-import org.odk.collect.projects.ProjectsRepository;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.storage.StorageSubdirectory;
@@ -112,7 +110,6 @@ import org.odk.collect.android.utilities.InstancesRepositoryProvider;
 import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.utilities.ScreenUtils;
 import org.odk.collect.android.utilities.SoftKeyboardController;
-import org.odk.collect.shared.UUIDGenerator;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 import org.odk.collect.android.version.VersionInformation;
 import org.odk.collect.android.views.BarcodeViewDecoder;
@@ -121,6 +118,9 @@ import org.odk.collect.async.Scheduler;
 import org.odk.collect.audiorecorder.recording.AudioRecorder;
 import org.odk.collect.audiorecorder.recording.AudioRecorderFactory;
 import org.odk.collect.forms.FormSource;
+import org.odk.collect.projects.ProjectsRepository;
+import org.odk.collect.projects.SharedPreferencesProjectsRepository;
+import org.odk.collect.shared.UUIDGenerator;
 import org.odk.collect.utilities.Clock;
 import org.odk.collect.utilities.UserAgentProvider;
 
@@ -318,10 +318,10 @@ public class AppDependencyModule {
     public ApplicationInitializer providesApplicationInitializer(Application application, UserAgentProvider userAgentProvider,
                                                                  SettingsPreferenceMigrator preferenceMigrator, PropertyManager propertyManager,
                                                                  Analytics analytics, StorageInitializer storageInitializer, SettingsProvider settingsProvider,
-                                                                 ProjectsRepository projectsRepository, AppStateProvider appStateProvider, ProjectImporter projectImporter) {
+                                                                 AppStateProvider appStateProvider, ProjectImporter projectImporter) {
         return new ApplicationInitializer(application, userAgentProvider, preferenceMigrator,
                 propertyManager, analytics, storageInitializer, settingsProvider.getGeneralSettings(),
-                settingsProvider.getAdminSettings(), projectsRepository, appStateProvider, projectImporter);
+                settingsProvider.getAdminSettings(), settingsProvider.getMetaSettings(), appStateProvider, projectImporter);
     }
 
     @Provides
@@ -563,8 +563,8 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public SplashScreenViewModel.Factory providesSplashScreenViewModel(SettingsProvider settingsProvider, AppStateProvider appStateProvider) {
-        return new SplashScreenViewModel.Factory(settingsProvider.getGeneralSettings(), appStateProvider);
+    public SplashScreenViewModel.Factory providesSplashScreenViewModel(SettingsProvider settingsProvider, AppStateProvider appStateProvider, ProjectsRepository projectsRepository) {
+        return new SplashScreenViewModel.Factory(settingsProvider.getGeneralSettings(), appStateProvider, projectsRepository);
     }
 
     @Provides

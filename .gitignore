@@ -44,6 +44,11 @@ javarosa/
 # Config for the official ODK Collect build
 collect_app/src/odkCollectRelease/
 
+# Files generated during CI runs
+.circleci/collect_app_test_files.txt
+.circleci/collect_app_test_classes.txt
+.circleci/fork_test_classes.txt
+
 # Firebase
 **/branded/google-services.json
 
