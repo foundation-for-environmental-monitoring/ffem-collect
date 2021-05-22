@@ -37,6 +37,7 @@ import org.odk.collect.android.formentry.ODKView;
 import org.odk.collect.android.formentry.QuitFormDialogFragment;
 import org.odk.collect.android.formentry.saving.SaveAnswerFileErrorDialogFragment;
 import org.odk.collect.android.formentry.saving.SaveFormProgressDialogFragment;
+import org.odk.collect.android.formmanagement.InstancesAppState;
 import org.odk.collect.android.fragments.AppListFragment;
 import org.odk.collect.android.fragments.BarCodeScannerFragment;
 import org.odk.collect.android.fragments.BlankFormListFragment;
@@ -76,6 +77,7 @@ import org.odk.collect.android.provider.InstanceProvider;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.tasks.InstanceServerUploaderTask;
 import org.odk.collect.android.tasks.MediaLoadingTask;
+import org.odk.collect.android.upload.InstanceUploader;
 import org.odk.collect.android.utilities.ApplicationResetter;
 import org.odk.collect.android.utilities.AuthDialogUtility;
 import org.odk.collect.android.utilities.ThemeUtils;
@@ -264,6 +266,8 @@ public interface AppDependencyComponent {
 
     void inject(FirstLaunchDialog firstLaunchDialog);
 
+    void inject(InstanceUploader instanceUploader);
+
     void inject(AdminPreferencesFragment adminPreferencesFragment);
 
     OpenRosaHttpInterface openRosaHttpInterface();
@@ -283,6 +287,8 @@ public interface AppDependencyComponent {
     InstancesDatabaseProvider instancesDatabaseProvider();
 
     CurrentProjectProvider currentProjectProvider();
+
+    InstancesAppState instancesAppState();
 
     ProjectImporter projectImporter();
 

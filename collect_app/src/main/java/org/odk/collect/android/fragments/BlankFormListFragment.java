@@ -245,6 +245,7 @@ public class BlankFormListFragment extends FormListFragment implements DiskSyncL
         }
         deleteButton.setEnabled(false);
 
+        updateAdapter();
         DialogUtils.dismissDialog(ProgressDialogFragment.class, getActivity().getSupportFragmentManager());
     }
 

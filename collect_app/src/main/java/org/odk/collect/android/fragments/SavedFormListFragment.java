@@ -235,6 +235,7 @@ public class SavedFormListFragment extends InstanceListFragment
         }
         deleteButton.setEnabled(false);
 
+        updateAdapter();
         progressDialog.dismiss();
     }
 
