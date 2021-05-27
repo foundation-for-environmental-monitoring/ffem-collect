@@ -48,6 +48,18 @@
         <item name="cornerSize">50dp</item>
     </style>
 
+    <style name="NegativeButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">?attr/colorSecondary</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">?attr/colorSecondary</item>
+    </style>
+
+    <style name="Widget.Collect.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="searchHintIcon">@null</item>
+    </style>
+
     <style name="Button" parent="Widget.Collect.Button.FullWidth">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
