@@ -209,7 +209,7 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
     private void setupLocationDialog() {
         // dialog displayed while fetching gps location
         // Brand change
-        locationDialog = new ProgressDialog(this, themeUtils.getMaterialDialogTheme());
+        locationDialog = new ProgressDialog(this);
 
         locationDialog.setCancelable(false); // taping outside the dialog doesn't cancel
         locationDialog.setIndeterminate(true);

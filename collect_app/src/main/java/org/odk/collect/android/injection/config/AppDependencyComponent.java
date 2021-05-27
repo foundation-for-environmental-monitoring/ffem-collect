@@ -91,6 +91,7 @@ import javax.inject.Singleton;
 
 import dagger.BindsInstance;
 import dagger.Component;
+import io.ffem.collect.android.activities.MainMenuActivityBranded;
 import io.ffem.collect.android.activities.SignInActivity;
 
 /**
@@ -298,5 +299,6 @@ public interface AppDependencyComponent {
     StoragePathProvider storagePathProvider();
 
     // Brand change
+    void inject(MainMenuActivityBranded mainMenuActivity);
     void inject(SignInActivity signInActivity);
 }

@@ -1,10 +1,8 @@
 package io.ffem.collect.android.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
@@ -17,9 +15,11 @@ import com.google.android.material.textfield.TextInputLayout;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.MainMenuActivity;
-import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.logic.PropertyManager;
-import org.odk.collect.android.preferences.keys.GeneralKeys;
+import org.odk.collect.android.preferences.source.SettingsProvider;
+import org.odk.collect.android.projects.CurrentProjectProvider;
+import org.odk.collect.android.projects.ProjectImporter;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 
@@ -34,10 +34,14 @@ import static android.view.View.GONE;
  */
 public class SignInActivity extends CollectAbstractActivity {
     private static final String MASK = "**********";
-    @Inject
+
     WebCredentialsUtils webCredentialsUtils;
     @Inject
     PropertyManager propertyManager;
+    @Inject
+    ProjectImporter projectImporter;
+    @Inject
+    CurrentProjectProvider currentProjectProvider;
 
     private EditText editText;
     private EditText editPassword;
@@ -48,11 +52,18 @@ public class SignInActivity extends CollectAbstractActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        Collect.getInstance().getComponent().inject(this);
+        DaggerUtils.getComponent(this).inject(this);
 
         isSettings = getIntent().getBooleanExtra("isSettings", false);
 
-        if (isUserSignedIn() && !isSettings) {
+        try {
+            currentProjectProvider.getCurrentProject();
+        } catch (Exception e) {
+            currentProjectProvider.setCurrentProject(projectImporter.importExistingProject().getUuid());
+        }
+
+        webCredentialsUtils = new WebCredentialsUtils(new SettingsProvider(this).getGeneralSettings());
+        if (!webCredentialsUtils.getPasswordFromPreferences().isEmpty() && !isSettings) {
             startActivity(new Intent(getBaseContext(), MainMenuActivity.class));
             finish();
         }
@@ -126,7 +137,7 @@ public class SignInActivity extends CollectAbstractActivity {
         layoutUserName = findViewById(R.id.layoutUsername);
         layoutPassword = findViewById(R.id.passwordLayout);
 
-        if (!isUserSignedIn() || isSettings) {
+        if (!webCredentialsUtils.getPasswordFromPreferences().isEmpty() || isSettings) {
             editText.setText(webCredentialsUtils.getUserNameFromPreferences());
             editPassword.setText(maskPassword(webCredentialsUtils.getPasswordFromPreferences()));
         }
@@ -195,17 +206,6 @@ public class SignInActivity extends CollectAbstractActivity {
         }
 
         return true;
-    }
-
-    private boolean isUserSignedIn() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        String storedUsername = settings.getString(GeneralKeys.KEY_USERNAME, null);
-        String storedPassword = settings.getString(GeneralKeys.KEY_PASSWORD, null);
-
-        return storedUsername != null
-                && storedUsername.trim().length() != 0
-                && storedPassword != null
-                && storedPassword.trim().length() != 0;
     }
 
     @Override

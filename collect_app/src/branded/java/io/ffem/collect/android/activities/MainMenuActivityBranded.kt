@@ -15,21 +15,17 @@ import io.ffem.collect.android.util.ApkHelper.isNonStoreVersion
 import org.odk.collect.android.BuildConfig
 import org.odk.collect.android.R
 import org.odk.collect.android.activities.FormDownloadListActivity
-import org.odk.collect.android.application.Collect
 import org.odk.collect.android.configure.SettingsImporter
 import org.odk.collect.android.configure.qr.QRCodeDecoder
 import org.odk.collect.android.gdrive.GoogleDriveActivity
+import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.preferences.keys.GeneralKeys
 import org.odk.collect.android.utilities.MultiClickGuard
 import org.odk.collect.android.utilities.PlayServicesChecker
-import org.odk.collect.android.utilities.WebCredentialsUtils
 import java.util.*
 import javax.inject.Inject
 
 open class MainMenuActivityBranded : AppUpdateActivity() {
-
-    @Inject
-    lateinit var webCredentialsUtils: WebCredentialsUtils
 
     @Inject
     lateinit var qrCodeDecoder: QRCodeDecoder
@@ -47,15 +43,15 @@ open class MainMenuActivityBranded : AppUpdateActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Collect.getInstance().component.inject(this)
+        DaggerUtils.getComponent(this).inject(this)
 
         if (hasAppVersionExpired()) {
             return
         }
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
-                broadcastReceiver,
-                IntentFilter("DOWNLOAD_FORMS_ACTION")
+            broadcastReceiver,
+            IntentFilter("DOWNLOAD_FORMS_ACTION")
         )
     }
 
@@ -77,17 +73,17 @@ open class MainMenuActivityBranded : AppUpdateActivity() {
 
             if (GregorianCalendar().after(appExpiryDate)) {
                 val marketUrl =
-                        Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                    Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
                 val message = String.format(
-                        "%s%n%n%s", getString(R.string.version_has_expired),
-                        getString(R.string.uninstall_install_from_store)
+                    "%s%n%n%s", getString(R.string.version_has_expired),
+                    getString(R.string.uninstall_install_from_store)
                 )
 
-                val builder: AlertDialog.Builder = AlertDialog.Builder(this, themeUtils.materialDialogTheme)
+                val builder: AlertDialog.Builder = AlertDialog.Builder(this)
 
                 builder.setTitle(R.string.version_expired)
-                        .setMessage(message)
-                        .setCancelable(false)
+                    .setMessage(message)
+                    .setCancelable(false)
 
                 builder.setPositiveButton(R.string.ok) { dialogInterface, _ ->
                     dialogInterface.dismiss()
@@ -120,11 +116,18 @@ open class MainMenuActivityBranded : AppUpdateActivity() {
         if (MultiClickGuard.allowClick(javaClass.name)) {
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
             val protocol = sharedPreferences.getString(
-                    GeneralKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default))
-            val i: Intent = if (protocol.equals(getString(R.string.protocol_google_sheets), ignoreCase = true)) {
+                GeneralKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default)
+            )
+            val i: Intent = if (protocol.equals(
+                    getString(R.string.protocol_google_sheets),
+                    ignoreCase = true
+                )
+            ) {
                 if (PlayServicesChecker().isGooglePlayServicesAvailable(this)) {
-                    Intent(applicationContext,
-                            GoogleDriveActivity::class.java)
+                    Intent(
+                        applicationContext,
+                        GoogleDriveActivity::class.java
+                    )
                 } else {
                     PlayServicesChecker().showGooglePlayServicesAvailabilityErrorDialog(this)
                     return
