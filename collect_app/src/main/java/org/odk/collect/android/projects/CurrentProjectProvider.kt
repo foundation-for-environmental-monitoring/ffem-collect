@@ -28,7 +28,8 @@ class CurrentProjectProvider(private val settingsProvider: SettingsProvider, pri
         settingsProvider.getMetaSettings().save(MetaKeys.CURRENT_PROJECT_ID, uuid)
     }
 
-    private fun getCurrentProjectId(): String? {
+    // Brand change
+    fun getCurrentProjectId(): String? {
         return settingsProvider.getMetaSettings().getString(MetaKeys.CURRENT_PROJECT_ID)
     }
 }

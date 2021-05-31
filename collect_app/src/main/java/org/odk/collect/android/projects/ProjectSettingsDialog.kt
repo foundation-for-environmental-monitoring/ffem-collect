@@ -10,6 +10,7 @@ import android.view.View.VISIBLE
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import io.ffem.collect.android.activities.SettingsActivity
 import org.odk.collect.android.R
 import org.odk.collect.android.activities.AboutActivity
 import org.odk.collect.android.activities.viewmodels.CurrentProjectViewModel
@@ -71,7 +72,8 @@ class ProjectSettingsDialog : DialogFragment() {
         }
 
         binding.generalSettingsButton.setOnClickListener {
-            startActivity(Intent(requireContext(), GeneralPreferencesActivity::class.java))
+            // Brand change
+            startActivity(Intent(requireContext(), SettingsActivity::class.java))
             dismiss()
         }
 

@@ -24,8 +24,19 @@ class ProjectImporter(
         setupProject(project)
     }
 
+    // Brand change
     fun importExistingProject(): Saved {
-        val project = projectsRepository.save(Project.New("Existing project", "E", "#3e9fcc"))
+        return importExistingProject("")
+    }
+
+    // Brand change
+    fun importExistingProject(name: String): Saved {
+        val projectName = if (name.isEmpty()) {
+            "Existing Project"
+        } else {
+            name
+        }
+        val project = projectsRepository.save(Project.New(projectName, "E", "#3e9fcc"))
 
         val rootDir = storagePathProvider.odkRootDirPath
         listOf(
@@ -59,6 +70,11 @@ class ProjectImporter(
 
     private fun createProjectDirs(project: Saved) {
         storagePathProvider.getProjectDirPaths(project).forEach { FileUtils.createDir(it) }
+    }
+
+    // Brand change
+    fun updateProject(project: Saved) {
+        projectsRepository.save(project)
     }
 
     companion object {

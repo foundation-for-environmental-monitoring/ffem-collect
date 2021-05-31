@@ -22,6 +22,7 @@ import org.odk.collect.android.projects.CurrentProjectProvider;
 import org.odk.collect.android.projects.ProjectImporter;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
+import org.odk.collect.projects.Project;
 
 import javax.inject.Inject;
 
@@ -59,7 +60,12 @@ public class SignInActivity extends CollectAbstractActivity {
         try {
             currentProjectProvider.getCurrentProject();
         } catch (Exception e) {
-            currentProjectProvider.setCurrentProject(projectImporter.importExistingProject().getUuid());
+            String projectName = "";
+            if (webCredentialsUtils != null) {
+                projectName = webCredentialsUtils.getUserNameFromPreferences();
+            }
+            currentProjectProvider.setCurrentProject(projectImporter
+                    .importExistingProject(projectName).getUuid());
         }
 
         webCredentialsUtils = new WebCredentialsUtils(new SettingsProvider(this).getGeneralSettings());
@@ -128,6 +134,14 @@ public class SignInActivity extends CollectAbstractActivity {
                     webCredentialsUtils.saveCredentialsPreferences(editText.getText().toString().trim(),
                             editPassword.getText().toString().trim(), propertyManager);
                 }
+
+                String projectName = "Existing";
+                if (webCredentialsUtils != null) {
+                    projectName = webCredentialsUtils.getUserNameFromPreferences();
+                }
+                Project.Saved project = new Project.Saved(currentProjectProvider.getCurrentProjectId(),
+                        projectName, projectName.substring(0, 1).toUpperCase(), "#3e9fcc");
+                projectImporter.updateProject(project);
 
                 startActivity(new Intent(getBaseContext(), MainMenuActivity.class));
                 finish();

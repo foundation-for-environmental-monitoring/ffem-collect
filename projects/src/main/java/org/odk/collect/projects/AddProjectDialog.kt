@@ -48,7 +48,8 @@ class AddProjectDialog : MaterialFullScreenDialogFragment() {
         }
 
         binding.addButton.setOnClickListener {
-            val newProject = ProjectGenerator.generateProject(getUrl())
+            // Brand change
+            val newProject = ProjectGenerator.generateProject(getUrl(), getUsername())
             val savedProject = projectsRepository.save(newProject)
 
             listener?.onProjectAdded(savedProject, getUrl(), getUsername(), getPassword())
@@ -72,7 +73,14 @@ class AddProjectDialog : MaterialFullScreenDialogFragment() {
         toolbar?.navigationIcon = null
     }
 
-    private fun getUrl() = binding.url.editText?.text?.trim().toString()
+    // Brand change
+    private fun getUrl(): String {
+        var url = binding.url.editText?.text?.trim().toString()
+        if (!url.startsWith("http")) {
+            url = "https://$url"
+        }
+        return url
+    }
 
     private fun getUsername() = binding.username.editText?.text?.trim().toString()
 

@@ -63,6 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/admin_preferences"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/guideline_start"
         app:layout_constraintTop_toBottomOf="@+id/general_settings_button" />
 
@@ -109,7 +110,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginEnd="@dimen/margin_standard"
         android:layout_marginBottom="@dimen/margin_small"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:gravity="center_vertical"
@@ -118,7 +118,8 @@
         app:icon="@drawable/ic_baseline_qr_code_scanner_24"
         app:iconTintMode="multiply"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
 
     <com.google.android.material.button.MaterialButton
@@ -133,6 +134,7 @@
         android:textColor="?colorOnSurface"
         app:icon="@drawable/ic_outline_info_24"
         app:iconTintMode="multiply"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/guideline_center"
         app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
 </androidx.constraintlayout.widget.ConstraintLayout>
