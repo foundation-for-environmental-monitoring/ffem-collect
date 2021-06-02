@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import io.ffem.collect.android.activities.SettingsActivity
 import org.odk.collect.android.R
 import org.odk.collect.android.activities.AboutActivity
+import org.odk.collect.android.activities.ActivityUtils
+import org.odk.collect.android.activities.MainMenuActivity
 import org.odk.collect.android.activities.viewmodels.CurrentProjectViewModel
 import org.odk.collect.android.application.Collect
 import org.odk.collect.android.databinding.ProjectSettingsDialogLayoutBinding
@@ -140,6 +142,7 @@ class ProjectSettingsDialog : DialogFragment() {
         Collect.resetDatabaseConnections()
         currentProjectViewModel.setCurrentProject(project)
 
+        ActivityUtils.startActivityAndCloseAllOthers(requireActivity(), MainMenuActivity::class.java)
         ToastUtils.showLongToast(getString(R.string.switched_project, project.name))
         dismiss()
     }
