@@ -139,7 +139,8 @@ public class AdminPreferencesFragment extends BaseAdminPreferencesFragment
                 case DELETE_PROJECT_KEY:
                     new AlertDialog.Builder(requireActivity())
                             .setTitle(R.string.delete_project_confirm_message)
-                            .setNegativeButton(R.string.delete_project_no, (dialog, which) -> { })
+                            .setNegativeButton(R.string.delete_project_no, (dialog, which) -> {
+                            })
                             .setPositiveButton(R.string.delete_project_yes, (dialog, which) -> deleteProject())
                             .show();
                     break;
@@ -228,7 +229,6 @@ public class AdminPreferencesFragment extends BaseAdminPreferencesFragment
             ActivityUtils.startActivityAndCloseAllOthers(requireActivity(), SplashScreenActivity.class);
         } else {
             currentProjectProvider.setCurrentProject(projectsRepository.getAll().get(0).getUuid());
-            Collect.resetDatabaseConnections();
             ActivityUtils.startActivityAndCloseAllOthers(requireActivity(), MainMenuActivity.class);
             ToastUtils.showLongToast(getString(R.string.switched_project, currentProjectProvider.getCurrentProject().getName()));
         }
