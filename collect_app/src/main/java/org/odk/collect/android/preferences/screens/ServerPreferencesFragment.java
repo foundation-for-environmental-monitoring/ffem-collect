@@ -62,7 +62,7 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
-import io.ffem.collect.android.activities.SettingsActivity;
+import io.ffem.collect.android.activities.PreferencesActivity;
 
 import static android.app.Activity.RESULT_OK;
 import static org.odk.collect.android.analytics.AnalyticsEvents.SET_FALLBACK_SHEETS_URL;
@@ -112,7 +112,7 @@ public class ServerPreferencesFragment extends BaseGeneralPreferencesFragment im
         DaggerUtils.getComponent(context).inject(this);
 
         // Brand change
-        ((SettingsActivity) context).setOnBackPressedListener(this);
+        ((PreferencesActivity) context).setOnBackPressedListener(this);
     }
 
     @Override

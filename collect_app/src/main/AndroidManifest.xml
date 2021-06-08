@@ -263,7 +263,7 @@ the specific language governing permissions and limitations under the License.
             </intent-filter>
         </activity>
 
-        <activity android:name="io.ffem.collect.android.activities.SettingsActivity" />
+        <activity android:name="io.ffem.collect.android.activities.PreferencesActivity" />
         <activity
             android:name="io.ffem.collect.android.activities.SignInActivity"
             android:theme="@style/Theme.Collect.Light">

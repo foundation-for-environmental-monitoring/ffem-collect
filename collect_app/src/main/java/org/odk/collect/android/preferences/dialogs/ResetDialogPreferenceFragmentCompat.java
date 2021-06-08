@@ -22,7 +22,7 @@ import org.odk.collect.android.utilities.ApplicationResetter;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.ffem.collect.android.activities.SettingsActivity;
+import io.ffem.collect.android.activities.PreferencesActivity;
 import timber.log.Timber;
 
 import static org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialog.RESET_SETTINGS_RESULT_DIALOG_TAG;
@@ -216,10 +216,10 @@ public class ResetDialogPreferenceFragmentCompat extends PreferenceDialogFragmen
                 resultMessage.append("\n\n");
             }
         }
-        if (!((SettingsActivity) context).isInstanceStateSaved()) {
-            ((SettingsActivity) context).runOnUiThread(() -> {
+        if (!((PreferencesActivity) context).isInstanceStateSaved()) {
+            ((PreferencesActivity) context).runOnUiThread(() -> {
                 if (resetActions.contains(RESET_PREFERENCES)) {
-                    ((SettingsActivity) context).recreate();
+                    ((PreferencesActivity) context).recreate();
                 }
                 ResetSettingsResultDialog resetSettingsResultDialog = ResetSettingsResultDialog.newInstance(String.valueOf(resultMessage));
                 try {

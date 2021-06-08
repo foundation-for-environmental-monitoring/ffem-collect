@@ -58,7 +58,7 @@ open class MainMenuActivityBranded : AppUpdateActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_settings -> {
-                val intent = Intent(this, SettingsActivity::class.java)
+                val intent = Intent(this, PreferencesActivity::class.java)
                 startActivityForResult(intent, 100)
             }
         }
