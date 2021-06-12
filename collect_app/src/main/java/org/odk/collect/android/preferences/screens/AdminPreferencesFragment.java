@@ -32,6 +32,7 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.activities.ActivityUtils;
 import org.odk.collect.android.activities.MainMenuActivity;
 import org.odk.collect.android.activities.SplashScreenActivity;
+import org.odk.collect.android.backgroundwork.FormUpdateScheduler;
 import org.odk.collect.android.backgroundwork.FormUpdateManager;
 import org.odk.collect.android.activities.DeleteSavedFormActivity;
 import org.odk.collect.android.application.Collect;
@@ -70,7 +71,7 @@ public class AdminPreferencesFragment extends BaseAdminPreferencesFragment
     ProjectsRepository projectsRepository;
 
     @Inject
-    FormUpdateManager formUpdateManager;
+    FormUpdateScheduler formUpdateManager;
 
     @Override
     public void onAttach(@NonNull Context context) {
