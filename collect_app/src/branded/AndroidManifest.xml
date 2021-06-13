@@ -20,6 +20,29 @@
             android:exported="true"
             tools:replace="android:authorities" />
 
-        <activity android:name="io.ffem.collect.android.activities.AboutActivity" />
+        <activity
+            android:name="org.odk.collect.android.activities.DeleteSavedFormActivity"
+            android:parentActivityName="org.odk.collect.android.activities.MainMenuActivity" />
+        <activity android:name="io.ffem.collect.android.activities.GeneralPreferencesActivity" />
+        <activity
+            android:name="io.ffem.collect.android.activities.SignInActivity"
+            android:theme="@style/Theme.Collect.Light">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="io.ffem.collect.android.activities.AboutActivity"
+            android:screenOrientation="nosensor" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+
+        <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
+
     </application>
 </manifest>

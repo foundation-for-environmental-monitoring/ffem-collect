@@ -17,7 +17,7 @@ import org.odk.collect.android.preferences.ServerPreferences
 import org.odk.collect.android.preferences.screens.AdminPreferencesFragment
 import org.odk.collect.android.preferences.screens.FormManagementPreferencesFragment
 
-class PreferencesActivity : CollectAbstractActivity(), ResetSettingsResultDialogListener {
+class GeneralPreferencesActivity : CollectAbstractActivity(), ResetSettingsResultDialogListener {
     private var onBackPressedListener: OnBackPressedListener? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

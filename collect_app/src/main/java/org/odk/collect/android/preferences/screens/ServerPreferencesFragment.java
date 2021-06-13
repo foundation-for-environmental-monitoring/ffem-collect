@@ -53,16 +53,16 @@ import org.odk.collect.android.permissions.PermissionsProvider;
 import org.odk.collect.android.utilities.PlayServicesChecker;
 import org.odk.collect.android.utilities.SoftKeyboardController;
 import org.odk.collect.android.utilities.ToastUtils;
-import org.odk.collect.shared.Validator;
-import org.odk.collect.shared.Md5;
-import org.odk.collect.android.utilities.WebCredentialsUtils;
+import org.odk.collect.shared.strings.Validator;
+import org.odk.collect.shared.strings.Md5;
 
 import java.io.ByteArrayInputStream;
 import java.util.Locale;
 
 import javax.inject.Inject;
 
-import io.ffem.collect.android.activities.PreferencesActivity;
+import org.odk.collect.android.utilities.WebCredentialsUtils;
+import io.ffem.collect.android.activities.GeneralPreferencesActivity;
 
 import static android.app.Activity.RESULT_OK;
 import static org.odk.collect.android.analytics.AnalyticsEvents.SET_FALLBACK_SHEETS_URL;
@@ -111,8 +111,7 @@ public class ServerPreferencesFragment extends BaseGeneralPreferencesFragment im
         super.onAttach(context);
         DaggerUtils.getComponent(context).inject(this);
 
-        // Brand change
-        ((PreferencesActivity) context).setOnBackPressedListener(this);
+        ((GeneralPreferencesActivity) context).setOnBackPressedListener(this);
     }
 
     @Override

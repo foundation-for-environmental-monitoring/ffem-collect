@@ -10,7 +10,6 @@ import android.view.View.VISIBLE
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import io.ffem.collect.android.activities.PreferencesActivity
 import org.odk.collect.android.R
 import org.odk.collect.android.activities.AboutActivity
 import org.odk.collect.android.activities.ActivityUtils
@@ -20,6 +19,7 @@ import org.odk.collect.android.databinding.ProjectSettingsDialogLayoutBinding
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment
 import org.odk.collect.android.preferences.screens.AdminPreferencesActivity
+import org.odk.collect.android.preferences.screens.GeneralPreferencesActivity
 import org.odk.collect.android.preferences.source.SettingsProvider
 import org.odk.collect.android.utilities.AdminPasswordProvider
 import org.odk.collect.android.utilities.DialogUtils
@@ -71,8 +71,7 @@ class ProjectSettingsDialog : DialogFragment() {
         }
 
         binding.generalSettingsButton.setOnClickListener {
-            // Brand change
-            startActivity(Intent(requireContext(), PreferencesActivity::class.java))
+            startActivity(Intent(requireContext(), GeneralPreferencesActivity::class.java))
             dismiss()
         }
 
