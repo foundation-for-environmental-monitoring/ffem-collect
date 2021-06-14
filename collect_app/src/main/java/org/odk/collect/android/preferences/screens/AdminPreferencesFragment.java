@@ -95,7 +95,7 @@ public class AdminPreferencesFragment extends BaseAdminPreferencesFragment
 
         findPreference("odk_preferences").setOnPreferenceClickListener(this);
         findPreference(KEY_CHANGE_ADMIN_PASSWORD).setOnPreferenceClickListener(this);
-        findPreference(PROJECT_COLOR_KEY).setOnPreferenceClickListener(this);
+//        findPreference(PROJECT_COLOR_KEY).setOnPreferenceClickListener(this);
         findPreference(KEY_IMPORT_SETTINGS).setOnPreferenceClickListener(this);
         findPreference("main_menu").setOnPreferenceClickListener(this);
         findPreference("user_settings").setOnPreferenceClickListener(this);
