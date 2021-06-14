@@ -104,11 +104,6 @@ public class AnalyticsEvents {
     public static final String CUSTOM_ENDPOINT_SUB = "CustomEndpointSub";
 
     /**
-     * Track usage of legacy Aggregate < 1 form list API code paths.
-     */
-    public static final String LEGACY_FORM_LIST = "LegacyFormList";
-
-    /**
      * Tracks how often the audio player seek bar is used.
      */
     public static final String AUDIO_PLAYER_SEEK = "AudioPlayerSeek";
@@ -161,4 +156,9 @@ public class AnalyticsEvents {
      * from disk and then encrypted
      */
     public static final String IMPORT_AND_ENCRYPT_INSTANCE = "ImportAndEncryptInstance";
+
+    /**
+     * Tracks responses from OpenMapKit to the OSMWidget
+     */
+    public static final String OPEN_MAP_KIT_RESPONSE = "OpenMapKitResponse";
 }
