@@ -32,7 +32,18 @@ class ExistingProjectMigrator(
     }
 
     override fun run() {
-        val project = projectsRepository.save(Project.New("Existing project", "E", "#3e9fcc"))
+        run("")
+    }
+
+    fun run(name: String) {
+        // Brand change
+        val projectName = if (name.isEmpty()) {
+            "Default Project"
+        } else {
+            name
+        }
+
+        val project = projectsRepository.save(Project.New(projectName, "D", "#3e9fcc"))
 
         val rootDir = storagePathProvider.odkRootDirPath
         listOf(
@@ -59,6 +70,11 @@ class ExistingProjectMigrator(
         createProjectDirs(project)
 
         currentProjectProvider.setCurrentProject(project.uuid)
+    }
+
+    // Brand change
+    fun updateProject(project: Project.Saved) {
+        projectsRepository.save(project)
     }
 
     private fun createProjectDirs(project: Project.Saved) {
