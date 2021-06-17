@@ -23,7 +23,7 @@ class InMemSettings : Settings {
     }
 
     override fun saveAll(prefs: Map<String, Any?>) {
-        TODO("Not yet implemented")
+        map.putAll(prefs)
     }
 
     override fun reset(key: String) {
@@ -31,19 +31,19 @@ class InMemSettings : Settings {
     }
 
     override fun clear() {
-        TODO("Not yet implemented")
+        map.clear()
     }
 
     override fun contains(key: String): Boolean {
-        TODO("Not yet implemented")
+        return map.containsKey(key)
     }
 
     override fun getAll(): Map<String, *> {
-        TODO("Not yet implemented")
+        return map
     }
 
     override fun getBoolean(key: String): Boolean {
-        TODO("Not yet implemented")
+        return map[key] as Boolean? ?: false
     }
 
     override fun getLong(key: String): Long {
@@ -51,7 +51,7 @@ class InMemSettings : Settings {
     }
 
     override fun getInt(key: String): Int {
-        TODO("Not yet implemented")
+        return map[key] as Int? ?: 0
     }
 
     override fun getFloat(key: String): Float {

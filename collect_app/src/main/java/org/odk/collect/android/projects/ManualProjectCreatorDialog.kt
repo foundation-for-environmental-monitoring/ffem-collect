@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.doOnTextChanged
 import org.odk.collect.android.R
-import org.odk.collect.android.configure.qr.JsonPreferencesGenerator
+import org.odk.collect.android.activities.ActivityUtils
+import org.odk.collect.android.activities.MainMenuActivity
+import org.odk.collect.android.configure.qr.AppConfigurationGenerator
 import org.odk.collect.android.databinding.ManualProjectCreatorDialogLayoutBinding
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.utilities.ToastUtils
@@ -21,19 +23,13 @@ class ManualProjectCreatorDialog : MaterialFullScreenDialogFragment() {
     lateinit var projectCreator: ProjectCreator
 
     @Inject
-    lateinit var jsonPreferencesGenerator: JsonPreferencesGenerator
+    lateinit var appConfigurationGenerator: AppConfigurationGenerator
 
     private lateinit var binding: ManualProjectCreatorDialogLayoutBinding
-
-    private var listener: ProjectAddedListener? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         DaggerUtils.getComponent(context).inject(this)
-
-        if (context is ProjectAddedListener) {
-            listener = context
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -75,15 +71,14 @@ class ManualProjectCreatorDialog : MaterialFullScreenDialogFragment() {
     }
 
     private fun handleAddingNewProject() {
-        val settingsJson = jsonPreferencesGenerator.getProjectDetailsAsJson(
+        val settingsJson = appConfigurationGenerator.getAppConfigurationAsJsonWithServerDetails(
             binding.urlInputText.text?.trim().toString(),
             binding.usernameInputText.text?.trim().toString(),
             binding.passwordInputText.text?.trim().toString()
         )
 
         projectCreator.createNewProject(settingsJson)
+        ActivityUtils.startActivityAndCloseAllOthers(activity, MainMenuActivity::class.java)
         ToastUtils.showLongToast(getString(org.odk.collect.projects.R.string.new_project_created))
-        listener?.onProjectAdded()
-        dismiss()
     }
 }
