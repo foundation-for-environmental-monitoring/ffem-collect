@@ -8,8 +8,14 @@ import kotlin.math.abs
 
 class ProjectDetailsCreator(private val context: Context) {
 
-    fun getProject(urlString: String): Project.New {
-        var projectName = "Project"
+    fun getProject(urlString: String, name: String): Project.New {
+        // Brand change
+        var projectName = if (name.isEmpty()) {
+            "Project"
+        } else {
+            name
+        }
+
         var projectIcon = "P"
         var projectColor = "#3e9fcc"
         try {

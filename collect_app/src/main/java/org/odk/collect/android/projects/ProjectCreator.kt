@@ -24,7 +24,7 @@ class ProjectCreator(
             ""
         }
 
-        val newProject = projectDetailsCreator.getProject(urlString)
+        val newProject = projectDetailsCreator.getProject(urlString, "")
         val savedProject = projectImporter.importNewProject(newProject)
 
         val settingsImportedSuccessfully = settingsImporter.fromJSON(settingsJson, savedProject)

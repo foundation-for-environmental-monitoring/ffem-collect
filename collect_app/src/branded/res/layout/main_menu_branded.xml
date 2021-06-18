@@ -67,12 +67,22 @@
                         android:text="@string/get_forms" />
 
                     <TextView
-                        android:id="@+id/version_sha"
-                        style="@style/TextAppearance.Collect.Caption"
+                        android:id="@+id/app_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="@dimen/margin_standard"
+                        android:textAppearance="?textAppearanceBody1"
+                        android:textColor="@color/color_on_surface_medium_emphasis"
+                        android:visibility="gone"
+                        tools:text="ODK Collect v2022.3" />
+
+                    <TextView
+                        android:id="@+id/version_sha"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textAppearance="?textAppearanceCaption"
                         android:visibility="gone"
                         tools:text="commit sha" />
                 </LinearLayout>

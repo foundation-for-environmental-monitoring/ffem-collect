@@ -34,21 +34,16 @@ class ExistingProjectMigrator(
         return MetaKeys.EXISTING_PROJECT_IMPORTED
     }
 
+    // Brand change
     override fun run() {
         run("")
     }
 
+    // Brand change
     fun run(name: String) {
-        // Brand change
-        val projectName = if (name.isEmpty()) {
-            "Default Project"
-        } else {
-            name
-        }
-
         val generalSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
 
-        val newProject = projectDetailsCreator.getProject(generalSharedPrefs.getString(GeneralKeys.KEY_SERVER_URL, "") ?: "")
+        val newProject = projectDetailsCreator.getProject(generalSharedPrefs.getString(GeneralKeys.KEY_SERVER_URL, "") ?: "", name)
         val project = projectsRepository.save(newProject)
 
         val rootDir = storagePathProvider.odkRootDirPath
