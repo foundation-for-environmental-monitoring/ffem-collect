@@ -98,6 +98,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         currentProjectViewModel = new ViewModelProvider(this, currentProjectViewModelFactory).get(CurrentProjectViewModel.class);
         currentProjectViewModel.getCurrentProject().observe(this, project -> {
             invalidateOptionsMenu();
+            setTitle(project.getName());
         });
 
         initToolbar();
@@ -193,6 +194,9 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
 //                startActivity(i);
 //            }
 //        });
+
+        TextView appName = findViewById(R.id.app_name);
+        appName.setText(String.format("%s %s", getString(R.string.app_name), mainMenuViewModel.getVersion()));
 
         TextView versionSHAView = findViewById(R.id.version_sha);
         String versionSHA = mainMenuViewModel.getVersionCommitDescription();
@@ -292,11 +296,9 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
 
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         // Brand change -----------------
         setTitle(getString(R.string.app_name));
-        // setTitle(String.format("%s %s", getString(R.string.app_name), mainMenuViewModel.getVersion()));
-        // end brand change -------------
-        setSupportActionBar(toolbar);
     }
 
     @Override
