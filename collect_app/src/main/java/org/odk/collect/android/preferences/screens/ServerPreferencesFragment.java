@@ -89,7 +89,6 @@ public class ServerPreferencesFragment extends BaseGeneralPreferencesFragment im
     protected
     WebCredentialsUtils webCredentialsUtils;
 
-    private ListPopupWindow listPopupWindow;
     private Preference selectedGoogleAccountPreference;
     private boolean allowClickSelectedGoogleAccountPreference = true;
 
