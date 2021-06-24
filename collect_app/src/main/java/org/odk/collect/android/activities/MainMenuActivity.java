@@ -244,7 +244,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
     @Override
     protected void onResume() {
         super.onResume();
-        mainMenuViewModel.resume();
+        mainMenuViewModel.refreshInstances();
 
         // Brand change
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
