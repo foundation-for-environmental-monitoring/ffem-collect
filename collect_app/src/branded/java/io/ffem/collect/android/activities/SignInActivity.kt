@@ -41,6 +41,11 @@ class SignInActivity : CollectAbstractActivity() {
     @JvmField
     @Inject
     var currentProjectProvider: CurrentProjectProvider? = null
+
+    @JvmField
+    @Inject
+    var settingsProvider: SettingsProvider? = null
+
     private var editText: EditText? = null
     private var editPassword: EditText? = null
     private var layoutUserName: TextInputLayout? = null
@@ -58,7 +63,7 @@ class SignInActivity : CollectAbstractActivity() {
             }
             projectMigrator!!.run(projectName!!)
         }
-        webCredentialsUtils = WebCredentialsUtils(SettingsProvider(this).getGeneralSettings())
+        webCredentialsUtils = WebCredentialsUtils(settingsProvider.getGeneralSettings())
         if (webCredentialsUtils!!.passwordFromPreferences.isNotEmpty() && !isSettings) {
             startActivity(Intent(baseContext, MainMenuActivity::class.java))
             finish()

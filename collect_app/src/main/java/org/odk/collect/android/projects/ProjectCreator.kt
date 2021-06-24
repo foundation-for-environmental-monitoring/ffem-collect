@@ -16,7 +16,7 @@ class ProjectCreator(
 ) {
 
     fun createNewProject(settingsJson: String): Boolean {
-        val newProject = projectDetailsCreator.getProject(getServerUrl(settingsJson))
+        val newProject = projectDetailsCreator.getProject(getServerUrl(settingsJson), "")
         val savedProject = projectImporter.importNewProject(newProject)
 
         val settingsImportedSuccessfully = settingsImporter.fromJSON(settingsJson, savedProject)
