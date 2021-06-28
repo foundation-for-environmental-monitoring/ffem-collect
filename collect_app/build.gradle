@@ -276,7 +276,6 @@ dependencies {
     implementation "com.google.android.material:material:${rootProject.materialVersion}"
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
-    implementation 'com.google.android.play:core-ktx:1.8.1'
     implementation "com.google.android.gms:play-services-auth:19.0.0"
 //    implementation "com.google.android.gms:play-services-maps:17.0.0"
     implementation "com.google.android.gms:play-services-location:18.0.0"
@@ -436,6 +435,7 @@ dependencies {
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:${rootProject.okhttp3Version}"
 
     androidTestImplementation "androidx.work:work-testing:2.5.0"
+    implementation 'com.google.android.play:core-ktx:1.8.1'
 }
 
 // Must be at bottom to prevent dependency collisions
