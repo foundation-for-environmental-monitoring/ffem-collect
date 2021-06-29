@@ -52,6 +52,8 @@ import org.odk.collect.projects.Project.Saved
 import org.odk.collect.projects.ProjectsRepository
 import javax.inject.Inject
 
+import org.odk.collect.android.activities.DeleteSavedFormActivity
+
 class AdminPreferencesFragment :
     BaseAdminPreferencesFragment(), Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
 
@@ -82,7 +84,7 @@ class AdminPreferencesFragment :
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         super.onCreatePreferences(savedInstanceState, rootKey)
-        setPreferencesFromResource(R.xml.admin_preferences, rootKey)
+        setPreferencesFromResource(R.xml.admin_preferences_custom, rootKey)
         findPreference<Preference>("odk_preferences")!!.onPreferenceClickListener = this
         findPreference<Preference>(AdminKeys.KEY_CHANGE_ADMIN_PASSWORD)!!.onPreferenceClickListener = this
         findPreference<Preference>(PROJECT_COLOR_KEY)!!.onPreferenceClickListener = this
@@ -114,6 +116,8 @@ class AdminPreferencesFragment :
                 OneSignTextWatcher(editText)
             )
         }
+        // Brand change
+        findPreference<Preference>("delete_forms")!!.onPreferenceClickListener = this
     }
 
     override fun onDisplayPreferenceDialog(preference: Preference) {
@@ -166,6 +170,12 @@ class AdminPreferencesFragment :
                 "main_menu" -> displayPreferences(MainMenuAccessPreferencesFragment())
                 "user_settings" -> displayPreferences(UserSettingsAccessPreferencesFragment())
                 "form_entry" -> displayPreferences(FormEntryAccessPreferencesFragment())
+
+                // Brand change
+                "delete_forms" -> {
+                    val deleteIntent = Intent(activity, DeleteSavedFormActivity::class.java)
+                    startActivity(deleteIntent)
+                }
             }
             return true
         }

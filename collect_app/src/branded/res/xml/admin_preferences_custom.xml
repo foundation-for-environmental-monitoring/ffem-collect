@@ -31,6 +31,29 @@
         app:allowDividerAbove="false"
         app:allowDividerBelow="false"
         app:iconSpaceReserved="false">
+
+        <EditTextPreference
+            android:key="project_name"
+            app:isPreferenceVisible="false"
+            android:title="@string/project_name"
+            app:iconSpaceReserved="false"
+            app:useSimpleSummaryProvider="true"
+            app:persistent="false"/>
+
+        <EditTextPreference
+            android:key="project_icon"
+            app:isPreferenceVisible="false"
+            android:title="@string/project_icon"
+            app:iconSpaceReserved="false"
+            app:persistent="false"/>
+
+        <Preference
+            android:key="project_color"
+            app:isPreferenceVisible="false"
+            android:title="@string/project_color"
+            app:iconSpaceReserved="false"
+            app:persistent="false"/>
+
         <org.odk.collect.android.preferences.dialogs.ResetDialogPreference
             android:dialogTitle="@string/reset_settings_dialog_title"
             android:key="reset_settings"
@@ -43,6 +66,12 @@
             android:key="import_settings"
             app:isPreferenceVisible="false"
             android:title="@string/configure_via_qr_code"
+            app:iconSpaceReserved="false" />
+
+        <PreferenceScreen
+            android:key="delete_project"
+            app:isPreferenceVisible="false"
+            android:title="@string/delete_project"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
