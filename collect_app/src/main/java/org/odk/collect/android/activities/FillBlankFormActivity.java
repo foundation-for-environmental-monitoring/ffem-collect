@@ -14,7 +14,6 @@
 
 package org.odk.collect.android.activities;
 
-import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -33,6 +32,7 @@ import androidx.loader.content.Loader;
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.FormListAdapter;
 import org.odk.collect.android.dao.CursorLoaderFactory;
+import org.odk.collect.android.database.forms.DatabaseFormColumns;
 import org.odk.collect.android.formmanagement.BlankFormListMenuDelegate;
 import org.odk.collect.android.formmanagement.BlankFormsListViewModel;
 import org.odk.collect.android.injection.DaggerUtils;
@@ -41,7 +41,7 @@ import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.network.NetworkStateProvider;
 import org.odk.collect.android.preferences.dialogs.ServerAuthDialogFragment;
 import org.odk.collect.android.preferences.keys.GeneralKeys;
-import org.odk.collect.android.database.forms.DatabaseFormColumns;
+import org.odk.collect.android.projects.CurrentProjectProvider;
 import org.odk.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.tasks.FormSyncTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
@@ -73,6 +73,9 @@ public class FillBlankFormActivity extends FillBlankFormActivityBranded implemen
 
     @Inject
     BlankFormsListViewModel.Factory blankFormsListViewModelFactory;
+
+    @Inject
+    CurrentProjectProvider currentProjectProvider;
 
     BlankFormListMenuDelegate menuDelegate;
 
@@ -169,7 +172,7 @@ public class FillBlankFormActivity extends FillBlankFormActivityBranded implemen
         if (MultiClickGuard.allowClick(getClass().getName())) {
             // get uri to form
             long idFormsTable = listView.getAdapter().getItemId(position);
-            Uri formUri = ContentUris.withAppendedId(FormsProviderAPI.CONTENT_URI, idFormsTable);
+            Uri formUri = FormsProviderAPI.getUri(currentProjectProvider.getCurrentProject().getUuid(), idFormsTable);
 
             String action = getIntent().getAction();
             if (Intent.ACTION_PICK.equals(action)) {
@@ -239,7 +242,7 @@ public class FillBlankFormActivity extends FillBlankFormActivityBranded implemen
         String[] columnNames = {
                 DatabaseFormColumns.DISPLAY_NAME,
                 DatabaseFormColumns.JR_VERSION,
-                hideOldFormVersions() ? DatabaseFormColumns.MAX_DATE : DatabaseFormColumns.DATE,
+                DatabaseFormColumns.DATE,
                 DatabaseFormColumns.GEOMETRY_XPATH
         };
         int[] viewIds = {
@@ -270,7 +273,7 @@ public class FillBlankFormActivity extends FillBlankFormActivityBranded implemen
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         showProgressBar();
 
-        return new CursorLoaderFactory().getFormsCursorLoader(getFilterText(), getSortingOrder(), hideOldFormVersions());
+        return new CursorLoaderFactory(currentProjectProvider).getFormsCursorLoader(getFilterText(), getSortingOrder(), hideOldFormVersions());
     }
 
     @Override

@@ -21,13 +21,19 @@ import android.net.Uri;
 import org.odk.collect.android.BuildConfig;
 
 public final class InstanceProviderAPI {
+
     // Brand change ---
     public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider.odk.instances";
-
-    public static final Uri CONTENT_URI = Uri.parse("content://" + InstanceProviderAPI.AUTHORITY + "/instances");
-    // brand change ----
     public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.ffem.instance";
     public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.ffem.instance";
+
+    public static Uri getUri(String projectId) {
+        return Uri.parse("content://" + AUTHORITY + "/instances?projectId=" + projectId);
+    }
+
+    public static Uri getUri(String projectId, Long instanceDbId) {
+        return Uri.parse("content://" + AUTHORITY + "/instances/" + instanceDbId + "?projectId=" + projectId);
+    }
 
     // This class cannot be instantiated
     private InstanceProviderAPI() {
