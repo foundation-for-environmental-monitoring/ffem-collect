@@ -112,7 +112,6 @@ import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static io.ffem.collect.android.helper.AppHelper.getUnitText;
 
 import io.ffem.collect.android.widget.RowView;
-import android.content.DialogInterface;
 import android.app.AlertDialog;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -666,7 +665,10 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
         });
 
         if (layout.getChildAt(layout.getChildCount() - 1) instanceof RowView) {
-            ((RowView) layout.getChildAt(layout.getChildCount() - 1)).setLaunchButton(launchIntentButton);
+            if (!((RowView) layout.getChildAt(layout.getChildCount() - 1)).setLaunchButton(launchIntentButton)) {
+                layout.addView(launchIntentButton);
+                layout.setPadding(layout.getPaddingLeft(), layout.getPaddingTop(), layout.getPaddingRight(), 50);
+            }
         } else {
             layout.addView(launchIntentButton);
         }
