@@ -1,6 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:title="@string/admin_preferences">
+    android:title="@string/project_settings">
 
     <PreferenceCategory android:title="@string/delete"
         app:allowDividerAbove="false"
@@ -14,20 +14,12 @@
     </PreferenceCategory>
 
     <Preference
-        android:key="odk_preferences"
-        app:isPreferenceVisible="false"
-        android:summary="@string/admin_access_settings"
-        android:title="@string/general_preferences"
-        app:iconSpaceReserved="false">
-    </Preference>
-
-    <Preference
         android:key="admin_password"
         app:isPreferenceVisible="false"
         android:title="@string/admin_password"
         app:iconSpaceReserved="false" />
 
-    <PreferenceCategory android:title="@string/project_configuration"
+    <PreferenceCategory android:title="@string/project_display_title"
         app:allowDividerAbove="false"
         app:allowDividerBelow="false"
         app:iconSpaceReserved="false">
@@ -59,14 +51,15 @@
             android:key="reset_settings"
             android:negativeButtonText="@string/cancel"
             android:positiveButtonText="@string/reset_settings_button_reset"
-            android:title="@string/reset_settings_dialog"
+            android:title="@string/reset_project_settings_title"
             app:iconSpaceReserved="false" />
 
-        <PreferenceScreen
+        <Preference
+            android:icon="@drawable/ic_outline_qr_code_scanner_24"
             android:key="import_settings"
             app:isPreferenceVisible="false"
-            android:title="@string/configure_via_qr_code"
-            app:iconSpaceReserved="false" />
+            android:title="@string/reconfigure_with_qr_code_settings_title"
+            android:summary="@string/reconfigure_with_qr_code_settings_subtext"/>
 
         <PreferenceScreen
             android:key="delete_project"
@@ -75,7 +68,7 @@
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/user_access_control"
+    <PreferenceCategory android:title="@string/access_control_section_title"
         app:allowDividerAbove="false"
         app:isPreferenceVisible="false"
         app:allowDividerBelow="false"

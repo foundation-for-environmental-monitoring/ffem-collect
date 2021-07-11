@@ -46,6 +46,9 @@ import org.odk.collect.android.utilities.PlayServicesChecker;
 import javax.inject.Inject;
 
 import io.ffem.collect.android.activities.MainMenuActivityBranded;
+import org.odk.collect.android.utilities.ToastUtils;
+
+import static org.odk.collect.android.utilities.DialogUtils.showIfNotShowing;
 
 /**
  * Responsible for displaying buttons to launch the major activities. Launches
@@ -54,7 +57,7 @@ import io.ffem.collect.android.activities.MainMenuActivityBranded;
  * @author Carl Hartung (carlhartung@gmail.com)
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
-public class MainMenuActivity extends CollectAbstractActivity {
+public class MainMenuActivity extends MainMenuActivityBranded {
     // buttons
     private Button manageFilesButton;
     private Button sendDataButton;

@@ -13,8 +13,6 @@ import org.odk.collect.android.R
 import org.odk.collect.android.activities.CollectAbstractActivity
 import org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialog.ResetSettingsResultDialogListener
 import org.odk.collect.android.listeners.OnBackPressedListener
-import org.odk.collect.android.preferences.ServerPreferences
-import org.odk.collect.android.preferences.screens.AdminPreferencesFragment
 import org.odk.collect.android.preferences.screens.FormManagementPreferencesFragment
 
 class GeneralPreferencesActivity : CollectAbstractActivity(), ResetSettingsResultDialogListener {
@@ -38,12 +36,12 @@ class GeneralPreferencesActivity : CollectAbstractActivity(), ResetSettingsResul
         supportFragmentManager.beginTransaction()
             .replace(R.id.layoutInfo, OtherPreferenceFragment())
             .commitAllowingStateLoss()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.layoutServer, ServerPreferences())
-            .commitAllowingStateLoss()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.layoutAdmin, AdminPreferencesFragment())
-            .commitAllowingStateLoss()
+//        supportFragmentManager.beginTransaction()
+//            .replace(R.id.layoutServer, ServerPreferences())
+//            .commitAllowingStateLoss()
+//        supportFragmentManager.beginTransaction()
+//            .replace(R.id.layoutAdmin, AdminPreferencesFragment())
+//            .commitAllowingStateLoss()
         if (AppPreferences.isDiagnosticMode(this)) {
             supportFragmentManager.beginTransaction()
                 .add(R.id.layoutTesting, TestingPreferenceFragment())

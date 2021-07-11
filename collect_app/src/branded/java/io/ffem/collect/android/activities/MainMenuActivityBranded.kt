@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -114,28 +113,22 @@ open class MainMenuActivityBranded : AppUpdateActivity() {
 
     fun getBlankForm() {
         if (MultiClickGuard.allowClick(javaClass.name)) {
-            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-            val protocol = sharedPreferences.getString(
-                GeneralKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default)
-            )
-            val i: Intent = if (protocol.equals(
-                    getString(R.string.protocol_google_sheets),
-                    ignoreCase = true
-                )
-            ) {
-                if (PlayServicesChecker().isGooglePlayServicesAvailable(this)) {
-                    Intent(
-                        applicationContext,
-                        GoogleDriveActivity::class.java
-                    )
+            val protocol = settingsProvider.getGeneralSettings().getString(GeneralKeys.KEY_PROTOCOL)
+            val i: Intent =
+                if (protocol.equals(GeneralKeys.PROTOCOL_GOOGLE_SHEETS, ignoreCase = true)) {
+                    if (PlayServicesChecker().isGooglePlayServicesAvailable(this)) {
+                        Intent(
+                            applicationContext,
+                            GoogleDriveActivity::class.java
+                        )
+                    } else {
+                        PlayServicesChecker().showGooglePlayServicesAvailabilityErrorDialog(this)
+                        return
+                    }
                 } else {
-                    PlayServicesChecker().showGooglePlayServicesAvailabilityErrorDialog(this)
-                    return
+                    Intent(applicationContext, FormDownloadListActivity::class.java)
+                    //                i.putExtra("isDownloadForms", true);
                 }
-            } else {
-                Intent(applicationContext, FormDownloadListActivity::class.java)
-                //                i.putExtra("isDownloadForms", true);
-            }
             startActivity(i)
         }
     }
