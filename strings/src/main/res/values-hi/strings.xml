@@ -331,7 +331,7 @@
   <!--##############################################
     # GENERAL SETTINGS
     ##############################################-->
-  <string name="general_preferences">सामान्य सेटिंग्स</string>
+  <string name="project_settings">सामान्य सेटिंग्स</string>
   <!--Title of a settings section-->
   <string name="server_settings_title">सर्वर</string>
   <!--Title of a settings section-->
@@ -436,8 +436,6 @@
   <!--##############################################
      # ADMIN SETTINGS
      ##############################################-->
-  <string name="admin_preferences">एडमिन सेटिंग</string>
-  <string name="admin_access_settings">सेटिंग तक एडमिन पहुंच के लिए टैप करें</string>
   <string name="enter_new_password"> नया पासवर्ड दर्ज करें </string>
   <string name="admin_password">एडमिन पासवर्ड </string>
   <string name="admin_password_changed">एडमिन पासवर्ड सफलतापूर्वक बदल दिया गया</string>
@@ -449,7 +447,7 @@
   <string name="found_in_main">मुख्य मेनू से छुपाने के लिए अनचेक करें</string>
   <string name="found_in_settings">सामान्य सेटिंग्स से छुपाने के लिए अनचेक करें</string>
   <string name="form_entry">फॉर्म एंट्री से छुपाने के लिए चेक हटायें</string>
-  <string name="reset_settings_dialog">एप्लिकेशन रीसेट करें …</string>
+  <string name="reset_project_settings_title">एप्लिकेशन रीसेट करें …</string>
   <string name="select_all">सभी का चयन करे</string>
   <string name="clear_all">सभी साफ करें</string>
   <string name="reset_settings">सभी सेटिंग (आंतरिक सेटिंग, संरक्षित  सेटिंग)</string>
@@ -457,7 +455,6 @@
   <string name="reset_blank_forms">रिक्त फॉर्म (फॉर्म फ़ोल्डर, फॉर्म डेटाबेस, आइटम सेट डेटाबेस)</string>
   <string name="reset_layers">मानचित्र लेयरें (लेयर फ़ोल्डर)</string>
   <string name="reset_cache">फॉर्म लोड कैश (.कैश फोल्डर)</string>
-  <string name="reset_osm_tiles">OSM टाइल कैश (osmdroid फ़ोल्डर)</string>
   <string name="reset_settings_dialog_title">क्या रीसेट करना है, चुनें</string>
   <string name="reset_settings_button_reset">रीसेट</string>
   <string name="reset_in_progress">रीसेट किया जा रहा …</string>
@@ -468,8 +465,6 @@
   <string name="reset_blank_forms_result">खाली  फॉर्म:: %s</string>
   <string name="reset_layers_result">मानचित्र लेयरें :: %s</string>
   <string name="reset_cache_result">फॉर्म लोड कैश :: %s</string>
-  <string name="reset_osm_tiles_result">OSM टाइल कैश :: %s</string>
-  <string name="user_access_control">प्रयोगकर्ता एक्सेस नियंत्रण</string>
   <string name="main_menu_settings">मुख्य मेनू सेटिंग्स</string>
   <string name="main_menu_settings_summary">मुख्य मेनू आइटम मैनेज करने के लिए टैप करें</string>
   <string name="user_settings">प्रयोगकर्ता सेटिंग</string>

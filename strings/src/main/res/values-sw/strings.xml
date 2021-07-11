@@ -445,7 +445,7 @@
   <!--##############################################
     # GENERAL SETTINGS
     ##############################################-->
-  <string name="general_preferences">Mpangilio wa jumla</string>
+  <string name="project_settings">Mpangilio wa jumla</string>
   <!--Title of a settings section-->
   <string name="server_settings_title">Seva</string>
   <!--Title of a settings section-->
@@ -578,8 +578,6 @@
   <!--##############################################
      # ADMIN SETTINGS
      ##############################################-->
-  <string name="admin_preferences">Mipangilio ya msimamizi</string>
-  <string name="admin_access_settings">Bofya kwa upatikanaji wa mipangilio ya msimamizi</string>
   <string name="enter_new_password">Ingiza nenosiri jipya</string>
   <string name="admin_password">Nenosiri la msimamizi</string>
   <string name="admin_password_changed">Nenosiri la msimamizi limebadilishwa kwa ufanisi</string>
@@ -591,7 +589,7 @@
   <string name="found_in_main">Ondoa alama ili kuficha kutoka kwenye orodha kuu</string>
   <string name="found_in_settings">Ondoa alama ili kuficha kutoka kwenye mipangilio kuu</string>
   <string name="form_entry">Ondoa alama kuficha  kujaza fomu</string>
-  <string name="reset_settings_dialog">Rekebisha programu …</string>
+  <string name="reset_project_settings_title">Rekebisha programu …</string>
   <string name="select_all">Chagua zote</string>
   <string name="clear_all">Futa zote</string>
   <string name="reset_settings">Mipangilio yote (mipangilio ya ndani, mipangilio iliyohifadhiwa)</string>
@@ -599,7 +597,6 @@
   <string name="reset_blank_forms">Fomu tupu(kabrasha la fomu,hifadhidata ya fomu,seti_vifaa vya hifadhidata)</string>
   <string name="reset_layers">Safu za ramani (Kabrasha la safu)</string>
   <string name="reset_cache">Fomu ya kuweka hifahi ya muda mfupi (.kabrasha la hifadhi la muda mfupi)</string>
-  <string name="reset_osm_tiles">Takwimu za OSM za muda mfupi (kabrasha ya osmdroid)</string>
   <string name="reset_settings_dialog_title">Chagua kipi cha kurekebisha</string>
   <string name="reset_settings_button_reset">Rudisha mwanzo</string>
   <string name="reset_in_progress">Kurudisha mwanzo…</string>
@@ -610,8 +607,6 @@
   <string name="reset_blank_forms_result">Fomu tupu :: %s</string>
   <string name="reset_layers_result">Safu za ramani :: %s</string>
   <string name="reset_cache_result">Fomu ya takwimu za muda mfupi :: %s</string>
-  <string name="reset_osm_tiles_result">Takwimu za muda mfupi  za OSM 1%s</string>
-  <string name="user_access_control">Dhibiti ya ufikivu wa mtumiaji</string>
   <string name="main_menu_settings">Mipangilio ya menyu kuu</string>
   <string name="main_menu_settings_summary">Bofya ili kudhibiti vitu muhimu vya menyu kuu</string>
   <string name="user_settings">Mipangilio ya mtumiaji</string>

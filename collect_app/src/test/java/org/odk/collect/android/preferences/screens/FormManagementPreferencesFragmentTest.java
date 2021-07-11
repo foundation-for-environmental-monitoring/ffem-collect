@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.odk.collect.android.R;
 import org.odk.collect.android.TestSettingsProvider;
-import org.odk.collect.android.preferences.Protocol;
 import org.odk.collect.android.preferences.keys.AdminKeys;
 import org.odk.collect.android.preferences.keys.GeneralKeys;
 import org.odk.collect.android.support.CollectHelpers;
@@ -32,7 +31,7 @@ import static org.odk.collect.android.preferences.keys.GeneralKeys.KEY_AUTOMATIC
 import static org.odk.collect.android.preferences.keys.GeneralKeys.KEY_FORM_UPDATE_MODE;
 import static org.odk.collect.android.preferences.keys.GeneralKeys.KEY_PERIODIC_FORM_UPDATES_CHECK;
 import static org.odk.collect.android.preferences.keys.GeneralKeys.KEY_PROTOCOL;
-import static org.odk.collect.android.preferences.screens.GeneralPreferencesActivity.INTENT_KEY_ADMIN_MODE;
+import static org.odk.collect.android.preferences.screens.ProjectPreferencesActivity.INTENT_KEY_ADMIN_MODE;
 import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(AndroidJUnit4.class)
@@ -52,7 +51,7 @@ public class FormManagementPreferencesFragmentTest {
 
     @Test
     public void whenGoogleDriveUsedAsServer_showsUpdateModeAsManual_andDisablesPrefs() {
-        generalSettings.save(KEY_PROTOCOL, Protocol.GOOGLE.getValue(context));
+        generalSettings.save(KEY_PROTOCOL, GeneralKeys.PROTOCOL_GOOGLE_SHEETS);
         generalSettings.save(KEY_FORM_UPDATE_MODE, MATCH_EXACTLY.getValue(context));
 
         FragmentScenario<FormManagementPreferencesFragment> scenario = FragmentScenario.launch(FormManagementPreferencesFragment.class);
@@ -127,7 +126,7 @@ public class FormManagementPreferencesFragmentTest {
 
     @Test
     public void whenGoogleDriveUsedAsServer_andAutomaticDownloadEnabled_showsAutomaticDownloadAsNotChecked() {
-        generalSettings.save(KEY_PROTOCOL, Protocol.GOOGLE.getValue(context));
+        generalSettings.save(KEY_PROTOCOL, GeneralKeys.PROTOCOL_GOOGLE_SHEETS);
         generalSettings.save(KEY_AUTOMATIC_UPDATE, true);
 
         FragmentScenario<FormManagementPreferencesFragment> scenario = FragmentScenario.launch(FormManagementPreferencesFragment.class);

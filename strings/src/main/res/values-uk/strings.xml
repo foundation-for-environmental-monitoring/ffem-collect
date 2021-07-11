@@ -459,7 +459,7 @@
   <!--##############################################
     # GENERAL SETTINGS
     ##############################################-->
-  <string name="general_preferences">Загальні налаштування</string>
+  <string name="project_settings">Загальні налаштування</string>
   <!--Title of a settings section-->
   <string name="server_settings_title">Сервер</string>
   <!--Title of a settings section-->
@@ -590,8 +590,6 @@
   <!--##############################################
      # ADMIN SETTINGS
      ##############################################-->
-  <string name="admin_preferences">Адміністрування</string>
-  <string name="admin_access_settings">Клікніть для адміністративного доступу до налаштувань</string>
   <string name="enter_new_password">Введіть новий пароль</string>
   <string name="admin_password">Пароль адміністратора</string>
   <string name="admin_password_changed">Пароль адміністратора успішно змінено</string>
@@ -603,7 +601,7 @@
   <string name="found_in_main">Зніміть позначку щоб прибрати з Головного меню</string>
   <string name="found_in_settings">Зніміть позначку щоб прибрати з Загальні Налаштування</string>
   <string name="form_entry">Зніміть позначку аби прибрати з Заповнити Анкету</string>
-  <string name="reset_settings_dialog">Скинути програму…</string>
+  <string name="reset_project_settings_title">Скинути програму…</string>
   <string name="select_all">Обрати всі</string>
   <string name="clear_all">Зняти всі позначки</string>
   <string name="reset_settings">Всі налаштування (внутрішні налаштування, збережені налаштування)</string>
@@ -611,7 +609,6 @@
   <string name="reset_blank_forms">Чисті анкети (директорія forms, база даних forms, база даних itemsets)</string>
   <string name="reset_layers">Шари карт (директорія layers)</string>
   <string name="reset_cache">Кеш завантаження анкет (директорія .cache)</string>
-  <string name="reset_osm_tiles">Кеш фрагментів OSM (директорія osmdroid)</string>
   <string name="reset_settings_dialog_title">Оберіть що скинути</string>
   <string name="reset_settings_button_reset">Скинути</string>
   <string name="reset_in_progress">Скидання…</string>
@@ -622,8 +619,6 @@
   <string name="reset_blank_forms_result">Незаповнені анкети :: %s</string>
   <string name="reset_layers_result">Шари карт :: %s</string>
   <string name="reset_cache_result">Кеш завантаження анкет :: %s</string>
-  <string name="reset_osm_tiles_result">Кеш фрагментів OSM :: %s</string>
-  <string name="user_access_control">Контроль Доступу Користувачів</string>
   <string name="main_menu_settings">Налаштування Головного Меню</string>
   <string name="main_menu_settings_summary">Натисніть для управління пунктами головного меню</string>
   <string name="user_settings">Користувацькі Налаштування</string>

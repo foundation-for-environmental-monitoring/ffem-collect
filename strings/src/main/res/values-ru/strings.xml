@@ -414,7 +414,7 @@
   <!--##############################################
     # GENERAL SETTINGS
     ##############################################-->
-  <string name="general_preferences">Настройки</string>
+  <string name="project_settings">Настройки</string>
   <!--Title of a settings section-->
   <string name="server_settings_title">Сервер</string>
   <!--Title of a settings section-->
@@ -545,8 +545,6 @@
   <!--##############################################
      # ADMIN SETTINGS
      ##############################################-->
-  <string name="admin_preferences">Администрирование</string>
-  <string name="admin_access_settings">Административный доступ к настройкам</string>
   <string name="enter_new_password">Укажите новый пароль</string>
   <string name="admin_password">Пароль администратора</string>
   <string name="admin_password_changed">Пароль администратора успешно изменён</string>
@@ -558,7 +556,7 @@
   <string name="found_in_main">Снимите галочку, чтобы скрыть пункт в главном меню</string>
   <string name="found_in_settings">Снимите галочку, чтобы скрыть пункт в настройках</string>
   <string name="form_entry">Снимите галочку, чтобы скрыть пункт при заполнении опросника</string>
-  <string name="reset_settings_dialog">Сброс приложения…</string>
+  <string name="reset_project_settings_title">Сброс приложения…</string>
   <string name="select_all">Выбрать всё</string>
   <string name="clear_all">Очистить всё</string>
   <string name="reset_settings">Все настройки (внутренние настройки, сохранённые настройки)</string>
@@ -566,7 +564,6 @@
   <string name="reset_blank_forms">Бланки опросников (forms folder, forms database, itemsets database)</string>
   <string name="reset_layers">Слои карты (папка layers)</string>
   <string name="reset_cache">Кэш (папка .cache)</string>
-  <string name="reset_osm_tiles">Кэш тайлов OSM (папка osmdroid)</string>
   <string name="reset_settings_dialog_title">Выберите, что хотите сбросить</string>
   <string name="reset_settings_button_reset">Сброс</string>
   <string name="reset_in_progress">Сбрасывание…</string>
@@ -576,8 +573,6 @@
   <string name="reset_saved_forms_result">Сохранённые опросы: %s</string>
   <string name="reset_blank_forms_result">Бланки опросников: %s</string>
   <string name="reset_layers_result">Слои карт: %s</string>
-  <string name="reset_osm_tiles_result">Кэш тайлов OSM: %s</string>
-  <string name="user_access_control">Контроль доступа пользователя</string>
   <string name="main_menu_settings">Кнопки главного меню…</string>
   <string name="main_menu_settings_summary"> Доступ к кнопкам в главном меню</string>
   <string name="user_settings">Видимость настроек</string>

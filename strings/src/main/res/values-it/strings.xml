@@ -463,7 +463,7 @@
   <!--##############################################
     # GENERAL SETTINGS
     ##############################################-->
-  <string name="general_preferences">Impostazioni Generali</string>
+  <string name="project_settings">Impostazioni Generali</string>
   <!--Title of a settings section-->
   <string name="server_settings_title">Server</string>
   <!--Title of a settings section-->
@@ -594,8 +594,6 @@
   <!--##############################################
      # ADMIN SETTINGS
      ##############################################-->
-  <string name="admin_preferences">Impostazioni Amministratore</string>
-  <string name="admin_access_settings">Regola parametri accesso dell\'Amministratore</string>
   <string name="enter_new_password">Inserire nuova password</string>
   <string name="admin_password">Password di amministratore</string>
   <string name="admin_password_changed">Password dell\'Amministratore cambiata con successo</string>
@@ -607,7 +605,7 @@
   <string name="found_in_main">Deseleziona per nascondere dal Menu Principale</string>
   <string name="found_in_settings">Deseleziona per nascondere da Impostazioni Generali</string>
   <string name="form_entry">Deseleziona per nascondere dal Modulo d\'Entrata</string>
-  <string name="reset_settings_dialog">Reimpostare l\'applicazione</string>
+  <string name="reset_project_settings_title">Reimpostare l\'applicazione</string>
   <string name="select_all">Seleziona tutto</string>
   <string name="clear_all">Deseleziona tutto</string>
   <string name="reset_settings">Tutte le impostazioni (impostazioni di base, impostazioni salvate)</string>
@@ -615,7 +613,6 @@
   <string name="reset_blank_forms">Moduli vuoti (cartella forms, database forms, database itemsets)</string>
   <string name="reset_layers">Livelli della mappa (cartella layers)</string>
   <string name="reset_cache">Cache di caricamento dei moduli (cartella .cache)</string>
-  <string name="reset_osm_tiles">Cache dei tile OSM (cartella osmdroid)</string>
   <string name="reset_settings_dialog_title">Seleziona le opzioni da reimpostare</string>
   <string name="reset_settings_button_reset">Reimposta</string>
   <string name="reset_in_progress">Reimpostazione…</string>
@@ -626,8 +623,6 @@
   <string name="reset_blank_forms_result">Form vuoti :: %s</string>
   <string name="reset_layers_result">Livelli della mappa :: %s</string>
   <string name="reset_cache_result">Cache di caricamento dei moduli :: %s</string>
-  <string name="reset_osm_tiles_result">Cache dei tile OSM :: %s</string>
-  <string name="user_access_control">Controllo Accesso Utente</string>
   <string name="main_menu_settings">Parametri Menu Principale</string>
   <string name="main_menu_settings_summary">Tocca per gestire elementi menu principale</string>
   <string name="user_settings">Impostazioni utente</string>

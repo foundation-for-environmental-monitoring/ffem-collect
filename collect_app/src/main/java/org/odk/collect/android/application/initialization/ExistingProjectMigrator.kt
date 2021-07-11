@@ -43,7 +43,7 @@ class ExistingProjectMigrator(
     fun run(name: String) {
         val generalSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
 
-        val newProject = projectDetailsCreator.createProjectFromDetails(generalSharedPrefs.getString(GeneralKeys.KEY_SERVER_URL, "") ?: "")
+        val newProject = projectDetailsCreator.createProjectFromDetails(connectionIdentifier = generalSharedPrefs.getString(GeneralKeys.KEY_SERVER_URL, "") ?: "")
         val project = projectsRepository.save(newProject)
 
         val rootDir = storagePathProvider.odkRootDirPath

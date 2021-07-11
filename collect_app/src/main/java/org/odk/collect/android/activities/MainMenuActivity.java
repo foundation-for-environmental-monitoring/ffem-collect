@@ -33,10 +33,8 @@ import org.odk.collect.android.gdrive.GoogleDriveActivity;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.network.NetworkStateProvider;
 import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment;
-import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment.Action;
 import org.odk.collect.android.preferences.keys.GeneralKeys;
 import org.odk.collect.android.preferences.keys.MetaKeys;
-import org.odk.collect.android.preferences.screens.AdminPreferencesActivity;
 import org.odk.collect.android.preferences.source.SettingsProvider;
 import org.odk.collect.android.projects.ProjectIconView;
 import org.odk.collect.android.projects.ProjectSettingsDialog;
@@ -44,7 +42,6 @@ import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.utilities.PlayServicesChecker;
-import org.odk.collect.android.utilities.ToastUtils;
 
 import javax.inject.Inject;
 
@@ -57,7 +54,7 @@ import io.ffem.collect.android.activities.MainMenuActivityBranded;
  * @author Carl Hartung (carlhartung@gmail.com)
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
-public class MainMenuActivity extends MainMenuActivityBranded implements AdminPasswordDialogFragment.AdminPasswordDialogCallback {
+public class MainMenuActivity extends CollectAbstractActivity {
     // buttons
     private Button manageFilesButton;
     private Button sendDataButton;
@@ -166,7 +163,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
                 }
                 String protocol = settingsProvider.getGeneralSettings().getString(GeneralKeys.KEY_PROTOCOL);
                 Intent i = null;
-                if (protocol.equalsIgnoreCase(getString(R.string.protocol_google_sheets))) {
+                if (protocol.equalsIgnoreCase(GeneralKeys.PROTOCOL_GOOGLE_SHEETS)) {
                     if (new PlayServicesChecker().isGooglePlayServicesAvailable(MainMenuActivity.this)) {
                         i = new Intent(getApplicationContext(),
                                 GoogleDriveActivity.class);
@@ -206,7 +203,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
             versionSHAView.setVisibility(View.GONE);
         }
 
-//        mainMenuViewModel.getFinalizedFormsCount().observe(this, finalized -> {
+//        mainMenuViewModel.getSendableInstancesCount().observe(this, finalized -> {
 //            if (finalized > 0) {
 //                sendDataButton.setText(getString(R.string.send_data_button, String.valueOf(finalized)));
 //            } else {
@@ -215,7 +212,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
 //        });
 
 
-        mainMenuViewModel.getUnsentFormsCount().observe(this, unsent -> {
+        mainMenuViewModel.getEditableInstancesCount().observe(this, unsent -> {
             if (unsent > 0) {
                 reviewDataButton.setText(getString(R.string.review_data_button, String.valueOf(unsent)));
                 // Brand change
@@ -228,7 +225,7 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         });
 
 
-        mainMenuViewModel.getSentFormsCount().observe(this, sent -> {
+        mainMenuViewModel.getSentInstancesCount().observe(this, sent -> {
             if (sent > 0) {
                 viewSentFormsButton.setText(getString(R.string.view_sent_forms_button, String.valueOf(sent)));
                 // Brand change
@@ -299,17 +296,5 @@ public class MainMenuActivity extends MainMenuActivityBranded implements AdminPa
         setSupportActionBar(toolbar);
         // Brand change -----------------
         setTitle(getString(R.string.app_name));
-    }
-
-    @Override
-    public void onCorrectAdminPassword(Action action) {
-        if (action == Action.ADMIN_SETTINGS) {
-            startActivity(new Intent(this, AdminPreferencesActivity.class));
-        }
-    }
-
-    @Override
-    public void onIncorrectAdminPassword() {
-        ToastUtils.showShortToast(R.string.admin_password_incorrect);
     }
 }
