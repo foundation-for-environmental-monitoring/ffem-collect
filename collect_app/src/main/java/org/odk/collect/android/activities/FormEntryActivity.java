@@ -1934,18 +1934,12 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             backgroundLocationViewModel.locationPermissionChanged();
             locationPermissionsPreviouslyGranted = !locationPermissionsPreviouslyGranted;
         }
-        activityDisplayed();
-    }
-
-    @Override
-    protected void onStop() {
-        backgroundLocationViewModel.activityHidden();
-
-        super.onStop();
     }
 
     @Override
     protected void onPause() {
+        backgroundLocationViewModel.activityHidden();
+
         FormController formController = getFormController();
 
         // make sure we're not already saving to disk. if we are, currentPrompt
@@ -1963,6 +1957,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     @Override
     protected void onResume() {
         super.onResume();
+
+        activityDisplayed();
 
 // Brand change
 //        String navigation = settingsProvider.getGeneralSettings().getString(KEY_NAVIGATION);
@@ -2320,7 +2316,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             registerReceiver(locationProvidersReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
         }
 
-        // onStart ran before the form was loaded. Let the viewModel know that the activity
+        // onResume ran before the form was loaded. Let the viewModel know that the activity
         // is about to be displayed and configured. Do this before the refresh actually
         // happens because if audit logging is enabled, the refresh logs a question event
         // and we want that to show up after initialization events.
