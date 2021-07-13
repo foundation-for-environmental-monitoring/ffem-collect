@@ -98,7 +98,8 @@ public class MainMenuActivity extends MainMenuActivityBranded {
         currentProjectViewModel = new ViewModelProvider(this, currentProjectViewModelFactory).get(CurrentProjectViewModel.class);
         currentProjectViewModel.getCurrentProject().observe(this, project -> {
             invalidateOptionsMenu();
-            setTitle(project.getName());
+            // Brand change -----------------
+            setTitle(getString(R.string.app_name));
         });
 
         initToolbar();
@@ -297,7 +298,5 @@ public class MainMenuActivity extends MainMenuActivityBranded {
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Brand change -----------------
-        setTitle(getString(R.string.app_name));
     }
 }
