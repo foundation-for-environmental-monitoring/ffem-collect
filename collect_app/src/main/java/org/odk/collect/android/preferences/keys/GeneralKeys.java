@@ -13,12 +13,15 @@ public final class GeneralKeys {
     // server_preferences.xml
     public static final String KEY_PROTOCOL = "protocol";
 
-    // odk_server_preferences.xmll
+    // project_display.xml
+    public static final String KEY_PROJECT_DISPLAY = "project_display";
+
+    // odk_server_preferences.xml
     public static final String KEY_SERVER_URL = "server_url";
     public static final String KEY_USERNAME = "username";
     public static final String KEY_PASSWORD = "password";
 
-    // custom_server_paths_preferences.xmlreferences.xml
+    // custom_server_paths_preferences.xml
     public static final String KEY_FORMLIST_URL = "formlist_url";
     public static final String KEY_SUBMISSION_URL = "submission_url";
 
@@ -99,7 +102,6 @@ public final class GeneralKeys {
 
     // experimental
     public static final String KEY_MAGENTA_THEME = "magenta";
-    public static final String KEY_USE_LOCATION_TRACKER = "use_location_tracker";
 
     public static HashMap<String, Object> getDefaults() {
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -148,7 +150,6 @@ public final class GeneralKeys {
         hashMap.put(KEY_SPLASH_PATH, Collect.getInstance().getString(R.string.default_splash_path));
         hashMap.put(KEY_MAGENTA_THEME, false);
         hashMap.put(KEY_EXTERNAL_APP_RECORDING, true);
-        hashMap.put(KEY_USE_LOCATION_TRACKER, false);
         // map_preferences.xml
         // Brand change ------
         hashMap.put(KEY_BASEMAP_SOURCE, BASEMAP_SOURCE_OSM);
