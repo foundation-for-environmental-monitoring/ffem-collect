@@ -55,7 +55,7 @@
             app:iconSpaceReserved="false" />
 
         <Preference
-            android:icon="@drawable/ic_outline_qr_code_scanner_24"
+            android:icon="@drawable/ic_outline_qr_code_scanner_accent_24"
             android:key="import_settings"
             app:isPreferenceVisible="false"
             android:title="@string/reconfigure_with_qr_code_settings_title"
