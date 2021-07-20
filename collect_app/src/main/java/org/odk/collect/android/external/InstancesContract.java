@@ -20,7 +20,7 @@ import android.net.Uri;
 
 import org.odk.collect.android.BuildConfig;
 
-public final class InstanceProviderAPI {
+public final class InstancesContract {
 
     // Brand change ---
     public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider.odk.instances";
@@ -36,7 +36,7 @@ public final class InstanceProviderAPI {
     }
 
     // This class cannot be instantiated
-    private InstanceProviderAPI() {
+    private InstancesContract() {
     }
 
 }

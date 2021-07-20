@@ -29,7 +29,7 @@ import org.odk.collect.android.BuildConfig;
  * This defines the data model for blank forms. Blank forms are unique by
  * {@link DatabaseFormColumns#JR_FORM_ID} unless multiple {@link DatabaseFormColumns#JR_VERSION}s are defined.
  */
-public final class FormsProviderAPI {
+public final class FormsContract {
 
     // Brand change ---
     static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider.odk.forms";
@@ -60,6 +60,6 @@ public final class FormsProviderAPI {
         return Uri.parse("content://" + AUTHORITY + "/newest_forms_by_form_id?projectId=" + projectId);
     }
 
-    private FormsProviderAPI() {
+    private FormsContract() {
     }
 }
