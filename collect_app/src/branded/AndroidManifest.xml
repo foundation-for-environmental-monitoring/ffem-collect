@@ -10,12 +10,12 @@
         tools:replace="android:icon,android:label">
 
         <provider
-            android:name="org.odk.collect.android.provider.FormsProvider"
+            android:name="org.odk.collect.android.external.FormsProvider"
             android:authorities="${applicationId}.provider.odk.forms"
             android:exported="true"
             tools:replace="android:authorities" />
         <provider
-            android:name="org.odk.collect.android.provider.InstanceProvider"
+            android:name="org.odk.collect.android.external.InstanceProvider"
             android:authorities="${applicationId}.provider.odk.instances"
             android:exported="true"
             tools:replace="android:authorities" />
