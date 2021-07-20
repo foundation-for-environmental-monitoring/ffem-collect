@@ -53,6 +53,7 @@ import javax.inject.Inject;
 
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 import io.ffem.collect.android.activities.GeneralPreferencesActivity;
+import io.ffem.collect.android.activities.SignInActivity;
 
 import static android.app.Activity.RESULT_OK;
 import static org.odk.collect.android.analytics.AnalyticsEvents.SET_FALLBACK_SHEETS_URL;
@@ -93,15 +94,35 @@ public class ServerPreferencesFragment extends BaseProjectPreferencesFragment im
         super.onAttach(context);
         DaggerUtils.getComponent(context).inject(this);
 
-        ((ProjectPreferencesActivity) context).setOnBackPressedListener(this);
+        ((GeneralPreferencesActivity) context).setOnBackPressedListener(this);
     }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         super.onCreatePreferences(savedInstanceState, rootKey);
         // Brand change
-//        setPreferencesFromResource(R.xml.server_preferences, rootKey);
+        setPreferencesFromResource(R.xml.server_preferences_custom, rootKey);
 //        initProtocolPrefs();
+
+        Preference serverPreferences = findPreference("server_credentials");
+        if (serverPreferences != null) {
+
+            String username = webCredentialsUtils.getUserNameFromPreferences();
+            String password = webCredentialsUtils.getPasswordFromPreferences();
+
+            if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+                serverPreferences.setSummary(R.string.sign_in_to_account);
+            } else {
+                serverPreferences.setSummary(username);
+            }
+
+            serverPreferences.setOnPreferenceClickListener(preference -> {
+                final Intent intent = new Intent(getActivity(), SignInActivity.class);
+                intent.putExtra("isSettings", true);
+                getActivity().startActivity(intent);
+                return true;
+            });
+        }
     }
 
     private void initProtocolPrefs() {

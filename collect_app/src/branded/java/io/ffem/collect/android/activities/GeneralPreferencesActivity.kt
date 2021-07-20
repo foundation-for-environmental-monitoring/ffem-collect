@@ -14,6 +14,7 @@ import org.odk.collect.android.activities.CollectAbstractActivity
 import org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialog.ResetSettingsResultDialogListener
 import org.odk.collect.android.listeners.OnBackPressedListener
 import org.odk.collect.android.preferences.screens.FormManagementPreferencesFragment
+import org.odk.collect.android.preferences.screens.ServerPreferencesFragment
 
 class GeneralPreferencesActivity : CollectAbstractActivity(), ResetSettingsResultDialogListener {
     private var onBackPressedListener: OnBackPressedListener? = null
@@ -36,9 +37,9 @@ class GeneralPreferencesActivity : CollectAbstractActivity(), ResetSettingsResul
         supportFragmentManager.beginTransaction()
             .replace(R.id.layoutInfo, OtherPreferenceFragment())
             .commitAllowingStateLoss()
-//        supportFragmentManager.beginTransaction()
-//            .replace(R.id.layoutServer, ServerPreferences())
-//            .commitAllowingStateLoss()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.layoutServer, ServerPreferencesFragment())
+            .commitAllowingStateLoss()
 //        supportFragmentManager.beginTransaction()
 //            .replace(R.id.layoutAdmin, AdminPreferencesFragment())
 //            .commitAllowingStateLoss()
